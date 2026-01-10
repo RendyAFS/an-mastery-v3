@@ -15,7 +15,9 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "alpinejs": "^3.15.3",
         "glob": "^13.0.0",
+        "lucide": "^0.562.0",
         "preline": "^3.2.3"
     }
 }
