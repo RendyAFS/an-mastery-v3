@@ -1,4 +1,4 @@
-<div x-data="toastStore()" x-init="document.addEventListener('toast', (e) => { show(e.detail.message, e.detail.type, e.detail.timeout) })" class="fixed top-5 right-5 z-50 space-y-3">
+<div x-data="customToast()" x-init="document.addEventListener('toast', (e) => { show(e.detail.message, e.detail.type, e.detail.timeout) })" class="fixed top-5 right-5 z-50 space-y-3">
     <template x-for="toast in toasts" :key="toast.id">
         <div x-show="toast.show" @mouseenter="pause(toast.id)" @mouseleave="resume(toast.id)"
             x-transition:enter="transition transform ease-out duration-300"

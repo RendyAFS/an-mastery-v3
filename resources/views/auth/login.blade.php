@@ -28,7 +28,11 @@
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)"
-                                    placeholder="Enter Email / Username" required>
+                                    placeholder="Enter Email / Username" required value="{{ old('email') }}"
+                                    @error('email') border-red-500 @else border-(--color-primary) @enderror>
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-gray)/70 w-5 h-5"></i>
@@ -48,7 +52,8 @@
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
                                         disabled:opacity-50 disabled:pointer-events-none"
-                                    placeholder="Enter Password" required>
+                                    placeholder="Enter Password" required
+                                    @error('password') border-red-500 @else border-(--color-primary) @enderror>
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
@@ -57,6 +62,9 @@
                                     <i x-show="show" data-lucide="eye" class="w-5 h-5"></i>
                                 </button>
                             </div>
+                            @error('password')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex flex-wrap items-center justify-between gap-4">

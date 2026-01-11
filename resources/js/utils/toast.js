@@ -1,4 +1,4 @@
-export default function toastStore() {
+export default function customToast() {
     return {
         toasts: [],
         counter: 0,
@@ -85,7 +85,6 @@ export default function toastStore() {
         },
     };
 }
-
 
 window.Toast = {
     success(message, title = null, timeout) {
