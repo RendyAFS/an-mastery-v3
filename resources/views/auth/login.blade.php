@@ -67,8 +67,7 @@
                                     text-(--color-primary) focus:ring-(--color-primary) checked:border-(--color-primary)
                                     disabled:opacity-50 disabled:pointer-events-none
                                     dark:bg-(--color-dark) dark:border-(--color-dark) dark:checked:bg-(--color-primary) dark:checked:border-(--color-primary) dark:focus:ring-offset-(--color-dark)"
-                                    name="remember"
-                                    id="remember">
+                                    name="remember" id="remember">
                                 <label for="remember"
                                     class="text-sm text-(--color-dark) ms-3 dark:text-(--color-light)">Remember me</label>
                             </div>
@@ -92,7 +91,7 @@
                 </form>
             </div>
 
-            <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full md:rounded-tr-xl md:rounded-br-xl lg:p-12 p-8 relative overflow-hidden"
+            <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full lg:p-12 p-8 relative overflow-hidden"
                 style="background-color: var(--color-dark);">
                 <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
                     alt="login-image" />
