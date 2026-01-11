@@ -28,7 +28,7 @@
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)"
-                                    placeholder="Enter Email / Username">
+                                    placeholder="Enter Email / Username" required>
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-gray)/70 w-5 h-5"></i>
@@ -48,13 +48,13 @@
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
                                         disabled:opacity-50 disabled:pointer-events-none"
-                                    placeholder="Enter Password">
+                                    placeholder="Enter Password" required>
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
                                         hover:text-(--color-primary) transition cursor-pointer">
-                                    <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
-                                    <i x-show="show" data-lucide="eye-off" class="w-5 h-5"></i>
+                                    <i x-show="!show" data-lucide="eye-off" class="w-5 h-5"></i>
+                                    <i x-show="show" data-lucide="eye" class="w-5 h-5"></i>
                                 </button>
                             </div>
                         </div>

@@ -9,10 +9,13 @@
     @vite(['resources/css/app.css', 'resources/css/theme.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+<body x-data class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+    <x-toast />
+
     @yield('content')
-    {{-- Script Lucide Icons --}}
+
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
 </body>
+
 
 </html>
