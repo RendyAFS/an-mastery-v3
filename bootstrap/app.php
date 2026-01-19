@@ -11,8 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web();
-
         $middleware->validateCsrfTokens(except: ['log-viewer/*']);
         $middleware->alias([
             'role.custom' => \App\Http\Middleware\RoleMiddleware::class,
