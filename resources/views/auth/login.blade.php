@@ -22,7 +22,7 @@
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
                                 for="email">Email / Username</label>
                             <div class="relative">
-                                <input type="text" name="email" id="email"
+                                <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                     bg-(--color-light) text-(--color-dark)
                                     border border-(--color-primary) rounded-lg sm:text-sm
@@ -46,7 +46,7 @@
                             </label>
 
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="current-password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm
@@ -101,8 +101,8 @@
 
             <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full lg:p-12 p-8 relative overflow-hidden"
                 style="background-color: var(--color-dark);">
-                {{-- <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
-                    alt="login-image" /> --}}
+                <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
+                    alt="login-image" />
             </div>
         </div>
     </div>
