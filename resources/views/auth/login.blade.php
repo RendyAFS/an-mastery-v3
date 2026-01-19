@@ -101,8 +101,8 @@
 
             <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full lg:p-12 p-8 relative overflow-hidden"
                 style="background-color: var(--color-dark);">
-                <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
-                    alt="login-image" />
+                {{-- <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
+                    alt="login-image" /> --}}
             </div>
         </div>
     </div>

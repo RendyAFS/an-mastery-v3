@@ -1,5 +1,3 @@
-// This code should be added to <head>.
-// It's used to prevent page load glitches.
 const html = document.querySelector("html");
 const isLightOrAuto =
     localStorage.getItem("hs_theme") === "light" ||
