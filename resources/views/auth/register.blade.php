@@ -65,14 +65,15 @@
                                 Password
                             </label>
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password" id="password" required
+                                <input :type="show ? 'text' : 'password'" name="password"
+                                    id="password" required autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) text-(--color-dark)
                                            border border-(--color-primary) rounded-lg sm:text-sm
                                            focus:border-(--color-primary) focus:ring-(--color-primary)"
                                     placeholder="Create password">
 
-                                <button type="button" @click="show = !show"
+                                <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
                                            hover:text-(--color-primary) transition">
                                     <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
@@ -88,14 +89,14 @@
                             </label>
                             <div class="relative">
                                 <input :type="show ? 'text' : 'password'" name="password_confirmation"
-                                    id="password_confirmation" required
+                                    id="password_confirmation" required autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) text-(--color-dark)
                                            border border-(--color-primary) rounded-lg sm:text-sm
                                            focus:border-(--color-primary) focus:ring-(--color-primary)"
                                     placeholder="Repeat password">
 
-                                <button type="button" @click="show = !show"
+                                <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
                                            hover:text-(--color-primary) transition">
                                     <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>

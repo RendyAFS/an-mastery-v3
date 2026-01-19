@@ -46,7 +46,7 @@
                             </label>
 
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="current-password"
+                                <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm

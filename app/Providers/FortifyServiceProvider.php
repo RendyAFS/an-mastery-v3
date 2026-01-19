@@ -49,9 +49,6 @@ class FortifyServiceProvider extends ServiceProvider
             $request->validate([
                 'email' => ['required', 'string'],
                 'password' => ['required', 'string'],
-            ], [
-                'email.required' => 'Email atau username wajib diisi.',
-                'password.required' => 'Password wajib diisi.',
             ]);
 
             $login = $request->email;
@@ -61,33 +58,14 @@ class FortifyServiceProvider extends ServiceProvider
                 ->first();
 
             if (! $user) {
-                return null;
-            }
-
-            if (! Hash::check($request->password, $user->password)) {
-                return null;
-            }
-
-            return $user;
-        });
-
-        Fortify::authenticateUsing(function (Request $request) {
-
-            $login = $request->email;
-
-            $user = User::where('email', $login)
-                ->orWhere('name', $login)
-                ->first();
-
-            if (! $user) {
                 throw ValidationException::withMessages([
-                    'email' => 'Email atau username tidak ditemukan.',
+                    'email' => 'Email or username not found.',
                 ]);
             }
 
             if (! Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
-                    'password' => 'Password yang Anda masukkan salah.',
+                    'password' => 'The provided password was incorrect.',
                 ]);
             }
 
