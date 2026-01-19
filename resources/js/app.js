@@ -1,9 +1,5 @@
 import "./bootstrap";
 import "preline";
 import "./utils/toggle-dark-mode";
+import "./utils/custom-toast";
 
-import Alpine from "alpinejs";
-
-// alpinejs
-window.Alpine = Alpine;
-Alpine.start();

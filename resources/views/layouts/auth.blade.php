@@ -11,8 +11,8 @@
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
 </head>
 
-<body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
-
+<body x-data="customToast()" class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+    <x-custom-toast />
     @yield('content')
 
     @routes
