@@ -98,18 +98,6 @@
                         </button>
                     </div>
                 </form>
-                <button class="p-3 bg-(--color-green) text-(--color-dark) rounded-md" @click="Toast.success('Login berhasil', 'Berhasil')">
-                    Test Success
-                </button>
-                <button class="p-3 bg-(--color-red) text-(--color-dark) rounded-md" @click="Toast.error('Login Error', 'Gagal')">
-                    Test Error
-                </button>
-                <button class="p-3 bg-(--color-yellow) text-(--color-dark) rounded-md" @click="Toast.warning('Login Warning silahkan cek lagi ', 'Peringatan')">
-                    Test Warning
-                </button>
-                <button class="p-3 bg-(--color-blue) text-(--color-dark) rounded-md" @click="Toast.info('Login Info', 'Info')">
-                    Test Info
-                </button>
             </div>
 
             <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full lg:p-12 p-8 relative overflow-hidden"
