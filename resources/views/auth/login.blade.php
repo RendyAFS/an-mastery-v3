@@ -30,14 +30,14 @@
                                     placeholder-(--color-gray)"
                                     placeholder="Enter Email / Username" required value="{{ old('email') }}"
                                     @error('email') border-red-500 @else border-(--color-primary) @enderror>
-                                @error('email')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                @enderror
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-gray)/70 w-5 h-5"></i>
                                 </div>
                             </div>
+                            @error('email')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div x-data="{ show: false }">
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
@@ -46,7 +46,8 @@
                             </label>
 
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="password"
+                                <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                    autocomplete="password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm
