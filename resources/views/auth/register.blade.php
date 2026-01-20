@@ -36,7 +36,7 @@
                                            focus:border-(--color-primary) focus:ring-(--color-primary)"
                                     placeholder="Enter your name">
                                 <div class="absolute inset-y-0 end-4 flex items-center pointer-events-none">
-                                    <i data-lucide="user" class="text-(--color-gray)/70 w-5 h-5"></i>
+                                    <i data-lucide="user" class="text-(--color-primary)/80 w-5 h-5"></i>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                            focus:border-(--color-primary) focus:ring-(--color-primary)"
                                     placeholder="Enter your email">
                                 <div class="absolute inset-y-0 end-4 flex items-center pointer-events-none">
-                                    <i data-lucide="mail" class="text-(--color-gray)/70 w-5 h-5"></i>
+                                    <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
                                 </div>
                             </div>
                         </div>
@@ -65,8 +65,8 @@
                                 Password
                             </label>
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password"
-                                    id="password" required autocomplete="false"
+                                <input :type="show ? 'text' : 'password'" name="password" id="password" required
+                                    autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) text-(--color-dark)
                                            border border-(--color-primary) rounded-lg sm:text-sm
@@ -74,8 +74,7 @@
                                     placeholder="Create password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
-                                           hover:text-(--color-primary) transition">
+                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
                                     <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="w-5 h-5"></i>
                                 </button>
@@ -97,8 +96,7 @@
                                     placeholder="Repeat password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
-                                           hover:text-(--color-primary) transition">
+                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
                                     <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="w-5 h-5"></i>
                                 </button>
@@ -107,14 +105,10 @@
                     </div>
 
                     <div class="mt-12">
-                        <button type="submit"
-                            class="w-full py-2.5 px-4 text-[15px]
-                                   font-medium tracking-wide rounded-md
-                                   text-(--color-light) hover:text-(--color-dark)
-                                   transition-colors duration-200
-                                   bg-(--color-primary) hover:bg-(--color-gray)">
-                            Register
-                        </button>
+                        <x-button-loading type="submit" text="Register" loadingText="Registering..."
+                            color="bg-(--color-primary) hover:bg-(--color-gray)"
+                            textColor="text-(--color-light) hover:text-(--color-dark)" size="w-full py-2.5 px-4 text-[15px]"
+                            rounded="rounded-md" />
                     </div>
                 </form>
             </div>

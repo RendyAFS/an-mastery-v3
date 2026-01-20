@@ -14,7 +14,12 @@ class SablonEmployeeDetail extends Model
         'fee',
         'additional_fee',
         'total',
-        'notes',
+        'is_change',
+        'notes'
+    ];
+
+    protected $casts = [
+        'is_change' => 'boolean',
     ];
 
     public function sablon(): BelongsTo

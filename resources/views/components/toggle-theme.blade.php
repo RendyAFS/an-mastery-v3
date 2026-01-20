@@ -1,6 +1,7 @@
 <div class="hs-dropdown">
     <button id="hs-dropdown-dark-mode" type="button"
-        class="hs-dropdown-toggle hs-dark-mode group flex items-center text-(--color-dark-gray) hover:text-(--color-primary)
+        class="hs-dropdown-toggle hs-dark-mode group flex items-center hover:cursor-pointer
+        text-(--color-dark-gray) hover:text-(--color-primary)
         focus:outline-hidden focus:text-(--color-primary)
         font-medium dark:text-(--color-gray) dark:hover:text-(--color-gray) dark:focus:text-(--color-gray)"
         aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
@@ -24,7 +25,7 @@
 
         <!-- LIGHT -->
         <button type="button"
-            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm
+            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm hover:cursor-pointer
             text-(--color-dark) hover:bg-(--color-gray)/20
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="light">
@@ -34,7 +35,7 @@
 
         <!-- DARK -->
         <button type="button"
-            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm
+            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm hover:cursor-pointer
             text-(--color-dark) hover:bg-(--color-gray)/20
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="dark">
@@ -44,7 +45,7 @@
 
         <!-- SYSTEM / AUTO -->
         <button type="button"
-            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm
+            class="w-full flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm hover:cursor-pointer
             text-(--color-dark) hover:bg-(--color-gray)/20
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="auto">
