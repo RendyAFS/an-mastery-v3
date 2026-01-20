@@ -9,8 +9,7 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class PriceEmployee extends Model
 {
-    use Userstamps;
-    use SoftDeletes;
+    use Userstamps, SoftDeletes;
 
     protected $fillable = [
         'type_fabric_id',
