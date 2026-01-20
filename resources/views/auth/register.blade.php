@@ -37,7 +37,7 @@
                                     value="{{ old('name') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                                    <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
+                                    <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
                                 </div>
                             </div>
                             @error('name')
@@ -59,7 +59,7 @@
                                     value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                                    <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
+                                    <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
                                 </div>
                             </div>
                             @error('email')
@@ -83,8 +83,8 @@
 
                                 <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
-                                    <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
-                                    <i x-show="show" data-lucide="eye-off" class="w-5 h-5"></i>
+                                    <i x-show="!show" data-lucide="eye" class="size-5"></i>
+                                    <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>
                             </div>
                             @error('password')
@@ -109,8 +109,8 @@
 
                                 <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
-                                    <i x-show="!show" data-lucide="eye" class="w-5 h-5"></i>
-                                    <i x-show="show" data-lucide="eye-off" class="w-5 h-5"></i>
+                                    <i x-show="!show" data-lucide="eye" class="size-5"></i>
+                                    <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>
                             </div>
                             @error('password_confirmation')

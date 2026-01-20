@@ -24,7 +24,7 @@
                 <button @click="remove(toast.id)"
                     class="ms-3 p-2 rounded-full text-(--color-dark) dark:text-(--color-light)
                                hover:bg-(--color-gray)/30 transition ease-in-out duration-200 cursor-pointer">
-                    <i data-lucide="x" class="text-(--color-dark)/50 dark:text-(--color-light)/70 w-4 h-4"></i>
+                    <i data-lucide="x" class="text-(--color-dark)/50 dark:text-(--color-light)/70 size-4"></i>
                 </button>
             </div>
         </div>
