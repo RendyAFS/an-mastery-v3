@@ -10,8 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class ImageFabric extends Model implements HasMedia
 {
-    use Userstamps;
-    use SoftDeletes;
+    use Userstamps, SoftDeletes;
     use InteractsWithMedia;
 
     protected $fillable = [
