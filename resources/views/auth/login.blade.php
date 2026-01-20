@@ -3,7 +3,7 @@
 @section('content')
     <div class="h-screen">
         <div class="grid lg:grid-cols-5 md:grid-cols-2 items-center gap-y-4 h-full">
-            <div class="lg:col-span-2 w-full p-8 max-w-lg max-md:max-w-lg mx-auto">
+            <div class="md:col-span-2 w-full p-8 max-w-lg max-md:max-w-lg mx-auto max-h-screen overflow-auto">
                 <form action="{{ route('login') }}" method="POST">
                     @csrf
                     <div class="mb-8">
@@ -96,7 +96,7 @@
                 </form>
             </div>
 
-            <div class="hidden md:block max-md:order-1 lg:col-span-3 md:h-screen w-full lg:p-12 p-8 relative overflow-hidden"
+            <div class="hidden lg:block max-lg:order-1 md:col-span-3 lg:h-screen w-full relative overflow-hidden"
                 style="background-color: var(--color-dark);">
                 <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
                     alt="login-image" />
