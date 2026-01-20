@@ -9,8 +9,7 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Presence extends Model
 {
-    use Userstamps;
-    use SoftDeletes;
+    use Userstamps, SoftDeletes;
 
     protected $fillable = [
         'employee_id',

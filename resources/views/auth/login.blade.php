@@ -30,14 +30,14 @@
                                     placeholder-(--color-gray)"
                                     placeholder="Enter Email / Username" required value="{{ old('email') }}"
                                     @error('email') border-red-500 @else border-(--color-primary) @enderror>
-                                @error('email')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                @enderror
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                                    <i data-lucide="mail" class="text-(--color-gray)/70 w-5 h-5"></i>
+                                    <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
                                 </div>
                             </div>
+                            @error('email')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div x-data="{ show: false }">
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
@@ -46,7 +46,8 @@
                             </label>
 
                             <div class="relative">
-                                <input :type="show ? 'text' : 'password'" name="password" id="password" autocomplete="current-password"
+                                <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                    autocomplete="password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm
@@ -56,7 +57,7 @@
                                     @error('password') border-red-500 @else border-(--color-primary) @enderror>
 
                                 <button type="button" @click="show = !show"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-gray)/70
+                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70
                                         hover:text-(--color-primary) transition cursor-pointer">
                                     <i x-show="!show" data-lucide="eye-off" class="w-5 h-5"></i>
                                     <i x-show="show" data-lucide="eye" class="w-5 h-5"></i>
@@ -89,12 +90,10 @@
                     </div>
 
                     <div class="mt-12">
-                        <button type="submit"
-                            class="w-full py-2.5 px-4 text-[15px]
-                            font-medium tracking-wide rounded-md text-(--color-light) hover:text-(--color-dark) transition-colors duration-200 cursor-pointer
-                            bg-(--color-primary) hover:bg-(--color-gray) dark:bg-(--color-primary) dark:hover:bg-(--color-gray)">
-                            Sign in
-                        </button>
+                        <x-button-loading type="submit" text="Sign in" loadingText="Signing in..."
+                            color="bg-(--color-primary) hover:bg-(--color-gray)"
+                            textColor="text-(--color-light) hover:text-(--color-dark)" size="w-full py-2.5 px-4 text-[15px]"
+                            rounded="rounded-md" />
                     </div>
                 </form>
             </div>

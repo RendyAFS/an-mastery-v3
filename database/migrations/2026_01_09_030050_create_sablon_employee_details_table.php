@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('fee')->nullable();
             $table->json('additional_fee')->nullable();
             $table->integer('total')->nullable();
+            $table->boolean('is_change')->nullable();
             $table->longText('notes')->nullable();
             $table->timestamps();
         });
