@@ -7,6 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'AN Mastery' }}</title>
 
+    {{-- Check Theme --}}
+    <script>
+        (() => {
+            const html = document.documentElement;
+            const stored = localStorage.getItem('hs_theme') || 'auto';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (stored === 'dark' || (stored === 'auto' && prefersDark)) {
+                html.classList.add('dark');
+                html.classList.remove('light');
+            } else {
+                html.classList.add('light');
+                html.classList.remove('dark');
+            }
+        })();
+    </script>
+
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
 
@@ -31,9 +48,13 @@
     @routes
 
     {{-- Scripts --}}
+    {{-- jquery --}}
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    {{-- block ui --}}
+    <script src="{{ asset('js/blockUi.js') }}"></script>
+    {{-- lucide --}}
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
     <script>
-        // lucide icons
         lucide.createIcons();
     </script>
 
