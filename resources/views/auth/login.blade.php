@@ -20,23 +20,22 @@
                     <div class="space-y-6">
                         <div>
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
-                                for="email">Email / Username</label>
+                                for="email">Email / Name</label>
                             <div class="relative">
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                     bg-(--color-light) text-(--color-dark)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)"
-                                    placeholder="Enter Email / Username" required value="{{ old('email') }}"
-                                    @error('email') border-red-500 @else border-(--color-primary) @enderror>
+                                    placeholder-(--color-gray)" @error('email') class="border-(--color-red)" @enderror
+                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
                                 </div>
                             </div>
                             @error('email')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-(--color-red)">{{ $message }}</p>
                             @enderror
                         </div>
                         <div x-data="{ show: false }">
@@ -52,9 +51,8 @@
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
-                                        disabled:opacity-50 disabled:pointer-events-none"
-                                    placeholder="Enter Password" required
-                                    @error('password') border-red-500 @else border-(--color-primary) @enderror>
+                                        disabled:opacity-50 disabled:pointer-events-none" @error('password') class="border-(--color-red)" @enderror
+                                    placeholder="Enter Password">
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70
@@ -64,19 +62,18 @@
                                 </button>
                             </div>
                             @error('password')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-(--color-red)">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="flex flex-wrap items-center justify-between gap-4">
                             <div class="flex">
-                                <input type="checkbox"
+                                <input type="checkbox" name="remember" id="remember" value="1"
                                     class="shrink-0 mt-0.5
                                     border-(--color-primary)rounded-sm
                                     text-(--color-primary) focus:ring-(--color-primary) checked:border-(--color-primary)
                                     disabled:opacity-50 disabled:pointer-events-none
-                                    dark:bg-(--color-dark) dark:border-(--color-dark) dark:checked:bg-(--color-primary) dark:checked:border-(--color-primary) dark:focus:ring-offset-(--color-dark)"
-                                    name="remember" id="remember">
+                                    dark:bg-(--color-dark) dark:border-(--color-dark) dark:checked:bg-(--color-primary) dark:checked:border-(--color-primary) dark:focus:ring-offset-(--color-dark)">
                                 <label for="remember"
                                     class="text-sm text-(--color-dark) ms-3 dark:text-(--color-light)">Remember me</label>
                             </div>
@@ -93,7 +90,7 @@
                         <x-button-loading type="submit" text="Sign in" loadingText="Signing in..."
                             color="bg-(--color-primary) hover:bg-(--color-gray)"
                             textColor="text-(--color-light) hover:text-(--color-dark)" size="w-full py-2.5 px-4 text-[15px]"
-                            rounded="rounded-md" />
+                            rounded="rounded-md" class="cursor-pointer"/>
                     </div>
                 </form>
             </div>
