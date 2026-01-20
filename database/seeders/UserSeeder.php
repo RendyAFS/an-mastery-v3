@@ -30,8 +30,10 @@ class UserSeeder extends Seeder
                 'email' => 'rendy@gmail.com',
             ],
             [
-                'name' => 'Rendy',
-                'password' => Hash::make('qawsedrf'),
+                'email_verified_at' => now(),
+                'name'              => 'Rendy',
+                'password'          => Hash::make('qawsedrf'),
+                'is_active'         => true,
             ]
         );
 

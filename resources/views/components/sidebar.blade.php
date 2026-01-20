@@ -43,8 +43,8 @@
                     @if ($menu->children->isEmpty())
                         <li>
                             <a href="{{ $menu->url }}"
-                                class="flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm
-                               text-(--color-dark-gray) dark:text-(--color-light) font-semibold
+                                class="flex items-center gap-x-3.5 py-3 px-3 rounded-xl text-sm
+                               text-(--color-dark-gray) dark:text-(--color-light) font-semibold cursor-pointer
                                hover:bg-(--color-gray)/50 hover:text-(--color-primary) dark:hover:text-(--color-secondary)
                                {{ request()->is(ltrim($menu->url, '/')) ? 'bg-(--color-primary) text-white' : '' }}">
 
@@ -57,8 +57,8 @@
                     @else
                         <li class="hs-accordion">
                             <button type="button"
-                                class="hs-accordion-toggle w-full flex items-center gap-x-3.5 py-2 px-3 rounded-xl text-sm
-                                text-(--color-dark-gray) dark:text-(--color-light) font-semibold
+                                class="hs-accordion-toggle w-full flex items-center gap-x-3.5 py-3 px-3 rounded-xl text-sm
+                                text-(--color-dark-gray) dark:text-(--color-light) font-semibold cursor-pointer
                                hover:bg-(--color-gray)/50 hover:text-(--color-primary) dark:hover:text-(--color-secondary)">
 
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>

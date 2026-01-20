@@ -9,6 +9,8 @@
 
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
+
+    @stack('styles')
 </head>
 
 <body x-data="customToast()" class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
@@ -26,6 +28,8 @@
 
     {{-- Js classVite --}}
     @vite(['resources/js/app.js'])
+
+    @stack('scripts')
 </body>
 
 </html>

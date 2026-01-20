@@ -9,6 +9,8 @@
 
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
+
+    @stack('styles')
 </head>
 
 <body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
@@ -37,6 +39,8 @@
 
     {{-- Js Vite --}}
     @vite(['resources/js/app.js'])
+
+    @stack('scripts')
 </body>
 
 </html>
