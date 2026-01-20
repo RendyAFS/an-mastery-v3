@@ -13,7 +13,7 @@
 
 <body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
     {{-- Sidebar --}}
-    @include('components.sidebar')
+    <x-sidebar />
 
     {{-- Main Content Area --}}
     <div class="transition-all duration-300 lg:ms-64 hs-overlay-minified:lg:ms-14">

@@ -46,7 +46,7 @@
                             class="text-xs
                             text-(--color-dark-gray)
                             dark:text-(--color-gray)">
-                            {{ Auth::user()->role->name ?? 'User' }}
+                            {{ Auth::user()->getRoleNames()->implode(', ') ?? 'Unknown' }}
                         </p>
                     </div>
 
