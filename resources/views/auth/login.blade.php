@@ -27,11 +27,12 @@
                                     bg-(--color-light) text-(--color-dark)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)" @error('email') class="border-(--color-red)" @enderror
-                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
+                                    placeholder-(--color-gray)"
+                                    @error('email') class="border-(--color-red)" @enderror placeholder="Enter Email / Name"
+                                    value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                                    <i data-lucide="mail" class="text-(--color-primary)/80 w-5 h-5"></i>
+                                    <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
                                 </div>
                             </div>
                             @error('email')
@@ -51,14 +52,14 @@
                                         bg-(--color-light) text-(--color-dark)
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
-                                        disabled:opacity-50 disabled:pointer-events-none" @error('password') class="border-(--color-red)" @enderror
-                                    placeholder="Enter Password">
+                                        disabled:opacity-50 disabled:pointer-events-none"
+                                    @error('password') class="border-(--color-red)" @enderror placeholder="Enter Password">
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70
                                         hover:text-(--color-primary) transition cursor-pointer">
-                                    <i x-show="!show" data-lucide="eye-off" class="w-5 h-5"></i>
-                                    <i x-show="show" data-lucide="eye" class="w-5 h-5"></i>
+                                    <i x-show="!show" data-lucide="eye-off" class="size-5"></i>
+                                    <i x-show="show" data-lucide="eye" class="size-5"></i>
                                 </button>
                             </div>
                             @error('password')
@@ -90,7 +91,7 @@
                         <x-button-loading type="submit" text="Sign in" loadingText="Signing in..."
                             color="bg-(--color-primary) hover:bg-(--color-gray)"
                             textColor="text-(--color-light) hover:text-(--color-dark)" size="w-full py-2.5 px-4 text-[15px]"
-                            rounded="rounded-md" class="cursor-pointer"/>
+                            rounded="rounded-md" class="cursor-pointer" />
                     </div>
                 </form>
             </div>

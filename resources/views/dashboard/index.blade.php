@@ -1,6 +1,5 @@
-<h1>Welcome {{ Auth::user()->name ?? 'Guest'}}</h1>
+@extends('layouts.main', ['title' => 'Dashboard'])
 
-<form action="{{ route('logout') }}" method="POST">
-    @csrf
-    <button type="submit">Logout</button>
-</form>
+@section('content')
+
+@endsection
