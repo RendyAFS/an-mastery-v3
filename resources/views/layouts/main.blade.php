@@ -30,7 +30,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+<body>
     {{-- Sidebar --}}
     <x-sidebar />
 
@@ -40,7 +40,9 @@
         @include('components.navbar')
 
         {{-- Content --}}
-        <main class="p-4 md:p-6 lg:p-8 min-h-screen bg-(--color-light-gray) dark:bg-(--color-dark)">
+        <main class="p-4 md:p-6 lg:p-8 min-h-screen
+            bg-(--color-light-gray) dark:bg-(--color-dark-slate)
+            text-(--color-dark) dark:text-(--color-light)">
             @yield('content')
         </main>
     </div>

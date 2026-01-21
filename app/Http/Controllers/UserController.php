@@ -12,6 +12,7 @@ class UserController extends Controller
     public function index()
     {
         //
+        return view('user.index');
     }
 
     /**
@@ -20,6 +21,7 @@ class UserController extends Controller
     public function create()
     {
         //
+        return view('user.create');
     }
 
     /**
@@ -44,6 +46,8 @@ class UserController extends Controller
     public function edit(string $id)
     {
         //
+        $user = \App\Models\User::findOrFail($id);
+        return view('user.edit', compact('user'));
     }
 
     /**

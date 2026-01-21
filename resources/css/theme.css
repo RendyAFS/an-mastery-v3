@@ -3,15 +3,22 @@
     --color-secondary : #f2e7d5;
     --color-dark      : #282b31;
     --color-light     : #f7f7f7;
-    /* Advance Color */
+    /* Notification Color */
     --color-red       : #e62727;
     --color-green     : #27e67d;
     --color-yellow    : #e6b327;
     --color-blue      : #27aae6;
+    /* Process Color */
+    --color-danger    : #d17b7b;
+    --color-success   : #66a76b;
+    --color-warning   : #dda565;
+    --color-info      : #73c2c5;
+    /* Advance Color */
     --color-gray      : #c0c0c0;
     --color-light-gray: #ececec;
     --color-dark-gray : #949494;
     --color-slate     : #4b5563;
+    --color-dark-slate: #373e47;
 }
 
 /* Custom Scrollbar */
