@@ -21,10 +21,13 @@ class SaveUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('user')?->id;
         return [
             'name'      => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:8',
+            'email'     => 'required|email|unique:users,email,' . $userId,
+            'password'  => $userId
+                ? 'nullable|string|min:8'
+                : 'required|string|min:8',
             'is_active' => 'nullable|boolean',
             'roles'     => 'nullable|array',
             'roles.*'   => 'nullable|exists:roles,id',

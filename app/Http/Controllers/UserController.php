@@ -2,67 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\User\SaveUserAction;
+use App\Http\Repositories\UserRepository;
+use App\Http\Requests\SaveUserRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected SaveUserAction $saveUserAction
+    ) {}
+
     public function index()
     {
-        //
-        return view('user.index');
+        $users = $this->userRepository->getAll();
+
+        return view('user.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
         return view('user.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(SaveUserRequest $request)
     {
-        //
+        $user = $this->saveUserAction->execute($request->validated());
+
+        return new UserResource($user);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-        $user = \App\Models\User::findOrFail($id);
         return view('user.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(SaveUserRequest $request, User $user)
     {
-        //
+        $user = $this->saveUserAction->execute(
+            $request->validated(),
+            $user
+        );
+
+        return new UserResource($user);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
     }
 }

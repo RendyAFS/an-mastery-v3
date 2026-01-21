@@ -28,21 +28,19 @@
                    rounded-b-xl py-3 px-4 md:px-5 flex gap-2
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
-                <button type="submit" data-action="save"
-                    class="px-4 py-2 text-sm font-semibold rounded-lg
-                       bg-(--color-success) text-(--color-light) cursor-pointer
-                       hover:opacity-90 transition">
-                    Save
-                </button>
+                <x-button-loading type="submit" text="Save" loadingText="Saving..."
+                    color="bg-(--color-success) hover:bg-(--color-success)"
+                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
+                    rounded="rounded-lg" class="cursor-pointer" />
 
-                <button type="button" data-action="save-another"
-                    class="py-2 px-4 flex items-center gap-x-2 cursor-pointer
-                        text-sm font-medium rounded-lg border border-(--color-gray) bg-(--color-light) text-(--color-primary)
-                        shadow-2xs hover:bg-(--color-light-gray) focus:outline-none focus:ring-2 focus:ring-(--color-primary)/30
-                        disabled:opacity-50 disabled:pointer-events-none transition dark:bg-(--color-dark) dark:border-(--color-slate)
-                        dark:text-(--color-light) dark:hover:bg-(--color-dark-slate)">
-                    Save & Create Another
-                </button>
+                <x-button-loading type="submit" text="Save & Create Another" loadingText="Saving..."
+                    color="bg-(--color-light) hover:bg-(--color-light-gray)"
+                    textColor="text-(--color-primary) hover:text-(--color-light) dark:text-(--color-light)" size="py-2 px-4 text-sm"
+                    rounded="rounded-lg"
+                    class="flex items-center gap-x-2 cursor-pointer
+                    border border-(--color-gray) dark:bg-(--color-dark)
+                    dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"
+                    data-action="save-another" />
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg

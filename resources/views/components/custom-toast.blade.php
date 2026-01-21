@@ -1,13 +1,17 @@
-<div x-data="customToast()" x-init="document.addEventListener('toast', (e) => { show(e.detail.message, e.detail.type, e.detail.timeout, e.detail.title) })" class="fixed top-5 right-5 z-50 flex flex-col items-end space-y-3">
+@props([
+    'top' => 'top-22',
+    'right' => 'right-4',
+])
+
+<div x-data="customToast()" x-init="document.addEventListener('toast', (e) => { show(e.detail.message, e.detail.type, e.detail.timeout, e.detail.title) })"
+    class="fixed {{ $top }} {{ $right }} z-50 flex flex-col gap-3 w-max max-w-xs">
     <template x-for="toast in toasts" :key="toast.id">
         <div x-show="toast.show" @mouseenter="pause(toast.id)" @mouseleave="resume(toast.id)"
             x-transition:enter="transition transform ease-out duration-300"
             x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition transform ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-3"
-            class="w-max max-w-xs rounded-xl shadow-lg
-                    bg-(--color-light) dark:bg-(--color-dark)
-                    border border-(--color-dark) dark:border-(--color-gray)"
+            class="w-80 rounded-xl shadow-lg bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray)"
             role="alert">
 
             <div class="flex items-start gap-3 px-6 py-4">
@@ -22,9 +26,9 @@
 
                 <!-- Close Button -->
                 <button @click="remove(toast.id)"
-                    class="ms-3 p-2 rounded-full text-(--color-dark) dark:text-(--color-light)
-                               hover:bg-(--color-gray)/30 transition ease-in-out duration-200 cursor-pointer">
-                    <i data-lucide="x" class="text-(--color-dark)/50 dark:text-(--color-light)/70 size-4"></i>
+                    class="ms-3 p-2 rounded-full text-(--color-dark) dark:text-(--color-light) bg-(--color-gray)/20
+                               hover:bg-(--color-gray)/40 transition ease-in-out duration-200 cursor-pointer">
+                    <i data-lucide="x" class="text-(--color-dark)/70 dark:text-(--color-light)/70 size-4"></i>
                 </button>
             </div>
         </div>
