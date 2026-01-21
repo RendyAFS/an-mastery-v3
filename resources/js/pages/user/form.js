@@ -1,25 +1,19 @@
 import ApiProvider from "@/utils/api-provider";
+import Toast from "@/utils/custom-toast";
 
 const PageScript = (function () {
     let form;
     let mode;
     let id;
-    let submitAction = "save";
 
     function bindEvents() {
         if (!form) return;
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            await submitForm(submitAction);
-            submitAction = "save";
-        });
 
-        const actionButtons = form.querySelectorAll("[data-action]");
-        actionButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                submitAction = btn.dataset.action;
-            });
+            const action = e.submitter?.dataset.action ?? "save";
+            await submitForm(action);
         });
     }
 
@@ -34,21 +28,18 @@ const PageScript = (function () {
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("users.store"), payload);
-
-                Toast.success("User berhasil dibuat");
-
                 if (action === "save-another") {
-                    form.reset();
+                    flashToast("success", "Success", "User Successfully Created");
+                    window.location.reload();
                     return;
                 }
-
+                flashToast("success", "Success", "User Successfully Created");
                 window.location.href = route("users.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(route("users.update", id), payload);
-
-                Toast.success("User berhasil diperbarui");
+                flashToast("success", "Success", "User Successfully Updated");
                 window.location.href = route("users.index");
             }
         } catch (error) {
@@ -68,7 +59,6 @@ const PageScript = (function () {
         },
     };
 })();
-
 
 $(function () {
     PageScript.init();

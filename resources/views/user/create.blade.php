@@ -35,7 +35,7 @@
                     Save
                 </button>
 
-                <button type="button" data-action="save-another"
+                <button type="submit" data-action="save-another"
                     class="py-2 px-4 flex items-center gap-x-2 cursor-pointer
                         text-sm font-medium rounded-lg border border-(--color-gray) bg-(--color-light) text-(--color-primary)
                         shadow-2xs hover:bg-(--color-light-gray) focus:outline-none focus:ring-2 focus:ring-(--color-primary)/30

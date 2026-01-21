@@ -79,12 +79,16 @@ const ApiProvider = {
         }
 
         switch (response.status) {
-            case 422: Toast.error(response.data.message || "Bad Request"); break;
             case 400: Toast.error(response.data.message || "Bad Request"); break;
+            case 401: Toast.error("Invalid Session").then(() => window.location.reload()); break;
+            case 402: Toast.error("Invalid Token").then(() => window.location.reload()); break;
+            case 403: Toast.error("Access Denied"); break;
             case 404: Toast.error("Data not found"); break;
             case 419: Toast.error("Page Expired. Refresh the page").then(() => window.location.reload()); break;
-            case 403: Toast.error("Access Denied"); break;
-            case 401: Toast.error("Invalid Session").then(() => window.location.reload()); break;
+            case 422: Toast.error(response.data.message || "Bad Request"); break;
+            case 429: Toast.error(response.data.message || "Too Many Requests"); break;
+            case 500: Toast.error(response.data.message || "Internal Server Error"); break;
+            case 503: Toast.error(response.data.message || "Service Unavailable"); break;
             default: Toast.error(response.status >= 500 ? "Internal Server Error" : "Unknown Error"); break;
         }
     },

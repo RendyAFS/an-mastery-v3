@@ -8,6 +8,8 @@ class UserRepository
 {
     public function getAll()
     {
-        return User::with('roles')->get();
+        return User::with('roles')
+            ->orderBy('id', 'desc')
+            ->get();
     }
 }
