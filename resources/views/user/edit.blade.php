@@ -28,12 +28,10 @@
                    rounded-b-xl py-3 px-4 md:px-5 flex gap-2
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
-                <button type="submit" data-action="update"
-                    class="px-4 py-2 text-sm font-semibold rounded-lg
-                       bg-(--color-success) text-(--color-light) cursor-pointer
-                       hover:opacity-90 transition">
-                    Save
-                </button>
+                <x-button-loading type="submit" text="Update" loadingText="Updating..."
+                    color="bg-(--color-success) hover:bg-(--color-success)"
+                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
+                    rounded="rounded-lg" class="cursor-pointer" />
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
