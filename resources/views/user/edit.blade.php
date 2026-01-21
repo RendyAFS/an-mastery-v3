@@ -5,5 +5,43 @@
 @endpush
 
 @section('content')
+    <form id="user-form" data-mode="edit" data-id="{{ $user->id }}" class="max-w-2xl mx-auto">
+        <div
+            class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
+               shadow-2xs rounded-xl
+               dark:bg-(--color-dark) dark:border-(--color-slate)">
 
+            {{-- Header --}}
+            <div class="p-4 md:p-5">
+                <h3 class="text-lg font-bold text-(--color-dark) dark:text-(--color-light)">
+                    Edit User
+                </h3>
+
+                <div class="mt-4">
+                    @include('user.form', ['user' => $user])
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div
+                class="bg-(--color-light) shadow-md
+                   rounded-b-xl py-3 px-4 md:px-5 flex gap-2
+                   dark:bg-(--color-dark) dark:border-(--color-slate)">
+
+                <button type="submit" data-action="update"
+                    class="px-4 py-2 text-sm font-semibold rounded-lg
+                       bg-(--color-success) text-(--color-light) cursor-pointer
+                       hover:opacity-90 transition">
+                    Save
+                </button>
+
+                <a href="{{ route('users.index') }}"
+                    class="px-4 py-2 text-sm font-semibold rounded-lg
+                       bg-(--color-dark-gray) text-(--color-light) cursor-pointer
+                       hover:opacity-90 transition">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    </form>
 @endsection

@@ -5,5 +5,5 @@
 @endpush
 
 @section('content')
-
+    
 @endsection
