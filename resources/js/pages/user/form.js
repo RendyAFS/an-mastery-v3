@@ -1,10 +1,9 @@
 import ApiProvider from "@/utils/api-provider";
-import Toast from "@/utils/custom-toast";
+import normalizeFormInputs from "@/utils/normalize-form";
+import { startLoading, stopLoading } from "@/utils/button-loading";
 
 const PageScript = (function () {
-    let form;
-    let mode;
-    let id;
+    let form, mode, id;
 
     function bindEvents() {
         if (!form) return;
@@ -12,14 +11,26 @@ const PageScript = (function () {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const action = e.submitter?.dataset.action ?? "save";
-            await submitForm(action);
+            const submitter = e.submitter;
+            const action = submitter?.dataset.action ?? "save";
+
+            if (submitter?.hasAttribute("data-button-loading")) {
+                startLoading(submitter);
+            }
+
+            await submitForm(action, submitter);
         });
     }
 
-    async function submitForm(action) {
+    function resetForm() {
+        form.reset();
+    }
+
+    async function submitForm(action, submitter) {
         const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
+        let payload = Object.fromEntries(formData.entries());
+
+        payload = normalizeFormInputs(form, payload);
 
         if (mode === "edit" && !payload.password) {
             delete payload.password;
@@ -28,11 +39,13 @@ const PageScript = (function () {
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("users.store"), payload);
+
                 if (action === "save-another") {
-                    flashToast("success", "Success", "User Successfully Created");
-                    window.location.reload();
+                    Toast.success("Success", "User Successfully Created");
+                    resetForm();
                     return;
                 }
+
                 flashToast("success", "Success", "User Successfully Created");
                 window.location.href = route("users.index");
             }
@@ -44,6 +57,8 @@ const PageScript = (function () {
             }
         } catch (error) {
             // error sudah ditangani ApiProvider
+        } finally {
+            stopLoading(submitter);
         }
     }
 

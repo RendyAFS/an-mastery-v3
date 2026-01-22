@@ -18,7 +18,7 @@
                 </h3>
 
                 <div class="mt-4">
-                    @include('user.form')
+                    @include('user.form', ['user' => null])
                 </div>
             </div>
 
