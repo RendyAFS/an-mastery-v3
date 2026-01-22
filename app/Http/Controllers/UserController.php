@@ -18,6 +18,8 @@ class UserController extends Controller
 
     public function index()
     {
+        $this->authorize('users.view');
+
         $users = $this->userRepository->getAll();
 
         return view('user.index', compact('users'));
@@ -25,11 +27,15 @@ class UserController extends Controller
 
     public function create()
     {
+        $this->authorize('users.create');
+
         return view('user.create');
     }
 
     public function store(SaveUserRequest $request)
     {
+        $this->authorize('users.store');
+
         $user = $this->saveUserAction->execute($request->validated());
 
         return new UserResource($user);
@@ -37,21 +43,24 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $this->authorize('users.edit');
+
         return view('user.edit', compact('user'));
     }
 
     public function update(SaveUserRequest $request, User $user)
     {
-        $user = $this->saveUserAction->execute(
-            $request->validated(),
-            $user
-        );
+        $this->authorize('users.update');
+
+        $user = $this->saveUserAction->execute($request->validated(), $user);
 
         return new UserResource($user);
     }
 
     public function destroy(User $user)
     {
+        $this->authorize('users.delete');
+
         $user->delete();
 
         return response()->json([
