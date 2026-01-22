@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -16,25 +15,52 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Role::firstOrCreate([
+        $superAdminRole = Role::firstOrCreate([
             'name' => 'Super Admin',
             'guard_name' => 'web',
         ]);
 
-        $permissions = Permission::pluck('name')->toArray();
+        $allPermissions = Permission::pluck('name')->toArray();
+        $superAdminRole->syncPermissions($allPermissions);
 
-        $role->syncPermissions($permissions);
+        $superAdmin = User::firstOrCreate([
+            'email' => 'rendy@gmail.com',
+        ], [
+            'name' => 'Rendy',
+            'password' => Hash::make('qawsedrf'),
+            'email_verified_at' => now(),
+            'is_active' => 1,
+        ]);
 
-        $user = User::firstOrCreate(
-            [
-                'email' => 'rendy@gmail.com',
-                'email_verified_at' => now(),
-                'name'              => 'Rendy',
-                'password'          => Hash::make('qawsedrf'),
-                'is_active'         => 1,
-            ]
-        );
+        $superAdmin->assignRole($superAdminRole);
 
-        $user->assignRole($role);
+        $adminRole = Role::firstOrCreate([
+            'name' => 'Admin',
+            'guard_name' => 'web',
+        ]);
+
+        $adminPermissions = Permission::whereIn('name', [
+            'dashboard.view',
+            'users.view',
+            'users.create',
+            'users.read',
+            'users.update',
+            'users.delete',
+            'users.restore',
+            'users.forceDelete',
+        ])->get()->pluck('name')->toArray();
+
+        $adminRole->syncPermissions($adminPermissions);
+
+        $adminUser = User::firstOrCreate([
+            'email' => 'edo@gmail.com',
+        ], [
+            'name' => 'Edo',
+            'password' => Hash::make('qawsedrf'),
+            'email_verified_at' => now(),
+            'is_active' => 1,
+        ]);
+
+        $adminUser->assignRole($adminRole);
     }
 }

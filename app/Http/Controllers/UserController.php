@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function store(SaveUserRequest $request)
     {
-        $this->authorize('users.store');
+        $this->authorize('users.create');
 
         $user = $this->saveUserAction->execute($request->validated());
 
@@ -43,7 +43,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $this->authorize('users.edit');
+        $this->authorize('users.read');
 
         return view('user.edit', compact('user'));
     }

@@ -17,7 +17,7 @@ class MenuPermissionSeeder extends Seeder
         'update',
         'delete',
         'restore',
-        'force_delete',
+        'forceDelete',
     ];
 
     protected array $validMenuIds = [];
