@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'name'              => 'Rendy',
                 'password'          => Hash::make('qawsedrf'),
-                'is_active'         => true,
+                'is_active'         => 1,
             ]
         );
 

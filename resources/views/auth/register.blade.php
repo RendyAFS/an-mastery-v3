@@ -1,10 +1,14 @@
 @extends('layouts.auth', ['title' => 'Register'])
 
+@push('scripts')
+    @vite('resources/js/pages/auth/auth-form.js')
+@endpush
+
 @section('content')
     <div class="h-screen">
         <div class="grid lg:grid-cols-5 md:grid-cols-2 items-center gap-y-4 h-full">
             <div class="md:col-span-2 w-full p-8 max-w-lg max-md:max-w-lg mx-auto max-h-screen overflow-auto">
-                <form action="{{ route('register') }}" method="POST">
+                <form action="{{ route('register') }}" method="POST" data-auth-form>
                     @csrf
                     <div class="mb-8">
                         <div class="flex justify-between items-center">
@@ -32,9 +36,9 @@
                                     bg-(--color-light) text-(--color-dark)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)"
-                                    @error('name') class="border-(--color-red)" @enderror placeholder="Enter Name"
-                                    value="{{ old('name') }}">
+                                    placeholder-(--color-gray)
+                                    @error('name') border-(--color-red) @enderror"
+                                    placeholder="Enter Name" value="{{ old('name') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -54,9 +58,9 @@
                                     bg-(--color-light) text-(--color-dark)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)"
-                                    @error('email') class="border-(--color-red)" @enderror placeholder="Enter Email / Name"
-                                    value="{{ old('email') }}">
+                                    placeholder-(--color-gray)
+                                    @error('email') border-(--color-red) @enderror"
+                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -78,8 +82,9 @@
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) text-(--color-dark)
                                            border border-(--color-primary) rounded-lg sm:text-sm
-                                           focus:border-(--color-primary) focus:ring-(--color-primary)"
-                                    @error('password') class="border-(--color-red)" @enderror placeholder="Create password">
+                                           focus:border-(--color-primary) focus:ring-(--color-primary)
+                                    @error('password') border-(--color-red) @enderror"
+                                    placeholder="Create password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
@@ -103,8 +108,8 @@
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) text-(--color-dark)
                                            border border-(--color-primary) rounded-lg sm:text-sm
-                                           focus:border-(--color-primary) focus:ring-(--color-primary)"
-                                    @error('password_confirmation') class="border-(--color-red)" @enderror
+                                           focus:border-(--color-primary) focus:ring-(--color-primary)
+                                    @error('password_confirmation') border-(--color-red) @enderror"
                                     placeholder="Repeat password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"

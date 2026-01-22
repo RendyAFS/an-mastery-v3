@@ -1,6 +1,5 @@
 import axios from "axios";
 import Loading from "@/utils/loading";
-import Toast from "@/utils/custom-toast";
 
 const metaToken = document.querySelector('meta[name="csrf-token"]');
 const csrfToken = metaToken ? metaToken.getAttribute("content") : "";
@@ -71,25 +70,49 @@ const ApiProvider = {
     handleAxiosError(error) {
         const response = error.response;
 
-        console.error("api_provider_error", error);
-
         if (!response) {
-            Toast.error("Network Error or Server Down");
+            Toast.error("Error", "Network Error or Server Down");
             return;
         }
 
         switch (response.status) {
-            case 400: Toast.error(response.data.message || "Bad Request"); break;
-            case 401: Toast.error("Invalid Session").then(() => window.location.reload()); break;
-            case 402: Toast.error("Invalid Token").then(() => window.location.reload()); break;
-            case 403: Toast.error("Access Denied"); break;
-            case 404: Toast.error("Data not found"); break;
-            case 419: Toast.error("Page Expired. Refresh the page").then(() => window.location.reload()); break;
-            case 422: Toast.error(response.data.message || "Bad Request"); break;
-            case 429: Toast.error(response.data.message || "Too Many Requests"); break;
-            case 500: Toast.error(response.data.message || "Internal Server Error"); break;
-            case 503: Toast.error(response.data.message || "Service Unavailable"); break;
-            default: Toast.error(response.status >= 500 ? "Internal Server Error" : "Unknown Error"); break;
+            case 401:
+                Toast.error("Error", "Invalid Session");
+                setTimeout(() => window.location.reload(), 4000);
+                break;
+
+            case 403:
+                Toast.error("Error", "Access Denied");
+                break;
+
+            case 404:
+                Toast.error("Error", "Data not found");
+                break;
+
+            case 419:
+                Toast.error("Error", "Page Expired. Refreshing...");
+                setTimeout(() => window.location.reload(), 4000);
+                break;
+
+            case 422:
+                if (response.data.errors) {
+                    Object.values(response.data.errors)
+                        .flat()
+                        .forEach((msg) => {
+                            Toast.error("Validation Error", msg, 4000);
+                        });
+                } else {
+                    Toast.error("Validation Error", response.data.message);
+                }
+                break;
+
+            case 500:
+                Toast.error("Server Error", "Internal Server Error");
+                break;
+
+            default:
+                Toast.error("Error", response.data.message || "Unknown Error");
+                break;
         }
     },
 };

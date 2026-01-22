@@ -7,22 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'AN Mastery' }}</title>
 
-    {{-- Check Theme --}}
-    <script>
-        (() => {
-            const html = document.documentElement;
-            const stored = localStorage.getItem('hs_theme') || 'auto';
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            if (stored === 'dark' || (stored === 'auto' && prefersDark)) {
-                html.classList.add('dark');
-                html.classList.remove('light');
-            } else {
-                html.classList.add('light');
-                html.classList.remove('dark');
-            }
-        })();
-    </script>
+    {{-- Init Theme --}}
+    <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
 
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
@@ -31,7 +17,7 @@
 </head>
 
 <body>
-    <x-custom-toast top="top-22" right="right-4" align="align-end"/>
+    <x-custom-toast top="top-22" right="right-4" align="align-end" />
     {{-- Sidebar --}}
     <x-sidebar />
 
@@ -41,7 +27,8 @@
         @include('components.navbar')
 
         {{-- Content --}}
-        <main class="p-4 md:p-6 lg:p-8 min-h-screen
+        <main
+            class="p-4 md:p-6 lg:p-8 min-h-screen
             bg-(--color-light-gray) dark:bg-(--color-dark-slate)
             text-(--color-dark) dark:text-(--color-light)">
             @yield('content')

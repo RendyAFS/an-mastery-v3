@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: ['log-viewer/*']);
         $middleware->alias([
-            'role.custom' => \App\Http\Middleware\RoleMiddleware::class,
+            'check.active' => \App\Http\Middleware\CheckActiveAndPermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

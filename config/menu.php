@@ -4,7 +4,7 @@ return [
     [
         'name'        => 'Dashboard',
         'icon'        => 'home',
-        'url'         => 'dashboard',
+        'url'         => '/dashboard',
         'permissions' => ['view'],
     ],
 
@@ -14,8 +14,12 @@ return [
         'url'  => '#access-management',
         'children' => [
             [
+                'name' => 'Users',
+                'url'  => '/users',
+            ],
+            [
                 'name' => 'Roles',
-                'url'  => 'roles',
+                'url'  => '/roles',
             ],
         ],
     ],
