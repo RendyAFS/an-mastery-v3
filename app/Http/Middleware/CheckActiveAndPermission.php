@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckActiveAndPermission
 {
-    public function handle(Request $request, Closure $next, ...$permissions)
+    public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
 
@@ -21,10 +21,6 @@ class CheckActiveAndPermission
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             abort(403, 'Your account is inactive.');
-        }
-
-        if ($permissions && !$user->hasAnyPermission($permissions)) {
-            abort(403, 'You do not have permission to access this page.');
         }
 
         return $next($request);

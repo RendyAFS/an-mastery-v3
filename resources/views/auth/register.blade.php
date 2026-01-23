@@ -2,6 +2,23 @@
 
 @push('scripts')
     @vite('resources/js/pages/auth/auth-form.js')
+    @if ($errors->any())
+        <script>
+            const errors = @json($errors->all());
+
+            errors.forEach((msg, i) => {
+                sessionStorage.setItem(
+                    "flash_toast_" + i,
+                    JSON.stringify({
+                        type: "error",
+                        title: "Register Failed",
+                        message: msg,
+                        timeout: 5000
+                    })
+                );
+            });
+        </script>
+    @endif
 @endpush
 
 @section('content')
@@ -33,7 +50,7 @@
                             <div class="relative">
                                 <input type="text" name="name" id="name" autocomplete="name"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                    bg-(--color-light) text-(--color-dark)
+                                    bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)
@@ -55,7 +72,7 @@
                             <div class="relative">
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                    bg-(--color-light) text-(--color-dark)
+                                    bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)
@@ -80,7 +97,7 @@
                                 <input :type="show ? 'text' : 'password'" name="password" id="password"
                                     autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
-                                           bg-(--color-light) text-(--color-dark)
+                                           bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                            border border-(--color-primary) rounded-lg sm:text-sm
                                            focus:border-(--color-primary) focus:ring-(--color-primary)
                                     @error('password') border-(--color-red) @enderror"
@@ -106,7 +123,7 @@
                                 <input :type="show ? 'text' : 'password'" name="password_confirmation"
                                     id="password_confirmation" autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
-                                           bg-(--color-light) text-(--color-dark)
+                                           bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                            border border-(--color-primary) rounded-lg sm:text-sm
                                            focus:border-(--color-primary) focus:ring-(--color-primary)
                                     @error('password_confirmation') border-(--color-red) @enderror"

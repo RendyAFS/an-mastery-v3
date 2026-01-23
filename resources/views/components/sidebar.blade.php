@@ -1,5 +1,5 @@
 <div id="hs-sidebar-content-push"
-    class="hs-overlay [--auto-close:lg] hs-overlay-minified:w-14 lg:block lg:translate-x-0 w-64
+    class="hs-overlay [--auto-close:lg] hs-overlay-minified:w-14 lg:block lg:translate-x-0 w-65
            hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform h-full fixed top-0 start-0 bottom-0 z-60
            bg-(--color-light) dark:bg-(--color-dark) border-e border-(--color-gray)/20"
     role="dialog" tabindex="-1" aria-label="Sidebar">
@@ -79,19 +79,23 @@
                             <div class="hs-accordion-content {{ $isOpen ? '' : 'hidden' }}">
                                 <ul class="mt-1 ps-7 space-y-1 hs-overlay-minified:hidden">
                                     @foreach ($menu->children as $child)
-                                        @can($child->permission)
+                                        @php
+                                            $childPermissions = $child->permissions->pluck('name')->toArray();
+                                        @endphp
+
+                                        @if (empty($childPermissions) || auth()->user()->canAny($childPermissions))
                                             <li>
                                                 <a href="{{ $child->url }}"
-                                                    class="block py-2 px-3 rounded-xl text-sm transition duration-300 ease-in-outfont-semibold
+                                                    class="block py-2 px-3 rounded-xl text-sm transition duration-300 ease-in-out font-semibold
                                                     {{ request()->is(trim($child->url, '/') . '*')
                                                         ? 'bg-(--color-primary) text-(--color-light)'
-                                                        : 'text-(--color-dark-gray) dark:text-(--color-light)' }}
-                                                    hover:bg-(--color-gray)/50 hover:text-(--color-primary) dark:hover:text-(--color-light)">
+                                                        : 'text-(--color-dark-gray) dark:text-(--color-light)' }}">
                                                     {{ $child->name }}
                                                 </a>
                                             </li>
-                                        @endcan
+                                        @endif
                                     @endforeach
+
                                 </ul>
                             </div>
                         </li>

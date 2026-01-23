@@ -2,6 +2,23 @@
 
 @push('scripts')
     @vite('resources/js/pages/auth/auth-form.js')
+    @if ($errors->any())
+        <script>
+            const errors = @json($errors->all());
+
+            errors.forEach((msg, i) => {
+                sessionStorage.setItem(
+                    "flash_toast_" + i,
+                    JSON.stringify({
+                        type: "error",
+                        title: "Login Failed",
+                        message: msg,
+                        timeout: 5000
+                    })
+                );
+            });
+        </script>
+    @endif
 @endpush
 
 @section('content')
@@ -28,12 +45,12 @@
                             <div class="relative">
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                    bg-(--color-light) text-(--color-dark)
+                                    bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)
-                                    @error('email') border-(--color-red) @enderror" placeholder="Enter Email / Name"
-                                    value="{{ old('email') }}">
+                                    @error('email') border-(--color-red) @enderror"
+                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -53,11 +70,12 @@
                                 <input :type="show ? 'text' : 'password'" name="password" id="password"
                                     autocomplete="password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                        bg-(--color-light) text-(--color-dark)
+                                        bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
                                         disabled:opacity-50 disabled:pointer-events-none
-                                    @error('password') border-(--color-red) @enderror" placeholder="Enter Password">
+                                    @error('password') border-(--color-red) @enderror"
+                                    placeholder="Enter Password">
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70

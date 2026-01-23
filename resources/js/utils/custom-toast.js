@@ -151,18 +151,21 @@ window.flashToast = function (type, title = null, message, timeout = 4000) {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const flash = sessionStorage.getItem("flash_toast");
+    Object.keys(sessionStorage)
+        .filter((key) => key.startsWith("flash_toast"))
+        .forEach((key) => {
+            const { type, title, message, timeout } = JSON.parse(
+                sessionStorage.getItem(key),
+            );
 
-    if (!flash) return;
+            setTimeout(() => {
+                if (window.Toast?.[type]) {
+                    window.Toast[type](title, message, timeout);
+                }
+            }, 350);
 
-    const { type, title, message, timeout } = JSON.parse(flash);
-    setTimeout(() => {
-        if (window.Toast?.[type]) {
-            window.Toast[type](title, message, timeout);
-        }
-    }, 350);
-
-    sessionStorage.removeItem("flash_toast");
+            sessionStorage.removeItem(key);
+        });
 });
 
 Alpine.data("customToast", customToast);
