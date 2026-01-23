@@ -26,11 +26,7 @@ class MenuPermissionSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
-
-            $menus = config('menu');
-
-            $this->syncMenus($menus);
-
+            $this->syncMenus(config('menu'));
             $this->cleanupMenus();
             $this->cleanupPermissions();
             $this->cleanupRolePermissions();
@@ -62,7 +58,9 @@ class MenuPermissionSeeder extends Seeder
                 $permissions = self::DEFAULT_PERMISSION;
             }
 
-            if (!empty($permissions) && isset($item['url'])) {
+            if (!empty($permissions) && isset($item['url']) && !isset($item['children'])) {
+
+                $permissionNames = [];
 
                 $prefix = Str::of($item['url'])
                     ->trim('/')
@@ -75,13 +73,15 @@ class MenuPermissionSeeder extends Seeder
                         ['name' => $name, 'guard_name' => 'web']
                     );
 
+                    $permissionNames[] = $name;
                     $this->validPermissionNames[] = $name;
                 }
 
-                $permissionIds = Permission::whereIn('name', $this->validPermissionNames)
-                    ->pluck('id');
-
-                $menu->permissions()->sync($permissionIds);
+                $menu->permissions()->sync(
+                    Permission::whereIn('name', $permissionNames)->pluck('id')
+                );
+            } else {
+                $menu->permissions()->detach();
             }
 
             if (isset($item['children'])) {

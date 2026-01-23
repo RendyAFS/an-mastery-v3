@@ -2,6 +2,19 @@
 
 @push('scripts')
     @vite('resources/js/pages/auth/auth-form.js')
+    @if ($errors->has('email'))
+        <script>
+            sessionStorage.setItem(
+                "flash_toast",
+                JSON.stringify({
+                    type: "error",
+                    title: "Login Failed",
+                    message: @json($errors->first('email')),
+                    timeout: 5000
+                })
+            );
+        </script>
+    @endif
 @endpush
 
 @section('content')
@@ -32,8 +45,8 @@
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)
-                                    @error('email') border-(--color-red) @enderror" placeholder="Enter Email / Name"
-                                    value="{{ old('email') }}">
+                                    @error('email') border-(--color-red) @enderror"
+                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -57,7 +70,8 @@
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
                                         disabled:opacity-50 disabled:pointer-events-none
-                                    @error('password') border-(--color-red) @enderror" placeholder="Enter Password">
+                                    @error('password') border-(--color-red) @enderror"
+                                    placeholder="Enter Password">
 
                                 <button type="button" @click="show = !show"
                                     class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70

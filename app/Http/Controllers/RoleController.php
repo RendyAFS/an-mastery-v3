@@ -11,6 +11,8 @@ class RoleController extends Controller
      */
     public function index()
     {
+        $this->authorize('role.view');
+
         return view('role.index');
     }
 
@@ -19,6 +21,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $this->authorize('role.create');
         //
     }
 
@@ -27,6 +30,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('role.create');
         //
     }
 
@@ -35,6 +39,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
+        $this->authorize('role.read');
         //
     }
 
@@ -43,6 +48,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('role.update');
         //
     }
 
@@ -51,6 +57,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('role.update');
         //
     }
 
@@ -59,6 +66,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('role.delete');
         //
     }
 }
