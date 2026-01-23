@@ -35,7 +35,7 @@
 
                 <x-button-loading type="submit" text="Save & Create Another" loadingText="Saving..."
                     color="bg-(--color-light) hover:bg-(--color-light-gray)"
-                    textColor="text-(--color-primary) hover:text-(--color-light) dark:text-(--color-light)" size="py-2 px-4 text-sm"
+                    textColor="text-(--color-primary) hover:text-(--color-primary) dark:text-(--color-light) dark:hover:text-(--color-light)" size="py-2 px-4 text-sm"
                     rounded="rounded-lg"
                     class="flex items-center gap-x-2 cursor-pointer
                     border border-(--color-gray) dark:bg-(--color-dark)
@@ -44,7 +44,7 @@
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
-                       bg-(--color-dark-gray) text-(--color-light) cursor-pointer
+                       bg-(--color-danger) text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">
                     Cancel
                 </a>

@@ -2,17 +2,21 @@
 
 @push('scripts')
     @vite('resources/js/pages/auth/auth-form.js')
-    @if ($errors->has('email'))
+    @if ($errors->any())
         <script>
-            sessionStorage.setItem(
-                "flash_toast",
-                JSON.stringify({
-                    type: "error",
-                    title: "Login Failed",
-                    message: @json($errors->first('email')),
-                    timeout: 5000
-                })
-            );
+            const errors = @json($errors->all());
+
+            errors.forEach((msg, i) => {
+                sessionStorage.setItem(
+                    "flash_toast_" + i,
+                    JSON.stringify({
+                        type: "error",
+                        title: "Login Failed",
+                        message: msg,
+                        timeout: 5000
+                    })
+                );
+            });
         </script>
     @endif
 @endpush
@@ -41,7 +45,7 @@
                             <div class="relative">
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                    bg-(--color-light) text-(--color-dark)
+                                    bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                     border border-(--color-primary) rounded-lg sm:text-sm
                                     focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)
@@ -66,7 +70,7 @@
                                 <input :type="show ? 'text' : 'password'" name="password" id="password"
                                     autocomplete="password"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
-                                        bg-(--color-light) text-(--color-dark)
+                                        bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
                                         border border-(--color-primary) rounded-lg sm:text-sm
                                         focus:border-(--color-primary) focus:ring-(--color-primary)
                                         disabled:opacity-50 disabled:pointer-events-none

@@ -1,5 +1,5 @@
 <div id="hs-sidebar-content-push"
-    class="hs-overlay [--auto-close:lg] hs-overlay-minified:w-14 lg:block lg:translate-x-0 w-64
+    class="hs-overlay [--auto-close:lg] hs-overlay-minified:w-14 lg:block lg:translate-x-0 w-65
            hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform h-full fixed top-0 start-0 bottom-0 z-60
            bg-(--color-light) dark:bg-(--color-dark) border-e border-(--color-gray)/20"
     role="dialog" tabindex="-1" aria-label="Sidebar">

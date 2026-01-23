@@ -48,10 +48,10 @@
         lucide.createIcons();
     </script>
 
+    @stack('scripts')
+
     {{-- Js Vite --}}
     @vite(['resources/js/app.js'])
-
-    @stack('scripts')
 </body>
 
 </html>
