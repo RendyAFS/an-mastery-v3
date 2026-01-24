@@ -33,7 +33,7 @@
                     {{-- Avatar --}}
                     <img class="inline-block size-8 rounded-full
                         ring-2 ring-(--color-primary)"
-                        src="https://ui-avatars.com/api/?name=John+Doe&background=6d9886&color=fff" alt="Profile">
+                        src="{{ asset('assets/profile.png') }}" alt="Profile">
 
                     <div class="hidden sm:block text-left">
                         <p
