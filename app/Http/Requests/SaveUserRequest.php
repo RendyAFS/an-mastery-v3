@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class SaveUserRequest extends FormRequest
 {
@@ -25,9 +26,7 @@ class SaveUserRequest extends FormRequest
         return [
             'name'      => 'required|string|max:255',
             'email'     => 'required|email|unique:users,email,' . $userId,
-            'password'  => $userId
-                ? 'nullable|string|min:8'
-                : 'required|string|min:8',
+            'password'  => [ $userId ? 'nullable' : 'required', 'string', Password::min(8)->letters()->numbers(), 'confirmed' ],
             'is_active' => 'nullable|boolean',
             'roles'     => 'nullable|array',
             'roles.*'   => 'nullable|exists:roles,id',

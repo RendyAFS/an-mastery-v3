@@ -1,6 +1,5 @@
 @extends('layouts.main', ['title' => 'Dashboard'])
 
 @section('content')
-this dashboard
+    this dashboard
 @endsection
-

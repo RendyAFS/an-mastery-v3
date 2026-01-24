@@ -23,16 +23,19 @@
 
     {{-- Main Content Area --}}
     <div class="transition-all duration-300 lg:ms-64 hs-overlay-minified:lg:ms-14">
-        {{-- Navbar --}}
-        @include('components.navbar')
 
-        {{-- Content --}}
-        <main
-            class="p-4 md:p-6 lg:p-8 min-h-screen
-            bg-(--color-light-gray) dark:bg-(--color-dark-slate)
-            text-(--color-dark) dark:text-(--color-light)">
-            @yield('content')
-        </main>
+
+        <div class="min-h-screen flex flex-col">
+            @include('components.navbar')
+
+            <main
+                class="flex-1 px-10 py-8
+                bg-(--color-light-gray) dark:bg-(--color-dark-slate)
+                text-(--color-dark) dark:text-(--color-light)">
+                @yield('content')
+            </main>
+        </div>
+
     </div>
 
     @routes

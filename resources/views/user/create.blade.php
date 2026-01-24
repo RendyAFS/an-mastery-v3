@@ -5,14 +5,14 @@
 @endpush
 
 @section('content')
-    <form id="user-form" data-mode="create" class="max-w-2xl mx-auto">
+    <form id="user-form" data-mode="create" class="max-w-4xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl
                dark:bg-(--color-dark) dark:border-(--color-slate)">
 
             {{-- Header --}}
-            <div class="p-4 md:p-5">
+            <div class="p-4 md:p-5">    
                 <h3 class="text-lg font-bold text-(--color-dark) dark:text-(--color-light)">
                     Create User
                 </h3>

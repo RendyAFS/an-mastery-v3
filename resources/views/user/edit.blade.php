@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="user-form" data-mode="edit" data-id="{{ $user->id }}" class="max-w-2xl mx-auto">
+    <form id="user-form" data-mode="edit" data-id="{{ $user->id }}" class="max-w-4xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl

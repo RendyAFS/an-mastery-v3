@@ -6,6 +6,7 @@ use App\Actions\User\SaveUserAction;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,9 @@ class UserController extends Controller
     {
         $this->authorize('users.create');
 
-        return view('user.create');
+        $roles = $this->userRepository->getRoles();
+
+        return view('user.create', compact('roles'));
     }
 
     public function store(SaveUserRequest $request)
@@ -45,7 +48,9 @@ class UserController extends Controller
     {
         $this->authorize('users.update');
 
-        return view('user.edit', compact('user'));
+        $roles = $this->userRepository->getRoles();
+
+        return view('user.edit', compact('user', 'roles'));
     }
 
     public function update(SaveUserRequest $request, User $user)
