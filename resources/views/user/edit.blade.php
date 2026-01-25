@@ -29,13 +29,13 @@
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
                 <x-button-loading type="submit" text="Update" loadingText="Updating..."
-                    color="bg-(--color-success) hover:bg-(--color-success)"
+                    color="bg-(--color-success) hover:bg-(--color-success)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
-                       bg-(--color-dark-gray) text-(--color-light) cursor-pointer
+                       bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">
                     Cancel
                 </a>
