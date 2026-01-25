@@ -10,6 +10,9 @@
     {{-- Init Theme --}}
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
 
+    {{-- styles --}}
+    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
+
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
 
@@ -41,11 +44,9 @@
     @routes
 
     {{-- Scripts --}}
-    {{-- jquery --}}
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-    {{-- block ui --}}
     <script src="{{ asset('js/blockUi.js') }}"></script>
-    {{-- lucide --}}
+    <script src="{{ asset('js/dataTables.min.js') }}"></script>
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
     <script>
         lucide.createIcons();
