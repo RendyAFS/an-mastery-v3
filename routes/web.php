@@ -8,6 +8,11 @@ Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->n
 Route::middleware(['auth', 'check.active'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+    // Profile
+    Route::get('/profile', [App\Http\Controllers\MyProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [App\Http\Controllers\MyProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [App\Http\Controllers\MyProfileController::class, 'updatePassword'])->name('profile.update-password');
+
     // Users
     Route::resource('users', App\Http\Controllers\UserController::class)->names('users');
 

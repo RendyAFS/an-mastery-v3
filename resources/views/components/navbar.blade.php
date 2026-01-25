@@ -77,7 +77,7 @@
                         </p>
                     </div>
 
-                    <a href="#"
+                    <a href="{{ route('profile.index') }}"
                         class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
                         text-(--color-dark)
                         dark:text-(--color-gray)

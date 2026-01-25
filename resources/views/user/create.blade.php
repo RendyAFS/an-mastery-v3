@@ -12,7 +12,7 @@
                dark:bg-(--color-dark) dark:border-(--color-slate)">
 
             {{-- Header --}}
-            <div class="p-4 md:p-5">    
+            <div class="p-4 md:p-5">
                 <h3 class="text-lg font-bold text-(--color-dark) dark:text-(--color-light)">
                     Create User
                 </h3>
@@ -29,7 +29,7 @@
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
                 <x-button-loading type="submit" text="Save" loadingText="Saving..."
-                    color="bg-(--color-success) hover:bg-(--color-success)"
+                    color="bg-(--color-success) hover:bg-(--color-success)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
@@ -44,7 +44,7 @@
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
-                       bg-(--color-danger) text-(--color-light) cursor-pointer
+                       bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">
                     Cancel
                 </a>

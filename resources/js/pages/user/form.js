@@ -45,7 +45,7 @@ const PageScript = (function () {
                     resetForm();
                     return;
                 }
-                
+
                 flashToast("success", "Success", "User Successfully Created");
                 window.location.href = route("users.index");
             }

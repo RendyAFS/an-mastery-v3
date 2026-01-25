@@ -1,8 +1,6 @@
 import Alpine from "alpinejs";
 
 function customToast() {
-    let lucideInitialized = false;
-
     return {
         toasts: [],
         counter: 0,
@@ -44,9 +42,8 @@ function customToast() {
                 toast.show = true;
                 this.startTimer(toast);
 
-                if (window.lucide && !lucideInitialized) {
+                if (window.lucide) {
                     window.lucide.createIcons();
-                    lucideInitialized = true;
                 }
             });
         },
@@ -93,22 +90,30 @@ function customToast() {
 window.Toast = {
     success(title = null, message, timeout = 4000) {
         document.dispatchEvent(
-            new CustomEvent("toast", { detail: { type: "success", title, message, timeout, }, }),
+            new CustomEvent("toast", {
+                detail: { type: "success", title, message, timeout },
+            }),
         );
     },
     error(title = null, message, timeout = 4000) {
         document.dispatchEvent(
-            new CustomEvent("toast", { detail: { type: "error", title, message, timeout, }, }),
+            new CustomEvent("toast", {
+                detail: { type: "error", title, message, timeout },
+            }),
         );
     },
     info(title = null, message, timeout = 4000) {
         document.dispatchEvent(
-            new CustomEvent("toast", { detail: { type: "info", title, message, timeout, }, }),
+            new CustomEvent("toast", {
+                detail: { type: "info", title, message, timeout },
+            }),
         );
     },
     warning(title = null, message, timeout = 4000) {
         document.dispatchEvent(
-            new CustomEvent("toast", { detail: { type: "warning", title, message, timeout, }, }),
+            new CustomEvent("toast", {
+                detail: { type: "warning", title, message, timeout },
+            }),
         );
     },
 };
@@ -116,7 +121,7 @@ window.Toast = {
 window.flashToast = function (type, title = null, message, timeout = 4000) {
     sessionStorage.setItem(
         "flash_toast",
-        JSON.stringify({ type, title, message, timeout, }),
+        JSON.stringify({ type, title, message, timeout }),
     );
 };
 
