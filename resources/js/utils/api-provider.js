@@ -80,20 +80,16 @@ const ApiProvider = {
                 Toast.error("Error", "Invalid Session");
                 setTimeout(() => window.location.reload(), 4000);
                 break;
-
             case 403:
                 Toast.error("Error", "Access Denied");
                 break;
-
             case 404:
                 Toast.error("Error", "Data not found");
                 break;
-
             case 419:
                 Toast.error("Error", "Page Expired. Refreshing...");
                 setTimeout(() => window.location.reload(), 4000);
                 break;
-
             case 422:
                 if (response.data.errors) {
                     Object.values(response.data.errors)
@@ -105,11 +101,9 @@ const ApiProvider = {
                     Toast.error("Validation Error", response.data.message);
                 }
                 break;
-
             case 500:
                 Toast.error("Server Error", "Internal Server Error");
                 break;
-
             default:
                 Toast.error("Error", response.data.message || "Unknown Error");
                 break;

@@ -104,7 +104,7 @@
                                     placeholder="Create password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
+                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80 cursor-pointer">
                                     <i x-show="!show" data-lucide="eye" class="size-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>
@@ -130,7 +130,7 @@
                                     placeholder="Repeat password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80">
+                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80 cursor-pointer">
                                     <i x-show="!show" data-lucide="eye" class="size-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>
