@@ -1,6 +1,8 @@
 import Alpine from "alpinejs";
 
 function customToast() {
+    let lucideInitialized = false;
+
     return {
         toasts: [],
         counter: 0,
@@ -42,8 +44,9 @@ function customToast() {
                 toast.show = true;
                 this.startTimer(toast);
 
-                if (window.lucide) {
+                if (window.lucide && !lucideInitialized) {
                     window.lucide.createIcons();
+                    lucideInitialized = true;
                 }
             });
         },
