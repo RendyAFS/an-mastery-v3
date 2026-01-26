@@ -7,13 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
 
+    {{-- Init Theme --}}
+    <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
+
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
+
+    @stack('styles')
 </head>
 
-<body x-data="customToast()" class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
-    <x-custom-toast />
-    @yield('content')
+<body>
+    <x-custom-toast top="top-5" right="right-4" align="align-end" />
+    <div class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+        @yield('content')
+    </div>
 
     @routes
 
@@ -23,6 +30,8 @@
         // lucide icons
         lucide.createIcons();
     </script>
+
+    @stack('scripts')
 
     {{-- Js classVite --}}
     @vite(['resources/js/app.js'])

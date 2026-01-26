@@ -5,26 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title }}</title>
+    <title>{{ $title ?? 'AN Mastery' }}</title>
+
+    {{-- Init Theme --}}
+    <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
+
+    {{-- styles --}}
+    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
 
     {{-- Styles Vite --}}
     @vite(['resources/css/app.css', 'resources/css/theme.css'])
+
+    @stack('styles')
 </head>
 
-<body class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
+<body>
+    <x-custom-toast top="top-22" right="right-4" align="align-end" />
+    {{-- Sidebar --}}
+    <x-sidebar />
 
-    @yield('content')
+    {{-- Main Content Area --}}
+    <div class="transition-all duration-300 lg:ms-64 hs-overlay-minified:lg:ms-14">
+
+
+        <div class="min-h-screen flex flex-col">
+            <x-navbar />
+            
+            <main
+                class="flex-1 px-10 py-8
+                bg-(--color-light-gray) dark:bg-(--color-dark-slate)
+                text-(--color-dark) dark:text-(--color-light)">
+                @yield('content')
+            </main>
+        </div>
+
+    </div>
 
     @routes
 
     {{-- Scripts --}}
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/blockUi.js') }}"></script>
+    <script src="{{ asset('js/dataTables.min.js') }}"></script>
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
     <script>
-        // lucide icons
         lucide.createIcons();
     </script>
 
-    {{-- Js classVite --}}
+    @stack('scripts')
+
+    {{-- Js Vite --}}
     @vite(['resources/js/app.js'])
 </body>
 

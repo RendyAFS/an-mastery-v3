@@ -19,7 +19,7 @@ function customToast() {
             error: "Error",
         },
 
-        show(message, type = "info", timeout = 3500, title = null) {
+        show(message, type = "info", timeout = 4000, title = null) {
             const id = ++this.counter;
             const start = Date.now();
 
@@ -75,49 +75,73 @@ function customToast() {
             const toast = this.toasts.find((t) => t.id === id);
             if (!toast) return;
 
-            if (toast.timer) {
-                clearTimeout(toast.timer);
-            }
+            if (toast.timer) clearTimeout(toast.timer);
 
             toast.show = false;
 
             setTimeout(() => {
                 this.toasts = this.toasts.filter((t) => t.id !== id);
+                if (toast.onClose) toast.onClose();
             }, 250);
         },
     };
 }
 
 window.Toast = {
-    success(message, title = null, timeout) {
+    success(title = null, message, timeout = 4000) {
         document.dispatchEvent(
             new CustomEvent("toast", {
-                detail: { message, type: "success", title, timeout },
+                detail: { type: "success", title, message, timeout },
             }),
         );
     },
-    info(message, title = null, timeout) {
+    error(title = null, message, timeout = 4000) {
         document.dispatchEvent(
             new CustomEvent("toast", {
-                detail: { message, type: "info", title, timeout },
+                detail: { type: "error", title, message, timeout },
             }),
         );
     },
-    warning(message, title = null, timeout) {
+    info(title = null, message, timeout = 4000) {
         document.dispatchEvent(
             new CustomEvent("toast", {
-                detail: { message, type: "warning", title, timeout },
+                detail: { type: "info", title, message, timeout },
             }),
         );
     },
-    error(message, title = null, timeout) {
+    warning(title = null, message, timeout = 4000) {
         document.dispatchEvent(
             new CustomEvent("toast", {
-                detail: { message, type: "error", title, timeout },
+                detail: { type: "warning", title, message, timeout },
             }),
         );
     },
 };
+
+window.flashToast = function (type, title = null, message, timeout = 4000) {
+    sessionStorage.setItem(
+        "flash_toast",
+        JSON.stringify({ type, title, message, timeout }),
+    );
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    Object.keys(sessionStorage)
+        .filter((key) => key.startsWith("flash_toast"))
+        .forEach((key) => {
+            const { type, title, message, timeout } = JSON.parse(
+                sessionStorage.getItem(key),
+            );
+
+            setTimeout(() => {
+                if (window.Toast?.[type]) {
+                    window.Toast[type](title, message, timeout);
+                }
+            }, 350);
+
+            sessionStorage.removeItem(key);
+        });
+});
 
 Alpine.data("customToast", customToast);
 Alpine.start();

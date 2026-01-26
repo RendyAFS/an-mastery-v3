@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
@@ -59,6 +58,12 @@ class FortifyServiceProvider extends ServiceProvider
             if (! $user) {
                 throw ValidationException::withMessages([
                     'email' => 'Email or username not found.',
+                ]);
+            }
+
+            if (is_null($user->is_active) || $user->is_active == 0) {
+                throw ValidationException::withMessages([
+                    'email' => 'Your account is inactive. Please contact administrator.',
                 ]);
             }
 

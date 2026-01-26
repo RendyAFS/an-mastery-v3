@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/forms";
 /* Toggling Manual Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));
 /* Preline UI */
