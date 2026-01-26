@@ -15,7 +15,7 @@
                 <div class="space-y-3 col-span-1">
                     <label class="block text-sm font-medium">Profile Image</label>
                     <div class="flex flex-col space-y-4">
-                        <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?name=' . $user->name }}"
+                        <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?background=random&name=' . $user->name }}"
                             class="size-26 rounded-full object-cover border" id="avatar-preview">
 
                         <div class="space-y-2">
