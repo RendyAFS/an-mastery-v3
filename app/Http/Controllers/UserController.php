@@ -6,9 +6,7 @@ use App\Actions\User\SaveUserAction;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\SaveUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -21,9 +19,12 @@ class UserController extends Controller
     {
         $this->authorize('users.view');
 
-        $users = $this->userRepository->getAll();
+        if (request()->expectsJson()) {
+            $users = $this->userRepository->getAll();
+            return UserResource::collection($users);
+        }
 
-        return view('user.index', compact('users'));
+        return view('user.index');
     }
 
     public function create()
