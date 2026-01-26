@@ -55,4 +55,11 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->roles()->first()?->id;
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('user-profile')
+            ->singleFile();
+    }
 }

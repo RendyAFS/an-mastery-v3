@@ -37,13 +37,13 @@ const PageScript = (function () {
 
     async function submitProfileForm(submitter) {
         const formData = new FormData(profileForm);
-        let payload = Object.fromEntries(formData.entries());
 
-        payload = normalizeFormInputs(profileForm, payload);
+        formData.append("_method", "PUT");
 
         try {
-            await ApiProvider.put(route("profile.update"), payload);
-            Toast.success("Success", "Profile successfully updated");
+            await ApiProvider.post(route("profile.update"), formData);
+            flashToast("success", "Success", "Profile successfully updated");
+            window.location.reload();
         } catch (error) {
             // error ditangani ApiProvider
         } finally {
@@ -66,6 +66,18 @@ const PageScript = (function () {
         } finally {
             stopLoading(submitter);
         }
+    }
+
+    const avatarInput = document.querySelector('input[name="avatar"]');
+    const avatarPreview = document.getElementById("avatar-preview");
+
+    if (avatarInput) {
+        avatarInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            avatarPreview.src = URL.createObjectURL(file);
+        });
     }
 
     return {

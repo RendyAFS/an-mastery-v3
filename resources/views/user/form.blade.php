@@ -2,13 +2,13 @@
     <div class="col-span-1">
         <div class="mb-6">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Nama
+                Name
             </label>
 
             <input type="text" id="name" name="name" value="{{ $user->name ?? '' }}" required
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) transition">
+                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
         </div>
 
         <div class="mb-6">
@@ -19,7 +19,7 @@
             <input type="email" id="email" name="email" value="{{ $user->email ?? '' }}" required
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) transition">
+                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
         </div>
 
         <div class="mb-6" x-data="{ show: false }">

@@ -29,8 +29,8 @@
 
 
         <div class="min-h-screen flex flex-col">
-            @include('components.navbar')
-
+            <x-navbar />
+            
             <main
                 class="flex-1 px-10 py-8
                 bg-(--color-light-gray) dark:bg-(--color-dark-slate)
