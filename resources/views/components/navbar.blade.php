@@ -31,22 +31,21 @@
                     cursor-pointer">
 
                     {{-- Avatar --}}
-                    <img class="inline-block size-8 rounded-full
-                        ring-2 ring-(--color-primary)"
-                        src="{{ asset('assets/profile.png') }}" alt="Profile">
+                    <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?name=' . $user->name }}"
+                        class="inline-block size-8 rounded-full ring-2 ring-(--color-primary)">
 
                     <div class="hidden sm:block text-left">
                         <p
                             class="text-sm font-semibold
                             text-(--color-dark)
                             dark:text-(--color-gray)">
-                            {{ Auth::user()->name }}
+                            {{ $user->name }}
                         </p>
                         <p
                             class="text-xs
                             text-(--color-dark-gray)
                             dark:text-(--color-gray)">
-                            {{ Auth::user()->getRoleNames()->implode(', ') ?? 'Unknown' }}
+                            {{ $user->getRoleNames()->implode(', ') ?? 'Unknown' }}
                         </p>
                     </div>
 
@@ -67,13 +66,13 @@
                             class="text-sm font-semibold
                             text-(--color-dark)
                             dark:text-(--color-light)">
-                            {{ Auth::user()->name }}
+                            {{ $user->name }}
                         </p>
                         <p
                             class="text-xs
                             text-(--color-dark-gray)
                             dark:text-(--color-gray)">
-                            {{ Auth::user()->email }}
+                            {{ $user->email }}
                         </p>
                     </div>
 

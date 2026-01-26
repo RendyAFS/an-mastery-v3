@@ -29,6 +29,13 @@ class UpdateMyProfileRequest extends FormRequest
                 'email',
                 Rule::unique('users', 'email')->ignore($this->user()->id),
             ],
+            'avatar' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+            'remove_avatar' => ['nullable', 'boolean'],
         ];
     }
 }
