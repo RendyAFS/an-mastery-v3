@@ -6,7 +6,6 @@
 
 @section('content')
     <div class="space-y-6">
-
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Users</h1>

@@ -30,7 +30,7 @@
 
         <div class="min-h-screen flex flex-col">
             <x-navbar />
-            
+
             <main
                 class="flex-1 px-10 py-8
                 bg-(--color-light-gray) dark:bg-(--color-dark-slate)

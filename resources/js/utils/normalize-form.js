@@ -4,6 +4,7 @@
  * @returns {Object}
  */
 function normalizeFormInputs(form, data) {
+
     $(form)
         .find('input[type="checkbox"][name]')
         .each(function () {
@@ -27,12 +28,36 @@ function normalizeFormInputs(form, data) {
         });
 
     $(form)
-        .find("select.select2[name]")
+        .find('input[type="radio"][name]')
         .each(function () {
             const name = this.name;
-            const val = $(this).val();
 
-            data[name] = val === "" || val === null ? null : val;
+            if (!(name in data)) {
+                const checked = $(form).find(`input[type="radio"][name="${name}"]:checked`).val();
+                data[name] = checked ?? null;
+            }
+        });
+
+    $(form)
+        .find('input[type="file"][name]')
+        .each(function () {
+            const name = this.name;
+            const files = this.files;
+
+            data[name] = files && files.length > 0 ? files[0] : null;
+        });
+
+    $(form)
+        .find('input[name]:not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea[name], select[name]')
+        .each(function () {
+            const name = this.name;
+            let val = $(this).val();
+
+            if (Array.isArray(val)) {
+                data[name] = val.length ? val : null;
+            } else {
+                data[name] = val === "" || val === undefined ? null : val;
+            }
         });
 
     return data;
