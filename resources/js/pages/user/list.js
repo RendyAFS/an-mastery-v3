@@ -10,7 +10,7 @@ const PageScript = (function () {
         datatable = $(tableSelector).DataTable({
             dom: "t",
             paging: true,
-            pageLength: 1,
+            pageLength: 10,
             lengthChange: false,
             info: false,
             processing: true,
