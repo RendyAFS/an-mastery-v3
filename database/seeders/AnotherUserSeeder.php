@@ -63,7 +63,7 @@ class AnotherUserSeeder extends Seeder
                     'name' => $user['name'],
                     'password' => Hash::make('qawsedrf'),
                     'email_verified_at' => now(),
-                    'is_active' => true,
+                    'is_active' => false,
                 ]
             );
         }
