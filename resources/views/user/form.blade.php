@@ -84,8 +84,8 @@
     </div>
     <div class="col-span-1">
         <div class="mb-6">
-            <x-select id="role_id" name="role_id" label="Role" :options="$roles" :value="$user->role_id ?? null"
-                placeholder="Choose Role" search-placeholder="Search role..." />
+            <x-select id="roles" name="roles" label="Role" :options="$roles" :value="$user->role_id ?? null"
+                placeholder="Choose Role" search-placeholder="Search role..." clearable="true" />
         </div>
 
         <div class="mb-6 flex items-center">
@@ -95,14 +95,14 @@
                 border-(--color-gray) rounded-sm
                 text-(--color-primary)
                 focus:ring-(--color-primary) checked:border-(--color-primary)
-                disabled:opacity-50 disabled:pointer-events-none
+                disabled:opacity-50 cursor-pointer
                 dark:bg-(--color-dark-slate)
                 dark:border-(--color-slate)
                 dark:checked:bg-(--color-primary)
                 dark:checked:border-(--color-primary)
                 dark:focus:ring-offset-(--color-dark-slate)">
 
-            <label for="is_active" class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3">
+            <label for="is_active" class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
                 Is Active
             </label>
         </div>
