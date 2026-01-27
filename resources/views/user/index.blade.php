@@ -32,8 +32,8 @@
             <div class="flex items-center gap-2">
                 <span class="text-sm">Show</span>
                 <select id="dt-length" class="py-2 px-3 text-sm rounded-lg border">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
                     <option value="50">50</option>
                 </select>
             </div>
