@@ -4,3 +4,4 @@ import "preline";
 import "./utils/toggle-dark-mode";
 import "./utils/custom-toast";
 import "./utils/sidebar-state";
+import "./utils/custom-select";

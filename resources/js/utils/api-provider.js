@@ -11,9 +11,18 @@ const http = axios.create({
     },
 });
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 http.interceptors.request.use(
-    (config) => {
+    async (config) => {
         Loading.start();
+
+        const method = config.method?.toLowerCase();
+
+        if (method === "post" || method === "put") {
+            await sleep(500);
+        }
+
         return config;
     },
     (error) => {
