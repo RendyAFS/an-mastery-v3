@@ -7,7 +7,6 @@ const PageScript = (function () {
     const DataTable = () => {
         datatable = initDatatable({
             table: "#users-datatable",
-            pageLength: 10,
             ajax: {
                 url: route("users.index"),
                 method: "GET",
@@ -45,7 +44,7 @@ const PageScript = (function () {
                     searchable: false,
                     className: "px-4 py-3 text-center",
                     render(data) {
-                        const isActive = data === true || data === 1 || data === "1";
+                        const isActive = data === true;
 
                         return `
                             <div class="flex justify-center items-center w-full">
