@@ -1,20 +1,13 @@
 import ApiProvider from "@/utils/api-provider";
+import initDatatable from "@/utils/datatable";
 
 const PageScript = (function () {
-    const tableSelector = "#users-datatable";
     let datatable;
 
-    const initDatatable = () => {
-        if (!document.querySelector(tableSelector)) return;
-
-        datatable = $(tableSelector).DataTable({
-            dom: "t",
-            paging: true,
+    const DataTable = () => {
+        datatable = initDatatable({
+            table: "#users-datatable",
             pageLength: 10,
-            lengthChange: false,
-            info: false,
-            processing: true,
-            serverSide: false,
             ajax: {
                 url: route("users.index"),
                 method: "GET",
@@ -23,166 +16,90 @@ const PageScript = (function () {
             columns: [
                 {
                     data: "name",
-                    className: "px-4 py-3",
+                    width: "20%",
                 },
                 {
                     data: "email",
-                    className: "px-4 py-3",
+                    width: "20%",
                 },
                 {
                     data: "roles",
-                    className: "px-4 py-3",
+                    width: "20%",
                     render(data) {
-                        return data
-                            .map(
-                                (role) =>
-                                    `<span class="badge">${role.name}</span>`,
-                            )
-                            .join("");
+                        if (!Array.isArray(data)) return "";
+
+                        return `
+                            <div class="inline-flex flex-wrap gap-2">
+                                ${data
+                                    .map((role) => renderRoleBadge(role.name))
+                                    .join("")}
+                            </div>
+                        `;
                     },
                 },
                 {
                     data: "id",
+                    width: "10%",
                     orderable: false,
                     searchable: false,
-                    className: "px-4 py-3 text-right",
+                    className: "px-4 py-3 align-middle text-center",
                     render(id) {
                         return `
-                            <a href="${route("users.edit", id)}"
-                               class="text-(--color-primary) hover:underline">
-                               Edit
-                            </a>
+                        <div class="hs-dropdown [--auto-close:inside] relative inline-flex">
+                            <button type="button" class="hs-dropdown-toggle inline-flex items-center gap-x-3 px-3 py-2
+                                text-sm font-medium rounded-lg
+                                bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
+                                hover:bg-(--color-gray)/40
+                                cursor-pointer">
+                                <i data-lucide="ellipsis-vertical" class="size-4"></i>
+                            </button>
+
+                            <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 mt-2 hidden z-10
+                                transition-[margin,opacity] opacity-0 duration-300
+                                w-auto bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
+                                shadow-md rounded-lg p-2
+                                role="menu" aria-orientation="vertical">
+                                <div class="p-1 space-y-0.5">
+                                <a href="${route("users.edit", id)}"
+                                    class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                    text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
+                                    focus:outline-hidden focus:bg-dropdown-item-focus">
+                                    <i data-lucide="square-pen" class="size-4"></i>
+                                    Edit
+                                </a>
+                                <a href="${route("users.destroy", id)}"
+                                    class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                    text-(--color-red) hover:bg-(--color-gray)/20
+                                    focus:outline-hidden focus:bg-dropdown-item-focus">
+                                    <i data-lucide="trash-2" class="size-4"></i>
+                                    Delete
+                                </a>
+                                </div>
+                            </div>
+                        </div>
                         `;
                     },
                 },
             ],
-            drawCallback() {
-                // Lucide → aman & rapi
-                if (window.lucide) {
-                    lucide.createIcons();
-                }
-            },
-        });
-        datatable.on("draw", function () {
-            renderPagination();
         });
     };
 
-    const renderPagination = () => {
-        const info = datatable.page.info();
-        const container = $("#dt-pagination");
+    function renderRoleBadge(roleName) {
+        const baseClass =
+            "inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium";
+        const map = {
+            "Super Admin": `${baseClass} bg-(--color-badge-danger)/50 dark:bg-(--color-badge-danger-dark)/50 text-(--color-badge-danger-foreground) dark:text-(--color-badge-danger)`,
+            Admin: `${baseClass} bg-(--color-badge-warning)/50 dark:bg-(--color-badge-warning-dark)/50 text-(--color-badge-warning-foreground) dark:text-(--color-badge-warning)`,
+        };
+        const classes =
+            map[roleName] ?? `${baseClass} bg-muted text-muted-foreground-1`;
 
-        container.empty();
-
-        const current = info.page;
-        const total = info.pages;
-        const last = total - 1;
-
-        const createBtn = (page, label = null) => `
-            <button
-                class="px-3 py-1 text-sm rounded-lg border
-                    ${
-                        page === current
-                            ? "bg-(--color-primary) text-white"
-                            : "hover:bg-(--color-light-gray)"
-                    }"
-                data-page="${page}">
-                ${label ?? page + 1}
-            </button>
-        `;
-
-        const ellipsis = `
-            <span class="px-2 py-1 text-sm text-(--color-gray)">…</span>
-        `;
-
-        // ===== Prev =====
-        container.append(`
-            <button
-                class="px-3 py-1 text-sm rounded-lg border
-                    ${current === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-(--color-light-gray)"}"
-                ${current === 0 ? "disabled" : ""}
-                data-page="${current - 1}">
-                Prev
-            </button>
-        `);
-
-        // ===== Page 1 =====
-        container.append(createBtn(0));
-
-        let start, end;
-
-        if (current <= 3) {
-            // Page 1–4
-            start = 1;
-            end = 4;
-        } else if (current >= last - 3) {
-            // Page akhir
-            start = last - 4;
-            end = last - 1;
-        } else {
-            // Tengah
-            start = current - 1;
-            end = current + 1;
-        }
-
-        // ===== Left Ellipsis =====
-        if (start > 1) {
-            container.append(ellipsis);
-        }
-
-        // ===== Middle Pages =====
-        for (let i = start; i <= end; i++) {
-            if (i > 0 && i < last) {
-                container.append(createBtn(i));
-            }
-        }
-
-        // ===== Right Ellipsis =====
-        if (end < last - 1) {
-            container.append(ellipsis);
-        }
-
-        // ===== Last Page =====
-        if (last > 0) {
-            container.append(createBtn(last, total));
-        }
-
-        // ===== Next =====
-        container.append(`
-            <button
-                class="px-3 py-1 text-sm rounded-lg border
-                    ${current === last ? "opacity-50 cursor-not-allowed" : "hover:bg-(--color-light-gray)"}"
-                ${current === last ? "disabled" : ""}
-                data-page="${current + 1}">
-                Next
-            </button>
-        `);
-
-        $("#dt-info").text(
-            `Showing ${info.start + 1}–${info.end} of ${info.recordsTotal}`
-        );
-    };
+        return `<span class="${classes}">${roleName}</span>`;
+    }
 
     return {
         init() {
-            initDatatable();
-
-            $("#dt-search").on("keyup", function () {
-                datatable.search(this.value).draw();
-            });
-
-            $("#dt-length").on("change", function () {
-                datatable.page.len(this.value).draw();
-            });
-
-            $(document).on(
-                "click",
-                "#dt-pagination button[data-page]",
-                function () {
-                    const page = $(this).data("page");
-                    datatable.page(page).draw("page");
-                },
-            );
+            DataTable();
         },
     };
 })();
