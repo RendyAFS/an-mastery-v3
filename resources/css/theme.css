@@ -7,7 +7,7 @@
     --color-red       : #e62727;
     --color-green     : #27e67d;
     --color-yellow    : #e6b327;
-    --color-blue      : #27aae6;
+    --color-blue      : #2764e6;
     /* Process Color */
     --color-danger    : #d44e4e;
     --color-success   : #66a76b;
@@ -19,6 +19,20 @@
     --color-dark-gray : #949494;
     --color-slate     : #4b5563;
     --color-dark-slate: #373e47;
+
+    /* Badge Color */
+    --color-badge-danger            : #f57d7d;
+    --color-badge-danger-dark       : #8b2626;
+    --color-badge-danger-foreground : #5a1919;
+    --color-badge-success           : #98e4a7;
+    --color-badge-success-dark      : #1f7e32;
+    --color-badge-success-foreground: #114d1d;
+    --color-badge-warning           : #f0c073;
+    --color-badge-warning-dark      : #97822b;
+    --color-badge-warning-foreground: #5f511a;
+    --color-badge-info              : #84e2e2;
+    --color-badge-info-dark         : #256985;
+    --color-badge-info-foreground   : #11374d;
 }
 
 /* Custom Scrollbar */
