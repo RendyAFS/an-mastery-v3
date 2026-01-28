@@ -26,10 +26,6 @@
 
     {{-- Scripts --}}
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
-    <script>
-        // lucide icons
-        lucide.createIcons();
-    </script>
 
     @stack('scripts')
 
