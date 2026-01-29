@@ -10,29 +10,26 @@ use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+
         $superAdminRole = Role::firstOrCreate([
             'name' => 'Super Admin',
             'guard_name' => 'web',
         ]);
 
-        $allPermissions = Permission::pluck('name')->toArray();
-        $superAdminRole->syncPermissions($allPermissions);
-
-        $superAdmin = User::firstOrCreate([
-            'email' => 'rendy@gmail.com',
-        ], [
-            'name' => 'Rendy',
-            'password' => Hash::make('qawsedrf'),
-            'email_verified_at' => now(),
-            'is_active' => 1,
-        ]);
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'rendy@gmail.com'],
+            [
+                'name' => 'Rendy',
+                'password' => Hash::make('qawsedrf'),
+                'email_verified_at' => now(),
+                'is_active' => 1,
+            ]
+        );
 
         $superAdmin->assignRole($superAdminRole);
+
 
         $adminRole = Role::firstOrCreate([
             'name' => 'Admin',
@@ -48,18 +45,19 @@ class UserSeeder extends Seeder
             'users.delete',
             'users.restore',
             'users.forceDelete',
-        ])->get()->pluck('name')->toArray();
+        ])->pluck('name')->toArray();
 
         $adminRole->syncPermissions($adminPermissions);
 
-        $adminUser = User::firstOrCreate([
-            'email' => 'edo@gmail.com',
-        ], [
-            'name' => 'Edo',
-            'password' => Hash::make('qawsedrf'),
-            'email_verified_at' => now(),
-            'is_active' => 1,
-        ]);
+        $adminUser = User::firstOrCreate(
+            ['email' => 'edo@gmail.com'],
+            [
+                'name' => 'Edo',
+                'password' => Hash::make('qawsedrf'),
+                'email_verified_at' => now(),
+                'is_active' => 1,
+            ]
+        );
 
         $adminUser->assignRole($adminRole);
     }
