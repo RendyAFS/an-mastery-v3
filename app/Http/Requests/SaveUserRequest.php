@@ -26,10 +26,9 @@ class SaveUserRequest extends FormRequest
         return [
             'name'      => 'required|string|max:255',
             'email'     => 'required|email|unique:users,email,' . $userId,
-            'password'  => [ $userId ? 'nullable' : 'required', 'string', Password::min(8)->letters()->numbers(), 'confirmed' ],
+            'password'  => [$userId ? 'nullable' : 'required', 'string', Password::min(8)->letters()->numbers(), 'confirmed'],
             'is_active' => 'nullable|boolean',
-            'roles'     => 'nullable|array',
-            'roles.*'   => 'nullable|exists:roles,id',
+            'roles'     => 'nullable|exists:roles,id',
         ];
     }
 

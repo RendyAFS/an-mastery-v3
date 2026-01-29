@@ -6,7 +6,6 @@
 
 @section('content')
     <div class="space-y-6">
-
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Users</h1>
@@ -21,20 +20,29 @@
             </a>
         </div>
 
-        <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-10">
-            <div class="overflow-x-auto">
-                <table id="users-datatable" class="min-w-full text-sm">
-                    <thead class="border-b">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Roles</th>
-                            <th class="text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+        <x-datatable id="users-datatable">
+            <thead class="border-b">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            Roles
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            Is Active
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            <i data-lucide="settings" class="size-4"></i>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </x-datatable>
     </div>
 @endsection

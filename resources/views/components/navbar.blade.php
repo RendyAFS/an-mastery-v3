@@ -31,7 +31,7 @@
                     cursor-pointer">
 
                     {{-- Avatar --}}
-                    <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?name=' . $user->name }}"
+                    <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?background=random&name=' . $user->name }}"
                         class="inline-block size-8 rounded-full ring-2 ring-(--color-primary)">
 
                     <div class="hidden sm:block text-left">

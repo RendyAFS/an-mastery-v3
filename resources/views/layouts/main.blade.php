@@ -20,7 +20,8 @@
 </head>
 
 <body>
-    <x-custom-toast top="top-22" right="right-4" align="align-end" />
+    {{-- <x-custom-toast top="top-22" right="right-4" align="align-end" /> --}}
+    <x-custom-alert top="top-22" right="right-4" align="align-end" />
     {{-- Sidebar --}}
     <x-sidebar />
 
@@ -30,7 +31,7 @@
 
         <div class="min-h-screen flex flex-col">
             <x-navbar />
-            
+
             <main
                 class="flex-1 px-10 py-8
                 bg-(--color-light-gray) dark:bg-(--color-dark-slate)
@@ -48,9 +49,6 @@
     <script src="{{ asset('js/blockUi.js') }}"></script>
     <script src="{{ asset('js/dataTables.min.js') }}"></script>
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 
     @stack('scripts')
 

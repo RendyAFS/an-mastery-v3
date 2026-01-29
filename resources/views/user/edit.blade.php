@@ -13,11 +13,11 @@
 
             {{-- Header --}}
             <div class="p-4 md:p-5">
-                <h3 class="text-lg font-bold text-(--color-dark) dark:text-(--color-light)">
+                <p class="text-2xl font-bold text-(--color-dark) dark:text-(--color-light)">
                     Edit User
-                </h3>
+                </p>
 
-                <div class="mt-4">
+                <div class="mt-6">
                     @include('user.form', ['user' => $user])
                 </div>
             </div>

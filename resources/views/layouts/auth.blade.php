@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <x-custom-toast top="top-5" right="right-4" align="align-end" />
+    <x-custom-alert top="top-5" right="right-4" align="align-end" />
     <div class="bg-(--color-light) text-(--color-dark) dark:bg-(--color-dark) dark:text-(--color-light)">
         @yield('content')
     </div>
@@ -26,10 +26,6 @@
 
     {{-- Scripts --}}
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
-    <script>
-        // lucide icons
-        lucide.createIcons();
-    </script>
 
     @stack('scripts')
 
