@@ -47,16 +47,16 @@ const PageScript = (function () {
                     orderable: false,
                     searchable: false,
                     className: "px-4 py-3 text-center",
-                    render(data) {
-                        const isActive = data === true;
+                    render(data, type, row) {
+                        const checked = data ? "checked" : "";
 
                         return `
-                            <div class="flex justify-center items-center w-full">
-                                ${
-                                    isActive
-                                        ? `<i data-lucide="check-circle" class="size-4 text-green-500"></i>`
-                                        : `<i data-lucide="x-circle" class="size-4 text-red-500"></i>`
-                                }
+                            <div class="flex items-center justify-center gap-x-3">
+                                <label for="toggle-active-${row.id}" class="relative inline-block w-11 h-6 cursor-pointer">
+                                    <input type="checkbox" id="toggle-active-${row.id}" class="peer sr-only toggle-active" data-user-id="${row.id}" ${checked}>
+                                    <span class="absolute inset-0 bg-(--color-dark-gray) rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-(--color-success) peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                    <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-(--color-light) rounded-full shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                                </label>
                             </div>
                         `;
                     },
@@ -108,6 +108,19 @@ const PageScript = (function () {
         });
     };
 
+    const bindEvents = () => {
+        $(document).on("click", ".btn-delete", function (e) {
+            e.preventDefault();
+            const userId = $(this).data("user-id");
+            handleDelete(userId);
+        });
+
+        $(document).on("change", ".toggle-active", function () {
+            const userId = $(this).data("user-id");
+            handleToggleActive(userId, this);
+        });
+    };
+
     const handleDelete = async (userId) => {
         const confirmed = await Confirm.delete(
             "Are you sure you want to delete this user? This action cannot be undone.",
@@ -127,14 +140,6 @@ const PageScript = (function () {
         }
     };
 
-    const bindEvents = () => {
-        $(document).on("click", ".btn-delete", function (e) {
-            e.preventDefault();
-            const userId = $(this).data("user-id");
-            handleDelete(userId);
-        });
-    };
-
     function renderRoleBadge(roleName) {
         const baseClass =
             "inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium";
@@ -147,6 +152,31 @@ const PageScript = (function () {
 
         return `<span class="${classes}">${roleName}</span>`;
     }
+
+    const handleToggleActive = async (userId, checkbox) => {
+        const confirmed = await Confirm.show(
+            "Are you sure you want to change this user status?",
+            "Confirmation",
+            "Yes",
+            "Cancel",
+        );
+
+        if (!confirmed) {
+            checkbox.checked = !checkbox.checked;
+            return;
+        }
+
+        try {
+            await ApiProvider.put(route("users.toggle-active", userId));
+
+            Toast.success("Success", "User status updated");
+            reloadDatatable();
+        } catch (error) {
+            checkbox.checked = !checkbox.checked;
+            Toast.error("Error", "Failed to update user status");
+            console.error(error);
+        }
+    };
 
     return {
         init() {

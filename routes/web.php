@@ -14,6 +14,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::put('/profile/password', [App\Http\Controllers\MyProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // Users
+    Route::prefix('users')->as('users.')->group(function () {
+        Route::put('{user}/toggle-active', [App\Http\Controllers\UserController::class, 'toggleActive'])->name('toggle-active');
+    });
     Route::resource('users', App\Http\Controllers\UserController::class)->names('users');
 
     // Roles
