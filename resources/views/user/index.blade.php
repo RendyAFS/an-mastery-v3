@@ -19,7 +19,7 @@
                 Add User
             </a>
         </div>
-
+        
         <x-datatable id="users-datatable">
             <thead class="border-b">
                 <tr>

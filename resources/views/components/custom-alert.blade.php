@@ -61,7 +61,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
-                class="w-full max-w-md bg-(--color-light) dark:bg-(--color-dark-slate) rounded-xl shadow-2xl border border-(--color-gray)"
+                class="w-full max-w-md bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow-2xl border border-(--color-gray)"
                 @click.away="closeAlert()">
 
                 {{-- Header --}}
@@ -82,9 +82,9 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="flex justify-end gap-2 p-5 border-t border-(--color-gray)">
+                <div class="flex justify-end gap-2 p-5">
                     <button @click="closeAlert()"
-                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-gray)/20 hover:bg-(--color-gray)/30 cursor-pointer text-(--color-dark) dark:text-(--color-light) transition ease-in-out duration-200"
+                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-primary) hover:bg-(--color-primary)/70 cursor-pointer text-(--color-dark) dark:text-(--color-light) transition ease-in-out duration-200"
                         x-text="alert.confirmText">
                     </button>
                 </div>
@@ -132,13 +132,13 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="flex justify-end gap-2 p-5 border-t border-(--color-gray)">
+                <div class="flex justify-end gap-2 p-5">
                     <button @click="closeConfirm(false)"
                         class="px-4 py-2 text-sm font-medium cursor-pointer rounded-lg bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/30 transition ease-in-out duration-200"
                         x-text="confirm.cancelText">
                     </button>
                     <button @click="closeConfirm(true)"
-                        class="px-4 py-2 text-sm font-medium cursor-pointer rounded-lg bg-(--color-red) text-white hover:bg-(--color-red)/90 transition ease-in-out duration-200"
+                        class="px-4 py-2 text-sm font-medium cursor-pointer rounded-lg bg-(--color-red) text-(--color-light) hover:bg-(--color-red)/90 transition ease-in-out duration-200"
                         x-text="confirm.confirmText">
                     </button>
                 </div>
