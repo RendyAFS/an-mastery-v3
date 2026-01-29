@@ -5,5 +5,6 @@ export function initLucide(root = document) {
         attrs: {
             "stroke-width": 1.75,
         },
+        root,
     });
 }

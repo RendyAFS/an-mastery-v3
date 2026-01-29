@@ -10,5 +10,9 @@ import "./utils/custom-select";
 import { initLucide } from "./utils/lucide";
 
 document.addEventListener("DOMContentLoaded", () => {
+    if (window.HSStaticMethods) {
+        window.HSStaticMethods.autoInit();
+    }
+
     initLucide();
-})
+});
