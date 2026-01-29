@@ -7,17 +7,19 @@
 ])
 
 {{-- Top Bar --}}
-<div class="flex justify-between items-center mb-4">
+<div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
     <div>
         @if ($search)
-            <div class="relative">
+            <div class="relative w-full sm:w-auto">
                 <input type="text" id="dt-search" name="dt-search"
-                    class="ps-10 py-2 px-3 text-sm rounded-lg text-(--color-dark) dark:text-(--color-light)
+                    class="w-full sm:w-64
+                    ps-10 py-2 px-3 text-sm rounded-lg
+                    text-(--color-dark) dark:text-(--color-light)
                     border border-(--color-gray) dark:border-(--color-dark-gray)
-                    bg-(--color-light) focus:ring-2 focus:ring-(--color-primary)/30
-                    dark:bg-(--color-dark-slate)"
+                    bg-(--color-light) dark:bg-(--color-dark-slate)
+                    focus:ring-2 focus:ring-(--color-primary)/30"
                     placeholder="Search...">
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
                     <i data-lucide="search" class="size-4"></i>
                 </div>
             </div>
@@ -25,9 +27,9 @@
     </div>
 
     @if ($length)
-        <div class="flex items-center gap-2">
-            <span class="text-sm">Show</span>
-            <select id="dt-length"
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <span class="text-sm whitespace-nowrap">Show</span>
+            <select id="dt-length" class="hidden w-full sm:w-28"
                 data-hs-select='{
                             "placeholder": "Show",
                             "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
@@ -58,7 +60,7 @@
 </div>
 
 {{-- Footer --}}
-<div class="flex justify-between items-center mt-4">
-    <div id="dt-info" class="text-sm"></div>
-    <div class="flex items-center gap-1" id="dt-pagination"></div>
+<div class="flex flex-col gap-3 mt-4 sm:flex-row sm:justify-between sm:items-center">
+    <div id="dt-info" class="text-sm text-center sm:text-left"></div>
+    <div id="dt-pagination" class="flex flex-wrap justify-center gap-1 sm:justify-end"></div>
 </div>

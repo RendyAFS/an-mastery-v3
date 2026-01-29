@@ -13,57 +13,18 @@ class AnotherUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
-            [
-                'name' => 'User 1',
-                'email' => 'user1@gmail.com',
-            ],
-            [
-                'name' => 'User 2',
-                'email' => 'user2@gmail.com',
-            ],
-            [
-                'name' => 'User 3',
-                'email' => 'user3@gmail.com',
-            ],
-            [
-                'name' => 'User 4',
-                'email' => 'user4@gmail.com',
-            ],
-            [
-                'name' => 'User 5',
-                'email' => 'user5@gmail.com',
-            ],
-            [
-                'name' => 'User 6',
-                'email' => 'user6@gmail.com',
-            ],
-            [
-                'name' => 'User 7',
-                'email' => 'user7@gmail.com',
-            ],
-            [
-                'name' => 'User 8',
-                'email' => 'user8@gmail.com',
-            ],
-            [
-                'name' => 'User 9',
-                'email' => 'user9@gmail.com',
-            ],
-            [
-                'name' => 'User 10',
-                'email' => 'user10@gmail.com',
-            ],
-        ];
+        $total = 100;
 
-        foreach ($users as $user) {
+        for ($i = 1; $i <= $total; $i++) {
             User::firstOrCreate(
-                ['email' => $user['email']],
                 [
-                    'name' => $user['name'],
-                    'password' => Hash::make('qawsedrf'),
+                    'email' => "user{$i}@gmail.com",
+                ],
+                [
+                    'name'              => "User {$i}",
+                    'password'          => Hash::make('qawsedrf'),
                     'email_verified_at' => now(),
-                    'is_active' => false,
+                    'is_active'         => false,
                 ]
             );
         }

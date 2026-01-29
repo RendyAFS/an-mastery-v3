@@ -20,7 +20,8 @@
 </head>
 
 <body>
-    <x-custom-toast top="top-22" right="right-4" align="align-end" />
+    {{-- <x-custom-toast top="top-22" right="right-4" align="align-end" /> --}}
+    <x-custom-alert top="top-22" right="right-4" align="align-end" />
     {{-- Sidebar --}}
     <x-sidebar />
 

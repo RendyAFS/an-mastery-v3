@@ -20,6 +20,57 @@ const PageScript = (function () {
 
             await submitForm(action, submitter);
         });
+
+        bindDeleteButtons();
+    }
+
+    function bindDeleteButtons() {
+        // Untuk tombol delete di index page (jika ada)
+        document.addEventListener("click", async (e) => {
+            const deleteBtn = e.target.closest("[data-delete-user]");
+            if (!deleteBtn) return;
+
+            e.preventDefault();
+
+            const userId = deleteBtn.dataset.deleteUser;
+            const userName = deleteBtn.dataset.userName || "this user";
+
+            await handleDelete(userId, userName, deleteBtn);
+        });
+    }
+
+    async function handleDelete(userId, userName, button) {
+        // Tampilkan confirm modal
+        const confirmed = await Confirm.delete(
+            `Are you sure you want to delete <strong>${userName}</strong>? This action cannot be undone.`,
+        );
+
+        if (!confirmed) return;
+
+        // Start loading state jika tombol punya data-button-loading
+        if (button?.hasAttribute("data-button-loading")) {
+            startLoading(button);
+        }
+
+        try {
+            await ApiProvider.delete(route("users.destroy", userId));
+
+            Toast.success("Success", "User deleted successfully");
+
+            // Tunggu sebentar agar toast terlihat, lalu reload atau redirect
+            setTimeout(() => {
+                window.location.reload();
+                // Atau jika ingin redirect:
+                // window.location.href = route("users.index");
+            }, 1000);
+        } catch (error) {
+            // Error sudah ditangani oleh ApiProvider
+            // Tapi kita bisa tambahkan handling khusus jika perlu
+        } finally {
+            if (button?.hasAttribute("data-button-loading")) {
+                stopLoading(button);
+            }
+        }
     }
 
     function resetForm() {

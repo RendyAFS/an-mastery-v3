@@ -1,5 +1,5 @@
 <nav
-    class="sticky top-0 z-99 bg-(--color-light) dark:bg-(--color-dark) dark:border-b dark:border-(--color-gray)/20 shadow-sm">
+    class="sticky top-0 z-50 bg-(--color-light) dark:bg-(--color-dark) dark:border-b dark:border-(--color-gray)/20 shadow-sm">
     <div class="flex items-center justify-between px-4 py-3">
         <!-- Left -->
         <div class="flex items-center gap-3">
