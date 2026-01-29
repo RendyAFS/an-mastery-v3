@@ -29,80 +29,91 @@ export default function initDatatable({
         },
     });
 
+    // Search handler
     $("#dt-search").on("keyup", function () {
         datatable.search(this.value).draw();
     });
 
+    // Length change handler
     $("#dt-length").on("change", function () {
         datatable.page.len(this.value).draw();
     });
 
+    // Pagination click handler
     $(document).on("click", "#dt-pagination button[data-page]", function () {
         datatable.page($(this).data("page")).draw("page");
     });
 
+    // Render pagination using templates
     const renderPagination = () => {
         const info = datatable.page.info();
         const container = $("#dt-pagination");
-
         container.empty();
 
         const current = info.page;
         const total = info.pages;
         const last = total - 1;
 
-        const baseBtn =
-            "min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg " +
-            "focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none";
+        // Clone templates
+        const btnTemplate = document.getElementById(
+            "dt-pagination-btn-template",
+        );
+        const ellipsisTemplate = document.getElementById(
+            "dt-pagination-ellipsis-template",
+        );
+        const prevTemplate = document.getElementById(
+            "dt-pagination-prev-template",
+        );
+        const nextTemplate = document.getElementById(
+            "dt-pagination-next-template",
+        );
 
-        const createBtn = (page, label = null) => `
-            <button
-                type="button"
-                class="${baseBtn}
-                    ${
-                        page === current
-                            ? "bg-(--color-primary) text-(--color-light)"
-                            : "border border-transparent text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-gray)"
-                    } cursor-pointer"
-                data-page="${page}"
-                ${page === current ? 'aria-current="page"' : ""}
-            >
-                ${label ?? page + 1}
-            </button>
-        `;
+        // Helper function to create button from template
+        const createBtn = (page, label = null, isCurrent = false) => {
+            const btn = btnTemplate.content
+                .cloneNode(true)
+                .querySelector("button");
+            btn.dataset.page = page;
+            btn.textContent = label ?? page + 1;
 
-        const ellipsis = `
-            <span class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm text-(--color-gray)">
-                …
-            </span>
-        `;
+            if (isCurrent) {
+                btn.classList.add(
+                    "bg-(--color-primary)",
+                    "text-(--color-light)",
+                );
+                btn.setAttribute("aria-current", "page");
+            } else {
+                btn.classList.add(
+                    "border",
+                    "border-transparent",
+                    "text-(--color-dark)",
+                    "dark:text-(--color-light)",
+                    "hover:bg-(--color-light-gray)",
+                    "dark:hover:bg-(--color-dark-gray)",
+                );
+            }
 
-        // Prev
-        container.append(`
-            <button
-                type="button"
-                class="${baseBtn} border border-transparent
-                    ${
-                        current === 0
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:bg-(--color-light-gray)"
-                    } cursor-pointer"
-                ${current === 0 ? "disabled" : ""}
-                data-page="${current - 1}"
-                aria-label="Previous"
-            >
-                <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/>
-                </svg>
-            </button>
-        `);
+            return btn;
+        };
 
-        // Page 1
-        container.append(createBtn(0));
+        // Prev button
+        const prevBtn = prevTemplate.content
+            .cloneNode(true)
+            .querySelector("button");
+        prevBtn.dataset.page = current - 1;
+        if (current === 0) {
+            prevBtn.classList.add("opacity-50", "cursor-not-allowed");
+            prevBtn.disabled = true;
+        } else {
+            prevBtn.classList.add("hover:bg-(--color-light-gray)");
+        }
+        container.append(prevBtn);
 
+        // First page
+        container.append(createBtn(0, null, current === 0));
+
+        // Calculate middle pages
         let start, end;
-
         if (current <= 3) {
             start = 1;
             end = 4;
@@ -114,43 +125,47 @@ export default function initDatatable({
             end = current + 1;
         }
 
-        if (start > 1) container.append(ellipsis);
+        // Start ellipsis
+        if (start > 1) {
+            container.append(ellipsisTemplate.content.cloneNode(true));
+        }
 
+        // Middle pages
         for (let i = start; i <= end; i++) {
             if (i > 0 && i < last) {
-                container.append(createBtn(i));
+                container.append(createBtn(i, null, i === current));
             }
         }
 
-        if (end < last - 1) container.append(ellipsis);
+        // End ellipsis
+        if (end < last - 1) {
+            container.append(ellipsisTemplate.content.cloneNode(true));
+        }
 
-        if (last > 0) container.append(createBtn(last, total));
+        // Last page
+        if (last > 0) {
+            container.append(createBtn(last, total, current === last));
+        }
 
-        // Next
-        container.append(`
-            <button
-                type="button"
-                class="${baseBtn} border border-transparent
-                    ${
-                        current === last
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:bg-(--color-light-gray)"
-                    } cursor-pointer"
-                ${current === last ? "disabled" : ""}
-                data-page="${current + 1}"
-                aria-label="Next"
-            >
-                <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/>
-                </svg>
-            </button>
-        `);
+        // Next button
+        const nextBtn = nextTemplate.content
+            .cloneNode(true)
+            .querySelector("button");
+        nextBtn.dataset.page = current + 1;
+        if (current === last) {
+            nextBtn.classList.add("opacity-50", "cursor-not-allowed");
+            nextBtn.disabled = true;
+        } else {
+            nextBtn.classList.add("hover:bg-(--color-light-gray)");
+        }
+        container.append(nextBtn);
 
-        // Info
+        // Update info text
         $("#dt-info").text(
             `Showing ${info.start + 1} – ${info.end} of ${info.recordsTotal}`,
         );
+
+        initLucide();
     };
 
     datatable.on("draw", renderPagination);

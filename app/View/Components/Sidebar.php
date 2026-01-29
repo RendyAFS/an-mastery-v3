@@ -16,32 +16,44 @@ class Sidebar extends Component
         /** @var User $user */
         $user = Auth::user();
 
-        $this->menus = Menu::query()
+        $query = Menu::query()
             ->whereNull('parent_id')
             ->where('is_active', true)
             ->orderBy('sort_order')
             ->with([
                 'children.permissions',
                 'permissions'
-            ])
-            ->get()
+            ]);
+
+        if ($user->hasRole('Super Admin')) {
+            $this->menus = $query->get();
+            return;
+        }
+
+        $this->menus = $query->get()
             ->filter(function ($menu) use ($user) {
 
                 if ($menu->permissions->isEmpty() && $menu->children->isEmpty()) {
                     return true;
                 }
 
-                if ($menu->permissions->isNotEmpty() && $user->canAny($menu->permissions->pluck('name')->toArray())) {
+                if (
+                    $menu->permissions->isNotEmpty() &&
+                    $user->canAny($menu->permissions->pluck('name')->toArray())
+                ) {
                     return true;
                 }
 
                 if ($menu->children->isNotEmpty()) {
                     $accessibleChildren = $menu->children->filter(function ($child) use ($user) {
+
                         if ($child->permissions->isEmpty()) {
                             return true;
                         }
 
-                        return $user->canAny($child->permissions->pluck('name')->toArray());
+                        return $user->canAny(
+                            $child->permissions->pluck('name')->toArray()
+                        );
                     });
 
                     if ($accessibleChildren->isNotEmpty()) {

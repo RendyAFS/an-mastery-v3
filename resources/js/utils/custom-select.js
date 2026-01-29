@@ -1,3 +1,9 @@
+import { initLucide } from "./lucide";
+
+document.addEventListener("hsSelect.afterInit", (e) => {
+    initLucide(e.target);
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const toggleClearButton = (select) => {
         const btn = document.querySelector(`[data-clear-select="${select.id}"]`);

@@ -12,7 +12,7 @@ function customAlert() {
             title: "",
             message: "",
             type: "info",
-            confirmText: "OK"
+            confirmText: "OK",
         },
 
         // Confirm State
@@ -23,15 +23,15 @@ function customAlert() {
             confirmText: "Confirm",
             cancelText: "Cancel",
             onConfirm: null,
-            onCancel: null
+            onCancel: null,
         },
 
         // Icons
         icons: {
-            success: `<i data-lucide="circle-check-big" class="text-(--color-green) w-5 h-5"></i>`,
-            info: `<i data-lucide="info" class="text-(--color-blue) w-5 h-5"></i>`,
-            warning: `<i data-lucide="triangle-alert" class="text-(--color-yellow) w-5 h-5"></i>`,
-            error: `<i data-lucide="circle-x" class="text-(--color-red) w-5 h-5"></i>`,
+            success: `<i data-lucide="circle-check-big" class="text-(--color-green) size-6"></i>`,
+            info: `<i data-lucide="info" class="text-(--color-blue) size-6"></i>`,
+            warning: `<i data-lucide="triangle-alert" class="text-(--color-yellow) size-6"></i>`,
+            error: `<i data-lucide="circle-x" class="text-(--color-red) size-6"></i>`,
         },
 
         // Default Titles
@@ -116,7 +116,7 @@ function customAlert() {
                 title: title || this.defaultTitles[type],
                 message,
                 type,
-                confirmText
+                confirmText,
             };
 
             this.$nextTick(() => {
@@ -125,16 +125,23 @@ function customAlert() {
                 }
             });
 
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = "hidden";
         },
 
         closeAlert() {
             this.alert.show = false;
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
         },
 
         // ============ CONFIRM METHODS ============
-        showConfirm(title, message, confirmText = "Confirm", cancelText = "Cancel", onConfirm = null, onCancel = null) {
+        showConfirm(
+            title,
+            message,
+            confirmText = "Confirm",
+            cancelText = "Cancel",
+            onConfirm = null,
+            onCancel = null,
+        ) {
             this.confirm = {
                 show: true,
                 title: title || "Confirmation",
@@ -142,7 +149,7 @@ function customAlert() {
                 confirmText,
                 cancelText,
                 onConfirm,
-                onCancel
+                onCancel,
             };
 
             this.$nextTick(() => {
@@ -151,12 +158,12 @@ function customAlert() {
                 }
             });
 
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = "hidden";
         },
 
         closeConfirm(confirmed) {
             this.confirm.show = false;
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
 
             if (confirmed && this.confirm.onConfirm) {
                 this.confirm.onConfirm();
@@ -167,7 +174,7 @@ function customAlert() {
             // Reset callbacks
             this.confirm.onConfirm = null;
             this.confirm.onCancel = null;
-        }
+        },
     };
 }
 
@@ -237,7 +244,12 @@ window.Alert = {
 
 // ============ GLOBAL CONFIRM API ============
 window.Confirm = {
-    show(message, title = "Confirmation", confirmText = "Confirm", cancelText = "Cancel") {
+    show(
+        message,
+        title = "Confirmation",
+        confirmText = "Confirm",
+        cancelText = "Cancel",
+    ) {
         return new Promise((resolve) => {
             document.dispatchEvent(
                 new CustomEvent("confirm", {
@@ -254,7 +266,9 @@ window.Confirm = {
         });
     },
 
-    delete(message = "Are you sure you want to delete this item? This action cannot be undone.") {
+    delete(
+        message = "Are you sure you want to delete this item? This action cannot be undone.",
+    ) {
         return this.show(message, "Delete Confirmation", "Delete", "Cancel");
     },
 };
