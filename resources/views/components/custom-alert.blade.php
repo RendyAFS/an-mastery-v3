@@ -50,7 +50,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-[80] overflow-x-hidden overflow-y-auto bg-black/50 backdrop-blur-sm"
+        class="fixed inset-0 z-80 overflow-x-hidden overflow-y-auto bg-(color-dark)/50 backdrop-blur-sm"
         style="display: none;">
 
         <div class="min-h-full flex items-center justify-center p-4">
@@ -61,7 +61,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
-                class="w-full max-w-md bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow-2xl border border-(--color-gray)"
+                class="w-full max-w-md bg-(--color-light) dark:bg-(--color-dark-slate) rounded-xl shadow-2xl border border-(--color-gray)"
                 @click.away="closeAlert()">
 
                 {{-- Header --}}
@@ -71,7 +71,7 @@
                         <h3 class="font-semibold text-lg text-(--color-dark) dark:text-(--color-light)" x-text="alert.title"></h3>
                     </div>
                     <button @click="closeAlert()"
-                        class="p-2 rounded-full text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20 transition">
+                        class="p-2 bg-(--color-gray)/20 hover:bg-(--color-gray)/40 cursor-pointer rounded-full text-(--color-dark) dark:text-(--color-light) transition ease-in-out duration-200">
                         <i data-lucide="x" class="size-4"></i>
                     </button>
                 </div>
@@ -84,7 +84,7 @@
                 {{-- Footer --}}
                 <div class="flex justify-end gap-2 p-5 border-t border-(--color-gray)">
                     <button @click="closeAlert()"
-                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/30 transition"
+                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-gray)/20 hover:bg-(--color-gray)/30 cursor-pointer text-(--color-dark) dark:text-(--color-light) transition ease-in-out duration-200"
                         x-text="alert.confirmText">
                     </button>
                 </div>
@@ -100,7 +100,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-[80] overflow-x-hidden overflow-y-auto bg-black/50 backdrop-blur-sm"
+        class="fixed inset-0 z-80 overflow-x-hidden overflow-y-auto bg-(color-dark)/50 backdrop-blur-sm"
         style="display: none;">
 
         <div class="min-h-full flex items-center justify-center p-4">
@@ -121,7 +121,7 @@
                         <h3 class="font-semibold text-lg text-(--color-dark) dark:text-(--color-light)" x-text="confirm.title"></h3>
                     </div>
                     <button @click="closeConfirm(false)"
-                        class="p-2 rounded-full text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20 transition">
+                        class="p-2 rounded-full bg-(--color-gray)/20 hover:bg-(--color-gray)/30 cursor-pointer text-(--color-dark) dark:text-(--color-light) transition ease-in-out duration-200">
                         <i data-lucide="x" class="size-4"></i>
                     </button>
                 </div>
@@ -134,11 +134,11 @@
                 {{-- Footer --}}
                 <div class="flex justify-end gap-2 p-5 border-t border-(--color-gray)">
                     <button @click="closeConfirm(false)"
-                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/30 transition"
+                        class="px-4 py-2 text-sm font-medium cursor-pointer rounded-lg bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/30 transition ease-in-out duration-200"
                         x-text="confirm.cancelText">
                     </button>
                     <button @click="closeConfirm(true)"
-                        class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-red) text-white hover:bg-(--color-red)/90 transition"
+                        class="px-4 py-2 text-sm font-medium cursor-pointer rounded-lg bg-(--color-red) text-white hover:bg-(--color-red)/90 transition ease-in-out duration-200"
                         x-text="confirm.confirmText">
                     </button>
                 </div>
