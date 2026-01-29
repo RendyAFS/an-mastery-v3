@@ -7,7 +7,6 @@ const PageScript = (function () {
     const DataTable = () => {
         datatable = initDatatable({
             table: "#users-datatable",
-            pageLength: 10,
             ajax: {
                 url: route("users.index"),
                 method: "GET",
@@ -16,15 +15,16 @@ const PageScript = (function () {
             columns: [
                 {
                     data: "name",
-                    width: "20%",
+                    width: "25%",
                 },
                 {
                     data: "email",
-                    width: "20%",
+                    width: "25%",
                 },
                 {
                     data: "roles",
-                    width: "20%",
+                    width: "25%",
+                    className: "text-center",
                     render(data) {
                         if (!Array.isArray(data)) return "";
 
@@ -37,12 +37,32 @@ const PageScript = (function () {
                         `;
                     },
                 },
-                {
-                    data: "id",
-                    width: "10%",
+               {
+                    data: "is_active",
+                    width: "20%",
                     orderable: false,
                     searchable: false,
-                    className: "px-4 py-3 align-middle text-center",
+                    className: "px-4 py-3 text-center",
+                    render(data) {
+                        const isActive = data === true;
+
+                        return `
+                            <div class="flex justify-center items-center w-full">
+                                ${
+                                    isActive
+                                        ? `<i data-lucide="check-circle" class="size-4 text-green-500"></i>`
+                                        : `<i data-lucide="x-circle" class="size-4 text-red-500"></i>`
+                                }
+                            </div>
+                        `;
+                    },
+                },
+                {
+                    data: "id",
+                    width: "5%",
+                    orderable: false,
+                    searchable: false,
+                    className: "px-4 py-3 text-center",
                     render(id) {
                         return `
                         <div class="hs-dropdown [--auto-close:inside] relative inline-flex">

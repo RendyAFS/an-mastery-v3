@@ -5,6 +5,7 @@ export default function initDatatable({
     ajax,
     columns,
     pageLength = 10,
+    order = [],
 }) {
     if (!document.querySelector(table)) return;
 
@@ -18,6 +19,7 @@ export default function initDatatable({
         serverSide: false,
         ajax,
         columns,
+        order,
         drawCallback() {
             initLucide();
 

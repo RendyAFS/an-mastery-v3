@@ -25,8 +25,21 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Roles</th>
-                    <th class="text-right">Action</th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            Roles
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            Is Active
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex justify-center items-center w-full">
+                            <i data-lucide="settings" class="size-4"></i>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody></tbody>

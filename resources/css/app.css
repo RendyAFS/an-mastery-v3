@@ -1,10 +1,10 @@
 @import 'tailwindcss';
-@plugin "@tailwindcss/forms";
 /* Toggling Manual Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));
 /* Preline UI */
 @import "../../node_modules/preline/variants.css";
 @source "../../node_modules/preline/dist/*.js";
+@plugin "@tailwindcss/forms";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
