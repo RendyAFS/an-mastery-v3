@@ -8,6 +8,10 @@ Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->n
 Route::middleware(['auth', 'check.active'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+    // Filepond
+    Route::post('/filepond/process', [App\Http\Controllers\FilepondController::class, 'process'])->name('filepond.process');
+    Route::delete('/filepond/revert', [App\Http\Controllers\FilepondController::class, 'revert'])->name('filepond.revert');
+
     // Profile
     Route::get('/profile', [App\Http\Controllers\MyProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [App\Http\Controllers\MyProfileController::class, 'update'])->name('profile.update');
