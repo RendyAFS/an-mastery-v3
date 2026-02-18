@@ -10,6 +10,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     // Filepond
     Route::post('/filepond/process', [App\Http\Controllers\FilepondController::class, 'process'])->name('filepond.process');
+    Route::get('/filepond/load', [App\Http\Controllers\FilepondController::class, 'load'])->name('filepond.load');
     Route::delete('/filepond/revert', [App\Http\Controllers\FilepondController::class, 'revert'])->name('filepond.revert');
 
     // Profile

@@ -12,13 +12,16 @@
             <h2 class="text-xl font-bold">Profile Information</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-3 col-span-1">
-                    <label class="block text-sm font-medium">Profile Image</label>
-
                     <input type="hidden" id="avatar-preview" value="{{ $user->getFirstMediaUrl('user-profile') ?? '' }}" />
-
+                    <div class="flex justify-center items-center">
+                        <img class="w-32 h-32 rounded-full"
+                            src="{{ $user->getFirstMediaUrl('user-profile')
+                                ? $user->getFirstMediaUrl('user-profile')
+                                : 'https://ui-avatars.com/api/?background=random&name=' . urlencode($user->name) }}"
+                            alt="{{ $user->name }}" />
+                    </div>
                     <input type="hidden" name="avatar_tmp" id="avatar_tmp">
-
-                    <input type="file" name="avatar" class="filepond" accept="image/*" multiple="true" />
+                    <input type="file" name="avatar" class="filepond" accept="image/*" />
                 </div>
 
                 <div class="space-y-4 col-span-1 md:col-span-2">

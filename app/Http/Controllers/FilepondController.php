@@ -9,6 +9,22 @@ use Illuminate\Support\Str;
 
 class FilepondController extends Controller
 {
+    public function load(Request $request)
+    {
+        $filePath = $request->query('file');
+        if (!$filePath || !Storage::exists($filePath)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        $file = Storage::get($filePath);
+        $mime = Storage::mimeType($filePath);
+        $name = basename($filePath);
+
+        return response($file)
+            ->header('Content-Type', $mime)
+            ->header('Content-Disposition', "inline; filename=\"$name\"");
+    }
+
     public function process(Request $request)
     {
         $maxSize = $request->input('max_size', 5120);

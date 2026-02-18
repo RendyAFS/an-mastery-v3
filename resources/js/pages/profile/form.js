@@ -71,6 +71,7 @@ const PageScript = (function () {
 
     function initFilePond() {
         const existingImage = document.getElementById("avatar-preview")?.value;
+        console.log(existingImage);
 
         const pond = FilePondHelper.init({
             selector: 'input[name="avatar"]',
