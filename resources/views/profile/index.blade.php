@@ -18,7 +18,7 @@
 
                     <input type="hidden" name="avatar_tmp" id="avatar_tmp">
 
-                    <input type="file" name="avatar" class="filepond" accept="image/*" />
+                    <input type="file" name="avatar" class="filepond" accept="image/*" multiple="true" />
                 </div>
 
                 <div class="space-y-4 col-span-1 md:col-span-2">

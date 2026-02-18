@@ -4,22 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class FilepondController extends Controller
 {
     public function process(Request $request)
     {
-        $request->validate([
-            'file' => ['required', 'file', 'max:5120'],
-        ]);
+        $maxSize = $request->input('max_size', 5120);
+        $allowedTypes = $request->input('allowed_types', []);
+        $folder = $request->input('folder', 'tmp');
+
+        $rules = [
+            'file' => ['required', 'file', "max:$maxSize"],
+        ];
+
+        if (!empty($allowedTypes)) {
+            $rules['file'][] = 'mimetypes:' . implode(',', $allowedTypes);
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         $file = $request->file('file');
 
-        $tmpPath = $file->store('tmp');
+        $path = $file->store($folder);
 
         return response()->json([
-            'id' => $tmpPath,
+            'id' => $path,
         ]);
     }
 

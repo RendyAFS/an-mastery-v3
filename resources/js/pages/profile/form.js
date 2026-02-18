@@ -76,21 +76,30 @@ const PageScript = (function () {
             selector: 'input[name="avatar"]',
             uploadUrl: route("filepond.process"),
             deleteUrl: route("filepond.revert"),
-            existingFileUrl: existingImage,
-            acceptedFileTypes: ["image/*"],
+            acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
+            allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+            maxSize: 2048,
+            folder: "tmp",
             multiple: false,
+            existingFileUrl: existingImage,
         });
 
         if (!pond) return;
 
+        bindTmpField(pond, "avatar_tmp");
+    }
+
+    function bindTmpField(pond, hiddenInputId) {
+        const hiddenInput = document.getElementById(hiddenInputId);
+
         pond.on("processfile", (error, file) => {
             if (!error) {
-                document.getElementById("avatar_tmp").value = file.serverId;
+                hiddenInput.value = file.serverId;
             }
         });
 
         pond.on("removefile", () => {
-            document.getElementById("avatar_tmp").value = "";
+            hiddenInput.value = "";
         });
     }
 

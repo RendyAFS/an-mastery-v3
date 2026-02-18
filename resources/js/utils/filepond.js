@@ -1,13 +1,22 @@
 import * as FilePond from "filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImageEdit from "filepond-plugin-image-edit";
+import FilePondPluginImageTransform from "filepond-plugin-image-transform";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import FilePondPluginImageCrop from "filepond-plugin-image-crop";
 
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import "filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css";
 
 FilePond.registerPlugin(
     FilePondPluginImagePreview,
     FilePondPluginFileValidateType,
+    FilePondPluginImageEdit,
+    FilePondPluginImageTransform,
+    FilePondPluginImageResize,
+    FilePondPluginImageCrop,
 );
 
 const FilePondHelper = (function () {
@@ -33,8 +42,12 @@ const FilePondHelper = (function () {
         uploadUrl,
         deleteUrl,
         existingFileUrl = null,
-        acceptedFileTypes = ["image/*"],
+        acceptedFileTypes = [],
+        allowedMimeTypes = [],
         multiple = false,
+        maxFileSize = null,
+        maxSize = 5120,
+        folder = "tmp",
     }) {
         const input = document.querySelector(selector);
         if (!input) return null;
@@ -43,6 +56,7 @@ const FilePondHelper = (function () {
             allowMultiple: multiple,
             allowReplace: !multiple,
             acceptedFileTypes,
+            maxFileSize,
 
             server: {
                 process: (
@@ -57,6 +71,15 @@ const FilePondHelper = (function () {
                     const formData = new FormData();
                     formData.append("file", file);
 
+                    formData.append("max_size", maxSize);
+                    formData.append("folder", folder);
+
+                    if (allowedMimeTypes.length) {
+                        allowedMimeTypes.forEach((type) => {
+                            formData.append("allowed_types[]", type);
+                        });
+                    }
+
                     const request = new XMLHttpRequest();
                     request.open("POST", uploadUrl);
                     request.setRequestHeader("X-CSRF-TOKEN", getCsrfToken());
@@ -66,11 +89,25 @@ const FilePondHelper = (function () {
                     };
 
                     request.onload = function () {
+                        let response = {};
+
+                        try {
+                            response = JSON.parse(request.responseText);
+                        } catch (e) {
+                            Toast.error("Server error");
+                            return;
+                        }
+
                         if (request.status >= 200 && request.status < 300) {
-                            const response = JSON.parse(request.responseText);
-                            load(response.id); // 🔥 kirim tmp path
+                            load(response.id);
                         } else {
-                            error("Upload failed");
+                            const message =
+                                response?.errors?.file?.[0] ||
+                                response?.message ||
+                                "Upload failed";
+
+                            Toast.error("Upload failed", message);
+                            error(message);
                         }
                     };
 
@@ -102,7 +139,6 @@ const FilePondHelper = (function () {
             },
         });
 
-        // Load existing file (edit mode)
         if (existingFileUrl) {
             pond.files = [
                 {

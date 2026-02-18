@@ -21,17 +21,25 @@ class MyProfileController extends Controller
     public function update(UpdateMyProfileRequest $request)
     {
         $user = $request->user();
+
         DB::transaction(function () use ($user, $request) {
+
             $user->update($request->validated());
 
-            if ($request->filled('avatar_tmp')) {
-                $tmpPath = $request->avatar_tmp;
+            $tmpPath = $request->input('avatar_tmp');
+
+            if ($tmpPath) {
                 if (Storage::disk('local')->exists($tmpPath)) {
                     $user->clearMediaCollection('user-profile');
                     $user->addMediaFromDisk($tmpPath, 'local')->toMediaCollection('user-profile');
-
                     Storage::disk('local')->delete($tmpPath);
                 }
+
+                return;
+            }
+
+            if ($request->has('avatar_tmp') && !$tmpPath) {
+                $user->clearMediaCollection('user-profile');
             }
         });
 
