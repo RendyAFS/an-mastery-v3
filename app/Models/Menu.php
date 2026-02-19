@@ -33,8 +33,13 @@ class Menu extends Model
         return $this->hasMany(Menu::class, 'parent_id')->where('is_active', true)->orderBy('sort_order');
     }
 
-    public function permissions(): BelongsToMany
+    // public function permissions(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Permission::class, 'menu_permissions');
+    // }
+
+    public function permissions(): HasMany
     {
-        return $this->belongsToMany(Permission::class, 'menu_permissions');
+        return $this->hasMany(Permission::class, 'menu_id');
     }
 }

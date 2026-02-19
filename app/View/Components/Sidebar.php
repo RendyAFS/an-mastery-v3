@@ -21,8 +21,8 @@ class Sidebar extends Component
             ->where('is_active', true)
             ->orderBy('sort_order')
             ->with([
-                'children.permissions',
-                'permissions'
+                'children.permissions:id,name,menu_id',
+                'permissions:id,name,menu_id'
             ]);
 
         if ($user->hasRole('Super Admin')) {

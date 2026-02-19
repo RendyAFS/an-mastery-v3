@@ -20,6 +20,9 @@
     --color-slate     : #4b5563;
     --color-dark-slate: #373e47;
 
+    --color-white     : #FFFFFF
+    --color-black     : #000000
+
     /* Badge Color */
     --color-badge-danger            : #f57d7d;
     --color-badge-danger-dark       : #8b2626;

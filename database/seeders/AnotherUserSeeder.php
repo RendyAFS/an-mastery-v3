@@ -13,7 +13,7 @@ class AnotherUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $total = 100;
+        $total = 50;
 
         for ($i = 1; $i <= $total; $i++) {
             User::firstOrCreate(
