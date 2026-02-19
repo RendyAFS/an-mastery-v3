@@ -69,3 +69,37 @@
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-dark-gray);
 }
+
+/* Danger */
+.badge-danger {
+    background-color: color-mix(in srgb, var(--color-badge-danger) 50%, transparent);
+    color: var(--color-badge-danger-foreground);
+}
+
+.dark .badge-danger {
+    background-color: color-mix(in srgb, var(--color-badge-danger-dark) 50%, transparent);
+    color: var(--color-badge-danger);
+}
+
+/* Warning */
+.badge-warning {
+    background-color: color-mix(in srgb, var(--color-badge-warning) 50%, transparent);
+    color: var(--color-badge-warning-foreground);
+}
+
+.dark .badge-warning {
+    background-color: color-mix(in srgb, var(--color-badge-warning-dark) 50%, transparent);
+    color: var(--color-badge-warning);
+}
+
+/* Success */
+.badge-success {
+    background-color: color-mix(in srgb, var(--color-badge-success) 50%, transparent);
+    color: var(--color-badge-success-foreground);
+}
+
+.dark .badge-success {
+    background-color: color-mix(in srgb, var(--color-badge-success-dark) 50%, transparent);
+    color: var(--color-badge-success);
+}
+

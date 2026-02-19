@@ -143,12 +143,13 @@ const PageScript = (function () {
     function renderRoleBadge(roleName) {
         const baseClass =
             "inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium";
+
         const map = {
-            "Super Admin": `${baseClass} bg-(--color-badge-danger)/50 dark:bg-(--color-badge-danger-dark)/50 text-(--color-badge-danger-foreground) dark:text-(--color-badge-danger)`,
-            Admin: `${baseClass} bg-(--color-badge-warning)/50 dark:bg-(--color-badge-warning-dark)/50 text-(--color-badge-warning-foreground) dark:text-(--color-badge-warning)`,
+            "Super Admin": `${baseClass} badge-danger`,
+            Admin: `${baseClass} badge-warning`,
         };
-        const classes =
-            map[roleName] ?? `${baseClass} bg-muted text-muted-foreground-1`;
+
+        const classes = map[roleName] ?? `${baseClass} badge-success`;
 
         return `<span class="${classes}">${roleName}</span>`;
     }
