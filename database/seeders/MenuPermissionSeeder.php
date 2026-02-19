@@ -69,17 +69,19 @@ class MenuPermissionSeeder extends Seeder
                 foreach ($permissions as $action) {
                     $name = "{$prefix}.{$action}";
 
-                    Permission::updateOrCreate(
-                        ['name' => $name, 'guard_name' => 'web']
+                    $permission = Permission::updateOrCreate(
+                        [
+                            'name' => $name,
+                            'guard_name' => 'web'
+                        ],
+                        [
+                            'menu_id' => $menu->id
+                        ]
                     );
 
-                    $permissionNames[] = $name;
-                    $this->validPermissionNames[] = $name;
+                    $permissionNames[] = $permission->name;
+                    $this->validPermissionNames[] = $permission->name;
                 }
-
-                $menu->permissions()->sync(
-                    Permission::whereIn('name', $permissionNames)->pluck('id')
-                );
             } else {
                 $menu->permissions()->detach();
             }

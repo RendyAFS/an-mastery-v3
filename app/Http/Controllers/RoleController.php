@@ -26,16 +26,32 @@ class RoleController extends Controller
         return view('role.index');
     }
 
+    // public function create()
+    // {
+    //     $this->authorize('roles.create');
+
+    //     $permissions = Permission::all()
+    //         ->groupBy(function ($permission) {
+    //             return explode('.', $permission->name)[0];
+    //         });
+
+    //     return view('role.create', compact('permissions'));
+    // }
+
     public function create()
     {
         $this->authorize('roles.create');
 
-        $permissions = Permission::all()
-            ->groupBy(function ($permission) {
-                return explode('.', $permission->name)[0]; // prefix sebelum titik
-            });
+        $menus = \App\Models\Menu::with([
+            'children.permissions',
+            'permissions'
+        ])
+            ->whereNull('parent_id')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
 
-        return view('role.create', compact('permissions'));
+        return view('role.create', compact('menus'));
     }
 
     public function store(Request $request)
@@ -64,20 +80,40 @@ class RoleController extends Controller
         //
     }
 
+    // public function edit(string $id)
+    // {
+    //     $this->authorize('roles.update');
+
+    //     $role = Role::with('permissions')->findOrFail($id);
+
+    //     $permissions = Permission::all()
+    //         ->groupBy(function ($permission) {
+    //             return explode('.', $permission->name)[0];
+    //         });
+
+    //     $rolePermissions = $role->permissions->pluck('name')->toArray();
+
+    //     return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
+    // }
+
     public function edit(string $id)
     {
         $this->authorize('roles.update');
 
         $role = Role::with('permissions')->findOrFail($id);
 
-        $permissions = Permission::all()
-            ->groupBy(function ($permission) {
-                return explode('.', $permission->name)[0];
-            });
+        $menus = \App\Models\Menu::with([
+            'children.permissions',
+            'permissions'
+        ])
+            ->whereNull('parent_id')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
 
         $rolePermissions = $role->permissions->pluck('name')->toArray();
 
-        return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
+        return view('role.edit', compact('role', 'menus', 'rolePermissions'));
     }
 
     public function update(Request $request, string $id)
