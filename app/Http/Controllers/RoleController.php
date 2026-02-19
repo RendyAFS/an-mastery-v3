@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\RoleRepository;
 use App\Http\Resources\RoleResource;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -12,9 +14,6 @@ class RoleController extends Controller
         protected RoleRepository $roleRepository
     ) {}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $this->authorize('roles.view');
@@ -27,57 +26,86 @@ class RoleController extends Controller
         return view('role.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $this->authorize('roles.create');
-        //
+
+        $permissions = Permission::all()
+            ->groupBy(function ($permission) {
+                return explode('.', $permission->name)[0]; // prefix sebelum titik
+            });
+
+        return view('role.create', compact('permissions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $this->authorize('roles.create');
-        //
+
+        $validated = $request->validate([
+            'name'        => 'required|unique:roles,name',
+            'permissions' => 'array'
+        ]);
+
+        $role = Role::create([
+            'name'       => $validated['name'],
+            'guard_name' => 'web'
+        ]);
+
+        $role->syncPermissions($validated['permissions'] ?? []);
+
+        return response()->json(['message' => 'Role created']);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         $this->authorize('roles.read');
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $this->authorize('roles.update');
-        //
+
+        $role = Role::with('permissions')->findOrFail($id);
+
+        $permissions = Permission::all()
+            ->groupBy(function ($permission) {
+                return explode('.', $permission->name)[0];
+            });
+
+        $rolePermissions = $role->permissions->pluck('name')->toArray();
+
+        return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $this->authorize('roles.update');
-        //
+
+        $role = Role::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|unique:roles,name,' . $role->id,
+            'permissions' => 'array'
+        ]);
+
+        $role->update([
+            'name' => $validated['name']
+        ]);
+
+        $role->syncPermissions($validated['permissions'] ?? []);
+
+        return response()->json(['message' => 'Role updated']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
         $this->authorize('roles.delete');
-        //
+
+        $role->delete();
+
+        return response()->noContent();
     }
 }

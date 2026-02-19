@@ -45,6 +45,12 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    public function show(string $id)
+    {
+        $this->authorize('roles.read');
+        //
+    }
+
     public function edit(User $user)
     {
         $this->authorize('users.update');
