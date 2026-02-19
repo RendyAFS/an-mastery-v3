@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\RoleRepository;
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    public function __construct(
+        protected RoleRepository $roleRepository
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $this->authorize('role.view');
+        $this->authorize('roles.view');
+
+        if (request()->expectsJson()) {
+            $roles = $this->roleRepository->getAll();
+            return RoleResource::collection($roles);
+        }
 
         return view('role.index');
     }
@@ -21,7 +32,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $this->authorize('role.create');
+        $this->authorize('roles.create');
         //
     }
 
@@ -30,7 +41,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('role.create');
+        $this->authorize('roles.create');
         //
     }
 
@@ -39,7 +50,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        $this->authorize('role.read');
+        $this->authorize('roles.read');
         //
     }
 
@@ -48,7 +59,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        $this->authorize('role.update');
+        $this->authorize('roles.update');
         //
     }
 
@@ -57,7 +68,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->authorize('role.update');
+        $this->authorize('roles.update');
         //
     }
 
@@ -66,7 +77,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->authorize('role.delete');
+        $this->authorize('roles.delete');
         //
     }
 }

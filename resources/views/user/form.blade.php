@@ -85,7 +85,7 @@
     <div class="col-span-1">
         <div class="mb-6 space-y-2">
             <x-select id="roles" name="roles" label="Role" :options="$roles" :value="$user->role_id ?? null"
-                placeholder="Choose Role" search-placeholder="Search role..." clearable="true" multiple="true" />
+                placeholder="Choose Role" search-placeholder="Search role..." clearable="true"/>
         </div>
 
         <div class="mb-6 flex items-center">

@@ -11,34 +11,19 @@
         <form id="profile-form" class="space-y-6 bg-(--color-light) dark:bg-(--color-dark) p-6 rounded-xl">
             <h2 class="text-xl font-bold">Profile Information</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
                 <div class="space-y-3 col-span-1">
-                    <label class="block text-sm font-medium">Profile Image</label>
-                    <div class="flex flex-col space-y-4">
-                        <img src="{{ $user->getFirstMediaUrl('user-profile') ?: 'https://ui-avatars.com/api/?background=random&name=' . $user->name }}"
-                            class="size-26 rounded-full object-cover border" id="avatar-preview">
-
-                        <div class="space-y-2">
-                            <input type="file" name="avatar" accept="image/*" class="block text-sm">
-
-                            @if ($user->getFirstMedia('user-profile'))
-                                <label class="flex items-center gap-2 text-sm">
-                                    <input type="checkbox" name="remove_avatar" value="1"
-                                        class="shrink-0 mt-0.5
-                                        border-(--color-danger) rounded-sm
-                                        text-(--color-danger) focus:ring-(--color-danger) checked:border-(--color-danger)
-                                        disabled:opacity-50 disabled:pointer-events-none
-                                        dark:bg-(--color-dark-slate) dark:border-(--color-danger)
-                                        dark:checked:bg-(--color-danger) dark:checked:border-(--color-danger)
-                                        dark:focus:ring-offset-(--color-dark)">
-                                    <span class="text-(--color-danger) font-semibold">
-                                        Remove image
-                                    </span>
-                                </label>
-                            @endif
-                        </div>
+                    <input type="hidden" id="avatar-preview" value="{{ $user->getFirstMediaUrl('user-profile') ?? '' }}" />
+                    <div class="flex justify-center items-center">
+                        <img class="w-32 h-32 rounded-full"
+                            src="{{ $user->getFirstMediaUrl('user-profile')
+                                ? $user->getFirstMediaUrl('user-profile')
+                                : 'https://ui-avatars.com/api/?background=random&name=' . urlencode($user->name) }}"
+                            alt="{{ $user->name }}" />
                     </div>
+                    <input type="hidden" name="avatar_tmp" id="avatar_tmp">
+                    <input type="file" name="avatar" class="filepond" accept="image/*" />
                 </div>
+
                 <div class="space-y-4 col-span-1 md:col-span-2">
                     <div class="space-y-2">
                         <label class="block text-sm font-medium">Name</label>

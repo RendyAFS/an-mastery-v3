@@ -1,4 +1,5 @@
 import ApiProvider from "@/utils/api-provider";
+import FilePondHelper from "@/utils/filepond";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 
@@ -68,15 +69,38 @@ const PageScript = (function () {
         }
     }
 
-    const avatarInput = document.querySelector('input[name="avatar"]');
-    const avatarPreview = document.getElementById("avatar-preview");
+    function initFilePond() {
+        const existingImage = document.getElementById("avatar-preview")?.value;
+        console.log(existingImage);
 
-    if (avatarInput) {
-        avatarInput.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+        const pond = FilePondHelper.init({
+            selector: 'input[name="avatar"]',
+            uploadUrl: route("filepond.process"),
+            deleteUrl: route("filepond.revert"),
+            acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
+            allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+            maxSize: 2048,
+            folder: "tmp",
+            multiple: false,
+            existingFileUrl: existingImage,
+        });
 
-            avatarPreview.src = URL.createObjectURL(file);
+        if (!pond) return;
+
+        bindTmpField(pond, "avatar_tmp");
+    }
+
+    function bindTmpField(pond, hiddenInputId) {
+        const hiddenInput = document.getElementById(hiddenInputId);
+
+        pond.on("processfile", (error, file) => {
+            if (!error) {
+                hiddenInput.value = file.serverId;
+            }
+        });
+
+        pond.on("removefile", () => {
+            hiddenInput.value = "";
         });
     }
 
@@ -88,6 +112,10 @@ const PageScript = (function () {
             if (!profileForm && !passwordForm) return;
 
             bindEvents();
+
+            if (profileForm) {
+                initFilePond();
+            }
         },
     };
 })();

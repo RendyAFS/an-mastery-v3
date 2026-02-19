@@ -16,9 +16,17 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "@pqina/pintura": "^8.95.7",
         "@preline/datatable": "^3.2.3",
         "alpinejs": "^3.15.3",
         "datatables.net-dt": "^2.3.6",
+        "filepond": "^4.32.11",
+        "filepond-plugin-file-validate-type": "^1.2.9",
+        "filepond-plugin-image-crop": "^2.0.6",
+        "filepond-plugin-image-edit": "^1.6.3",
+        "filepond-plugin-image-preview": "^4.6.12",
+        "filepond-plugin-image-resize": "^2.0.10",
+        "filepond-plugin-image-transform": "^3.8.7",
         "glob": "^13.0.0",
         "lucide": "^0.562.0",
         "preline": "^3.2.3"

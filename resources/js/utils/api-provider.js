@@ -19,7 +19,7 @@ http.interceptors.request.use(
 
         const method = config.method?.toLowerCase();
 
-        if (method === "post" || method === "put") {
+        if (method === "get") {
             await sleep(500);
         }
 

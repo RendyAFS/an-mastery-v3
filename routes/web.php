@@ -8,12 +8,20 @@ Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->n
 Route::middleware(['auth', 'check.active'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+    // Filepond
+    Route::post('/filepond/process', [App\Http\Controllers\FilepondController::class, 'process'])->name('filepond.process');
+    Route::get('/filepond/load', [App\Http\Controllers\FilepondController::class, 'load'])->name('filepond.load');
+    Route::delete('/filepond/revert', [App\Http\Controllers\FilepondController::class, 'revert'])->name('filepond.revert');
+
     // Profile
     Route::get('/profile', [App\Http\Controllers\MyProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [App\Http\Controllers\MyProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\MyProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // Users
+    Route::prefix('users')->as('users.')->group(function () {
+        Route::put('{user}/toggle-active', [App\Http\Controllers\UserController::class, 'toggleActive'])->name('toggle-active');
+    });
     Route::resource('users', App\Http\Controllers\UserController::class)->names('users');
 
     // Roles
