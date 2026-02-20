@@ -20,12 +20,7 @@
         <label
             class="inline-flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-(--color-dark) dark:text-(--color-light)">
             <input type="checkbox"
-                class="shrink-0 border-(--color-gray) rounded-sm text-(--color-primary)
-                    focus:ring-(--color-primary) checked:border-(--color-primary)
-                    disabled:opacity-50 cursor-pointer
-                    dark:bg-(--color-dark-slate) dark:border-(--color-slate)
-                    dark:checked:bg-(--color-primary) dark:checked:border-(--color-primary)
-                    dark:focus:ring-offset-(--color-dark-slate)"
+                class="checkbox-custom"
                 :checked="isAllChecked()" @change="toggleAll()">
             Select All
         </label>
