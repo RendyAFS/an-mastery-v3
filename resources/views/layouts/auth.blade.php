@@ -11,7 +11,7 @@
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
 
     {{-- Styles Vite --}}
-    @vite(['resources/css/app.css', 'resources/css/theme.css'])
+    @vite(['resources/css/app.css'])
 
     @stack('styles')
 </head>
