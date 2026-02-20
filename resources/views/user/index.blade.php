@@ -19,8 +19,8 @@
                 Add User
             </a>
         </div>
-        
-        <x-datatable id="users-datatable">
+
+        <x-datatable id="users-datatable" filterId="filter-users">
             <thead class="border-b">
                 <tr>
                     <th>Name</th>

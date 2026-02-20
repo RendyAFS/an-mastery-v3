@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Collection;
 
 class RoleRepository
 {
-    public function getAll(): Collection
+    public function getAll($filter = 'active')
     {
-        return Role::query()
+        $query = Role::query()
             ->where('name', '!=', 'Super Admin')
-            ->get();
+            ->orderBy('id', 'desc');
+
+        if ($filter === 'deleted') {
+            $query->onlyTrashed();
+        } elseif ($filter === 'all') {
+            $query->withTrashed();
+        }
+        return $query->get();
     }
 }

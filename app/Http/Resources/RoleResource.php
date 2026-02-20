@@ -19,6 +19,7 @@ class RoleResource extends JsonResource
             'name'       => $this->name,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
+            'deleted_at' => $this->deleted_at?->toDateTimeString() ?? null,
         ];
     }
 }

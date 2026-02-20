@@ -20,7 +20,11 @@ class UserController extends Controller
         $this->authorize('users.view');
 
         if (request()->expectsJson()) {
-            $users = $this->userRepository->getAll();
+
+            $filter = request('filter', 'active');
+
+            $users = $this->userRepository->getAll($filter);
+
             return UserResource::collection($users);
         }
 
@@ -76,6 +80,32 @@ class UserController extends Controller
         $user->delete();
 
         return response()->noContent();
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('users.restore');
+
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->restore();
+
+        return response()->json([
+            'message' => 'User restored successfully'
+        ]);
+    }
+
+    public function forceDelete($id)
+    {
+        $this->authorize('users.forceDelete');
+
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->forceDelete();
+
+        return response()->json([
+            'message' => 'User permanently deleted'
+        ]);
     }
 
     public function toggleActive(User $user)
