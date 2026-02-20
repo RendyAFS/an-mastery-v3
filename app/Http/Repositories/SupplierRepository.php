@@ -2,15 +2,13 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Role;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Supplier;
 
-class RoleRepository
+class SupplierRepository
 {
     public function getAll($filter = 'active')
     {
-        $query = Role::query()
-            ->where('name', '!=', 'Super Admin')
+        $query = Supplier::query()
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {

@@ -8,7 +8,6 @@ export default defineConfig({
         laravel({
             input: [
                 "resources/css/app.css",
-                "resources/css/theme.css",
                 "resources/js/app.js",
                 ...glob.sync([
                     "resources/js/utils/**/*.js",

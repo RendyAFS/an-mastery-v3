@@ -19,24 +19,16 @@ class RoleController extends Controller
         $this->authorize('roles.view');
 
         if (request()->expectsJson()) {
-            $roles = $this->roleRepository->getAll();
+
+            $filter = request('filter', 'active');
+
+            $roles = $this->roleRepository->getAll($filter);
+
             return RoleResource::collection($roles);
         }
 
         return view('role.index');
     }
-
-    // public function create()
-    // {
-    //     $this->authorize('roles.create');
-
-    //     $permissions = Permission::all()
-    //         ->groupBy(function ($permission) {
-    //             return explode('.', $permission->name)[0];
-    //         });
-
-    //     return view('role.create', compact('permissions'));
-    // }
 
     public function create()
     {
@@ -79,23 +71,6 @@ class RoleController extends Controller
         $this->authorize('roles.read');
         //
     }
-
-    // public function edit(string $id)
-    // {
-    //     $this->authorize('roles.update');
-
-    //     $role = Role::with('permissions')->findOrFail($id);
-
-    //     $permissions = Permission::all()
-    //         ->groupBy(function ($permission) {
-    //             return explode('.', $permission->name)[0];
-    //         });
-
-    //     $rolePermissions = $role->permissions->pluck('name')->toArray();
-
-    //     return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
-    // }
-
     public function edit(string $id)
     {
         $this->authorize('roles.update');
@@ -143,5 +118,31 @@ class RoleController extends Controller
         $role->delete();
 
         return response()->noContent();
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('roles.restore');
+
+        $role = Role::onlyTrashed()->findOrFail($id);
+
+        $role->restore();
+
+        return response()->json([
+            'message' => 'Role restored successfully'
+        ]);
+    }
+
+    public function forceDelete($id)
+    {
+        $this->authorize('roles.forceDelete');
+
+        $role = Role::onlyTrashed()->findOrFail($id);
+
+        $role->forceDelete();
+
+        return response()->json([
+            'message' => 'Role permanently deleted'
+        ]);
     }
 }

@@ -92,11 +92,7 @@
                         <div class="flex flex-wrap items-center justify-between gap-4">
                             <div class="flex">
                                 <input type="checkbox" name="remember" id="remember" value="1"
-                                    class="shrink-0 mt-0.5
-                                    border-(--color-primary) rounded-sm
-                                    text-(--color-primary) focus:ring-(--color-primary) checked:border-(--color-primary)
-                                    disabled:opacity-50 disabled:pointer-events-none
-                                    dark:bg-(--color-dark) dark:border-(--color-dark) dark:checked:bg-(--color-primary) dark:checked:border-(--color-primary) dark:focus:ring-offset-(--color-dark)">
+                                    class="checkbox-custom">
                                 <label for="remember"
                                     class="text-sm text-(--color-dark) ms-3 dark:text-(--color-light)">Remember me</label>
                             </div>

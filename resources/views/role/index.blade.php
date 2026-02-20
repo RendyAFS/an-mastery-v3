@@ -20,7 +20,7 @@
             </a>
         </div>
 
-        <x-datatable id="roles-datatable">
+        <x-datatable id="roles-datatable" filterId="filter-roles">
             <thead class="border-b">
                 <tr>
                     <th>Name</th>

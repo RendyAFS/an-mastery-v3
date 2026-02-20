@@ -91,16 +91,7 @@
         <div class="mb-6 flex items-center">
             <input type="checkbox" id="is_active" name="is_active" value="1"
                 {{ $user && $user->is_active == 1 ? 'checked' : '' }}
-                class="shrink-0 mt-0.5
-                border-(--color-gray) rounded-sm
-                text-(--color-primary)
-                focus:ring-(--color-primary) checked:border-(--color-primary)
-                disabled:opacity-50 cursor-pointer
-                dark:bg-(--color-dark-slate)
-                dark:border-(--color-slate)
-                dark:checked:bg-(--color-primary)
-                dark:checked:border-(--color-primary)
-                dark:focus:ring-offset-(--color-dark-slate)">
+                class="checkbox-custom">
 
             <label for="is_active" class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
                 Is Active

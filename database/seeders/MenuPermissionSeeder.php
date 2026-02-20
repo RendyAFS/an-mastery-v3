@@ -83,7 +83,7 @@ class MenuPermissionSeeder extends Seeder
                     $this->validPermissionNames[] = $permission->name;
                 }
             } else {
-                $menu->permissions()->detach();
+                $menu->permissions()->delete();
             }
 
             if (isset($item['children'])) {
@@ -95,8 +95,8 @@ class MenuPermissionSeeder extends Seeder
     private function cleanupMenus(): void
     {
         Menu::whereNotIn('id', $this->validMenuIds)
-            ->each(function ($menu) {
-                $menu->permissions()->detach();
+            ->each(function (Menu $menu) {
+                $menu->permissions()->delete();
                 $menu->delete();
             });
     }
