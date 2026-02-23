@@ -19,9 +19,10 @@ class SupplierResource extends JsonResource
             'name'       => $this->name,
             'address'    => $this->address,
             'contact'    => $this->contact,
-            'notes'    => $this->notes,
+            'notes'      => $this->notes,
             'created_at' => $this->created_at->toDateTimeLocalString(),
             'updated_at' => $this->updated_at->toDateTimeLocalString(),
+            'deleted_at' => $this->deleted_at?->toDateTimeLocalString() ?? null,
         ];
     }
 }
