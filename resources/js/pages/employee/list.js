@@ -10,14 +10,14 @@ const PageScript = (function () {
 
     const DataTable = () => {
         datatable = initDatatable({
-            table: "#suppliers-datatable",
-            filterSelector: "#filter-suppliers",
+            table: "#employees-datatable",
+            filterSelector: "#filter-employees",
             ajax: {
-                url: route("suppliers.index"),
+                url: route("employees.index"),
                 method: "GET",
                 dataSrc: "data",
                 data: function (d) {
-                    d.filter = $("#filter-suppliers").val();
+                    d.filter = $("#filter-employees").val();
                 },
             },
             columns: [
@@ -68,7 +68,7 @@ const PageScript = (function () {
                                 ${
                                     !isDeleted
                                         ? `
-                                        <a href="${route("suppliers.edit", id)}"
+                                        <a href="${route("employees.edit", id)}"
                                             class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus">
@@ -130,8 +130,8 @@ const PageScript = (function () {
         }
 
         try {
-            await ApiProvider.delete(route("suppliers.destroy", userId));
-            Toast.success("Success", "Supplier deleted successfully");
+            await ApiProvider.delete(route("employees.destroy", userId));
+            Toast.success("Success", "Employee deleted successfully");
 
             reloadDatatable();
         } catch (error) {
@@ -152,9 +152,9 @@ const PageScript = (function () {
 
         if (!confirmed) return;
 
-        await ApiProvider.put(route("suppliers.restore", id));
+        await ApiProvider.put(route("employees.restore", id));
 
-        Toast.success("Success", "Supplier restored");
+        Toast.success("Success", "Employee restored");
         reloadDatatable();
     };
 
@@ -170,9 +170,9 @@ const PageScript = (function () {
 
         if (!confirmed) return;
 
-        await ApiProvider.delete(route("suppliers.force-delete", id));
+        await ApiProvider.delete(route("employees.force-delete", id));
 
-        Toast.success("Success", "Supplier permanently deleted");
+        Toast.success("Success", "Employee permanently deleted");
         reloadDatatable();
     };
 

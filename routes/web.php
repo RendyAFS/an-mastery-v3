@@ -39,4 +39,11 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{supplier}/force-delete', [App\Http\Controllers\SupplierController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('suppliers', App\Http\Controllers\SupplierController::class)->names('suppliers');
+
+    // Employees
+    Route::prefix('employees')->as('employees.')->group(function () {
+        Route::put('{employee}/restore', [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
+        Route::delete('{employee}/force-delete', [App\Http\Controllers\EmployeeController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('employees', App\Http\Controllers\EmployeeController::class)->names('employees');
 });
