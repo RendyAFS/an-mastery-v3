@@ -35,6 +35,10 @@ return [
                 'name' => 'Suppliers',
                 'url'  => '/suppliers',
             ],
+            [
+                'name' => 'Employees',
+                'url'  => '/employees',
+            ],
         ],
     ],
 ];

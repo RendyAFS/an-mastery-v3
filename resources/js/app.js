@@ -16,5 +16,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initLucide();
 });
-
-console.log('app.js loaded');
