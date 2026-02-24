@@ -39,6 +39,10 @@ return [
                 'name' => 'Employees',
                 'url'  => '/employees',
             ],
+            [
+                'name' => 'Image Fabric',
+                'url'  => '/image-fabrics',
+            ],
         ],
     ],
 ];
