@@ -21,6 +21,7 @@
                             alt="{{ $user->name }}" />
                     </div>
                     <input type="hidden" name="avatar_tmp" id="avatar_tmp">
+                    <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
                     <input type="file" name="avatar" class="filepond" accept="image/*" />
                 </div>
 

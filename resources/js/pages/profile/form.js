@@ -92,15 +92,24 @@ const PageScript = (function () {
 
     function bindTmpField(pond, hiddenInputId) {
         const hiddenInput = document.getElementById(hiddenInputId);
+        const removeInput = document.getElementById("remove_avatar");
 
         pond.on("processfile", (error, file) => {
             if (!error) {
                 hiddenInput.value = file.serverId;
+
+                if (removeInput) {
+                    removeInput.value = "0";
+                }
             }
         });
 
         pond.on("removefile", () => {
             hiddenInput.value = "";
+
+            if (removeInput) {
+                removeInput.value = "1";
+            }
         });
     }
 
