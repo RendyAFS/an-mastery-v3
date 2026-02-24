@@ -12,7 +12,6 @@ class UserController extends Controller
 {
     public function __construct(
         protected UserRepository $userRepository,
-        protected SaveUserAction $saveUserAction
     ) {}
 
     public function index()
@@ -40,11 +39,11 @@ class UserController extends Controller
         return view('user.create', compact('roles'));
     }
 
-    public function store(SaveUserRequest $request)
+    public function store(SaveUserRequest $request, SaveUserAction $saveUserAction)
     {
         $this->authorize('users.create');
 
-        $user = $this->saveUserAction->execute($request->validated());
+        $user = $saveUserAction->execute($request->validated());
 
         return new UserResource($user);
     }
@@ -64,11 +63,11 @@ class UserController extends Controller
         return view('user.edit', compact('user', 'roles'));
     }
 
-    public function update(SaveUserRequest $request, User $user)
+    public function update(SaveUserRequest $request, SaveUserAction $saveUserAction, User $user)
     {
         $this->authorize('users.update');
 
-        $user = $this->saveUserAction->execute($request->validated(), $user);
+        $user = $saveUserAction->execute($request->validated(), $user);
 
         return new UserResource($user);
     }
