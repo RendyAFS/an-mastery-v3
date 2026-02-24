@@ -8,6 +8,7 @@ return [
         'permissions' => ['view'],
     ],
 
+    // Access Management
     [
         'name' => 'Access Management',
         'icon' => 'shield',
@@ -20,6 +21,23 @@ return [
             [
                 'name' => 'Roles',
                 'url'  => '/roles',
+            ],
+        ],
+    ],
+
+    // Master Data
+    [
+        'name' => 'Master Data',
+        'icon' => 'server',
+        'url'  => '#master-data',
+        'children' => [
+            [
+                'name' => 'Suppliers',
+                'url'  => '/suppliers',
+            ],
+            [
+                'name' => 'Employees',
+                'url'  => '/employees',
             ],
         ],
     ],

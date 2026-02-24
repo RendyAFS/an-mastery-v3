@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
 
     {{-- Styles Vite --}}
-    @vite(['resources/css/app.css', 'resources/css/theme.css'])
+    @vite(['resources/css/app.css'])
 
     @stack('styles')
 </head>

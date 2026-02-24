@@ -11,10 +11,14 @@ const PageScript = (function () {
     const DataTable = () => {
         datatable = initDatatable({
             table: "#roles-datatable",
+            filterSelector: "#filter-roles",
             ajax: {
                 url: route("roles.index"),
                 method: "GET",
                 dataSrc: "data",
+                data: function (d) {
+                    d.filter = $("#filter-roles").val();
+                },
             },
             columns: [
                 {
@@ -26,7 +30,9 @@ const PageScript = (function () {
                     orderable: false,
                     searchable: false,
                     className: "px-4 py-3 text-center",
-                    render(id) {
+                    render(id, type, row) {
+                        const isDeleted = row.deleted_at !== null;
+
                         return `
                         <div class="hs-dropdown [--auto-close:inside] relative inline-flex">
                             <button type="button" class="hs-dropdown-toggle inline-flex items-center gap-x-3 px-3 py-2
@@ -42,21 +48,46 @@ const PageScript = (function () {
                                 w-auto bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
                                 shadow-md rounded-lg p-2"
                                 role="menu" aria-orientation="vertical">
+
                                 <div class="p-1 space-y-0.5">
-                                <a href="${route("roles.edit", id)}"
-                                    class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                    text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
-                                    focus:outline-hidden focus:bg-dropdown-item-focus">
-                                    <i data-lucide="square-pen" class="size-4"></i>
-                                    Edit
-                                </a>
-                                <button type="button" data-role-id="${id}"
-                                    class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                    text-(--color-red) hover:bg-(--color-gray)/20
-                                    focus:outline-hidden focus:bg-dropdown-item-focus">
-                                    <i data-lucide="trash-2" class="size-4"></i>
-                                    Delete
-                                </button>
+
+                                ${
+                                    !isDeleted
+                                        ? `
+                                        <a href="${route("roles.edit", id)}"
+                                            class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                            text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
+                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            <i data-lucide="square-pen" class="size-4"></i>
+                                            Edit
+                                        </a>
+
+                                        <button type="button" data-role-id="${id}"
+                                            class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                            text-(--color-red) hover:bg-(--color-gray)/20
+                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            <i data-lucide="trash-2" class="size-4"></i>
+                                            Delete
+                                        </button>
+                                        `
+                                        : `
+                                        <button type="button" data-role-id="${id}"
+                                            class="btn-restore w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                            text-(--color-success) hover:bg-(--color-gray)/20
+                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            <i data-lucide="rotate-ccw" class="size-4"></i>
+                                            Restore
+                                        </button>
+
+                                        <button type="button" data-role-id="${id}"
+                                            class="btn-force-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                            text-(--color-red) hover:bg-(--color-gray)/20
+                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            <i data-lucide="trash" class="size-4"></i>
+                                            Force Delete
+                                        </button>
+                                        `
+                                }
                                 </div>
                             </div>
                         </div>
@@ -86,12 +117,49 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.delete(route("roles.destroy", roleId));
-            Toast.success("Success", "User deleted successfully");
+            Toast.success("Success", "Role deleted successfully");
 
             reloadDatatable();
         } catch (error) {
             console.error("Delete role error:", error);
         }
+    };
+
+    $(document).on("click", ".btn-restore", function () {
+        const id = $(this).data("role-id");
+        handleRestore(id);
+    });
+
+    const handleRestore = async (id) => {
+        const confirmed = await Confirm.show(
+            "Restore this role?",
+            "Confirmation",
+        );
+
+        if (!confirmed) return;
+
+        await ApiProvider.put(route("roles.restore", id));
+
+        Toast.success("Success", "Role restored");
+        reloadDatatable();
+    };
+
+    $(document).on("click", ".btn-force-delete", function () {
+        const id = $(this).data("role-id");
+        handleForceDelete(id);
+    });
+
+    const handleForceDelete = async (id) => {
+        const confirmed = await Confirm.delete(
+            "This will permanently delete the role. Continue?",
+        );
+
+        if (!confirmed) return;
+
+        await ApiProvider.delete(route("roles.force-delete", id));
+
+        Toast.success("Success", "Role permanently deleted");
+        reloadDatatable();
     };
 
     return {

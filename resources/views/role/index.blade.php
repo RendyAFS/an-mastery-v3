@@ -16,11 +16,11 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80">
                 <i data-lucide="plus" class="size-4"></i>
-                Add User
+                Add Role
             </a>
         </div>
 
-        <x-datatable id="roles-datatable">
+        <x-datatable id="roles-datatable" filterId="filter-roles">
             <thead class="border-b">
                 <tr>
                     <th>Name</th>

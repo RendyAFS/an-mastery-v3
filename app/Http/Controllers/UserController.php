@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\SaveUserAction;
 use App\Http\Repositories\UserRepository;
-use App\Http\Requests\SaveUserRequest;
+use App\Http\Requests\User\SaveUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -20,7 +20,11 @@ class UserController extends Controller
         $this->authorize('users.view');
 
         if (request()->expectsJson()) {
-            $users = $this->userRepository->getAll();
+
+            $filter = request('filter', 'active');
+
+            $users = $this->userRepository->getAll($filter);
+
             return UserResource::collection($users);
         }
 
@@ -43,6 +47,12 @@ class UserController extends Controller
         $user = $this->saveUserAction->execute($request->validated());
 
         return new UserResource($user);
+    }
+
+    public function show(string $id)
+    {
+        $this->authorize('roles.read');
+        //
     }
 
     public function edit(User $user)
@@ -70,6 +80,32 @@ class UserController extends Controller
         $user->delete();
 
         return response()->noContent();
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('users.restore');
+
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->restore();
+
+        return response()->json([
+            'message' => 'User restored successfully'
+        ]);
+    }
+
+    public function forceDelete($id)
+    {
+        $this->authorize('users.forceDelete');
+
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->forceDelete();
+
+        return response()->json([
+            'message' => 'User permanently deleted'
+        ]);
     }
 
     public function toggleActive(User $user)

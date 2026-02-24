@@ -6,6 +6,7 @@ export default function initDatatable({
     columns,
     pageLength = 10,
     order = [],
+    filterSelector = null,
 }) {
     if (!document.querySelector(table)) return;
 
@@ -38,6 +39,13 @@ export default function initDatatable({
     $("#dt-length").on("change", function () {
         datatable.page.len(this.value).draw();
     });
+
+    // Global filter handler
+    if (filterSelector) {
+        $(document).on("change", filterSelector, function () {
+            datatable.ajax.reload(null, false);
+        });
+    }
 
     // Pagination click handler
     $(document).on("click", "#dt-pagination button[data-page]", function () {

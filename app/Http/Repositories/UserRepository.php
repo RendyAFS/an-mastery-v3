@@ -7,11 +7,16 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function getAll()
+    public function getAll($filter = 'active')
     {
-        return User::with('roles')
-            ->orderBy('id', 'desc')
-            ->get();
+        $query = User::with('roles')->orderBy('id', 'desc');
+
+        if ($filter === 'deleted') {
+            $query->onlyTrashed();
+        } elseif ($filter === 'all') {
+            $query->withTrashed();
+        }
+        return $query->get();
     }
 
     public function getRoles()

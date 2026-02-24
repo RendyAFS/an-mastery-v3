@@ -69,19 +69,21 @@ class MenuPermissionSeeder extends Seeder
                 foreach ($permissions as $action) {
                     $name = "{$prefix}.{$action}";
 
-                    Permission::updateOrCreate(
-                        ['name' => $name, 'guard_name' => 'web']
+                    $permission = Permission::updateOrCreate(
+                        [
+                            'name' => $name,
+                            'guard_name' => 'web'
+                        ],
+                        [
+                            'menu_id' => $menu->id
+                        ]
                     );
 
-                    $permissionNames[] = $name;
-                    $this->validPermissionNames[] = $name;
+                    $permissionNames[] = $permission->name;
+                    $this->validPermissionNames[] = $permission->name;
                 }
-
-                $menu->permissions()->sync(
-                    Permission::whereIn('name', $permissionNames)->pluck('id')
-                );
             } else {
-                $menu->permissions()->detach();
+                $menu->permissions()->delete();
             }
 
             if (isset($item['children'])) {
@@ -93,8 +95,8 @@ class MenuPermissionSeeder extends Seeder
     private function cleanupMenus(): void
     {
         Menu::whereNotIn('id', $this->validMenuIds)
-            ->each(function ($menu) {
-                $menu->permissions()->detach();
+            ->each(function (Menu $menu) {
+                $menu->permissions()->delete();
                 $menu->delete();
             });
     }
