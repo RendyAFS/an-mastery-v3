@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\MyProfile\UpdateProfileAction;
 use App\Http\Requests\MyProfile\UpdateMyProfileRequest;
 use App\Http\Requests\MyProfile\UpdateMyPasswordRequest;
 use App\Http\Resources\MyProfileResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class MyProfileController extends Controller
 {
@@ -18,32 +17,11 @@ class MyProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateMyProfileRequest $request)
+    public function update( UpdateMyProfileRequest $request, UpdateProfileAction $action)
     {
-        $user = $request->user();
+        $user = $action->handle($request->user(), $request);
 
-        DB::transaction(function () use ($user, $request) {
-
-            $user->update($request->validated());
-
-            $tmpPath = $request->input('avatar_tmp');
-
-            if ($tmpPath) {
-                if (Storage::disk('local')->exists($tmpPath)) {
-                    $user->clearMediaCollection('user-profile');
-                    $user->addMediaFromDisk($tmpPath, 'local')->toMediaCollection('user-profile');
-                    Storage::disk('local')->delete($tmpPath);
-                }
-
-                return;
-            }
-
-            if ($request->has('avatar_tmp') && !$tmpPath) {
-                $user->clearMediaCollection('user-profile');
-            }
-        });
-
-        return new MyProfileResource($user->fresh());
+        return new MyProfileResource($user);
     }
 
     public function updatePassword(UpdateMyPasswordRequest $request)
