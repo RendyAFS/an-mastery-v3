@@ -20,9 +20,12 @@ class SupplierResource extends JsonResource
             'address'    => $this->address,
             'contact'    => $this->contact,
             'notes'      => $this->notes,
-            'created_at' => $this->created_at->toDateTimeLocalString(),
-            'updated_at' => $this->updated_at->toDateTimeLocalString(),
-            'deleted_at' => $this->deleted_at?->toDateTimeLocalString() ?? null,
+            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
+            'deleted_at' => $this->deleted_at?->format('Y-m-d H:i:s'),
+            'created_by' => $this->created_by,
+            'updated_by' => $this->updated_by,
+            'deleted_by' => $this->deleted_by,
         ];
     }
 }

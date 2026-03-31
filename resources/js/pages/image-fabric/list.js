@@ -1,184 +1,124 @@
 import ApiProvider from "@/utils/api-provider";
-import initDatatable from "@/utils/datatable";
+import initCardgrid from "@/utils/cardgrid";
 
 const PageScript = (function () {
-    let datatable;
+    let cardgrid;
 
-    const reloadDatatable = () => {
-        datatable.ajax.reload(null, false);
+    const renderCard = (item) => {
+        const isDeleted = item.deleted_at !== null;
+
+        return `
+        <div class="h-80 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3
+            ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
+
+            <div class="aspect-square rounded-lg bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
+                flex items-center justify-center overflow-hidden">
+                ${
+                    item.image_url
+                        ? `<img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover rounded-lg">`
+                        : `<i data-lucide="image" class="size-10 text-(--color-gray)"></i>`
+                }
+            </div>
+
+            <div class="flex-1">
+                <p class="font-semibold text-sm truncate">${item.name}</p>
+                ${item.notes ? `<p class="text-xs text-(--color-gray) mt-1 line-clamp-2">${item.notes}</p>` : ""}
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
+                ${
+                    isDeleted
+                        ? `
+                    <span class="text-xs text-(--color-gray) font-medium flex items-center gap-1">
+                        <i data-lucide="trash-2" class="size-3"></i> Deleted
+                    </span>
+                    <div class="flex items-center gap-1">
+                        <button data-id="${item.id}"
+                            class="btn-restore p-1.5 rounded-lg text-xs text-(--color-success)
+                            hover:bg-(--color-gray)/20 flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="size-3.5"></i> Restore
+                        </button>
+                        <button data-id="${item.id}"
+                            class="btn-force-delete p-1.5 rounded-lg text-xs text-(--color-red)
+                            hover:bg-(--color-gray)/20 flex items-center gap-1">
+                            <i data-lucide="trash" class="size-3.5"></i> Delete
+                        </button>
+                    </div>
+                `
+                        : `
+                    <span class="text-xs text-(--color-gray)">${item.created_at ?? ""}</span>
+                    <div class="flex items-center gap-1">
+                        <a href="${route("image_fabrics.edit", item.id)}"
+                            class="p-1.5 rounded-lg hover:bg-(--color-gray)/20
+                            text-(--color-dark) dark:text-(--color-light)">
+                            <i data-lucide="square-pen" class="size-4"></i>
+                        </a>
+                        <button data-id="${item.id}"
+                            class="btn-delete p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red)">
+                            <i data-lucide="trash-2" class="size-4"></i>
+                        </button>
+                    </div>
+                `
+                }
+            </div>
+        </div>`;
     };
 
-    const DataTable = () => {
-        datatable = initDatatable({
-            table: "#suppliers-datatable",
-            filterSelector: "#filter-suppliers",
+    const CardGrid = () => {
+        cardgrid = initCardgrid({
+            containerId: "#image-fabric-cardgrid",
+            filterSelector: "#filter-image-fabric",
             ajax: {
-                url: route("suppliers.index"),
-                method: "GET",
-                dataSrc: "data",
-                data: function (d) {
-                    d.filter = $("#filter-suppliers").val();
-                },
+                url: route("image_fabrics.index"),
             },
-            columns: [
-                {
-                    data: "name",
-                    width: "35%",
-                },
-                {
-                    data: "address",
-                    width: "35%",
-                    className: "text-center",
-                },
-                {
-                    data: "contact",
-                    width: "25%",
-                    className: "text-center",
-                    render: (data) => {
-                        return `<span class="block text-center">${data}</span>`;
-                    },
-                },
-                {
-                    data: "id",
-                    width: "5%",
-                    orderable: false,
-                    searchable: false,
-                    className: "px-4 py-3 text-center",
-                    render(id, type, row) {
-                        const isDeleted = row.deleted_at !== null;
-
-                        return `
-                        <div class="hs-dropdown [--auto-close:inside] relative inline-flex">
-                            <button type="button" class="hs-dropdown-toggle inline-flex items-center gap-x-3 px-3 py-2
-                                text-sm font-medium rounded-lg
-                                bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
-                                hover:bg-(--color-gray)/40
-                                cursor-pointer">
-                                <i data-lucide="ellipsis-vertical" class="size-4"></i>
-                            </button>
-
-                            <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 mt-2 hidden z-10
-                                transition-[margin,opacity] opacity-0 duration-300
-                                w-auto bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
-                                shadow-md rounded-lg p-2"
-                                role="menu" aria-orientation="vertical">
-
-                                <div class="p-1 space-y-0.5">
-
-                                ${
-                                    !isDeleted
-                                        ? `
-                                        <a href="${route("suppliers.edit", id)}"
-                                            class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
-                                            <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
-                                        </a>
-
-                                        <button type="button" data-user-id="${id}"
-                                            class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
-                                            <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
-                                        </button>
-                                        `
-                                        : `
-                                        <button type="button" data-user-id="${id}"
-                                            class="btn-restore w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-success) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
-                                            <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
-                                        </button>
-
-                                        <button type="button" data-user-id="${id}"
-                                            class="btn-force-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
-                                            <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
-                                        </button>
-                                        `
-                                }
-                                </div>
-                            </div>
-                        </div>
-                        `;
-                    },
-                },
-            ],
+            renderCard,
+            pageLength: 12,
         });
     };
 
     const bindEvents = () => {
-        $(document).on("click", ".btn-delete", function (e) {
-            e.preventDefault();
-            const userId = $(this).data("user-id");
-            handleDelete(userId);
+        $(document).on("click", ".btn-delete", async function () {
+            const id = $(this).data("id");
+            const confirmed = await Confirm.delete(
+                "Are you sure you want to delete this Image Fabric?",
+            );
+            if (!confirmed) return;
+            try {
+                await ApiProvider.delete(route("image_fabrics.destroy", id));
+                Toast.success("Success", "Image Fabric deleted successfully");
+                cardgrid.reload();
+            } catch (e) {
+                console.error(e);
+            }
         });
-    };
 
-    const handleDelete = async (userId) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this user? This action cannot be undone.",
-        );
+        $(document).on("click", ".btn-restore", async function () {
+            const id = $(this).data("id");
+            const confirmed = await Confirm.show(
+                "Restore this Image Fabric?",
+                "Confirmation",
+            );
+            if (!confirmed) return;
+            await ApiProvider.put(route("image_fabrics.restore", id));
+            Toast.success("Success", "Image Fabric restored");
+            cardgrid.reload();
+        });
 
-        if (!confirmed) {
-            return;
-        }
-
-        try {
-            await ApiProvider.delete(route("suppliers.destroy", userId));
-            Toast.success("Success", "Supplier deleted successfully");
-
-            reloadDatatable();
-        } catch (error) {
-            console.error("Delete user error:", error);
-        }
-    };
-
-    $(document).on("click", ".btn-restore", function () {
-        const id = $(this).data("user-id");
-        handleRestore(id);
-    });
-
-    const handleRestore = async (id) => {
-        const confirmed = await Confirm.show(
-            "Restore this user?",
-            "Confirmation",
-        );
-
-        if (!confirmed) return;
-
-        await ApiProvider.put(route("suppliers.restore", id));
-
-        Toast.success("Success", "Supplier restored");
-        reloadDatatable();
-    };
-
-    $(document).on("click", ".btn-force-delete", function () {
-        const id = $(this).data("user-id");
-        handleForceDelete(id);
-    });
-
-    const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the user. Continue?",
-        );
-
-        if (!confirmed) return;
-
-        await ApiProvider.delete(route("suppliers.force-delete", id));
-
-        Toast.success("Success", "Supplier permanently deleted");
-        reloadDatatable();
+        $(document).on("click", ".btn-force-delete", async function () {
+            const id = $(this).data("id");
+            const confirmed = await Confirm.delete(
+                "This will permanently delete the Image Fabric. Continue?",
+            );
+            if (!confirmed) return;
+            await ApiProvider.delete(route("image_fabrics.force-delete", id));
+            Toast.success("Success", "Image Fabric permanently deleted");
+            cardgrid.reload();
+        });
     };
 
     return {
         init() {
-            DataTable();
+            CardGrid();
             bindEvents();
         },
     };

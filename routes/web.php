@@ -48,9 +48,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::resource('employees', App\Http\Controllers\EmployeeController::class)->names('employees');
 
     // Image Fabric
-    Route::prefix('image-fabrics')->as('image-fabrics.')->group(function () {
-        Route::put('{image-fabric}/restore', [App\Http\Controllers\ImageFabricController::class, 'restore'])->name('restore');
-        Route::delete('{image-fabric}/force-delete', [App\Http\Controllers\ImageFabricController::class, 'forceDelete'])->name('force-delete');
+    Route::prefix('image-fabrics')->as('image_fabrics.')->group(function () {
+        Route::put('{imageFabric}/restore', [App\Http\Controllers\ImageFabricController::class, 'restore'])->name('restore');
+        Route::delete('{imageFabric}/force-delete', [App\Http\Controllers\ImageFabricController::class, 'forceDelete'])->name('force-delete');
     });
-    Route::resource('image-fabrics', App\Http\Controllers\ImageFabricController::class)->names('image-fabrics');
+    Route::resource('image-fabrics', App\Http\Controllers\ImageFabricController::class)->names('image_fabrics');
 });

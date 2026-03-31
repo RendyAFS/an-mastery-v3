@@ -42,7 +42,7 @@
                     dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"
                     data-action="save-another" />
 
-                <a href="{{ route('image-fabrics.index') }}"
+                <a href="{{ route('image_fabrics.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
                        bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">
