@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\MyProfile;
+namespace App\Http\Requests\ImageFabric;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateMyProfileRequest extends FormRequest
+class SaveImageFabricRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +22,10 @@ class UpdateMyProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($this->user()->id),
-            ],
+            'name'         => 'required|string|max:255',
+            'notes'        => 'nullable|string',
+            'image_tmp'    => ['nullable', 'string'],
+            'remove_image' => ['nullable', 'boolean'],
         ];
     }
 
@@ -38,9 +35,7 @@ class UpdateMyProfileRequest extends FormRequest
             'name.required'  => 'Name is required.',
             'name.string'    => 'Name must be a string.',
             'name.max'       => 'Name must be less than 255 characters.',
-            'email.required' => 'Email is required.',
-            'email.email'    => 'Email must be a valid email address.',
-            'email.unique'   => 'Email has already been taken.',
+            'notes.string'   => 'Notes must be a string.',
         ];
     }
 }

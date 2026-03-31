@@ -79,6 +79,7 @@ const PageScript = (function () {
             deleteUrl: route("filepond.revert"),
             acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
             allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+            maxFileSize: "2MB",
             maxSize: 2048,
             folder: "tmp",
             multiple: false,

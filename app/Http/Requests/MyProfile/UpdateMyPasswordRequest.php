@@ -26,4 +26,13 @@ class UpdateMyPasswordRequest extends FormRequest
             'password'  => ['required', 'string', Password::min(8)->letters()->numbers(), 'confirmed'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'password.required'  => 'Password is required.',
+            'password.string'    => 'Password must be a string.',
+            'password.confirmed' => 'Password confirmation does not match.',
+        ];
+    }
 }
