@@ -11,7 +11,7 @@
                 <h1 class="text-3xl font-bold">Image Fabric</h1>
                 <p class="text-sm">Manage image fabric data</p>
             </div>
-            <a href="{{ route('image-fabrics.create') }}"
+            <a href="{{ route('image_fabrics.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80">
                 <i data-lucide="plus" class="size-4"></i>

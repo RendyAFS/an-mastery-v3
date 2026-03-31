@@ -29,7 +29,7 @@ const PageScript = (function () {
                 ${
                     isDeleted
                         ? `
-                    <span class="text-xs text-(--color-red) font-medium flex items-center gap-1">
+                    <span class="text-xs text-(--color-gray) font-medium flex items-center gap-1">
                         <i data-lucide="trash-2" class="size-3"></i> Deleted
                     </span>
                     <div class="flex items-center gap-1">
@@ -48,7 +48,7 @@ const PageScript = (function () {
                         : `
                     <span class="text-xs text-(--color-gray)">${item.created_at ?? ""}</span>
                     <div class="flex items-center gap-1">
-                        <a href="${route("image-fabrics.edit", item.id)}"
+                        <a href="${route("image_fabrics.edit", item.id)}"
                             class="p-1.5 rounded-lg hover:bg-(--color-gray)/20
                             text-(--color-dark) dark:text-(--color-light)">
                             <i data-lucide="square-pen" class="size-4"></i>
@@ -69,7 +69,7 @@ const PageScript = (function () {
             containerId: "#image-fabric-cardgrid",
             filterSelector: "#filter-image-fabric",
             ajax: {
-                url: route("image-fabrics.index"),
+                url: route("image_fabrics.index"),
             },
             renderCard,
             pageLength: 12,
@@ -84,7 +84,7 @@ const PageScript = (function () {
             );
             if (!confirmed) return;
             try {
-                await ApiProvider.delete(route("image-fabrics.destroy", id));
+                await ApiProvider.delete(route("image_fabrics.destroy", id));
                 Toast.success("Success", "Image Fabric deleted successfully");
                 cardgrid.reload();
             } catch (e) {
@@ -99,7 +99,7 @@ const PageScript = (function () {
                 "Confirmation",
             );
             if (!confirmed) return;
-            await ApiProvider.put(route("image-fabrics.restore", id));
+            await ApiProvider.put(route("image_fabrics.restore", id));
             Toast.success("Success", "Image Fabric restored");
             cardgrid.reload();
         });
@@ -110,7 +110,7 @@ const PageScript = (function () {
                 "This will permanently delete the Image Fabric. Continue?",
             );
             if (!confirmed) return;
-            await ApiProvider.delete(route("image-fabrics.force-delete", id));
+            await ApiProvider.delete(route("image_fabrics.force-delete", id));
             Toast.success("Success", "Image Fabric permanently deleted");
             cardgrid.reload();
         });
