@@ -35,12 +35,12 @@ const PageScript = (function () {
                     <div class="flex items-center gap-1">
                         <button data-id="${item.id}"
                             class="btn-restore p-1.5 rounded-lg text-xs text-(--color-success)
-                            hover:bg-(--color-gray)/20 flex items-center gap-1">
+                            hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
                             <i data-lucide="rotate-ccw" class="size-3.5"></i> Restore
                         </button>
                         <button data-id="${item.id}"
                             class="btn-force-delete p-1.5 rounded-lg text-xs text-(--color-red)
-                            hover:bg-(--color-gray)/20 flex items-center gap-1">
+                            hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
                             <i data-lucide="trash" class="size-3.5"></i> Delete
                         </button>
                     </div>
@@ -50,11 +50,11 @@ const PageScript = (function () {
                     <div class="flex items-center gap-1">
                         <a href="${route("image_fabrics.edit", item.id)}"
                             class="p-1.5 rounded-lg hover:bg-(--color-gray)/20
-                            text-(--color-dark) dark:text-(--color-light)">
+                            text-(--color-dark) dark:text-(--color-light) cursor-pointer">
                             <i data-lucide="square-pen" class="size-4"></i>
                         </a>
                         <button data-id="${item.id}"
-                            class="btn-delete p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red)">
+                            class="btn-delete p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
                             <i data-lucide="trash-2" class="size-4"></i>
                         </button>
                     </div>
