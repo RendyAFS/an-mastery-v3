@@ -41,7 +41,7 @@ const PageScript = (function () {
 
         try {
             if (mode === "create") {
-                await ApiProvider.post(route("image-fabrics.store"), payload);
+                await ApiProvider.post(route("image_fabrics.store"), payload);
 
                 if (action === "save-another") {
                     Toast.success(
@@ -57,12 +57,12 @@ const PageScript = (function () {
                     "Success",
                     "Image Fabric Successfully Created",
                 );
-                window.location.href = route("image-fabrics.index");
+                window.location.href = route("image_fabrics.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(
-                    route("image-fabrics.update", id),
+                    route("image_fabrics.update", id),
                     payload,
                 );
                 flashToast(
@@ -70,7 +70,7 @@ const PageScript = (function () {
                     "Success",
                     "Image Fabric Successfully Updated",
                 );
-                window.location.href = route("image-fabrics.index");
+                window.location.href = route("image_fabrics.index");
             }
         } catch (error) {
             // error sudah ditangani ApiProvider
@@ -81,21 +81,23 @@ const PageScript = (function () {
 
     function initFilePond() {
         const existingImage = document.getElementById("image-preview")?.value;
+        const existingPath = document.getElementById("image-path")?.value;
 
         pond = FilePondHelper.init({
             selector: 'input[name="image"]',
             uploadUrl: route("filepond.process"),
             deleteUrl: route("filepond.revert"),
+            loadUrl: route("filepond.load"),
+            existingFileUrl: existingImage || null,
+            existingFilePath: existingPath || null,
             acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
             allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
             maxSize: 2048,
             folder: "tmp",
             multiple: false,
-            existingFileUrl: existingImage || null,
         });
 
         if (!pond) return;
-
         bindTmpField(pond);
     }
 

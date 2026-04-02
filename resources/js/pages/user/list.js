@@ -98,7 +98,7 @@ const PageScript = (function () {
                                         <a href="${route("users.edit", id)}"
                                             class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
                                             Edit
                                         </a>
@@ -106,7 +106,7 @@ const PageScript = (function () {
                                         <button type="button" data-user-id="${id}"
                                             class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
                                             Delete
                                         </button>
@@ -115,7 +115,7 @@ const PageScript = (function () {
                                         <button type="button" data-user-id="${id}"
                                             class="btn-restore w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-success) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
                                             Restore
                                         </button>
@@ -123,7 +123,7 @@ const PageScript = (function () {
                                         <button type="button" data-user-id="${id}"
                                             class="btn-force-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus">
+                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
                                             Force Delete
                                         </button>
