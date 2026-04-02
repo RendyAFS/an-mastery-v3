@@ -3,8 +3,15 @@
     {{-- Image Upload --}}
     <div class="space-y-2">
         <label class="block text-sm font-medium">Image</label>
+
+        {{-- URL publik untuk fallback --}}
         <input type="hidden" id="image-preview"
             value="{{ isset($imageFabric) ? $imageFabric->getFirstMediaUrl('image-fabrics') : '' }}" />
+
+        {{-- Path storage untuk server.load (agar preview bisa di-fetch) --}}
+        <input type="hidden" id="image-path"
+            value="{{ isset($imageFabric) ? optional($imageFabric->getFirstMedia('image-fabrics'))->getPath() : '' }}" />
+
         <input type="hidden" name="image_tmp" id="image_tmp"
             value="{{ isset($imageFabric) ? $imageFabric->getFirstMediaUrl('image-fabrics') : '' }}">
         <input type="hidden" name="remove_image" id="remove_image" value="0">

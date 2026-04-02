@@ -81,21 +81,23 @@ const PageScript = (function () {
 
     function initFilePond() {
         const existingImage = document.getElementById("image-preview")?.value;
+        const existingPath = document.getElementById("image-path")?.value;
 
         pond = FilePondHelper.init({
             selector: 'input[name="image"]',
             uploadUrl: route("filepond.process"),
             deleteUrl: route("filepond.revert"),
+            loadUrl: route("filepond.load"),
+            existingFileUrl: existingImage || null,
+            existingFilePath: existingPath || null,
             acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
             allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
             maxSize: 2048,
             folder: "tmp",
             multiple: false,
-            existingFileUrl: existingImage || null,
         });
 
         if (!pond) return;
-
         bindTmpField(pond);
     }
 
