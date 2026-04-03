@@ -41,6 +41,7 @@ class UserSeeder extends Seeder
             'users.view',
             'users.create',
             'users.read',
+            'users.edit',
             'users.update',
             'users.delete',
             'users.restore',
