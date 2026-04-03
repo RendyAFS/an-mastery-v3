@@ -6,7 +6,8 @@
         "build": "vite build",
         "dev": "vite",
         "get-update": "git pull origin develop && composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && npm run build && npm run dev",
-        "update": "composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && npm run build && npm run dev"
+        "update": "composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && npm run build && npm run dev",
+        "seeder": "composer install && npm install && php artisan migrate:fresh && php artisan db:seed && npm run build && npm run dev"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.11",

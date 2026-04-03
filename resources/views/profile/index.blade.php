@@ -13,16 +13,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-3 col-span-1">
                     <input type="hidden" id="avatar-preview" value="{{ $user->getFirstMediaUrl('user-profile') ?? '' }}" />
-                    <div class="flex justify-center items-center">
-                        <img class="w-32 h-32 rounded-full"
-                            src="{{ $user->getFirstMediaUrl('user-profile')
-                                ? $user->getFirstMediaUrl('user-profile')
-                                : 'https://ui-avatars.com/api/?background=random&name=' . urlencode($user->name) }}"
-                            alt="{{ $user->name }}" />
+                    <div class="space-y-3 col-span-1">
+                        <input type="hidden" id="avatar-preview"
+                            value="{{ $user->getFirstMediaUrl('user-profile') ?? '' }}" />
+                        <input type="hidden" id="avatar-path"
+                            value="{{ optional($user->getFirstMedia('user-profile'))->getPath() }}" />
+                        <input type="hidden" name="avatar_tmp" id="avatar_tmp">
+                        <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
+                        <input type="file" name="avatar" class="filepond" accept="image/*" />
                     </div>
-                    <input type="hidden" name="avatar_tmp" id="avatar_tmp">
-                    <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
-                    <input type="file" name="avatar" class="filepond" accept="image/*" />
                 </div>
 
                 <div class="space-y-4 col-span-1 md:col-span-2">

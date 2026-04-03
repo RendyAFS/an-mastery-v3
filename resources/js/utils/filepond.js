@@ -30,6 +30,7 @@ const FilePondHelper = (function () {
         maxFileSize = null,
         maxSize = 5120,
         folder = "tmp",
+        isCircle = false,
     }) {
         const input = document.querySelector(selector);
         if (!input) return null;
@@ -39,6 +40,16 @@ const FilePondHelper = (function () {
             allowReplace: !multiple,
             acceptedFileTypes,
             maxFileSize,
+
+            ...(isCircle && {
+                imageCropAspectRatio: "1:1",
+                stylePanelLayout: "compact circle",
+                imagePreviewHeight: 150,
+                styleLoadIndicatorPosition: "center bottom",
+                styleProgressIndicatorPosition: "right bottom",
+                styleButtonRemoveItemPosition: "left bottom",
+                styleButtonProcessItemPosition: "right bottom",
+            }),
 
             server: {
                 process: (
