@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\User\SaveUserAction;
-use App\Http\Repositories\UserRepository;
+use App\Repositories\UserRepository;
 use App\Http\Requests\User\SaveUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;

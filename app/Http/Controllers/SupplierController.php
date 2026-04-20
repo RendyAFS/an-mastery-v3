@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\SupplierRepository;
+use App\Repositories\SupplierRepository;
 use App\Http\Requests\Supplier\SaveSupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
