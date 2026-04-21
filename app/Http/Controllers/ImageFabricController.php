@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ImageFabric\SaveImageFabricAction;
-use App\Http\Repositories\ImageFabricRepository;
+use App\Repositories\ImageFabricRepository;
 use App\Http\Requests\ImageFabric\SaveImageFabricRequest;
 use App\Http\Resources\ImageFabricResource;
 use App\Models\ImageFabric;

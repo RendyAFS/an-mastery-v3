@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Repositories;
+namespace App\Repositories;
 
-use App\Models\Employee;
+use App\Models\Supplier;
 
-class EmployeeRepository
+class SupplierRepository
 {
     public function getAll($filter = 'active')
     {
-        $query = Employee::query()
+        $query = Supplier::query()
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {

@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Repositories;
+namespace App\Repositories;
 
-use App\Models\Role;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Employee;
 
-class RoleRepository
+class EmployeeRepository
 {
     public function getAll($filter = 'active')
     {
-        $query = Role::query()
-            ->where('name', '!=', 'Super Admin')
+        $query = Employee::query()
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {

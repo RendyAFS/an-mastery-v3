@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\RoleRepository;
+use App\Repositories\RoleRepository;
 use App\Http\Resources\RoleResource;
 use App\Models\Menu;
 use App\Models\Role;

@@ -210,7 +210,7 @@ const PageScript = (function () {
 
     function renderRoleBadge(roleName) {
         const baseClass =
-            "inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium";
+            "inline-flex items-center gap-x-1 py-1 px-3 rounded-lg text-xs font-medium";
 
         const map = {
             "Super Admin": `${baseClass} badge-danger`,

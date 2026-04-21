@@ -43,6 +43,10 @@ return [
                 'name' => 'Image Fabric',
                 'url'  => '/image-fabrics',
             ],
+            [
+                'name' => 'Color Fabric',
+                'url'  => '/color-fabrics',
+            ],
         ],
     ],
 ];
