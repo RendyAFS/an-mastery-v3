@@ -46,4 +46,18 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{employee}/force-delete', [App\Http\Controllers\EmployeeController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('employees', App\Http\Controllers\EmployeeController::class)->names('employees');
+
+    // Image Fabric
+    Route::prefix('image-fabrics')->as('image_fabrics.')->group(function () {
+        Route::put('{imageFabric}/restore', [App\Http\Controllers\ImageFabricController::class, 'restore'])->name('restore');
+        Route::delete('{imageFabric}/force-delete', [App\Http\Controllers\ImageFabricController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('image-fabrics', App\Http\Controllers\ImageFabricController::class)->names('image_fabrics');
+
+    // Color Fabric
+    Route::prefix('color-fabrics')->as('color_fabrics.')->group(function () {
+        Route::put('{colorFabric}/restore', [App\Http\Controllers\ColorFabricController::class, 'restore'])->name('restore');
+        Route::delete('{colorFabric}/force-delete', [App\Http\Controllers\ColorFabricController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('color-fabrics', App\Http\Controllers\ColorFabricController::class)->names('color_fabrics');
 });

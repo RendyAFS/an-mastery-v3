@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\MyProfile;
+namespace App\Http\Requests\ColorFabric;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class UpdateMyPasswordRequest extends FormRequest
+class SaveColorFabricRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +22,18 @@ class UpdateMyPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password'  => ['required', 'string', Password::min(8)->letters()->numbers(), 'confirmed'],
+            'name'       => 'required|string|max:255',
+            'code_color' => 'nullable|string|max:255',
+            'notes'      => 'nullable|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'password.required'  => 'Password is required.',
-            'password.string'    => 'Password must be a string.',
-            'password.confirmed' => 'Password confirmation does not match.',
+            'name.required'       => 'Name is required.',
+            'code_color.required' => 'Code Color is required.',
+            'notes.string'        => 'Notes must be a string.',
         ];
     }
 }

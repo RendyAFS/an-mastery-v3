@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\RoleRepository;
+use App\Repositories\RoleRepository;
 use App\Http\Resources\RoleResource;
+use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -34,7 +34,7 @@ class RoleController extends Controller
     {
         $this->authorize('roles.create');
 
-        $menus = \App\Models\Menu::with([
+        $menus = Menu::with([
             'children.permissions',
             'permissions'
         ])
@@ -77,7 +77,7 @@ class RoleController extends Controller
 
         $role = Role::with('permissions')->findOrFail($id);
 
-        $menus = \App\Models\Menu::with([
+        $menus = Menu::with([
             'children.permissions',
             'permissions'
         ])

@@ -14,6 +14,7 @@ class MenuPermissionSeeder extends Seeder
         'view',
         'create',
         'read',
+        'edit',
         'update',
         'delete',
         'restore',

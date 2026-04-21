@@ -1,25 +1,13 @@
 import * as FilePond from "filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginImageEdit from "filepond-plugin-image-edit";
-import FilePondPluginImageTransform from "filepond-plugin-image-transform";
-import FilePondPluginImageResize from "filepond-plugin-image-resize";
-import FilePondPluginImageCrop from "filepond-plugin-image-crop";
-
-import { openDefaultEditor } from "@pqina/pintura";
 
 import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import "@pqina/pintura/pintura.css";
 
 FilePond.registerPlugin(
     FilePondPluginImagePreview,
     FilePondPluginFileValidateType,
-    // FilePondPluginImageEdit,
-    // FilePondPluginImageTransform,
-    // FilePondPluginImageResize,
-    // FilePondPluginImageCrop,
 );
 
 const FilePondHelper = (function () {
@@ -29,29 +17,20 @@ const FilePondHelper = (function () {
             ?.getAttribute("content");
     }
 
-    /**
-     * Init FilePond
-     *
-     * @param {Object} options
-     * @param {String} options.selector
-     * @param {String} options.uploadUrl
-     * @param {String} options.deleteUrl
-     * @param {String|null} options.existingFileUrl
-     * @param {Array} options.acceptedFileTypes
-     * @param {Boolean} options.multiple
-     */
-
     function init({
         selector,
         uploadUrl,
         deleteUrl,
+        loadUrl = null,
         existingFileUrl = null,
+        existingFilePath = null,
         acceptedFileTypes = [],
         allowedMimeTypes = [],
         multiple = false,
         maxFileSize = null,
         maxSize = 5120,
         folder = "tmp",
+        isCircle = false,
     }) {
         const input = document.querySelector(selector);
         if (!input) return null;
@@ -61,6 +40,16 @@ const FilePondHelper = (function () {
             allowReplace: !multiple,
             acceptedFileTypes,
             maxFileSize,
+
+            ...(isCircle && {
+                imageCropAspectRatio: "1:1",
+                stylePanelLayout: "compact circle",
+                imagePreviewHeight: 150,
+                styleLoadIndicatorPosition: "center bottom",
+                styleProgressIndicatorPosition: "right bottom",
+                styleButtonRemoveItemPosition: "left bottom",
+                styleButtonProcessItemPosition: "right bottom",
+            }),
 
             server: {
                 process: (
@@ -86,7 +75,6 @@ const FilePondHelper = (function () {
                     const request = new XMLHttpRequest();
                     request.open("POST", uploadUrl);
                     request.setRequestHeader("X-CSRF-TOKEN", getCsrfToken());
-
                     request.upload.onprogress = (e) =>
                         progress(e.lengthComputable, e.loaded, e.total);
 
@@ -112,7 +100,6 @@ const FilePondHelper = (function () {
                     };
 
                     request.send(formData);
-
                     return {
                         abort: () => {
                             request.abort();
@@ -120,6 +107,38 @@ const FilePondHelper = (function () {
                         },
                     };
                 },
+
+                load: loadUrl
+                    ? (source, load, error, progress, abort, headers) => {
+                          const request = new XMLHttpRequest();
+                          request.open(
+                              "GET",
+                              `${loadUrl}?file=${encodeURIComponent(source)}`,
+                          );
+                          request.responseType = "blob";
+
+                          request.onload = function () {
+                              if (
+                                  request.status >= 200 &&
+                                  request.status < 300
+                              ) {
+                                  load(request.response);
+                              } else {
+                                  error("Error loading file");
+                              }
+                          };
+
+                          request.onerror = () => error("Network error");
+                          request.send();
+
+                          return {
+                              abort: () => {
+                                  request.abort();
+                                  abort();
+                              },
+                          };
+                      }
+                    : undefined,
 
                 revert: (uniqueFileId, load, error) => {
                     const request = new XMLHttpRequest();
@@ -135,7 +154,11 @@ const FilePondHelper = (function () {
             },
         });
 
-        if (existingFileUrl) {
+        if (existingFilePath && loadUrl) {
+            pond.files = [
+                { source: existingFilePath, options: { type: "local" } },
+            ];
+        } else if (existingFileUrl) {
             pond.files = [
                 { source: existingFileUrl, options: { type: "local" } },
             ];

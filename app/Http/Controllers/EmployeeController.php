@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\EmployeeRepository;
+use App\Repositories\EmployeeRepository;
 use App\Http\Requests\Employee\SaveEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
-use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {

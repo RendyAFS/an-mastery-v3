@@ -23,7 +23,7 @@ export default function initDatatable({
         order,
         drawCallback() {
             initLucide();
-
+            $(`${table} tbody tr`).addClass("hover:!bg-(--color-light-gray) dark:hover:!bg-(--color-dark-slate) cursor-pointer");
             if (window.HSStaticMethods) {
                 window.HSStaticMethods.autoInit();
             }

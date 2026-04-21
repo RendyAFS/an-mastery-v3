@@ -5,24 +5,38 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class FilepondController extends Controller
 {
     public function load(Request $request)
     {
         $filePath = $request->query('file');
-        if (!$filePath || !Storage::exists($filePath)) {
+
+        if (!$filePath) {
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        $file = Storage::get($filePath);
-        $mime = Storage::mimeType($filePath);
-        $name = basename($filePath);
+        if (file_exists($filePath)) {
+            $file = file_get_contents($filePath);
+            $mime = mime_content_type($filePath);
+            $name = basename($filePath);
 
-        return response($file)
-            ->header('Content-Type', $mime)
-            ->header('Content-Disposition', "inline; filename=\"$name\"");
+            return response($file)
+                ->header('Content-Type', $mime)
+                ->header('Content-Disposition', "inline; filename=\"$name\"");
+        }
+
+        if (Storage::exists($filePath)) {
+            $file = Storage::get($filePath);
+            $mime = Storage::mimeType($filePath);
+            $name = basename($filePath);
+
+            return response($file)
+                ->header('Content-Type', $mime)
+                ->header('Content-Disposition', "inline; filename=\"$name\"");
+        }
+
+        return response()->json(['error' => 'File not found'], 404);
     }
 
     public function process(Request $request)

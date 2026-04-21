@@ -71,18 +71,23 @@ const PageScript = (function () {
 
     function initFilePond() {
         const existingImage = document.getElementById("avatar-preview")?.value;
-        console.log(existingImage);
+        const existingPath = document.getElementById("avatar-path")?.value;
 
         const pond = FilePondHelper.init({
             selector: 'input[name="avatar"]',
             uploadUrl: route("filepond.process"),
             deleteUrl: route("filepond.revert"),
+            loadUrl: route("filepond.load"),
+            existingFileUrl: existingImage || null,
+            existingFilePath: existingPath || null,
             acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
             allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+            maxFileSize: "2MB",
             maxSize: 2048,
             folder: "tmp",
             multiple: false,
-            existingFileUrl: existingImage,
+
+            isCircle: true,
         });
 
         if (!pond) return;
@@ -92,15 +97,24 @@ const PageScript = (function () {
 
     function bindTmpField(pond, hiddenInputId) {
         const hiddenInput = document.getElementById(hiddenInputId);
+        const removeInput = document.getElementById("remove_avatar");
 
         pond.on("processfile", (error, file) => {
             if (!error) {
                 hiddenInput.value = file.serverId;
+
+                if (removeInput) {
+                    removeInput.value = "0";
+                }
             }
         });
 
         pond.on("removefile", () => {
             hiddenInput.value = "";
+
+            if (removeInput) {
+                removeInput.value = "1";
+            }
         });
     }
 
