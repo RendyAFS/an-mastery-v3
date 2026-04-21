@@ -23,26 +23,33 @@
         <x-datatable id="users-datatable" filterId="filter-users">
             <thead class="border-b">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                        Name</th>
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                        Email</th>
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
                             Roles
                         </div>
                     </th>
-                    <th>
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
                             Is Active
                         </div>
                     </th>
-                    <th>
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
                             <i data-lucide="settings" class="size-4"></i>
                         </div>
                     </th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody class="divide-y divide-(--color-gray) dark:divide-(--color-dark-gray)"></tbody>
         </x-datatable>
     </div>
 @endsection
