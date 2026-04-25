@@ -60,4 +60,11 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{colorFabric}/force-delete', [App\Http\Controllers\ColorFabricController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('color-fabrics', App\Http\Controllers\ColorFabricController::class)->names('color_fabrics');
+
+    // Type Fabric
+    Route::prefix('type-fabrics')->as('type_fabrics.')->group(function () {
+        Route::put('{typeFabric}/restore', [App\Http\Controllers\TypeFabricController::class, 'restore'])->name('restore');
+        Route::delete('{typeFabric}/force-delete', [App\Http\Controllers\TypeFabricController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('type-fabrics', App\Http\Controllers\TypeFabricController::class)->names('type_fabrics');
 });
