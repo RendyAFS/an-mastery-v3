@@ -2,63 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ColorFabric\SaveColorFabricRequest;
+use App\Http\Resources\ColorFabricResource;
+use App\Models\ColorFabric;
+use App\Repositories\ColorFabricRepository;
 use Illuminate\Http\Request;
 
 class ColorFabricController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        private ColorFabricRepository $colorFabricRepository
+    ) {}
+
     public function index()
     {
-        //
+        $this->authorize('color-fabrics.view');
+
+        if (request()->expectsJson()) {
+
+            $filter = request('filter', 'active');
+
+            $colorFabrics = $this->colorFabricRepository->getAll($filter);
+
+            return ColorFabricResource::collection($colorFabrics);
+        }
+
+        return view('color-fabric.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $this->authorize('color-fabrics.create');
+
+        return view('color-fabric.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(SaveColorFabricRequest $request)
     {
-        //
+        $this->authorize('color-fabrics.create');
+
+        $colorFabric = ColorFabric::create($request->validated());
+
+        return new ColorFabricResource($colorFabric);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(ColorFabric $colorFabric)
     {
-        //
+        $this->authorize('color-fabrics.edit');
+
+        return view('color-fabric.edit', compact('colorFabric'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(SaveColorFabricRequest $request, ColorFabric $colorFabric)
     {
-        //
+        $this->authorize('color-fabrics.update');
+
+        $colorFabric->update($request->validated());
+
+        return new ColorFabricResource($colorFabric);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(ColorFabric $colorFabric)
     {
-        //
+        $this->authorize('color-fabrics.delete');
+
+        $colorFabric->delete();
+
+        return response()->noContent();
+    }
+
+    public function restore($id)
+    {
+        $this->authorize('color-fabrics.restore');
+
+        $colorFabric = ColorFabric::onlyTrashed()->findOrFail($id);
+
+        $colorFabric->restore();
+
+        return response()->json([
+            'message' => 'ColorFabric restored successfully'
+        ]);
+    }
+
+    public function forceDelete($id)
+    {
+        $this->authorize('color-fabrics.forceDelete');
+
+        $colorFabric = ColorFabric::onlyTrashed()->findOrFail($id);
+
+        $colorFabric->forceDelete();
+
+        return response()->json([
+            'message' => 'ColorFabric permanently deleted'
+        ]);
     }
 }
