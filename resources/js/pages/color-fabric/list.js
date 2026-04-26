@@ -1,14 +1,17 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
+import normalizeFormInputs from "@/utils/normalize-form";
+import { startLoading, stopLoading } from "@/utils/button-loading";
 
 const PageScript = (function () {
     let datatable;
+    let form;
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
     };
 
-    const DataTable = () => {
+    const initDataTable = () => {
         datatable = initDatatable({
             table: "#color-fabrics-datatable",
             filterSelector: "#filter-color-fabrics",
@@ -23,12 +26,16 @@ const PageScript = (function () {
             columns: [
                 {
                     data: "name",
-                    width: "35%",
+                    width: "30%",
                 },
                 {
                     data: "code_color",
-                    width: "35%",
+                    width: "30%",
                     className: "text-center",
+                },
+                {
+                    data: "notes",
+                    width: "35%",
                 },
                 {
                     data: "id",
@@ -60,15 +67,15 @@ const PageScript = (function () {
                                 ${
                                     !isDeleted
                                         ? `
-                                        <a href="${route("color_fabrics.edit", id)}"
-                                            class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
+                                        <button type="button" data-id="${id}"
+                                            class="btn-edit w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
                                             Edit
-                                        </a>
+                                        </button>
 
-                                        <button type="button" data-user-id="${id}"
+                                        <button type="button" data-id="${id}"
                                             class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
@@ -77,7 +84,7 @@ const PageScript = (function () {
                                         </button>
                                         `
                                         : `
-                                        <button type="button" data-user-id="${id}"
+                                        <button type="button" data-id="${id}"
                                             class="btn-restore w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
@@ -85,7 +92,7 @@ const PageScript = (function () {
                                             Restore
                                         </button>
 
-                                        <button type="button" data-user-id="${id}"
+                                        <button type="button" data-id="${id}"
                                             class="btn-force-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
@@ -104,73 +111,180 @@ const PageScript = (function () {
         });
     };
 
-    const bindEvents = () => {
-        $(document).on("click", ".btn-delete", function (e) {
-            e.preventDefault();
-            const userId = $(this).data("user-id");
-            handleDelete(userId);
-        });
+    const openModal = () => {
+        HSOverlay.open("#hs-color-fabric-modal");
     };
 
-    const handleDelete = async (userId) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this user? This action cannot be undone.",
-        );
+    const closeModal = () => {
+        HSOverlay.close("#hs-color-fabric-modal");
+    };
 
-        if (!confirmed) {
-            return;
+    const setModalTitle = (title) => {
+        $("#hs-color-fabric-modal-label").text(title);
+    };
+
+    const setFormMode = (mode, id = null) => {
+        form.dataset.mode = mode;
+
+        if (id) {
+            form.dataset.id = id;
+        } else {
+            delete form.dataset.id;
         }
+    };
+
+    const resetModal = () => {
+        form.reset();
+        setFormMode("create");
+        setModalTitle("Add Color Fabric");
+    };
+
+    const fillForm = (data) => {
+        $("#name").val(data.name ?? "");
+        $("#code_color").val(data.code_color ?? "");
+        $("#notes").val(data.notes ?? "");
+    };
+
+    const submitForm = async (submitter) => {
+        const mode = form.dataset.mode;
+        const id = form.dataset.id;
+
+        const formData = new FormData(form);
+        let payload = Object.fromEntries(formData.entries());
+        payload = normalizeFormInputs(form, payload);
 
         try {
-            await ApiProvider.delete(route("color_fabrics.destroy", userId));
-            Toast.success("Success", "Color fabric deleted successfully");
+            if (mode === "create") {
+                await ApiProvider.post(route("color_fabrics.store"), payload);
+                Toast.success("Success", "Color Fabric Successfully Created");
+            }
 
+            if (mode === "edit") {
+                await ApiProvider.put(
+                    route("color_fabrics.update", id),
+                    payload,
+                );
+                Toast.success("Success", "Color Fabric Successfully Updated");
+            }
+
+            closeModal();
+            reloadDatatable();
+        } catch (error) {
+            // error sudah ditangani ApiProvider
+        } finally {
+            stopLoading(submitter);
+        }
+    };
+
+    const handleCreate = () => {
+        resetModal();
+        openModal();
+    };
+
+    const handleEdit = async (id) => {
+        setModalTitle("Edit Color Fabric");
+        setFormMode("edit", id);
+        openModal();
+
+        try {
+            const response = await ApiProvider.get(
+                route("color_fabrics.show", id),
+            );
+            fillForm(response.data);
+        } catch (error) {
+            console.error("Fetch color fabric error:", error);
+            closeModal();
+        }
+    };
+
+    const handleDelete = async (id) => {
+        const confirmed = await Confirm.delete(
+            "Are you sure you want to delete this color fabric? This action cannot be undone.",
+        );
+
+        if (!confirmed) return;
+
+        try {
+            await ApiProvider.delete(route("color_fabrics.destroy", id));
+            Toast.success("Success", "Color fabric deleted successfully");
             reloadDatatable();
         } catch (error) {
             console.error("Delete color fabric error:", error);
         }
     };
 
-    $(document).on("click", ".btn-restore", function () {
-        const id = $(this).data("user-id");
-        handleRestore(id);
-    });
-
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this user?",
+            "Restore this color fabric?",
             "Confirmation",
         );
 
         if (!confirmed) return;
 
-        await ApiProvider.put(route("color_fabrics.restore", id));
-
-        Toast.success("Success", "Color fabric restored");
-        reloadDatatable();
+        try {
+            await ApiProvider.put(route("color_fabrics.restore", id));
+            Toast.success("Success", "Color fabric restored");
+            reloadDatatable();
+        } catch (error) {
+            console.error("Restore color fabric error:", error);
+        }
     };
-
-    $(document).on("click", ".btn-force-delete", function () {
-        const id = $(this).data("user-id");
-        handleForceDelete(id);
-    });
 
     const handleForceDelete = async (id) => {
         const confirmed = await Confirm.delete(
-            "This will permanently delete the user. Continue?",
+            "This will permanently delete the color fabric. Continue?",
         );
 
         if (!confirmed) return;
 
-        await ApiProvider.delete(route("color_fabrics.force-delete", id));
+        try {
+            await ApiProvider.delete(route("color_fabrics.force-delete", id));
+            Toast.success("Success", "Color fabric permanently deleted");
+            reloadDatatable();
+        } catch (error) {
+            console.error("Force delete color fabric error:", error);
+        }
+    };
 
-        Toast.success("Success", "Color fabric permanently deleted");
-        reloadDatatable();
+    const bindEvents = () => {
+        $(document).on("click", "#btn-create-color-fabric", () => {
+            handleCreate();
+        });
+
+        $(document).on("click", ".btn-edit", function () {
+            handleEdit($(this).data("id"));
+        });
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const submitter = e.submitter;
+
+            if (submitter?.hasAttribute("data-button-loading")) {
+                startLoading(submitter);
+            }
+
+            await submitForm(submitter);
+        });
+
+        $(document).on("click", ".btn-delete", function () {
+            handleDelete($(this).data("id"));
+        });
+
+        $(document).on("click", ".btn-restore", function () {
+            handleRestore($(this).data("id"));
+        });
+
+        $(document).on("click", ".btn-force-delete", function () {
+            handleForceDelete($(this).data("id"));
+        });
     };
 
     return {
         init() {
-            DataTable();
+            form = document.getElementById("color-fabric-form");
+
+            initDataTable();
             bindEvents();
         },
     };

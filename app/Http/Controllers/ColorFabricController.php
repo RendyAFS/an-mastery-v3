@@ -32,9 +32,7 @@ class ColorFabricController extends Controller
 
     public function create()
     {
-        $this->authorize('color-fabrics.create');
-
-        return view('color-fabric.create');
+        //
     }
 
     public function store(SaveColorFabricRequest $request)
@@ -46,16 +44,16 @@ class ColorFabricController extends Controller
         return new ColorFabricResource($colorFabric);
     }
 
-    public function show(string $id)
+    public function show(ColorFabric $colorFabric)
     {
-        //
+        $this->authorize('color-fabrics.view');
+
+        return new ColorFabricResource($colorFabric);
     }
 
     public function edit(ColorFabric $colorFabric)
     {
-        $this->authorize('color-fabrics.edit');
-
-        return view('color-fabric.edit', compact('colorFabric'));
+        //
     }
 
     public function update(SaveColorFabricRequest $request, ColorFabric $colorFabric)
