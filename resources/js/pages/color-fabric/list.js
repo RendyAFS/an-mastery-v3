@@ -267,6 +267,12 @@ const PageScript = (function () {
             await submitForm(submitter);
         });
 
+        document
+            .getElementById("hs-color-fabric-modal")
+            .addEventListener("close.hs.overlay", () => {
+                resetModal();
+            });
+
         $(document).on("click", ".btn-delete", function () {
             handleDelete($(this).data("id"));
         });
