@@ -6,7 +6,6 @@ use App\Http\Requests\ColorFabric\SaveColorFabricRequest;
 use App\Http\Resources\ColorFabricResource;
 use App\Models\ColorFabric;
 use App\Repositories\ColorFabricRepository;
-use Illuminate\Http\Request;
 
 class ColorFabricController extends Controller
 {
@@ -51,7 +50,7 @@ class ColorFabricController extends Controller
         return new ColorFabricResource($colorFabric);
     }
 
-    public function edit(ColorFabric $colorFabric)
+    public function edit()
     {
         //
     }

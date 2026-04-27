@@ -44,7 +44,7 @@ class MakeModuleCommand extends Command
 
         // Resource
         $this->call('make:resource', [
-            'name' => "{$studly}/{$studly}Resource",
+            'name' => "{$studly}Resource",
         ]);
 
         $baseViewPath = resource_path("views/{$kebab}");
