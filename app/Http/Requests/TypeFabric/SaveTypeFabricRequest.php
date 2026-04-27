@@ -11,7 +11,7 @@ class SaveTypeFabricRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class SaveTypeFabricRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'  => 'required|string|max:255',
+            'notes' => 'nullable|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required.',
+            'name.max'      => 'Name max 255 characters.',
         ];
     }
 }

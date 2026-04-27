@@ -50,7 +50,7 @@ class EmployeeController extends Controller
         return new EmployeeResource($employee);
     }
 
-    public function edit(Employee $employee)
+    public function edit()
     {
         //
     }
