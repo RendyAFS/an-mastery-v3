@@ -31,9 +31,7 @@ class SupplierController extends Controller
 
     public function create()
     {
-        $this->authorize('suppliers.create');
-
-        return view('supplier.create');
+        //
     }
 
     public function store(SaveSupplierRequest $request)
@@ -45,16 +43,16 @@ class SupplierController extends Controller
         return new SupplierResource($supplier);
     }
 
-    public function show(string $id)
+    public function show(Supplier $supplier)
     {
-        //
+        $this->authorize('suppliers.view');
+
+        return new SupplierResource($supplier);
     }
 
-    public function edit(Supplier $supplier)
+    public function edit()
     {
-        $this->authorize('suppliers.edit');
-
-        return view('supplier.edit', compact('supplier'));
+        //
     }
 
     public function update(SaveSupplierRequest $request, Supplier $supplier)
