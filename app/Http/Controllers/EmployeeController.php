@@ -31,9 +31,7 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        $this->authorize('employees.create');
-
-        return view('employee.create');
+        //
     }
 
     public function store(SaveEmployeeRequest $request)
@@ -45,16 +43,16 @@ class EmployeeController extends Controller
         return new EmployeeResource($employee);
     }
 
-    public function show(string $id)
+    public function show(Employee $employee)
     {
-        //
+        $this->authorize('employees.view');
+
+        return new EmployeeResource($employee);
     }
 
     public function edit(Employee $employee)
     {
-        $this->authorize('employees.edit');
-
-        return view('employee.edit', compact('employee'));
+        //
     }
 
     public function update(SaveEmployeeRequest $request, Employee $employee)
