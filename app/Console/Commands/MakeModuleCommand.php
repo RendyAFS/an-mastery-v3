@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class MakeModuleCommand extends Command
 {
     protected $signature = 'make:module {name} {--resource : Generate resource controller} {--simple : Generate simple CRUD (modal based)}';
-    protected $description = 'Generate module (Controller, Repository, Request)';
+    protected $description = 'Generate module (Controller, Repository, Request, Resource, View, JS)';
 
     public function handle()
     {
@@ -40,6 +40,11 @@ class MakeModuleCommand extends Command
         // Request
         $this->call('make:request', [
             'name' => "{$studly}/Save{$studly}Request",
+        ]);
+
+        // Resource
+        $this->call('make:resource', [
+            'name' => "{$studly}/{$studly}Resource",
         ]);
 
         $baseViewPath = resource_path("views/{$kebab}");
