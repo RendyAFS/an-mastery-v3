@@ -15,6 +15,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#suppliers-datatable",
             filterSelector: "#filter-suppliers",
+            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("suppliers.index"),
                 method: "GET",

@@ -15,6 +15,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#type-fabrics-datatable",
             filterSelector: "#filter-type-fabrics",
+            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("type_fabrics.index"),
                 method: "GET",

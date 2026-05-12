@@ -68,6 +68,7 @@ const PageScript = (function () {
         cardgrid = initCardgrid({
             containerId: "#image-fabric-cardgrid",
             filterSelector: "#filter-image-fabric",
+            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("image_fabrics.index"),
             },

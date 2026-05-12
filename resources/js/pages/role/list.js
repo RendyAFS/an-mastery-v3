@@ -12,6 +12,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#roles-datatable",
             filterSelector: "#filter-roles",
+            rowClickRoute: (row) => route("roles.edit", row.id),
             ajax: {
                 url: route("roles.index"),
                 method: "GET",
