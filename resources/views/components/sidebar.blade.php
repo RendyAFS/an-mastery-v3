@@ -61,8 +61,9 @@
                                {{ request()->is(trim($menu->url, '/') . '*') ? 'bg-(--color-primary) text-(--color-light)' : '' }}">
 
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>
-                                <span class="hs-overlay-minified:group-hover/sidebar:block
-hs-overlay-minified:hidden">
+                                <span
+                                    class="hs-overlay-minified:group-hover/sidebar:block
+                                    hs-overlay-minified:hidden">
                                     {{ $menu->name }}
                                 </span>
                             </a>
@@ -78,19 +79,20 @@ hs-overlay-minified:hidden">
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>
                                 <span
                                     class="hs-overlay-minified:group-hover/sidebar:block
-hs-overlay-minified:hidden">{{ $menu->name }}</span>
+                                    hs-overlay-minified:hidden">{{ $menu->name }}</span>
 
                                 <i data-lucide="chevron-down"
-                                    class="ms-auto size-4 transition-transform
-                                   hs-accordion-active:rotate-180
-                                   hs-overlay-minified:group-hover/sidebar:block
-hs-overlay-minified:hidden"></i>
+                                    class="ms-auto size-4 transition-transform duration-300
+                                    hs-accordion-active:rotate-180
+                                    hs-overlay-minified:group-hover/sidebar:block
+                                    hs-overlay-minified:hidden"></i>
                             </button>
 
-                            <div class="hs-accordion-content {{ $isOpen ? '' : 'hidden' }}">
+                            <div
+                                class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 {{ $isOpen ? '' : 'hidden' }}">
                                 <ul
                                     class="mt-1 ps-7 space-y-1 hs-overlay-minified:group-hover/sidebar:block
-hs-overlay-minified:hidden">
+                                        hs-overlay-minified:hidden">
                                     @foreach ($menu->children as $child)
                                         @php
                                             $childPermissions = $child->permissions->pluck('name')->toArray();
