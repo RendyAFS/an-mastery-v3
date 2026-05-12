@@ -1,13 +1,20 @@
 <div id="hs-sidebar-content-push"
-    class="hs-overlay [--auto-close:lg] hs-overlay-minified:w-14 lg:block lg:translate-x-0 w-65
-           hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform h-full fixed top-0 start-0 bottom-0 z-60
-           bg-(--color-light) dark:bg-(--color-dark) border-e border-(--color-gray)/20"
+    class="group/sidebar hs-overlay [--auto-close:lg]
+           hs-overlay-minified:w-14
+           hs-overlay-minified:hover:w-65
+           lg:block lg:translate-x-0 w-65
+           hs-overlay-open:translate-x-0 -translate-x-full
+           transition-all duration-300 transform
+           h-full fixed top-0 start-0 bottom-0 z-60
+           overflow-hidden
+           bg-(--color-light) dark:bg-(--color-dark)
+           border-e border-(--color-gray)/20"
     role="dialog" tabindex="-1" aria-label="Sidebar">
     <div class="relative flex flex-col h-full max-h-full">
         <!-- Header -->
         <header class="p-4 flex items-center justify-between gap-x-2">
             <!-- Brand -->
-            <a class="font-semibold text-xl text-(--color-primary) dark:text-(--color-secondary) hs-overlay-minified:hidden"
+            <a class="font-semibold text-xl text-(--color-primary) dark:text-(--color-secondary) hs-overlay-minified:group-hover/sidebar:block hs-overlay-minified:hidden"
                 href="{{ route('dashboard') }}">
                 AN Mastery
             </a>
@@ -24,7 +31,7 @@
             <!-- Desktop Mini Toggle -->
             <div class="hidden lg:block">
                 <button type="button"
-                    class="flex items-center justify-center size-8 rounded-full text-(--color-dark-gray) hover:bg-(--color-gray)/20"
+                    class="flex items-center justify-center size-8 rounded-full text-(--color-dark-gray) hover:bg-(--color-gray)/20 cursor-pointer"
                     aria-label="Minify sidebar" data-hs-overlay-minifier="#hs-sidebar-content-push">
 
                     <!-- icon when full -->
@@ -54,7 +61,8 @@
                                {{ request()->is(trim($menu->url, '/') . '*') ? 'bg-(--color-primary) text-(--color-light)' : '' }}">
 
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>
-                                <span class="hs-overlay-minified:hidden">
+                                <span class="hs-overlay-minified:group-hover/sidebar:block
+hs-overlay-minified:hidden">
                                     {{ $menu->name }}
                                 </span>
                             </a>
@@ -68,16 +76,21 @@
                                 hover:bg-(--color-gray)/50 hover:text-(--color-primary) dark:hover:text-(--color-secondary)">
 
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>
-                                <span class="hs-overlay-minified:hidden">{{ $menu->name }}</span>
+                                <span
+                                    class="hs-overlay-minified:group-hover/sidebar:block
+hs-overlay-minified:hidden">{{ $menu->name }}</span>
 
                                 <i data-lucide="chevron-down"
                                     class="ms-auto size-4 transition-transform
                                    hs-accordion-active:rotate-180
-                                   hs-overlay-minified:hidden"></i>
+                                   hs-overlay-minified:group-hover/sidebar:block
+hs-overlay-minified:hidden"></i>
                             </button>
 
                             <div class="hs-accordion-content {{ $isOpen ? '' : 'hidden' }}">
-                                <ul class="mt-1 ps-7 space-y-1 hs-overlay-minified:hidden">
+                                <ul
+                                    class="mt-1 ps-7 space-y-1 hs-overlay-minified:group-hover/sidebar:block
+hs-overlay-minified:hidden">
                                     @foreach ($menu->children as $child)
                                         @php
                                             $childPermissions = $child->permissions->pluck('name')->toArray();
