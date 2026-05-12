@@ -13,44 +13,25 @@ const PageScript = (function () {
 
     const initDataTable = () => {
         datatable = initDatatable({
-            table: "#color-fabrics-datatable",
-            filterSelector: "#filter-color-fabrics",
+            table: "#type-fabrics-datatable",
+            filterSelector: "#filter-type-fabrics",
             onRowClick: (row) => handleEdit(row.id),
             ajax: {
-                url: route("color_fabrics.index"),
+                url: route("type_fabrics.index"),
                 method: "GET",
                 dataSrc: "data",
                 data: function (d) {
-                    d.filter = $("#filter-color-fabrics").val();
+                    d.filter = $("#filter-type-fabrics").val();
                 },
             },
             columns: [
                 {
                     data: "name",
-                    width: "30%",
-                },
-                {
-                    data: "code_color",
-                    width: "30%",
-                    className: "text-center",
-                    render(data) {
-                        return `
-                            <div class="flex items-center justify-center gap-3">
-                                <div
-                                    class="size-6 rounded-full border border-(--color-gray) shadow-sm"
-                                    style="background-color: ${data}">
-                                </div>
-
-                                <span class="font-medium">
-                                    ${data}
-                                </span>
-                            </div>
-                        `;
-                    },
+                    width: "50%",
                 },
                 {
                     data: "notes",
-                    width: "35%",
+                    width: "45%",
                 },
                 {
                     data: "id",
@@ -127,15 +108,15 @@ const PageScript = (function () {
     };
 
     const openModal = () => {
-        HSOverlay.open("#hs-color-fabric-modal");
+        HSOverlay.open("#hs-type-fabric-modal");
     };
 
     const closeModal = () => {
-        HSOverlay.close("#hs-color-fabric-modal");
+        HSOverlay.close("#hs-type-fabric-modal");
     };
 
     const setModalTitle = (title) => {
-        $("#hs-color-fabric-modal-label").text(title);
+        $("#hs-type-fabric-modal-label").text(title);
     };
 
     const setFormMode = (mode, id = null) => {
@@ -150,16 +131,13 @@ const PageScript = (function () {
 
     const resetModal = () => {
         form.reset();
-        $("#color_picker").val("#000000");
-        $("#code_color").val("#000000");
         setFormMode("create");
-        setModalTitle("Add Color Fabric");
+        setModalTitle("Add Type Fabric");
     };
 
     const fillForm = (data) => {
         $("#name").val(data.name ?? "");
-        $("#code_color").val(data.code_color ?? "#000000");
-        $("#color_picker").val(data.code_color ?? "#000000");
+        $("#code_color").val(data.code_color ?? "");
         $("#notes").val(data.notes ?? "");
     };
 
@@ -173,16 +151,16 @@ const PageScript = (function () {
 
         try {
             if (mode === "create") {
-                await ApiProvider.post(route("color_fabrics.store"), payload);
-                Toast.success("Success", "Color Fabric Successfully Created");
+                await ApiProvider.post(route("type_fabrics.store"), payload);
+                Toast.success("Success", "Type Fabric Successfully Created");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(
-                    route("color_fabrics.update", id),
+                    route("type_fabrics.update", id),
                     payload,
                 );
-                Toast.success("Success", "Color Fabric Successfully Updated");
+                Toast.success("Success", "Type Fabric Successfully Updated");
             }
 
             closeModal();
@@ -194,89 +172,78 @@ const PageScript = (function () {
         }
     };
 
-    const initColorPicker = () => {
-        const colorPicker = document.getElementById("color_picker");
-        const codeColor = document.getElementById("code_color");
-
-        if (!colorPicker || !codeColor) return;
-
-        colorPicker.addEventListener("input", function () {
-            codeColor.value = this.value;
-        });
-    };
-
     const handleCreate = () => {
         resetModal();
         openModal();
     };
 
     const handleEdit = async (id) => {
-        setModalTitle("Edit Color Fabric");
+        setModalTitle("Edit Type Fabric");
         setFormMode("edit", id);
 
         try {
             const response = await ApiProvider.get(
-                route("color_fabrics.show", id),
+                route("type_fabrics.show", id),
             );
             fillForm(response.data);
             openModal();
         } catch (error) {
-            console.error("Fetch color fabric error:", error);
+            console.error("Fetch type fabric error:", error);
             closeModal();
         }
     };
 
     const handleDelete = async (id) => {
         const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this color fabric? This action cannot be undone.",
+            "Are you sure you want to delete this type fabric? This action cannot be undone.",
         );
 
         if (!confirmed) return;
 
         try {
-            await ApiProvider.delete(route("color_fabrics.destroy", id));
-            Toast.success("Success", "Color fabric deleted successfully");
+            await ApiProvider.delete(route("type_fabrics.destroy", id));
+            Toast.success("Success", "Type fabric deleted successfully");
             reloadDatatable();
         } catch (error) {
-            console.error("Delete color fabric error:", error);
+            console.error("Delete type fabric error:", error);
         }
     };
 
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this color fabric?",
+            "Restore this type fabric?",
             "Confirmation",
         );
 
         if (!confirmed) return;
 
         try {
-            await ApiProvider.put(route("color_fabrics.restore", id));
-            Toast.success("Success", "Color fabric restored");
+            await ApiProvider.put(route("type_fabrics.restore", id));
+            Toast.success("Success", "Type fabric restored");
             reloadDatatable();
         } catch (error) {
-            console.error("Restore color fabric error:", error);
+            console.error("Restore type fabric error:", error);
         }
     };
 
     const handleForceDelete = async (id) => {
         const confirmed = await Confirm.delete(
-            "This will permanently delete the color fabric. Continue?",
+            "This will permanently delete the type fabric. Continue?",
         );
 
         if (!confirmed) return;
 
         try {
-            await ApiProvider.delete(route("color_fabrics.force-delete", id));
-            Toast.success("Success", "Color fabric permanently deleted");
+            await ApiProvider.delete(route("type_fabrics.force-delete", id));
+            Toast.success("Success", "Type fabric permanently deleted");
             reloadDatatable();
         } catch (error) {
-            console.error("Force delete color fabric error:", error);
+            console.error("Force delete type fabric error:", error);
         }
     };
 
     const bindEvents = () => {
-        $(document).on("click", "#btn-create-color-fabric", () => {
+        $(document).on("click", "#btn-create-type-fabric", () => {
             handleCreate();
         });
 
@@ -297,7 +264,7 @@ const PageScript = (function () {
         });
 
         document
-            .getElementById("hs-color-fabric-modal")
+            .getElementById("hs-type-fabric-modal")
             .addEventListener("close.hs.overlay", () => {
                 resetModal();
             });
@@ -317,8 +284,8 @@ const PageScript = (function () {
 
     return {
         init() {
-            form = document.getElementById("color-fabric-form");
-            initColorPicker();
+            form = document.getElementById("type-fabric-form");
+
             initDataTable();
             bindEvents();
         },

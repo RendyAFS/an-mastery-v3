@@ -86,7 +86,7 @@ class ImageFabricController extends Controller
         $imageFabric->restore();
 
         return response()->json([
-            'message' => 'ImageFabric restored successfully'
+            'message' => 'Image Fabric restored successfully'
         ]);
     }
 
@@ -99,7 +99,7 @@ class ImageFabricController extends Controller
         $imageFabric->forceDelete();
 
         return response()->json([
-            'message' => 'ImageFabric permanently deleted'
+            'message' => 'Image Fabric permanently deleted'
         ]);
     }
 }

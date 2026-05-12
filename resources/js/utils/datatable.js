@@ -7,6 +7,8 @@ export default function initDatatable({
     pageLength = 10,
     order = [],
     filterSelector = null,
+    rowClickRoute = null,
+    onRowClick = null,
 }) {
     if (!document.querySelector(table)) return;
 
@@ -23,7 +25,38 @@ export default function initDatatable({
         order,
         drawCallback() {
             initLucide();
-            $(`${table} tbody tr`).addClass("hover:!bg-(--color-light-gray) dark:hover:!bg-(--color-dark-slate) cursor-pointer");
+            const rows = $(`${table} tbody tr`);
+            rows.addClass(
+                "hover:!bg-(--color-light-gray) dark:hover:!bg-(--color-dark-slate) cursor-pointer transition",
+            );
+
+            rows.off("click");
+
+            if (rowClickRoute || onRowClick) {
+                rows.on("click", function (e) {
+                    if (
+                        $(e.target).closest(
+                            "button, a, .hs-dropdown, .hs-dropdown-menu",
+                        ).length
+                    ) {
+                        return;
+                    }
+
+                    const rowData = datatable.row(this).data();
+
+                    if (!rowData?.id) return;
+
+                    if (onRowClick) {
+                        onRowClick(rowData, this);
+                        return;
+                    }
+
+                    if (rowClickRoute) {
+                        window.location.href = rowClickRoute(rowData);
+                    }
+                });
+            }
+
             if (window.HSStaticMethods) {
                 window.HSStaticMethods.autoInit();
             }

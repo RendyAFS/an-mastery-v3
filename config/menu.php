@@ -40,15 +40,15 @@ return [
                 'url'  => '/employees',
             ],
             [
-                'name' => 'Image Fabric',
+                'name' => 'Image Fabrics',
                 'url'  => '/image-fabrics',
             ],
             [
-                'name' => 'Color Fabric',
+                'name' => 'Color Fabrics',
                 'url'  => '/color-fabrics',
             ],
             [
-                'name' => 'Type Fabric',
+                'name' => 'Type Fabrics',
                 'url'  => '/type-fabrics',
             ],
         ],

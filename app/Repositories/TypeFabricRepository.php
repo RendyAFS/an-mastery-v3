@@ -2,13 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Models\TypeFabric;
+
 class TypeFabricRepository
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
+    public function getAll($filter = 'active')
     {
-        //
+        $query = TypeFabric::query()
+            ->orderBy('id', 'desc');
+
+        if ($filter === 'deleted') {
+            $query->onlyTrashed();
+        } elseif ($filter === 'all') {
+            $query->withTrashed();
+        }
+        return $query->get();
     }
 }

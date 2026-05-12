@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\StatusSablonEnum;
+use App\Enums\StatusSablonEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -13,7 +13,7 @@
             </div>
             <a href="{{ route('image_fabrics.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-(--color-primary) text-white hover:bg-(--color-primary)/80">
+                  bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
                 Add Image Fabric
             </a>
