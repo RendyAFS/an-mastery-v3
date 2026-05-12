@@ -25,6 +25,19 @@ const PageScript = (function () {
                     data: "name",
                 },
                 {
+                    data: "count_user",
+                    className: "text-center",
+                    render(data) {
+                        return `
+                            <div class="inline-flex items-center justify-center px-3 py-1 rounded-full
+                                bg-(--color-primary)/10 text-(--color-primary)
+                                text-xs font-semibold">
+                                ${data} User
+                            </div>
+                        `;
+                    },
+                },
+                {
                     data: "id",
                     width: "5%",
                     orderable: false,

@@ -188,11 +188,11 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle("Edit Supplier");
         setFormMode("edit", id);
-        openModal();
 
         try {
             const response = await ApiProvider.get(route("suppliers.show", id));
             fillForm(response.data);
+            openModal();
         } catch (error) {
             console.error("Fetch supplier error:", error);
             closeModal();

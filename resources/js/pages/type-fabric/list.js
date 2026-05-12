@@ -179,13 +179,13 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle("Edit Type Fabric");
         setFormMode("edit", id);
-        openModal();
 
         try {
             const response = await ApiProvider.get(
                 route("type_fabrics.show", id),
             );
             fillForm(response.data);
+            openModal();
         } catch (error) {
             console.error("Fetch type fabric error:", error);
             closeModal();

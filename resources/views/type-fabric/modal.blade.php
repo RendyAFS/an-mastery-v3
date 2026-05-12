@@ -21,15 +21,10 @@
                         bg-(--color-light-gray) border border-(--color-gray)
                         text-(--color-dark) hover:bg-(--color-gray)/40
                         dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
-                        focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none"
+                        focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                     aria-label="Close" data-hs-overlay="#hs-type-fabric-modal">
                     <span class="sr-only">Close</span>
-                    <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
+                    <i data-lucide="x" class="text-(--color-dark)/80 dark:text-(--color-light)/80 size-5"></i>
                 </button>
             </div>
 

@@ -32,6 +32,20 @@ const PageScript = (function () {
                     data: "code_color",
                     width: "30%",
                     className: "text-center",
+                    render(data) {
+                        return `
+                            <div class="flex items-center justify-center gap-3">
+                                <div
+                                    class="size-6 rounded-full border border-(--color-gray) shadow-sm"
+                                    style="background-color: ${data}">
+                                </div>
+
+                                <span class="font-medium">
+                                    ${data}
+                                </span>
+                            </div>
+                        `;
+                    },
                 },
                 {
                     data: "notes",
@@ -135,13 +149,16 @@ const PageScript = (function () {
 
     const resetModal = () => {
         form.reset();
+        $("#color_picker").val("#000000");
+        $("#code_color").val("#000000");
         setFormMode("create");
         setModalTitle("Add Color Fabric");
     };
 
     const fillForm = (data) => {
         $("#name").val(data.name ?? "");
-        $("#code_color").val(data.code_color ?? "");
+        $("#code_color").val(data.code_color ?? "#000000");
+        $("#color_picker").val(data.code_color ?? "#000000");
         $("#notes").val(data.notes ?? "");
     };
 
@@ -176,6 +193,17 @@ const PageScript = (function () {
         }
     };
 
+    const initColorPicker = () => {
+        const colorPicker = document.getElementById("color_picker");
+        const codeColor = document.getElementById("code_color");
+
+        if (!colorPicker || !codeColor) return;
+
+        colorPicker.addEventListener("input", function () {
+            codeColor.value = this.value;
+        });
+    };
+
     const handleCreate = () => {
         resetModal();
         openModal();
@@ -184,13 +212,13 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle("Edit Color Fabric");
         setFormMode("edit", id);
-        openModal();
 
         try {
             const response = await ApiProvider.get(
                 route("color_fabrics.show", id),
             );
             fillForm(response.data);
+            openModal();
         } catch (error) {
             console.error("Fetch color fabric error:", error);
             closeModal();
@@ -289,7 +317,7 @@ const PageScript = (function () {
     return {
         init() {
             form = document.getElementById("color-fabric-form");
-
+            initColorPicker();
             initDataTable();
             bindEvents();
         },

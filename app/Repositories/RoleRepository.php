@@ -9,6 +9,7 @@ class RoleRepository
     public function getAll($filter = 'active')
     {
         $query = Role::query()
+            ->withCount('users')
             ->where('name', '!=', 'Super Admin')
             ->orderBy('id', 'desc');
 
