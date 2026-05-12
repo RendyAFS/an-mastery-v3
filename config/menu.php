@@ -51,6 +51,10 @@ return [
                 'name' => 'Type Fabrics',
                 'url'  => '/type-fabrics',
             ],
+            [
+                'name' => 'Type Colors',
+                'url'  => '/type-colors',
+            ],
         ],
     ],
 ];
