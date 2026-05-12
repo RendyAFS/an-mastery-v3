@@ -6,6 +6,7 @@ export default function initCardgrid({
     ajax,
     renderCard,
     pageLength = 12,
+    cardClickRoute = null,
 }) {
     const container = document.querySelector(containerId);
     if (!container) return null;
@@ -23,7 +24,6 @@ export default function initCardgrid({
 
     let searchTimeout = null;
 
-    // ── Fetch ─────────────────────────────────────────────────────────────────
     const fetchData = async () => {
         setLoading(true);
 
@@ -35,7 +35,6 @@ export default function initCardgrid({
 
         if (state.filter) params.append("filter", state.filter);
 
-        // Allow caller to append extra params
         if (ajax.data) {
             const extra = ajax.data();
             Object.entries(extra).forEach(([k, v]) => params.append(k, v));
@@ -63,7 +62,6 @@ export default function initCardgrid({
         }
     };
 
-    // ── Render cards ──────────────────────────────────────────────────────────
     const render = (items) => {
         container.innerHTML = "";
 
@@ -76,13 +74,42 @@ export default function initCardgrid({
 
         emptyEl?.classList.add("hidden");
         container.classList.remove("hidden");
-        container.innerHTML = items.map(renderCard).join("");
+        container.innerHTML = items
+            .map((item) => {
+                return `
+                <div class="cg-card-wrapper" data-id="${item.id}">
+                    ${renderCard(item)}
+                </div>
+            `;
+            })
+            .join("");
 
         initLucide();
+
+        if (cardClickRoute) {
+            container.querySelectorAll(".cg-card-wrapper").forEach((cardEl) => {
+                cardEl.addEventListener("click", function (e) {
+                    if (
+                        e.target.closest(
+                            "button, a, .btn-delete, .btn-restore, .btn-force-delete",
+                        )
+                    ) {
+                        return;
+                    }
+
+                    const id = this.dataset.id;
+
+                    if (!id) return;
+
+                    window.location.href = cardClickRoute({
+                        id,
+                    });
+                });
+            });
+        }
         if (window.HSStaticMethods) window.HSStaticMethods.autoInit();
     };
 
-    // ── Loading state ─────────────────────────────────────────────────────────
     const setLoading = (loading) => {
         const loadingEl = document.getElementById(`${gridId}-loading`);
         if (loading) {
@@ -93,7 +120,6 @@ export default function initCardgrid({
         }
     };
 
-    // ── Info text ─────────────────────────────────────────────────────────────
     const renderInfo = () => {
         const from = (state.page - 1) * state.perPage + 1;
         const to = Math.min(state.page * state.perPage, state.total);
@@ -105,13 +131,12 @@ export default function initCardgrid({
         }
     };
 
-    // ── Pagination ────────────────────────────────────────────────────────────
     const renderPagination = () => {
         const paginationEl = document.getElementById("cg-pagination");
         if (!paginationEl) return;
         paginationEl.innerHTML = "";
 
-        const current = state.page - 1; // 0-indexed for compatibility
+        const current = state.page - 1;
         const total = state.lastPage;
         const last = total - 1;
 
@@ -124,7 +149,7 @@ export default function initCardgrid({
 
         const createBtn = (page, label = null, isCurrent = false) => {
             const btn = btnTpl.content.cloneNode(true).querySelector("button");
-            btn.dataset.page = page + 1; // back to 1-indexed
+            btn.dataset.page = page + 1;
             btn.textContent = label ?? page + 1;
             if (isCurrent) {
                 btn.classList.add(
@@ -145,7 +170,6 @@ export default function initCardgrid({
             return btn;
         };
 
-        // Prev
         const prevBtn = prevTpl.content.cloneNode(true).querySelector("button");
         prevBtn.dataset.page = state.page - 1;
         if (current === 0) {
@@ -154,7 +178,6 @@ export default function initCardgrid({
         } else prevBtn.classList.add("hover:bg-(--color-light-gray)");
         paginationEl.append(prevBtn);
 
-        // First page
         paginationEl.append(createBtn(0, null, current === 0));
 
         let start, end;
@@ -179,7 +202,6 @@ export default function initCardgrid({
         if (last > 0)
             paginationEl.append(createBtn(last, total, current === last));
 
-        // Next
         const nextBtn = nextTpl.content.cloneNode(true).querySelector("button");
         nextBtn.dataset.page = state.page + 1;
         if (current === last) {
@@ -191,7 +213,6 @@ export default function initCardgrid({
         initLucide();
     };
 
-    // ── Event Listeners ───────────────────────────────────────────────────────
     document
         .getElementById("cg-search")
         ?.addEventListener("input", function () {
@@ -231,10 +252,8 @@ export default function initCardgrid({
         }
     });
 
-    // ── Public API ────────────────────────────────────────────────────────────
     const reload = () => fetchData();
 
-    // Initial load
     fetchData();
 
     return { reload };

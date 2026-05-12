@@ -8,7 +8,7 @@ const PageScript = (function () {
         const isDeleted = item.deleted_at !== null;
 
         return `
-        <div class="h-80 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3
+        <div class="h-80 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer
             ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
 
             <div class="aspect-square rounded-lg bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
@@ -68,12 +68,12 @@ const PageScript = (function () {
         cardgrid = initCardgrid({
             containerId: "#image-fabric-cardgrid",
             filterSelector: "#filter-image-fabric",
-            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("image_fabrics.index"),
             },
             renderCard,
             pageLength: 12,
+            cardClickRoute: (row) => route("image_fabrics.edit", row.id),
         });
     };
 
