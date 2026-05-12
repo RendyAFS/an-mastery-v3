@@ -15,6 +15,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#type-fabrics-datatable",
             filterSelector: "#filter-type-fabrics",
+            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("type_fabrics.index"),
                 method: "GET",
@@ -179,13 +180,13 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle("Edit Type Fabric");
         setFormMode("edit", id);
-        openModal();
 
         try {
             const response = await ApiProvider.get(
                 route("type_fabrics.show", id),
             );
             fillForm(response.data);
+            openModal();
         } catch (error) {
             console.error("Fetch type fabric error:", error);
             closeModal();

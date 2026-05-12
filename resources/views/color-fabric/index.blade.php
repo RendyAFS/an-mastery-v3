@@ -12,14 +12,10 @@
                 <p class="text-sm">Manage color fabric data</p>
             </div>
 
-            <button type="button"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="hs-color-fabric-modal"
-                data-hs-overlay="#hs-color-fabric-modal"
-                id="btn-create-color-fabric"
+            <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-color-fabric-modal"
+                data-hs-overlay="#hs-color-fabric-modal" id="btn-create-color-fabric"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-(--color-primary) text-white hover:bg-(--color-primary)/80">
+                  bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
                 Add Color Fabric
             </button>
@@ -28,18 +24,22 @@
         <x-datatable id="color-fabrics-datatable" filterId="filter-color-fabrics">
             <thead class="border-b">
                 <tr>
-                    <th class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         Name
                     </th>
-                    <th class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
                             Code Color
                         </div>
                     </th>
-                    <th class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         Notes
                     </th>
-                    <th class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">
+                    <th
+                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
                             <i data-lucide="settings" class="size-4"></i>
                         </div>

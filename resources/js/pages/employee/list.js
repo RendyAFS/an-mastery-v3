@@ -15,6 +15,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#employees-datatable",
             filterSelector: "#filter-employees",
+            onRowClick: (row) => handleEdit(row.id),
             ajax: {
                 url: route("employees.index"),
                 method: "GET",
@@ -188,11 +189,11 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle("Edit Employee");
         setFormMode("edit", id);
-        openModal();
 
         try {
             const response = await ApiProvider.get(route("employees.show", id));
             fillForm(response.data);
+            openModal();
         } catch (error) {
             console.error("Fetch employee error:", error);
             closeModal();

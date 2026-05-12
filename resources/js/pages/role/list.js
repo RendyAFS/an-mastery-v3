@@ -12,6 +12,7 @@ const PageScript = (function () {
         datatable = initDatatable({
             table: "#roles-datatable",
             filterSelector: "#filter-roles",
+            rowClickRoute: (row) => route("roles.edit", row.id),
             ajax: {
                 url: route("roles.index"),
                 method: "GET",
@@ -23,6 +24,19 @@ const PageScript = (function () {
             columns: [
                 {
                     data: "name",
+                },
+                {
+                    data: "count_user",
+                    className: "text-center",
+                    render(data) {
+                        return `
+                            <div class="inline-flex items-center justify-center px-3 py-1 rounded-full
+                                bg-(--color-primary)/10 text-(--color-primary)
+                                text-xs font-semibold">
+                                ${data} User
+                            </div>
+                        `;
+                    },
                 },
                 {
                     data: "id",
