@@ -1,6 +1,10 @@
 <div class="grid grid-cols-1 gap-4">
     <div class="col-span-1">
         <div class="mb-6 space-y-2">
+            <x-select id="supplier_id" name="supplier_id" label="Supplier" placeholder="Choose Supplier"
+                search-placeholder="Search supplier..." api-url="{{ route('suppliers.select') }}" api-data-part="results"
+                field-id="id" field-title="name" field-page="page" search-query-key="search" :per-page="10"
+                :value="$priceSupplier->supplier_id ?? null" clearable="true" dropdown-scope="window" />
         </div>
 
         <div class="mb-6 space-y-2">

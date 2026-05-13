@@ -102,29 +102,19 @@ class SupplierController extends Controller
 
     public function select(Request $request)
     {
-        $search = $request->search;
-
-        $query = Supplier::query()
-            ->select('id', 'name');
-
-        if ($search) {
-            $query->where('name', 'like', "%{$search}%");
-        }
-
-        $suppliers = $query
-            ->orderBy('name')
-            ->paginate(3);
-
-        $data = collect($suppliers->items())->map(function ($item) use ($suppliers) {
-            return [
-                'id' => $item->id,
-                'name' => $item->name,
-                'page' => $suppliers->currentPage(),
-            ];
-        });
+        $suppliers = $this->supplierRepository->selectSupplier(
+            search: $request->search,
+            limit: $request->limit ?? 10,
+            page: $request->page ?? 1
+        );
 
         return response()->json([
-            'data' => $data,
+            'count'   => $suppliers->total(),
+            'results' => $suppliers->getCollection()->map(fn($item) => [
+                'id'   => $item->id,
+                'name' => $item->name,
+                'page' => $suppliers->currentPage(),
+            ]),
         ]);
     }
 }
