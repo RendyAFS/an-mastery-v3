@@ -48,6 +48,8 @@ class PriceSupplierController extends Controller
     {
         $this->authorize('price-suppliers.view');
 
+        $priceSupplier->load(['supplier', 'typeFabric', 'typeColor']);
+
         return new PriceSupplierResource($priceSupplier);
     }
 

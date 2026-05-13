@@ -19,7 +19,7 @@ class SupplierRepository
         return $query->get();
     }
 
-    public function selectSupplier(
+    public function getDataSelect(
         ?string $search = null,
         int $limit = 10,
         int $page = 1

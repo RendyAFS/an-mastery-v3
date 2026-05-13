@@ -102,7 +102,7 @@ class SupplierController extends Controller
 
     public function select(Request $request)
     {
-        $suppliers = $this->supplierRepository->selectSupplier(
+        $suppliers = $this->supplierRepository->getDataSelect(
             search: $request->search,
             limit: $request->limit ?? 10,
             page: $request->page ?? 1

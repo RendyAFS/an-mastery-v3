@@ -99,4 +99,22 @@ class TypeFabricController extends Controller
             'message' => 'Type Fabric permanently deleted'
         ]);
     }
+
+    public function select(Request $request)
+    {
+        $typeFabrics = $this->typeFabricRepository->getDataSelect(
+            search: $request->search,
+            limit: $request->limit ?? 10,
+            page: $request->page ?? 1
+        );
+
+        return response()->json([
+            'count'   => $typeFabrics->total(),
+            'results' => $typeFabrics->getCollection()->map(fn($item) => [
+                'id'   => $item->id,
+                'name' => $item->name,
+                'page' => $typeFabrics->currentPage(),
+            ]),
+        ]);
+    }
 }

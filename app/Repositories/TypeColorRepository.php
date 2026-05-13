@@ -18,4 +18,18 @@ class TypeColorRepository
         }
         return $query->get();
     }
+
+    public function getDataSelect(
+        ?string $search = null,
+        int $limit = 10,
+        int $page = 1
+    ) {
+        return TypeColor::query()
+            ->select('id', 'name')
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate($limit, ['*'], 'page', $page);
+    }
 }

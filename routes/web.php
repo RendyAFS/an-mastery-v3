@@ -45,6 +45,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('employees')->as('employees.')->group(function () {
         Route::put('{employee}/restore', [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
         Route::delete('{employee}/force-delete', [App\Http\Controllers\EmployeeController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/employees', [App\Http\Controllers\EmployeeController::class, 'select'])->name('select');
     });
     Route::resource('employees', App\Http\Controllers\EmployeeController::class)->names('employees');
 
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('type-fabrics')->as('type_fabrics.')->group(function () {
         Route::put('{typeFabric}/restore', [App\Http\Controllers\TypeFabricController::class, 'restore'])->name('restore');
         Route::delete('{typeFabric}/force-delete', [App\Http\Controllers\TypeFabricController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/type-fabrics', [App\Http\Controllers\TypeFabricController::class, 'select'])->name('select');
     });
     Route::resource('type-fabrics', App\Http\Controllers\TypeFabricController::class)->names('type_fabrics');
 
@@ -73,6 +75,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('type-colors')->as('type_colors.')->group(function () {
         Route::put('{typeColor}/restore', [App\Http\Controllers\TypeColorController::class, 'restore'])->name('restore');
         Route::delete('{typeColor}/force-delete', [App\Http\Controllers\TypeColorController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/type-colors', [App\Http\Controllers\TypeColorController::class, 'select'])->name('select');
     });
     Route::resource('type-colors', App\Http\Controllers\TypeColorController::class)->names('type_colors');
 

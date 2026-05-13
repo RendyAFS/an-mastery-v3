@@ -25,7 +25,7 @@ class SavePriceSupplierRequest extends FormRequest
             'supplier_id'    => 'required|exists:suppliers,id',
             'type_fabric_id' => 'required|exists:type_fabrics,id',
             'type_color_id'  => 'required|exists:type_colors,id',
-            'price'          => 'required|decimal:2',
+            'price'          => 'required|numeric',
             'notes'          => 'nullable|string',
         ];
     }

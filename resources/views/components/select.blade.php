@@ -57,6 +57,7 @@
                 "apiFieldsMap": {
                     "id": "{{ $fieldId }}",
                     "title": "{{ $fieldTitle }}",
+                    "val": "{{ $fieldId }}",
                     "page": "{{ $fieldPage }}"
                 },
                 "apiSearchQueryKey": "{{ $searchQueryKey }}",
