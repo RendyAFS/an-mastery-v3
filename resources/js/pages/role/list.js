@@ -30,9 +30,7 @@ const PageScript = (function () {
                     className: "text-center",
                     render(data) {
                         return `
-                            <div class="inline-flex items-center justify-center px-3 py-1 rounded-full
-                                bg-(--color-primary)/10 text-(--color-primary)
-                                text-xs font-semibold">
+                            <div class="badge badge-primary">
                                 ${data} User
                             </div>
                         `;
