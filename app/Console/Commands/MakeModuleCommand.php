@@ -3,80 +3,151 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class MakeModuleCommand extends Command
 {
-    protected $signature = 'make:module {name} {--resource : Generate resource controller} {--simple : Generate simple CRUD (modal based)}';
-    protected $description = 'Generate module (Controller, Repository, Request, Resource, View, JS)';
+    protected $signature = '
+        make:module
+        {name}
+        {--resource : Generate resource controller}
+        {--simple : Generate simple CRUD (modal based)}
+    ';
 
-    public function handle()
+    protected $description = 'Generate module structure';
+
+    public function handle(): int
     {
-        $name = $this->argument('name');
+        $name       = $this->argument('name');
         $isResource = $this->option('resource');
-        $isSimple = $this->option('simple');
-        $kebab = Str::kebab($name);
+        $isSimple   = $this->option('simple');
 
         $studly = Str::studly($name);
+        $kebab  = Str::kebab($name);
 
-        $this->info("🚀 Generating module: {$studly}");
+        $this->newLine();
+        $this->components->info("🚀 Generating module: {$studly}");
+        $this->line(str_repeat('─', 50));
 
-        // Controller
-        $controllerParams = [
-            'name' => "{$studly}Controller",
-        ];
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Backend
+        |--------------------------------------------------------------------------
+        */
 
-        if ($isResource) {
-            $controllerParams['--resource'] = true;
-        }
+        $this->components->twoColumnDetail('Module', $studly);
+        $this->components->twoColumnDetail('Controller Type', $isResource ? 'Resource' : 'Basic');
+        $this->components->twoColumnDetail('CRUD Type', $isSimple ? 'Simple Modal' : 'Full Page');
 
-        $this->call('make:controller', $controllerParams);
+        $this->newLine();
 
-        // Repository
-        $this->call('make:class', [
-            'name' => "Repositories/{$studly}Repository",
-        ]);
+        $this->components->task('Generating Controller', function () use ($studly, $isResource) {
 
-        // Request
-        $this->call('make:request', [
-            'name' => "{$studly}/Save{$studly}Request",
-        ]);
+            $params = [
+                'name' => "{$studly}Controller",
+            ];
 
-        // Resource
-        $this->call('make:resource', [
-            'name' => "{$studly}Resource",
-        ]);
+            if ($isResource) {
+                $params['--resource'] = true;
+            }
+
+            $this->call('make:controller', $params);
+
+            return true;
+        });
+
+        $this->components->task('Generating Repository', function () use ($studly) {
+
+            $this->call('make:class', [
+                'name' => "Repositories/{$studly}Repository",
+            ]);
+
+            return true;
+        });
+
+        $this->components->task('Generating Request', function () use ($studly) {
+
+            $this->call('make:request', [
+                'name' => "{$studly}/Save{$studly}Request",
+            ]);
+
+            return true;
+        });
+
+        $this->components->task('Generating Resource', function () use ($studly) {
+
+            $this->call('make:resource', [
+                'name' => "{$studly}Resource",
+            ]);
+
+            return true;
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate Views & JS
+        |--------------------------------------------------------------------------
+        */
 
         $baseViewPath = resource_path("views/{$kebab}");
         $baseJsPath   = resource_path("js/pages/{$kebab}");
 
-        // common files
-        $this->createFile("{$baseViewPath}/index.blade.php");
-        $this->createFile("{$baseViewPath}/form.blade.php");
-        $this->createFile("{$baseJsPath}/list.js");
+        $files = [
+            "{$baseViewPath}/index.blade.php",
+            "{$baseViewPath}/form.blade.php",
+            "{$baseJsPath}/list.js",
+        ];
 
         if ($isSimple) {
-            $this->createFile("{$baseViewPath}/modal.blade.php");
+            $files[] = "{$baseViewPath}/modal.blade.php";
         } else {
-            $this->createFile("{$baseViewPath}/create.blade.php");
-            $this->createFile("{$baseViewPath}/edit.blade.php");
-            $this->createFile("{$baseJsPath}/form.js");
+            $files[] = "{$baseViewPath}/create.blade.php";
+            $files[] = "{$baseViewPath}/edit.blade.php";
+            $files[] = "{$baseJsPath}/form.js";
         }
 
-        $this->info("✅ Module {$studly} generated successfully!");
+        $this->newLine();
+        $this->components->info('📁 Generating View & JS Files');
+
+        foreach ($files as $file) {
+            $this->components->task($file, function () use ($file) {
+                $this->createFile($file);
+                return true;
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Finish
+        |--------------------------------------------------------------------------
+        */
+
+        $this->newLine();
+        $this->line(str_repeat('─', 50));
+
+        $this->components->info("✅ Module {$studly} generated successfully!");
+
+        $this->table(
+            ['Type', 'Path'],
+            [
+                ['Views', "resources/views/{$kebab}"],
+                ['JS', "resources/js/pages/{$kebab}"],
+                ['Controller', "app/Http/Controllers/{$studly}Controller.php"],
+                ['Repository', "app/Repositories/{$studly}Repository.php"],
+            ]
+        );
+
+        $this->newLine();
+        return self::SUCCESS;
     }
 
-    private function createFile($path, $content = '')
+    private function createFile(string $path, string $content = ''): void
     {
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
+        File::ensureDirectoryExists(dirname($path));
 
-        if (!file_exists($path)) {
-            file_put_contents($path, $content);
-            $this->info("📄 Created: {$path}");
-        } else {
-            $this->warn("⚠️ Already exists: {$path}");
+        if (!File::exists($path)) {
+            File::put($path, $content);
         }
     }
 }

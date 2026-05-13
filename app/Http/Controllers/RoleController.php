@@ -120,7 +120,7 @@ class RoleController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('roles.restore');
 
@@ -133,7 +133,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('roles.forceDelete');
 

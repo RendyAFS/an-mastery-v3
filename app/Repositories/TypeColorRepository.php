@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\TypeFabric;
+use App\Models\TypeColor;
 
-class TypeFabricRepository
+class TypeColorRepository
 {
     public function getAll($filter = 'active')
     {
-        $query = TypeFabric::query()
+        $query = TypeColor::query()
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {
@@ -24,7 +24,7 @@ class TypeFabricRepository
         int $limit = 10,
         int $page = 1
     ) {
-        return TypeFabric::query()
+        return TypeColor::query()
             ->select('id', 'name')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");

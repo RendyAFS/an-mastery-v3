@@ -81,7 +81,7 @@ class UserController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('users.restore');
 
@@ -94,7 +94,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('users.forceDelete');
 

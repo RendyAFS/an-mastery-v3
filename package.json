@@ -19,6 +19,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "@floating-ui/dom": "^1.7.6",
         "@pqina/pintura": "^8.95.7",
         "@preline/datatable": "^3.2.3",
         "alpinejs": "^3.15.3",

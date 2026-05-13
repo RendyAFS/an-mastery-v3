@@ -6,6 +6,7 @@ use App\Repositories\EmployeeRepository;
 use App\Http\Requests\Employee\SaveEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -73,7 +74,7 @@ class EmployeeController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('employees.restore');
 
@@ -86,7 +87,7 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('employees.forceDelete');
 
@@ -96,6 +97,24 @@ class EmployeeController extends Controller
 
         return response()->json([
             'message' => 'Employee permanently deleted'
+        ]);
+    }
+
+    public function select(Request $request)
+    {
+        $employees = $this->employeeRepository->getDataSelect(
+            search: $request->search,
+            limit: $request->limit ?? 10,
+            page: $request->page ?? 1
+        );
+
+        return response()->json([
+            'count'   => $employees->total(),
+            'results' => $employees->getCollection()->map(fn($item) => [
+                'id'   => $item->id,
+                'name' => $item->name,
+                'page' => $employees->currentPage(),
+            ]),
         ]);
     }
 }
