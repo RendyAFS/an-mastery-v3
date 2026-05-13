@@ -55,6 +55,10 @@ return [
                 'name' => 'Type Colors',
                 'url'  => '/type-colors',
             ],
+            [
+                'name' => 'Price Supplier',
+                'url'  => '/price-suppliers',
+            ],
         ],
     ],
 ];

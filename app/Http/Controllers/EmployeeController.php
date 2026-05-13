@@ -73,7 +73,7 @@ class EmployeeController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('employees.restore');
 
@@ -86,7 +86,7 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('employees.forceDelete');
 

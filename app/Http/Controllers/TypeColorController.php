@@ -74,7 +74,7 @@ class TypeColorController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('type-colors.restore');
 
@@ -83,11 +83,11 @@ class TypeColorController extends Controller
         $typeColor->restore();
 
         return response()->json([
-            'message' => 'Type Fabric restored successfully'
+            'message' => 'Type Color restored successfully'
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('type-colors.forceDelete');
 
@@ -96,7 +96,7 @@ class TypeColorController extends Controller
         $typeColor->forceDelete();
 
         return response()->json([
-            'message' => 'Type Fabric permanently deleted'
+            'message' => 'Type Color permanently deleted'
         ]);
     }
 }

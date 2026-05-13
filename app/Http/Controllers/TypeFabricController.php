@@ -74,7 +74,7 @@ class TypeFabricController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('type-fabrics.restore');
 
@@ -87,7 +87,7 @@ class TypeFabricController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('type-fabrics.forceDelete');
 

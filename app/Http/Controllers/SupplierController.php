@@ -6,6 +6,7 @@ use App\Repositories\SupplierRepository;
 use App\Http\Requests\Supplier\SaveSupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
@@ -73,7 +74,7 @@ class SupplierController extends Controller
         return response()->noContent();
     }
 
-    public function restore($id)
+    public function restore(int $id)
     {
         $this->authorize('suppliers.restore');
 
@@ -86,7 +87,7 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         $this->authorize('suppliers.forceDelete');
 
@@ -96,6 +97,34 @@ class SupplierController extends Controller
 
         return response()->json([
             'message' => 'Supplier permanently deleted'
+        ]);
+    }
+
+    public function select(Request $request)
+    {
+        $search = $request->search;
+
+        $query = Supplier::query()
+            ->select('id', 'name');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $suppliers = $query
+            ->orderBy('name')
+            ->paginate(3);
+
+        $data = collect($suppliers->items())->map(function ($item) use ($suppliers) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'page' => $suppliers->currentPage(),
+            ];
+        });
+
+        return response()->json([
+            'data' => $data,
         ]);
     }
 }

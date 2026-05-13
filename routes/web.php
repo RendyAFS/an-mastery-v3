@@ -37,6 +37,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('suppliers')->as('suppliers.')->group(function () {
         Route::put('{supplier}/restore', [App\Http\Controllers\SupplierController::class, 'restore'])->name('restore');
         Route::delete('{supplier}/force-delete', [App\Http\Controllers\SupplierController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/suppliers', [App\Http\Controllers\SupplierController::class, 'select'])->name('select');
     });
     Route::resource('suppliers', App\Http\Controllers\SupplierController::class)->names('suppliers');
 
@@ -74,4 +75,11 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{typeColor}/force-delete', [App\Http\Controllers\TypeColorController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('type-colors', App\Http\Controllers\TypeColorController::class)->names('type_colors');
+
+    // Price Supplier
+    Route::prefix('price-suppliers')->as('price_suppliers.')->group(function () {
+        Route::put('{priceSupplier}/restore', [App\Http\Controllers\PriceSupplierController::class, 'restore'])->name('restore');
+        Route::delete('{priceSupplier}/force-delete', [App\Http\Controllers\PriceSupplierController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('price-suppliers', App\Http\Controllers\PriceSupplierController::class)->names('price_suppliers');
 });
