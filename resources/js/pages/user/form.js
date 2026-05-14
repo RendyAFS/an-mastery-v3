@@ -1,6 +1,7 @@
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import { resetAllSelects } from "@/utils/custom-select";
 
 const PageScript = (function () {
     let form, mode, id;
@@ -20,11 +21,11 @@ const PageScript = (function () {
 
             await submitForm(action, submitter);
         });
-
     }
 
     function resetForm() {
         form.reset();
+        resetAllSelects(form);
     }
 
     async function submitForm(action, submitter) {
