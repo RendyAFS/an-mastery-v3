@@ -24,8 +24,8 @@ class SaveUserRequest extends FormRequest
     {
         $userId = $this->route('user')?->id;
         return [
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email,' . $userId,
+            'name'      => 'required|string|unique:users,name,' . $userId . ',id,deleted_at,NULL',
+            'email'     => 'required|email|unique:users,email,' . $userId . ',id,deleted_at,NULL',
             'password'  => [$userId ? 'nullable' : 'required', 'string', Password::min(8)->letters()->numbers(), 'confirmed'],
             'is_active' => 'nullable|boolean',
             'roles'     => 'nullable|exists:roles,id',

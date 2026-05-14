@@ -26,7 +26,7 @@ class Presence extends Model
     ];
 
     protected $casts = [
-        'week_of'   => 'datetime',
+        'week_of'   => 'date',
         'monday'    => 'integer',
         'tuesday'   => 'integer',
         'wednesday' => 'integer',
