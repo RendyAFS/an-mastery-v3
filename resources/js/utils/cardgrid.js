@@ -221,7 +221,7 @@ export default function initCardgrid({
                 state.search = this.value;
                 state.page = 1;
                 fetchData();
-            }, 400);
+            }, 500);
         });
 
     document
