@@ -64,8 +64,16 @@ export default function initDatatable({
     });
 
     // Search handler
+    let searchTimeout = null;
+
     $("#dt-search").on("keyup", function () {
-        datatable.search(this.value).draw();
+        const value = this.value;
+
+        clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+            datatable.search(value).draw();
+        }, 500);
     });
 
     // Length change handler
