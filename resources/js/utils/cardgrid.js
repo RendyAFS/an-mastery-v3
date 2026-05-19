@@ -112,11 +112,23 @@ export default function initCardgrid({
 
     const setLoading = (loading) => {
         const loadingEl = document.getElementById(`${gridId}-loading`);
+
         if (loading) {
             loadingEl?.classList.remove("hidden");
-            container.classList.add("hidden");
+
+            container.classList.add(
+                "pointer-events-none",
+                "opacity-40",
+                "scale-[0.99]",
+            );
         } else {
             loadingEl?.classList.add("hidden");
+
+            container.classList.remove(
+                "pointer-events-none",
+                "opacity-40",
+                "scale-[0.99]",
+            );
         }
     };
 
@@ -213,16 +225,44 @@ export default function initCardgrid({
         initLucide();
     };
 
-    document
-        .getElementById("cg-search")
-        ?.addEventListener("input", function () {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                state.search = this.value;
-                state.page = 1;
-                fetchData();
-            }, 400);
-        });
+    const searchInput = document.getElementById("cg-search");
+    const clearBtn = document.getElementById("cg-search-clear");
+
+    searchInput?.addEventListener("input", function () {
+        const value = this.value;
+
+        // toggle clear button
+        if (value.length > 0) {
+            clearBtn?.classList.remove("hidden");
+            clearBtn?.classList.add("flex");
+        } else {
+            clearBtn?.classList.remove("flex");
+            clearBtn?.classList.add("hidden");
+        }
+
+        clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+            state.search = value;
+            state.page = 1;
+            fetchData();
+        }, 500);
+    });
+
+    // clear search
+    clearBtn?.addEventListener("click", () => {
+        searchInput.value = "";
+
+        clearBtn.classList.remove("flex");
+        clearBtn.classList.add("hidden");
+
+        state.search = "";
+        state.page = 1;
+
+        fetchData();
+
+        searchInput.focus();
+    });
 
     document
         .getElementById("cg-length")

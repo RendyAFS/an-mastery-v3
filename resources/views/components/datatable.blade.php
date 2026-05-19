@@ -22,16 +22,31 @@
         {{-- Search --}}
         @if ($search)
             <div class="relative w-full sm:w-64">
+
+                {{-- Search Icon --}}
+                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 z-10">
+                    <i data-lucide="search" class="size-4"></i>
+                </div>
+
+                {{-- Input --}}
                 <input type="text" id="dt-search"
-                    class="w-full ps-10 py-2 px-3 text-sm rounded-lg
+                    class="w-full ps-10 pe-10 py-2 px-3 text-sm rounded-lg
                     text-(--color-dark) dark:text-(--color-light)
                     border border-(--color-gray) dark:border-(--color-dark-gray)
                     bg-(--color-light) dark:bg-(--color-dark-slate)
                     focus:ring-2 focus:ring-(--color-primary)/30"
                     placeholder="Search...">
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
-                    <i data-lucide="search" class="size-4"></i>
-                </div>
+
+                {{-- Clear Button --}}
+                <button type="button"
+                    id="dt-search-clear"
+                    class="absolute inset-y-0 end-0 hidden items-center pe-3
+                        text-(--color-gray)
+                        hover:text-(--color-dark)
+                        dark:hover:text-(--color-light)
+                        transition cursor-pointer">
+                    <i data-lucide="x" class="size-4"></i>
+                </button>
             </div>
         @endif
 
@@ -81,8 +96,9 @@
 </div>
 
 {{-- Table --}}
-<div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-10">
-    <div class="border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
+<div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-10">
+    <div
+        class="border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
         <table id="{{ $id }}" class="min-w-full text-sm divide-y divide-table-line">
             {{ $slot }}
         </table>
