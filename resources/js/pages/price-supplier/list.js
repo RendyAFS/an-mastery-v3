@@ -209,6 +209,10 @@ const PageScript = (function () {
             );
 
             hsSelect.setValue(String(item.id));
+            
+            requestAnimationFrame(() => {
+                window.lucide?.createIcons();
+            });
 
             showClearBtn();
         } catch (err) {
