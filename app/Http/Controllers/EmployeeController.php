@@ -104,6 +104,7 @@ class EmployeeController extends Controller
     {
         $employees = $this->employeeRepository->getDataSelect(
             search: $request->search,
+            id: $request->id,
             limit: $request->limit ?? 10,
             page: $request->page ?? 1
         );

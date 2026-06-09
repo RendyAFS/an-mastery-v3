@@ -2,7 +2,6 @@ import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
-import { setSelectOption, resetAllSelects } from "@/utils/custom-select";
 
 const PageScript = (function () {
     let datatable;
@@ -147,15 +146,98 @@ const PageScript = (function () {
 
     const resetModal = () => {
         form.reset();
-        resetAllSelects(form);
+
+        form.querySelectorAll("[data-hs-select]").forEach((el) => {
+            const hsSelect = window.HSSelect?.getInstance(el);
+            if (hsSelect) hsSelect.setValue("");
+
+            const clearBtn = document.querySelector(
+                `[data-clear-select="${el.id}"]`,
+            );
+            if (clearBtn) clearBtn.style.display = "none";
+        });
+
         setFormMode("create");
         setModalTitle("Add Price Supplier");
     };
 
-    const fillForm = (data) => {
-        setSelectOption("#supplier_id", data.supplier);
-        setSelectOption("#type_fabric_id", data.type_fabric);
-        setSelectOption("#type_color_id", data.type_color);
+    const setSelectValue = async (selector, value, apiUrl = null) => {
+        const el = document.querySelector(selector);
+        if (!el || value === null || value === undefined) return;
+
+        const showClearBtn = () => {
+            const clearBtn = document.querySelector(
+                `[data-clear-select="${el.id}"]`,
+            );
+            if (clearBtn) clearBtn.style.display = "";
+        };
+
+        if (!apiUrl) {
+            el.value = value ?? "";
+            $(el).trigger("change");
+            const hsSelect = window.HSSelect?.getInstance(el);
+            if (hsSelect) {
+                hsSelect.setValue(String(value));
+                showClearBtn();
+            }
+            return;
+        }
+
+        const hsSelect = window.HSSelect?.getInstance(el);
+        if (!hsSelect) return;
+
+        try {
+            const res = await fetch(`${apiUrl}?id=${value}`);
+            const json = await res.json();
+            const item = json.results?.[0];
+            if (!item) return;
+
+            const existing = el.querySelector(`option[value="${item.id}"]`);
+            if (!existing) {
+                const opt = document.createElement("option");
+                opt.value = item.id;
+                opt.text = item.name;
+                el.appendChild(opt);
+            }
+
+            el.value = String(item.id);
+
+            el.dispatchEvent(
+                new Event("change", {
+                    bubbles: true,
+                }),
+            );
+
+            hsSelect.setValue(String(item.id));
+            
+            requestAnimationFrame(() => {
+                window.lucide?.createIcons();
+            });
+
+            showClearBtn();
+        } catch (err) {
+            console.error("setSelectValue API error:", err, selector);
+        }
+    };
+
+    const fillForm = async (data) => {
+        await Promise.all([
+            setSelectValue(
+                "#supplier_id",
+                data.supplier_id,
+                route("suppliers.select"),
+            ),
+            setSelectValue(
+                "#type_fabric_id",
+                data.type_fabric_id,
+                route("type_fabrics.select"),
+            ),
+            setSelectValue(
+                "#type_color_id",
+                data.type_color_id,
+                route("type_colors.select"),
+            ),
+        ]);
 
         $("#price").val(data.price ?? "");
         $("#notes").val(data.notes ?? "");
@@ -205,7 +287,7 @@ const PageScript = (function () {
             const response = await ApiProvider.get(
                 route("price_suppliers.show", id),
             );
-            fillForm(response.data);
+            await fillForm(response.data);
             openModal();
         } catch (error) {
             console.error("Fetch price supplier error:", error);

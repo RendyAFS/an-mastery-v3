@@ -1,5 +1,5 @@
 <div id="hs-price-supplier-modal"
-    class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
     role="dialog" tabindex="-1" aria-labelledby="hs-price-supplier-modal-label">
 
     <div
@@ -13,7 +13,8 @@
             {{-- Header --}}
             <div
                 class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
-                <h3 id="hs-price-supplier-modal-label" class="font-semibold text-(--color-dark) dark:text-(--color-light)">
+                <h3 id="hs-price-supplier-modal-label"
+                    class="font-semibold text-(--color-dark) dark:text-(--color-light)">
                     Price Supplier
                 </h3>
                 <button type="button"

@@ -24,7 +24,7 @@
             <div class="relative w-full sm:w-64">
 
                 {{-- Search Icon --}}
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 z-10">
+                <div class="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-4 z-10">
                     <i data-lucide="search" class="size-4"></i>
                 </div>
 
@@ -38,7 +38,7 @@
 
                 {{-- Clear Button --}}
                 <button type="button" id="cg-search-clear"
-                    class="absolute inset-y-0 end-0 hidden items-center pe-3
+                    class="absolute inset-y-0 inset-e-0 hidden items-center pe-3
                         text-(--color-gray)
                         hover:text-(--color-dark)
                         dark:hover:text-(--color-light)

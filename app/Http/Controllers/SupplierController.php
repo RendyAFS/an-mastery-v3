@@ -104,14 +104,15 @@ class SupplierController extends Controller
     {
         $suppliers = $this->supplierRepository->getDataSelect(
             search: $request->search,
+            id: $request->id,
             limit: $request->limit ?? 10,
             page: $request->page ?? 1
         );
 
         return response()->json([
-            'count'   => $suppliers->total(),
+            'count' => $suppliers->total(),
             'results' => $suppliers->getCollection()->map(fn($item) => [
-                'id'   => $item->id,
+                'id' => $item->id,
                 'name' => $item->name,
                 'page' => $suppliers->currentPage(),
             ]),
