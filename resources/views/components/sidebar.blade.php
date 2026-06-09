@@ -5,7 +5,7 @@
            lg:block lg:translate-x-0 w-65
            hs-overlay-open:translate-x-0 -translate-x-full
            transition-all duration-300 transform
-           h-full fixed top-0 start-0 bottom-0 z-60
+           h-full fixed top-0 inset-s-0 bottom-0 z-60
            overflow-hidden
            bg-(--color-light) dark:bg-(--color-dark)
            border-e border-(--color-gray)/20"
