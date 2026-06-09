@@ -147,7 +147,7 @@ const PageScript = (function () {
     const resetModal = () => {
         form.reset();
 
-         form.querySelectorAll("[data-hs-select]").forEach((el) => {
+        form.querySelectorAll("[data-hs-select]").forEach((el) => {
             const hsSelect = window.HSSelect?.getInstance(el);
             if (hsSelect) hsSelect.setValue("");
 
@@ -200,29 +200,40 @@ const PageScript = (function () {
                 el.appendChild(opt);
             }
 
+            el.value = String(item.id);
+
+            el.dispatchEvent(
+                new Event("change", {
+                    bubbles: true,
+                }),
+            );
+
             hsSelect.setValue(String(item.id));
+
             showClearBtn();
         } catch (err) {
             console.error("setSelectValue API error:", err, selector);
         }
     };
 
-    const fillForm = (data) => {
-        setSelectValue(
-            "#supplier_id",
-            data.supplier_id,
-            route("suppliers.select"),
-        );
-        setSelectValue(
-            "#type_fabric_id",
-            data.type_fabric_id,
-            route("type_fabrics.select"),
-        );
-        setSelectValue(
-            "#type_color_id",
-            data.type_color_id,
-            route("type_colors.select"),
-        );
+    const fillForm = async (data) => {
+        await Promise.all([
+            setSelectValue(
+                "#supplier_id",
+                data.supplier_id,
+                route("suppliers.select"),
+            ),
+            setSelectValue(
+                "#type_fabric_id",
+                data.type_fabric_id,
+                route("type_fabrics.select"),
+            ),
+            setSelectValue(
+                "#type_color_id",
+                data.type_color_id,
+                route("type_colors.select"),
+            ),
+        ]);
 
         $("#price").val(data.price ?? "");
         $("#notes").val(data.notes ?? "");
@@ -272,7 +283,7 @@ const PageScript = (function () {
             const response = await ApiProvider.get(
                 route("price_suppliers.show", id),
             );
-            fillForm(response.data);
+            await fillForm(response.data);
             openModal();
         } catch (error) {
             console.error("Fetch price supplier error:", error);
