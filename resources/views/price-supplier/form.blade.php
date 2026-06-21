@@ -1,23 +1,18 @@
 <div class="grid grid-cols-2 gap-3">
     <div class="col-span-full">
-        <x-select id="supplier_id" name="supplier_id" label="Supplier" placeholder="Choose Supplier"
-            search-placeholder="Search supplier..." api-url="{{ route('suppliers.select') }}" api-data-part="results"
-            field-id="id" field-title="name" field-page="page" search-query-key="search" :per-page="10"
-            :value="$priceSupplier->supplier_id ?? null" clearable="true" dropdown-scope="window" />
+        <x-select id="supplier_id" name="supplier_id" label="Supplier" :options="$suppliers" :value="$priceSupplier->supplier_id ?? null"
+            placeholder="Choose Supplier" search-placeholder="Search supplier..." clearable="true" />
     </div>
 
     <div class="coll-span-1">
-        <x-select id="type_fabric_id" name="type_fabric_id" label="Type Fabric" placeholder="Choose Type Fabric"
-            search-placeholder="Search type fabric..." api-url="{{ route('type_fabrics.select') }}"
-            api-data-part="results" field-id="id" field-title="name" field-page="page" search-query-key="search"
-            :per-page="10" :value="$priceSupplier->type_fabric_id ?? null" clearable="true" dropdown-scope="window" />
+        <x-select id="type_fabric_id" name="type_fabric_id" label="Type Fabric" :options="$typeFabrics" :value="$priceSupplier->type_fabric_id ?? null"
+            placeholder="Choose Type Fabric" search-placeholder="Search type fabric..." clearable="true" />
     </div>
 
     <div class="coll-span-1">
-        <x-select id="type_color_id" name="type_color_id" label="Type Color" placeholder="Choose Type Color"
-            search-placeholder="Search type color..." api-url="{{ route('type_colors.select') }}"
-            api-data-part="results" field-id="id" field-title="name" field-page="page" search-query-key="search"
-            :per-page="10" :value="$priceSupplier->type_color_id ?? null" clearable="true" dropdown-scope="window" />
+        <x-select id="type_color_id" name="type_color_id" label="Type Color" :options="$typeColors" :value="$priceSupplier->type_color_id ?? null"
+            placeholder="Choose Type Color" search-placeholder="Search type color..." clearable="true"
+            dropdown-scope="window" />
     </div>
 
     <div class="col-span-full">
