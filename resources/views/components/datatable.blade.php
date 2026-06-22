@@ -10,7 +10,7 @@
         'deleted' => 'Deleted',
     ],
     'filterDefault' => 'active',
-    'lengthOptions' => [10, 20, 50],
+    'lengthOptions' => [10, 20, 50, -1],
     'defaultLength' => 10,
 ])
 
@@ -86,7 +86,7 @@
                 class="hidden py-2 px-3 text-sm rounded-lg border">
                 @foreach ($lengthOptions as $opt)
                     <option value="{{ $opt }}" @selected($opt == $defaultLength)>
-                        {{ $opt }}
+                        {{ $opt == -1 ? 'All' : $opt }}
                     </option>
                 @endforeach
             </select>

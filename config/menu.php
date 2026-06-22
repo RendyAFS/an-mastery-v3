@@ -65,4 +65,9 @@ return [
             ],
         ],
     ],
+    [
+        'name' => 'Employee Presence',
+        'icon' => 'calendar-check-2',
+        'url'  => '/presences',
+    ],
 ];
