@@ -13,6 +13,7 @@ class MakeModuleCommand extends Command
         {name}
         {--resource : Generate resource controller}
         {--simple : Generate simple CRUD (modal based)}
+        {--default : Generate default listing module}
     ';
 
     protected $description = 'Generate module structure';
@@ -22,6 +23,7 @@ class MakeModuleCommand extends Command
         $name       = $this->argument('name');
         $isResource = $this->option('resource');
         $isSimple   = $this->option('simple');
+        $isDefault  = $this->option('default');
 
         $studly = Str::studly($name);
         $kebab  = Str::kebab($name);
@@ -38,17 +40,17 @@ class MakeModuleCommand extends Command
 
         $this->components->twoColumnDetail('Module', $studly);
         $this->components->twoColumnDetail('Controller Type', $isResource ? 'Resource' : 'Basic');
-        $this->components->twoColumnDetail('CRUD Type', $isSimple ? 'Simple Modal' : 'Full Page');
+        $this->components->twoColumnDetail('CRUD Type', $isDefault ? 'Default' : ($isSimple ? 'Simple Modal' : 'Full Page'));
 
         $this->newLine();
 
-        $this->components->task('Generating Controller', function () use ($studly, $isResource) {
+        $this->components->task('Generating Controller', function () use ($studly, $isResource, $isDefault) {
 
             $params = [
                 'name' => "{$studly}Controller",
             ];
 
-            if ($isResource) {
+            if ($isResource && ! $isDefault) {
                 $params['--resource'] = true;
             }
 
@@ -93,18 +95,28 @@ class MakeModuleCommand extends Command
         $baseViewPath = resource_path("views/{$kebab}");
         $baseJsPath   = resource_path("js/pages/{$kebab}");
 
-        $files = [
-            "{$baseViewPath}/index.blade.php",
-            "{$baseViewPath}/form.blade.php",
-            "{$baseJsPath}/list.js",
-        ];
+        $files = [];
 
-        if ($isSimple) {
-            $files[] = "{$baseViewPath}/modal.blade.php";
+        if ($isDefault) {
+            $files = [
+                "{$baseViewPath}/index.blade.php",
+                "{$baseJsPath}/index.js",
+            ];
         } else {
-            $files[] = "{$baseViewPath}/create.blade.php";
-            $files[] = "{$baseViewPath}/edit.blade.php";
-            $files[] = "{$baseJsPath}/form.js";
+
+            $files = [
+                "{$baseViewPath}/index.blade.php",
+                "{$baseViewPath}/form.blade.php",
+                "{$baseJsPath}/list.js",
+            ];
+
+            if ($isSimple) {
+                $files[] = "{$baseViewPath}/modal.blade.php";
+            } else {
+                $files[] = "{$baseViewPath}/create.blade.php";
+                $files[] = "{$baseViewPath}/edit.blade.php";
+                $files[] = "{$baseJsPath}/form.js";
+            }
         }
 
         $this->newLine();

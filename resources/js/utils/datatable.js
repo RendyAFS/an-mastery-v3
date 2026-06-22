@@ -4,7 +4,7 @@ export default function initDatatable({
     table,
     ajax,
     columns,
-    pageLength = 10,
+    pageLength = parseInt(document.getElementById("dt-length")?.value) || 10,
     order = [],
     filterSelector = null,
     rowClickRoute = null,

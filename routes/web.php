@@ -92,4 +92,13 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{priceEmployee}/force-delete', [App\Http\Controllers\PriceEmployeeController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('price-employees', App\Http\Controllers\PriceEmployeeController::class)->names('price_employees');
+
+    // Presences
+    Route::prefix('presences')->as('presences.')->group(function () {
+        Route::get('/', [App\Http\Controllers\PresenceController::class, 'index'])->name('index');
+        Route::get('data', [App\Http\Controllers\PresenceController::class, 'data'])->name('data');
+        Route::get('{employee}/show', [App\Http\Controllers\PresenceController::class, 'show'])->name('show');
+        Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
+    });
+    Route::resource('presences', App\Http\Controllers\PresenceController::class)->names('presences');
 });
