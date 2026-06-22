@@ -44,7 +44,11 @@ class PresenceController extends Controller
             ];
         });
 
-        return response()->json(['data' => $data]);
+        return response()->json([
+            'data'  => $data,
+            'dates' => collect(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
+                ->mapWithKeys(fn($day, $i) => [$day => $weekOf->copy()->addDays($i)->toDateString()]),
+        ]);
     }
 
     public function show(Employee $employee, Request $request)

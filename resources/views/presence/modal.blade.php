@@ -15,22 +15,34 @@
                  <input type="hidden" id="employee_id" name="employee_id" />
                  <input type="hidden" id="week_of" name="week_of" />
 
-                 <div class="grid grid-cols-2 gap-3">
-                     @foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
-                         <div>
-                             <label for="{{ $day }}"
-                                 class="block text-sm font-medium capitalize text-(--color-dark) dark:text-(--color-light)">
-                                 {{ $day }}
-                             </label>
-                             <input type="text" inputmode="numeric" id="{{ $day }}"
-                                 name="{{ $day }}" data-rupiah
-                                 class="day-input mt-1 px-4 py-2 block w-full rounded-lg
-                                        bg-(--color-light-gray) border border-(--color-gray)
-                                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
-                         </div>
-                     @endforeach
-                 </div>
+                 @php
+                    $dayLabels = [
+                        'monday' => 'Senin',
+                        'tuesday' => 'Selasa',
+                        'wednesday' => 'Rabu',
+                        'thursday' => 'Kamis',
+                        'friday' => 'Jumat',
+                        'saturday' => 'Sabtu',
+                        'sunday' => 'Minggu',
+                    ];
+                @endphp
+
+                <div class="grid grid-cols-2 gap-3">
+                    @foreach ($dayLabels as $day => $label)
+                        <div>
+                            <label for="{{ $day }}"
+                                class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                                {{ $label }}
+                            </label>
+                            <input type="text" inputmode="numeric" id="{{ $day }}"
+                                name="{{ $day }}" data-rupiah
+                                class="day-input mt-1 px-4 py-2 block w-full rounded-lg
+                                    bg-(--color-light-gray) border border-(--color-gray)
+                                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
+                        </div>
+                    @endforeach
+                </div>
 
                  <div class="col-span-full">
                      <label for="notes"

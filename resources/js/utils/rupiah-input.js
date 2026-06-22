@@ -3,21 +3,31 @@ const RupiahInput = {
 
     init() {
         document.querySelectorAll(this.selector).forEach((input) => {
-            // format awal kalau sudah ada value
-            if (input.value) {
-                input.value = this.format(input.value);
-            }
-
-            input.addEventListener("input", (e) => {
-                const raw = this.unformat(e.target.value);
-                e.target.value = this.format(raw);
-            });
-
-            // sebelum submit, ubah ke angka asli
-            input.form?.addEventListener("submit", () => {
-                input.value = this.unformat(input.value);
-            });
+            this.apply(input);
         });
+    },
+
+    apply(input) {
+        if (input.dataset.rupiahInitialized) return;
+
+        if (input.value) {
+            input.value = this.format(input.value);
+        }
+
+        input.addEventListener("input", (e) => {
+            const raw = this.unformat(e.target.value);
+            e.target.value = this.format(raw);
+        });
+
+        input.form?.addEventListener("submit", () => {
+            input.value = this.unformat(input.value);
+        });
+
+        input.dataset.rupiahInitialized = true;
+    },
+
+    refresh(input) {
+        input.value = this.format(input.value);
     },
 
     format(value) {

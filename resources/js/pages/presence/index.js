@@ -2,6 +2,7 @@ import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import RupiahInput from "@/utils/rupiah-input";
 
 const DAYS = [
     "monday",
@@ -12,6 +13,16 @@ const DAYS = [
     "saturday",
     "sunday",
 ];
+
+const DAY_LABELS = {
+    monday: "Senin",
+    tuesday: "Selasa",
+    wednesday: "Rabu",
+    thursday: "Kamis",
+    friday: "Jumat",
+    saturday: "Sabtu",
+    sunday: "Minggu",
+};
 
 const PageScript = (function () {
     let datatable;
@@ -55,7 +66,12 @@ const PageScript = (function () {
         return `${d.getFullYear()}-W${String(weekNo).padStart(2, "0")}`;
     };
 
-    const toDateStr = (date) => date.toISOString().split("T")[0];
+    const toDateStr = (date) => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+    };
 
     const formatThDate = (date) =>
         date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit" });
@@ -85,7 +101,11 @@ const PageScript = (function () {
             ajax: {
                 url: route("presences.data"),
                 method: "GET",
-                dataSrc: "data",
+                dataSrc: function (json) {
+                    if (json.dates)
+                        updateTheadDates(new Date(json.dates.monday));
+                    return json.data;
+                },
                 data: function (d) {
                     d.filter = $("#filter-presences").val();
                     d.week_of = currentWeekOf;
@@ -93,6 +113,7 @@ const PageScript = (function () {
             },
             columns: [
                 {
+                    width: "10%",
                     data: "employee_name",
                     render: (name, type, row) =>
                         row.is_deleted
@@ -100,46 +121,53 @@ const PageScript = (function () {
                             : name,
                 },
                 {
+                    width: "10%",
                     data: "monday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "tuesday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "wednesday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "thursday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "friday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "saturday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "sunday",
                     className: "text-center",
                     render: formatRupiah,
                 },
                 {
+                    width: "10%",
                     data: "total",
                     className: "text-center font-semibold",
                     render: formatRupiah,
                 },
-                { data: "notes" },
             ],
         });
     };
@@ -168,7 +196,13 @@ const PageScript = (function () {
         $("#employee_id").val(currentEmployeeId);
         $("#week_of").val(currentWeekOf);
 
-        DAYS.forEach((day) => $(`#${day}`).val(data[day] ?? 0));
+        DAYS.forEach((day) => {
+            const input = document.getElementById(day);
+
+            input.value = data[day] ?? 0;
+            RupiahInput.refresh(input);
+        });
+
         $("#notes").val(data.notes ?? "");
 
         const isDeleted = !!data.employee?.deleted_at;

@@ -18,9 +18,9 @@
                 </label>
                 <input type="week" id="filter-week"
                     class="mt-1 px-4 py-2 block w-full rounded-lg
-                        bg-(--color-light-gray) border border-(--color-gray)
+                        bg-(--color-light) border border-(--color-gray)
                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
+                        dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
             </div>
         </div>
 
@@ -34,59 +34,55 @@
                     <th id="th-monday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Mon</span>
+                            <span>Senin</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-tuesday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Tue</span>
+                            <span>Selasa</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-wednesday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Wed</span>
+                            <span>Rabu</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-thursday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Thu</span>
+                            <span>Kamis</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-friday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Fri</span>
+                            <span>Jumat</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-saturday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Sat</span>
+                            <span>Sabtu</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th id="th-sunday"
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex flex-col items-center justify-center w-full">
-                            <span>Sun</span>
+                            <span>Minggu</span>
                             <span class="th-date font-normal text-[10px] opacity-70"></span>
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">Total</div>
-                    </th>
-                    <th
-                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
                     </th>
                 </tr>
             </thead>

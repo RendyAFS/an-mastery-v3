@@ -18,6 +18,7 @@ class PresenceResource extends JsonResource
             'id'          => $this->id,
             'employee_id' => $this->employee_id,
             'week_of'     => $this->week_of,
+            'dates'       => $this->dayDates(),
             'monday'      => $this->monday,
             'tuesday'     => $this->tuesday,
             'wednesday'   => $this->wednesday,

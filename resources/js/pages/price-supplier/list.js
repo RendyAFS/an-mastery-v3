@@ -2,6 +2,7 @@ import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import RupiahInput from "@/utils/rupiah-input";
 
 const PageScript = (function () {
     let datatable;
@@ -209,7 +210,7 @@ const PageScript = (function () {
             );
 
             hsSelect.setValue(String(item.id));
-            
+
             requestAnimationFrame(() => {
                 window.lucide?.createIcons();
             });
@@ -239,7 +240,10 @@ const PageScript = (function () {
             ),
         ]);
 
-        $("#price").val(data.price ?? "");
+        const priceInput = document.getElementById("price");
+        priceInput.value = data.price ?? "";
+        RupiahInput.refresh(priceInput);
+
         $("#notes").val(data.notes ?? "");
     };
 
