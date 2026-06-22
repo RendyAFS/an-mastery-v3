@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PriceSupplier\SavePriceSupplierRequest;
 use App\Http\Resources\PriceSupplierResource;
 use App\Models\PriceSupplier;
+use App\Models\Supplier;
+use App\Models\TypeColor;
+use App\Models\TypeFabric;
 use App\Repositories\PriceSupplierRepository;
 use Illuminate\Http\Request;
 
@@ -26,8 +29,11 @@ class PriceSupplierController extends Controller
 
             return PriceSupplierResource::collection($priceSuppliers);
         }
+        $suppliers = Supplier::pluck('name', 'id')->all();
+        $typeFabrics = TypeFabric::pluck('name', 'id')->all();
+        $typeColors = TypeColor::pluck('name', 'id')->all();
 
-        return view('price-supplier.index');
+        return view('price-supplier.index', compact('suppliers', 'typeFabrics', 'typeColors'));
     }
 
     public function create()

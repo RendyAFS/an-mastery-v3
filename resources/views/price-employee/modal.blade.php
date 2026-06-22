@@ -1,6 +1,6 @@
-<div id="hs-price-supplier-modal"
+<div id="hs-price-employee-modal"
     class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
-    role="dialog" tabindex="-1" aria-labelledby="hs-price-supplier-modal-label">
+    role="dialog" tabindex="-1" aria-labelledby="hs-price-employee-modal-label">
 
     <div
         class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500
@@ -13,9 +13,9 @@
             {{-- Header --}}
             <div
                 class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
-                <h3 id="hs-price-supplier-modal-label"
+                <h3 id="hs-price-employee-modal-label"
                     class="font-semibold text-(--color-dark) dark:text-(--color-light)">
-                    Price Supplier
+                    Price Employee
                 </h3>
                 <button type="button"
                     class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full
@@ -23,7 +23,7 @@
                         text-(--color-dark) hover:bg-(--color-gray)/40
                         dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
                         focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-                    aria-label="Close" data-hs-overlay="#hs-price-supplier-modal">
+                    aria-label="Close" data-hs-overlay="#hs-price-employee-modal">
                     <span class="sr-only">Close</span>
                     <i data-lucide="x" class="text-(--color-dark)/80 dark:text-(--color-light)/80 size-5"></i>
                 </button>
@@ -31,8 +31,8 @@
 
             {{-- Body --}}
             <div class="p-4 overflow-y-auto">
-                <form id="price-supplier-form" data-mode="create">
-                    @include('price-supplier.form', ['priceSupplier' => null])
+                <form id="price-employee-form" data-mode="create">
+                    @include('price-employee.form', ['priceEmployee' => null])
 
                     {{-- Footer --}}
                     <div class="flex gap-2 pt-2">
@@ -41,7 +41,7 @@
                             textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                             rounded="rounded-lg" class="cursor-pointer" />
 
-                        <button type="button" data-hs-overlay="#hs-price-supplier-modal"
+                        <button type="button" data-hs-overlay="#hs-price-employee-modal"
                             class="px-4 py-2 text-sm font-semibold rounded-lg
                                 bg-(--color-danger) hover:bg-(--color-danger)/70
                                 text-(--color-light) cursor-pointer hover:opacity-90 transition">

@@ -59,6 +59,10 @@ return [
                 'name' => 'Price Supplier',
                 'url'  => '/price-suppliers',
             ],
+            [
+                'name' => 'Price Employee',
+                'url'  => '/price-employees',
+            ],
         ],
     ],
 ];

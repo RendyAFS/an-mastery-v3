@@ -31,7 +31,7 @@
             {{-- Body --}}
             <div class="p-4 overflow-y-auto">
                 <form id="type-fabric-form" data-mode="create">
-                    @include('type-fabric.form', ['colorFabric' => null])
+                    @include('type-fabric.form', ['typeFabric' => null])
 
                     {{-- Footer --}}
                     <div class="flex gap-2 pt-2">
