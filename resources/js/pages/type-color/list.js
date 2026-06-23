@@ -28,6 +28,10 @@ const PageScript = (function () {
                 {
                     data: "name",
                     width: "50%",
+                    className: "text-left dt-body-left",
+                    render: function (data, type, row) {
+                        return `${data} Warna`;
+                    },
                 },
                 {
                     data: "notes",
@@ -156,10 +160,7 @@ const PageScript = (function () {
             }
 
             if (mode === "edit") {
-                await ApiProvider.put(
-                    route("type_colors.update", id),
-                    payload,
-                );
+                await ApiProvider.put(route("type_colors.update", id), payload);
                 Toast.success("Success", "Type Color Successfully Updated");
             }
 
