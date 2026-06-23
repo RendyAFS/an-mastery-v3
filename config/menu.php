@@ -25,11 +25,11 @@ return [
         ],
     ],
 
-    // Master Data
+    // People
     [
-        'name' => 'Master Data',
-        'icon' => 'server',
-        'url'  => '#master-data',
+        'name' => 'People',
+        'icon' => 'users',
+        'url'  => '#people',
         'children' => [
             [
                 'name' => 'Suppliers',
@@ -39,6 +39,15 @@ return [
                 'name' => 'Employees',
                 'url'  => '/employees',
             ],
+        ],
+    ],
+
+    // Fabric Attribute
+    [
+        'name' => 'Fabric Attribute',
+        'icon' => 'layers',
+        'url'  => '#fabric-attribute',
+        'children' => [
             [
                 'name' => 'Image Fabrics',
                 'url'  => '/image-fabrics',
@@ -51,6 +60,41 @@ return [
                 'name' => 'Type Fabrics',
                 'url'  => '/type-fabrics',
             ],
+            [
+                'name' => 'Type Colors',
+                'url'  => '/type-colors',
+            ],
         ],
+    ],
+
+    // Pricing
+    [
+        'name' => 'Pricing',
+        'icon' => 'dollar-sign',
+        'url'  => '#pricing',
+        'children' => [
+            [
+                'name' => 'Price Supplier',
+                'url'  => '/price-suppliers',
+            ],
+            [
+                'name' => 'Price Employee',
+                'url'  => '/price-employees',
+            ],
+        ],
+    ],
+
+    // Employee Presence
+    [
+        'name' => 'Employee Presence',
+        'icon' => 'calendar-check-2',
+        'url'  => '/presences',
+    ],
+
+    // Inventory Fabric
+    [
+        'name' => 'Inventory Fabric',
+        'icon' => 'package',
+        'url'  => '/fabrics',
     ],
 ];

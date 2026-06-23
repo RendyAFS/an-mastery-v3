@@ -22,16 +22,29 @@
         {{-- Search --}}
         @if ($search)
             <div class="relative w-full sm:w-64">
+
+                {{-- Search Icon --}}
+                <div class="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-4 z-10">
+                    <i data-lucide="search" class="size-4"></i>
+                </div>
+
                 <input type="text" id="cg-search"
-                    class="w-full ps-10 py-2 px-3 text-sm rounded-lg
+                    class="w-full ps-10 pe-10 py-2 px-3 text-sm rounded-lg
                     text-(--color-dark) dark:text-(--color-light)
                     border border-(--color-gray) dark:border-(--color-dark-gray)
                     bg-(--color-light) dark:bg-(--color-dark-slate)
                     focus:ring-2 focus:ring-(--color-primary)/30"
                     placeholder="Search...">
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
-                    <i data-lucide="search" class="size-4"></i>
-                </div>
+
+                {{-- Clear Button --}}
+                <button type="button" id="cg-search-clear"
+                    class="absolute inset-y-0 inset-e-0 hidden items-center pe-3
+                        text-(--color-gray)
+                        hover:text-(--color-dark)
+                        dark:hover:text-(--color-light)
+                        transition cursor-pointer">
+                    <i data-lucide="x" class="size-4"></i>
+                </button>
             </div>
         @endif
 
@@ -76,9 +89,29 @@
 </div>
 
 {{-- Loading Overlay --}}
-<div id="{{ $id }}-loading" class="hidden">
-    <div class="flex justify-center items-center py-20">
-        <i data-lucide="loader-circle" class="size-8 animate-spin text-(--color-primary)"></i>
+<div class="relative min-h-40">
+    {{-- Loading Overlay --}}
+    <div id="{{ $id }}-loading"
+        class="hidden absolute inset-0 z-20 items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
+        <div class="flex flex-col items-center gap-4">
+            <div class="relative">
+                <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
+
+                <div
+                    class="absolute inset-0 size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin">
+                </div>
+            </div>
+
+            <span class="text-sm text-(--color-dark) dark:text-(--color-light)">
+                Loading data...
+            </span>
+        </div>
+    </div>
+
+    {{-- Card Grid Container --}}
+    <div id="{{ $id }}"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition duration-200">
+        {{-- Cards injected by JS --}}
     </div>
 </div>
 

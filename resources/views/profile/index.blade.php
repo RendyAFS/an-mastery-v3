@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <div class="max-w-3xl mx-auto space-y-10">
+    <div class="max-w-5xl mx-auto space-y-10">
 
         {{-- PROFILE --}}
         <form id="profile-form" class="space-y-6 bg-(--color-light) dark:bg-(--color-dark) p-6 rounded-xl">
@@ -51,8 +51,10 @@
 
         {{-- PASSWORD --}}
         <form id="password-form" class="space-y-6 bg-(--color-light) dark:bg-(--color-dark) p-6 rounded-xl">
+            <div class="space-y-2">
+                <input type="email" name="username" value="{{ $user->email }}" autocomplete="username" hidden>
+            </div>
             <h2 class="text-xl font-bold">Change Password</h2>
-
             <div x-data="{ show: false }" class="space-y-2">
                 <label class="block text-sm font-medium">New Password</label>
 

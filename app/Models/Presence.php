@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,7 +27,7 @@ class Presence extends Model
     ];
 
     protected $casts = [
-        'week_of'   => 'datetime',
+        'week_of'   => 'date',
         'monday'    => 'integer',
         'tuesday'   => 'integer',
         'wednesday' => 'integer',
@@ -36,6 +37,31 @@ class Presence extends Model
         'sunday'    => 'integer',
         'total'     => 'integer',
     ];
+
+    protected array $dayOrder = [
+        'monday' => 0,
+        'tuesday' => 1,
+        'wednesday' => 2,
+        'thursday' => 3,
+        'friday' => 4,
+        'saturday' => 5,
+        'sunday' => 6,
+    ];
+
+    public function dateFor(string $day): Carbon
+    {
+        return $this->week_of->copy()->addDays($this->dayOrder[$day] ?? 0);
+    }
+
+    /**
+     * @return array<string, string> day => 'Y-m-d'
+     */
+    public function dayDates(): array
+    {
+        return collect($this->dayOrder)
+            ->map(fn($offset) => $this->week_of->copy()->addDays($offset)->toDateString())
+            ->toArray();
+    }
 
     public function employee(): BelongsTo
     {

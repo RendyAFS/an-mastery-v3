@@ -18,4 +18,23 @@ class EmployeeRepository
         }
         return $query->get();
     }
+
+    public function getDataSelect(
+        ?string $search = null,
+        ?int $id = null,
+        int $limit = 10,
+        int $page = 1
+    ) {
+        return Employee::query()
+            ->select('id', 'name', 'contact')
+            ->when($id, function ($query) use ($id) {
+                $query->whereKey($id);
+            })
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('contact', 'like', "%{$search}%");
+            })
+            ->orderBy('name')
+            ->paginate($limit, ['*'], 'page', $page);
+    }
 }

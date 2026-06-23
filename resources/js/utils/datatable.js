@@ -4,7 +4,7 @@ export default function initDatatable({
     table,
     ajax,
     columns,
-    pageLength = 10,
+    pageLength = parseInt(document.getElementById("dt-length")?.value) || 10,
     order = [],
     filterSelector = null,
     rowClickRoute = null,
@@ -19,6 +19,22 @@ export default function initDatatable({
         lengthChange: false,
         info: false,
         processing: true,
+        language: {
+            processing: `
+                <div class="dt-overlay-loader">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="relative">
+                            <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
+                            <div class="size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin absolute inset-0"></div>
+                        </div>
+
+                        <div class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                            Loading data...
+                        </div>
+                    </div>
+                </div>
+            `,
+        },
         serverSide: false,
         ajax,
         columns,
@@ -36,7 +52,7 @@ export default function initDatatable({
                 rows.on("click", function (e) {
                     if (
                         $(e.target).closest(
-                            "button, a, .hs-dropdown, .hs-dropdown-menu",
+                            "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label",
                         ).length
                     ) {
                         return;
@@ -64,8 +80,37 @@ export default function initDatatable({
     });
 
     // Search handler
-    $("#dt-search").on("keyup", function () {
-        datatable.search(this.value).draw();
+    let searchTimeout = null;
+
+    const searchInput = $("#dt-search");
+    const clearBtn = $("#dt-search-clear");
+
+    searchInput.on("keyup", function () {
+        const value = this.value;
+
+        // toggle clear button
+        if (value.length > 0) {
+            clearBtn.removeClass("hidden").addClass("flex");
+        } else {
+            clearBtn.removeClass("flex").addClass("hidden");
+        }
+
+        clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+            datatable.search(value).draw();
+        }, 500);
+    });
+
+    // Clear search
+    clearBtn.on("click", function () {
+        searchInput.val("");
+
+        clearBtn.removeClass("flex").addClass("hidden");
+
+        datatable.search("").draw();
+
+        searchInput.trigger("focus");
     });
 
     // Length change handler

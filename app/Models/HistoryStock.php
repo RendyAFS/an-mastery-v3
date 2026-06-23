@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\StatusSablonEnum;
+use App\Enums\StatusHistoryStockEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,7 +17,7 @@ class HistoryStock extends Model
 
     protected $casts = [
         'total'  => 'integer',
-        'status' => StatusSablonEnum::class,
+        'status' => StatusHistoryStockEnum::class,
     ];
 
     public function fabricDetail(): BelongsTo

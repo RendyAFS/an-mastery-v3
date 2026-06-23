@@ -38,7 +38,7 @@
                     placeholder="Enter password">
 
                 <button type="button" @click="show = !show" tabindex="-1"
-                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
+                    class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
                     <i x-show="!show" data-lucide="eye-off" class="size-5"></i>
                     <i x-show="show" data-lucide="eye" class="size-5"></i>
                 </button>
@@ -69,7 +69,7 @@
                     placeholder="Confirm password">
 
                 <button type="button" @click="showConfirm = !showConfirm" tabindex="-1"
-                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
+                    class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
                     <i x-show="!showConfirm" data-lucide="eye-off" class="size-5"></i>
                     <i x-show="showConfirm" data-lucide="eye" class="size-5"></i>
                 </button>
@@ -85,15 +85,15 @@
     <div class="col-span-1">
         <div class="mb-6 space-y-2">
             <x-select id="roles" name="roles" label="Role" :options="$roles" :value="$user->role_id ?? null"
-                placeholder="Choose Role" search-placeholder="Search role..." clearable="true"/>
+                placeholder="Choose Role" search-placeholder="Search role..." clearable="true" />
         </div>
 
         <div class="mb-6 flex items-center">
             <input type="checkbox" id="is_active" name="is_active" value="1"
-                {{ $user && $user->is_active == 1 ? 'checked' : '' }}
-                class="checkbox-custom">
+                {{ $user && $user->is_active == 1 ? 'checked' : '' }} class="checkbox-custom">
 
-            <label for="is_active" class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
+            <label for="is_active"
+                class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
                 Is Active
             </label>
         </div>

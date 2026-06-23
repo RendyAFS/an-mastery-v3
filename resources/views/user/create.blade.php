@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="user-form" data-mode="create" class="max-w-4xl mx-auto">
+    <form id="user-form" data-mode="create" class="max-w-6xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl
@@ -35,8 +35,8 @@
 
                 <x-button-loading type="submit" text="Save & Create Another" loadingText="Saving..."
                     color="bg-(--color-light) hover:bg-(--color-light-gray)"
-                    textColor="text-(--color-primary) hover:text-(--color-primary) dark:text-(--color-light) dark:hover:text-(--color-light)" size="py-2 px-4 text-sm"
-                    rounded="rounded-lg"
+                    textColor="text-(--color-primary) hover:text-(--color-primary) dark:text-(--color-light) dark:hover:text-(--color-light)"
+                    size="py-2 px-4 text-sm" rounded="rounded-lg"
                     class="flex items-center gap-x-2 cursor-pointer
                     border border-(--color-gray) dark:bg-(--color-dark)
                     dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"

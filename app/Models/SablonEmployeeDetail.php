@@ -11,15 +11,19 @@ class SablonEmployeeDetail extends Model
         'sablon_id',
         'fabric_detail_id',
         'employee_id',
+        'layers',
         'fee',
         'additional_fee',
         'total',
         'is_change',
+        'employee_change_id',
+        'is_payed',
         'notes'
     ];
 
     protected $casts = [
         'is_change' => 'boolean',
+        'is_payed'  => 'boolean',
     ];
 
     public function sablon(): BelongsTo
@@ -35,5 +39,10 @@ class SablonEmployeeDetail extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function employeeChange(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'employee_change_id');
     }
 }

@@ -4,12 +4,13 @@ namespace App\View\Components;
 
 use App\Models\Menu;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Auth;
 
 class Sidebar extends Component
 {
-    public $menus;
+    public Collection $menus;
 
     public function __construct()
     {

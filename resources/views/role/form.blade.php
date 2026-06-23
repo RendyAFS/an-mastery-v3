@@ -39,7 +39,7 @@
                         {{ $menu->name }}
                     </h5>
                     <label
-                        class="inline-flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-(--color-dark-gray) dark:text-(--color-gray)">
+                        class="inline-flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-(--color-dark) dark:text-(--color-gray)">
                         <input type="checkbox" class="checkbox-custom" :checked="isGroupChecked({{ $menu->id }})"
                             @change="toggleGroup({{ $menu->id }})">
                         Select All
@@ -62,7 +62,7 @@
                                             {{ $child->name }}
                                         </span>
                                         <label
-                                            class="inline-flex items-center gap-2 text-xs font-medium cursor-pointer select-none text-(--color-dark-gray) dark:text-(--color-gray)">
+                                            class="inline-flex items-center gap-2 text-xs font-medium cursor-pointer select-none text-(--color-dark) dark:text-(--color-gray)">
                                             <input type="checkbox" class="checkbox-custom"
                                                 :checked="isSubmenuChecked({{ $child->id }})"
                                                 @change="toggleSubmenu({{ $child->id }})">
@@ -75,7 +75,7 @@
                                         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2 px-3 py-3">
                                         @foreach ($child->permissions as $permission)
                                             <label
-                                                class="inline-flex items-center gap-2 text-sm cursor-pointer select-none text-(--color-dark-gray) dark:text-(--color-gray) hover:text-(--color-dark) dark:hover:text-(--color-light)">
+                                                class="inline-flex items-center gap-2 text-sm cursor-pointer select-none text-(--color-dark) dark:text-(--color-gray) hover:text-(--color-dark) dark:hover:text-(--color-light)">
                                                 <input type="checkbox" name="permissions[]"
                                                     value="{{ $permission->name }}" class="checkbox-custom"
                                                     x-model="selected" data-menu="{{ $child->id }}"
@@ -95,7 +95,7 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2">
                             @foreach ($menu->permissions as $permission)
                                 <label
-                                    class="inline-flex items-center gap-2 text-sm cursor-pointer select-none text-(--color-dark-gray) dark:text-(--color-gray) hover:text-(--color-dark) dark:hover:text-(--color-light)">
+                                    class="inline-flex items-center gap-2 text-sm cursor-pointer select-none text-(--color-dark) dark:text-(--color-gray) hover:text-(--color-dark) dark:hover:text-(--color-light)">
                                     <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                         class="checkbox-custom" x-model="selected" data-menu="{{ $menu->id }}"
                                         data-parent="{{ $menu->id }}">

@@ -37,6 +37,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('suppliers')->as('suppliers.')->group(function () {
         Route::put('{supplier}/restore', [App\Http\Controllers\SupplierController::class, 'restore'])->name('restore');
         Route::delete('{supplier}/force-delete', [App\Http\Controllers\SupplierController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/suppliers', [App\Http\Controllers\SupplierController::class, 'select'])->name('select');
     });
     Route::resource('suppliers', App\Http\Controllers\SupplierController::class)->names('suppliers');
 
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('employees')->as('employees.')->group(function () {
         Route::put('{employee}/restore', [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
         Route::delete('{employee}/force-delete', [App\Http\Controllers\EmployeeController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/employees', [App\Http\Controllers\EmployeeController::class, 'select'])->name('select');
     });
     Route::resource('employees', App\Http\Controllers\EmployeeController::class)->names('employees');
 
@@ -65,6 +67,46 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('type-fabrics')->as('type_fabrics.')->group(function () {
         Route::put('{typeFabric}/restore', [App\Http\Controllers\TypeFabricController::class, 'restore'])->name('restore');
         Route::delete('{typeFabric}/force-delete', [App\Http\Controllers\TypeFabricController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/type-fabrics', [App\Http\Controllers\TypeFabricController::class, 'select'])->name('select');
     });
     Route::resource('type-fabrics', App\Http\Controllers\TypeFabricController::class)->names('type_fabrics');
+
+    // Type Colors
+    Route::prefix('type-colors')->as('type_colors.')->group(function () {
+        Route::put('{typeColor}/restore', [App\Http\Controllers\TypeColorController::class, 'restore'])->name('restore');
+        Route::delete('{typeColor}/force-delete', [App\Http\Controllers\TypeColorController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/type-colors', [App\Http\Controllers\TypeColorController::class, 'select'])->name('select');
+    });
+    Route::resource('type-colors', App\Http\Controllers\TypeColorController::class)->names('type_colors');
+
+    // Price Supplier
+    Route::prefix('price-suppliers')->as('price_suppliers.')->group(function () {
+        Route::put('{priceSupplier}/restore', [App\Http\Controllers\PriceSupplierController::class, 'restore'])->name('restore');
+        Route::delete('{priceSupplier}/force-delete', [App\Http\Controllers\PriceSupplierController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('price-suppliers', App\Http\Controllers\PriceSupplierController::class)->names('price_suppliers');
+
+    // Price Employee
+    Route::prefix('price-employees')->as('price_employees.')->group(function () {
+        Route::put('{priceEmployee}/restore', [App\Http\Controllers\PriceEmployeeController::class, 'restore'])->name('restore');
+        Route::delete('{priceEmployee}/force-delete', [App\Http\Controllers\PriceEmployeeController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('price-employees', App\Http\Controllers\PriceEmployeeController::class)->names('price_employees');
+
+    // Presences
+    Route::prefix('presences')->as('presences.')->group(function () {
+        Route::get('/', [App\Http\Controllers\PresenceController::class, 'index'])->name('index');
+        Route::get('data', [App\Http\Controllers\PresenceController::class, 'data'])->name('data');
+        Route::get('{employee}/show', [App\Http\Controllers\PresenceController::class, 'show'])->name('show');
+        Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
+    });
+    Route::resource('presences', App\Http\Controllers\PresenceController::class)->names('presences');
+
+    // Fabric
+    Route::prefix('fabrics')->as('fabrics.')->group(function () {
+        Route::put('{fabric}/restore', [App\Http\Controllers\FabricController::class, 'restore'])->name('restore');
+        Route::delete('{fabric}/force-delete', [App\Http\Controllers\FabricController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/fabrics', [App\Http\Controllers\FabricController::class, 'select'])->name('select');
+    });
+    Route::resource('fabrics', App\Http\Controllers\FabricController::class)->names('fabrics');
 });

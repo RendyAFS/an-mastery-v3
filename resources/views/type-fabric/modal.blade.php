@@ -1,5 +1,5 @@
 <div id="hs-type-fabric-modal"
-    class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
     role="dialog" tabindex="-1" aria-labelledby="hs-type-fabric-modal-label">
 
     <div
@@ -31,7 +31,7 @@
             {{-- Body --}}
             <div class="p-4 overflow-y-auto">
                 <form id="type-fabric-form" data-mode="create">
-                    @include('type-fabric.form', ['colorFabric' => null])
+                    @include('type-fabric.form', ['typeFabric' => null])
 
                     {{-- Footer --}}
                     <div class="flex gap-2 pt-2">

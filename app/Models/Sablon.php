@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\StatusSablonEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
 
@@ -15,6 +16,7 @@ class Sablon extends Model
     protected $fillable = [
         'supplier_id',
         'fabric_id',
+        'fabric_detail_id',
         'image_fabric_id',
         'type_color_id',
         'type_fabric_id',
@@ -43,6 +45,11 @@ class Sablon extends Model
         return $this->belongsTo(Fabric::class, 'fabric_id');
     }
 
+    public function fabricDetail(): BelongsTo
+    {
+        return $this->belongsTo(FabricDetail::class, 'fabric_detail_id');
+    }
+
     public function imageFabric(): BelongsTo
     {
         return $this->belongsTo(ImageFabric::class, 'image_fabric_id');
@@ -61,5 +68,15 @@ class Sablon extends Model
     public function priceEmployee(): BelongsTo
     {
         return $this->belongsTo(PriceEmployee::class, 'price_employee_id');
+    }
+
+    public function sablonDetails(): HasMany
+    {
+        return $this->hasMany(SablonDetail::class, 'sablon_id');
+    }
+
+    public function sablonEmployeeDetails(): HasMany
+    {
+        return $this->hasMany(SablonEmployeeDetail::class, 'sablon_id');
     }
 }

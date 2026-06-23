@@ -51,13 +51,16 @@
                                 <input type="text" name="name" id="name" autocomplete="name"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                     bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
-                                    border border-(--color-primary) rounded-lg sm:text-sm
-                                    focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)
-                                    @error('name') border-(--color-red) @enderror"
+                                    border rounded-lg sm:text-sm
+                                    {{ $errors->has('name')
+                                        ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
+                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
+                                    }}
+                                    disabled:opacity-50 disabled:pointer-events-none
+                                    placeholder-(--color-gray)"
                                     placeholder="Enter Name" value="{{ old('name') }}">
                                 <div
-                                    class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                    class="absolute inset-y-0 inset-e-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
                                 </div>
                             </div>
@@ -73,13 +76,16 @@
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
                                     bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
-                                    border border-(--color-primary) rounded-lg sm:text-sm
-                                    focus:border-(--color-primary) focus:ring-(--color-primary) disabled:opacity-50 disabled:pointer-events-none
-                                    placeholder-(--color-gray)
-                                    @error('email') border-(--color-red) @enderror"
+                                    border rounded-lg sm:text-sm
+                                    {{ $errors->has('email')
+                                        ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
+                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
+                                    }}
+                                    disabled:opacity-50 disabled:pointer-events-none
+                                    placeholder-(--color-gray)"
                                     placeholder="Enter Email / Name" value="{{ old('email') }}">
                                 <div
-                                    class="absolute inset-y-0 end-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                    class="absolute inset-y-0 inset-e-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
                                 </div>
                             </div>
@@ -98,13 +104,15 @@
                                     autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
-                                           border border-(--color-primary) rounded-lg sm:text-sm
-                                           focus:border-(--color-primary) focus:ring-(--color-primary)
-                                    @error('password') border-(--color-red) @enderror"
+                                           border rounded-lg sm:text-sm
+                                           {{ $errors->has('password')
+                                               ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
+                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
+                                           }}"
                                     placeholder="Create password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80 cursor-pointer">
+                                    class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/80 cursor-pointer">
                                     <i x-show="!show" data-lucide="eye" class="size-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>
@@ -124,13 +132,15 @@
                                     id="password_confirmation" autocomplete="false"
                                     class="peer py-2.5 sm:py-3 px-4 block w-full
                                            bg-(--color-light) dark:bg-(--color-dark) text-(--color-dark) dark:text-(--color-light)
-                                           border border-(--color-primary) rounded-lg sm:text-sm
-                                           focus:border-(--color-primary) focus:ring-(--color-primary)
-                                    @error('password_confirmation') border-(--color-red) @enderror"
+                                           border rounded-lg sm:text-sm
+                                           {{ $errors->has('password_confirmation')
+                                               ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
+                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
+                                           }}"
                                     placeholder="Repeat password">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
-                                    class="absolute inset-y-0 end-4 flex items-center text-(--color-primary)/80 cursor-pointer">
+                                    class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/80 cursor-pointer">
                                     <i x-show="!show" data-lucide="eye" class="size-5"></i>
                                     <i x-show="show" data-lucide="eye-off" class="size-5"></i>
                                 </button>

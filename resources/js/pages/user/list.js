@@ -60,7 +60,7 @@ const PageScript = (function () {
                                 <label for="toggle-active-${row.id}" class="relative inline-block w-11 h-6 cursor-pointer">
                                     <input type="checkbox" id="toggle-active-${row.id}" class="peer sr-only toggle-active" data-user-id="${row.id}" ${checked}>
                                     <span class="absolute inset-0 bg-(--color-dark-gray) rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-(--color-success) peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
-                                    <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-(--color-light) rounded-full shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                                    <span class="absolute top-1/2 inset-s-0.5 -translate-y-1/2 size-5 bg-(--color-light) rounded-full shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
                                 </label>
                             </div>
                         `;
@@ -210,17 +210,18 @@ const PageScript = (function () {
     };
 
     function renderRoleBadge(roleName) {
-        const baseClass =
-            "inline-flex items-center gap-x-1 py-1 px-3 rounded-lg text-xs font-medium";
-
         const map = {
-            "Super Admin": `${baseClass} badge-danger`,
-            Admin: `${baseClass} badge-warning`,
+            "Super Admin": "badge-danger",
+            Admin: "badge-warning",
         };
 
-        const classes = map[roleName] ?? `${baseClass} badge-success`;
+        const classes = map[roleName] ?? "badge-success";
 
-        return `<span class="${classes}">${roleName}</span>`;
+        return `
+            <span class="badge ${classes}">
+                ${roleName}
+            </span>
+        `;
     }
 
     const handleToggleActive = async (userId, checkbox) => {

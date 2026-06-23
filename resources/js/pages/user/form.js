@@ -20,7 +20,6 @@ const PageScript = (function () {
 
             await submitForm(action, submitter);
         });
-
     }
 
     function resetForm() {
