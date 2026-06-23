@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="role-form" data-mode="create" class="max-w-4xl mx-auto">
+    <form id="role-form" data-mode="create" class="max-w-6xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl

@@ -2,9 +2,29 @@ const Loading = {
     start(message = "Loading...") {
         $.blockUI({
             message: `
-                <div class="flex flex-col items-center justify-center space-y-3">
-                    <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-(--color-primary)"></div>
-                    <span class="text-(--color-light) font-semibold text-lg">${message}</span>
+                <div class="flex flex-col items-center justify-center gap-4">
+
+                    <!-- Preline Wave Spinner -->
+                    <div class="inline-flex" role="status" aria-label="loading">
+                        <span class="flex h-8 items-center justify-center gap-1" aria-hidden="true">
+                            <span class="h-3 w-1.5 rounded-full bg-(--color-primary) origin-center animate-[spinner-wave_0.9s_ease-in-out_infinite_0.12s]"></span>
+                            <span class="h-5 w-1.5 rounded-full bg-(--color-primary) origin-center animate-[spinner-wave_0.9s_ease-in-out_infinite_0.12s]"></span>
+                            <span class="h-7 w-1.5 rounded-full bg-(--color-primary) origin-center animate-[spinner-wave_0.9s_ease-in-out_infinite_0.24s]"></span>
+                            <span class="h-5 w-1.5 rounded-full bg-(--color-primary) origin-center animate-[spinner-wave_0.9s_ease-in-out_infinite_0.36s]"></span>
+                            <span class="h-3 w-1.5 rounded-full bg-(--color-primary) origin-center animate-[spinner-wave_0.9s_ease-in-out_infinite_0.48s]"></span>
+                        </span>
+                    </div>
+
+                    <!-- Loading Text -->
+                    <div class="text-center">
+                        <p class="text-(--color-light) text-lg font-semibold">
+                            ${message}
+                        </p>
+                        <p class="text-gray-400 text-sm mt-1">
+                            Please wait a moment...
+                        </p>
+                    </div>
+
                 </div>
             `,
             baseZ: 999999,
@@ -20,6 +40,7 @@ const Loading = {
             },
         });
     },
+
     stop() {
         $.unblockUI();
     },
