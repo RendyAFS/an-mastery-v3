@@ -4,7 +4,7 @@
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Name
             </label>
-            <input type="text" id="name" name="name" value="{{ $typeColor->name ?? '' }}" required
+            <input type="number" id="name" name="name" value="{{ $typeColor->name ?? '' }}" required
                 class="mt-1 px-4 py-2 block w-full rounded-lg
                     bg-(--color-light-gray) border border-(--color-gray)
                     text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30

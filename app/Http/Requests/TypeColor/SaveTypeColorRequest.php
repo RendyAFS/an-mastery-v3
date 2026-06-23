@@ -22,7 +22,7 @@ class SaveTypeColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => 'required|string|max:255',
+            'name'  => 'required|integer|min:1',
             'notes' => 'nullable|string',
         ];
     }
@@ -31,6 +31,7 @@ class SaveTypeColorRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required.',
+            'name.min'      => 'Name must be at least 1.',
             'notes.string'  => 'Notes must be a string.',
         ];
     }
