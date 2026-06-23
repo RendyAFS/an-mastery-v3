@@ -1,11 +1,11 @@
-@extends('layouts.main', ['title' => 'Create Image Fabric'])
+@extends('layouts.main', ['title' => 'Create Fabric'])
 
 @push('scripts')
-    @vite('resources/js/pages/image-fabric/form.js')
+    @vite('resources/js/pages/fabric/form.js')
 @endpush
 
 @section('content')
-    <form id="image-fabric-form" data-mode="create" class="max-w-6xl mx-auto">
+    <form id="fabric-form" data-mode="create" class="max-w-6xl mx-auto mb-32">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl
@@ -14,11 +14,11 @@
             {{-- Header --}}
             <div class="p-4 md:p-5">
                 <h3 class="text-2xl font-bold text-(--color-dark) dark:text-(--color-light)">
-                    Create Image Fabric
+                    Create Fabric
                 </h3>
 
                 <div class="mt-6">
-                    @include('image-fabric.form', ['image-fabric' => null])
+                    @include('fabric.form', ['fabric' => null])
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                     dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"
                     data-action="save-another" />
 
-                <a href="{{ route('image_fabrics.index') }}"
+                <a href="{{ route('fabrics.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
                        bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">

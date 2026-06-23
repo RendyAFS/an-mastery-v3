@@ -102,6 +102,7 @@
                                             <li>
                                                 <a href="{{ $child->url }}"
                                                     class="block py-2 px-3 rounded-xl text-sm transition duration-300 ease-in-out font-semibold
+                                                    hover:bg-(--color-gray)/50 hover:text-(--color-primary) dark:hover:text-(--color-secondary)
                                                     {{ request()->is(trim($child->url, '/') . '*')
                                                         ? 'bg-(--color-primary) text-(--color-light)'
                                                         : 'text-(--color-dark-gray) dark:text-(--color-light)' }}">

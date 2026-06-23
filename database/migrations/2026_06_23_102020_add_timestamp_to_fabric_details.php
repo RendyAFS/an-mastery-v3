@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sablons', function (Blueprint $table) {
-            $table->foreignId('fabric_detail_id')->nullable()->after('fabric_id')->constrained('fabric_details')->nullOnDelete();
+        Schema::table('fabric_details', function (Blueprint $table) {
+            $table->timestamps();
         });
     }
 
@@ -21,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sablons', function (Blueprint $table) {
-            $table->dropForeign(['fabric_detail_id']);
-            $table->dropColumn('fabric_detail_id');
+        Schema::table('fabric_details', function (Blueprint $table) {
+            $table->dropTimestamps();
         });
     }
 };

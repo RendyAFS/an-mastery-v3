@@ -90,4 +90,11 @@ return [
         'icon' => 'calendar-check-2',
         'url'  => '/presences',
     ],
+
+    // Inventory Fabric
+    [
+        'name' => 'Inventory Fabric',
+        'icon' => 'package',
+        'url'  => '/fabrics',
+    ],
 ];
