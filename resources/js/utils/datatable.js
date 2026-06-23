@@ -52,7 +52,7 @@ export default function initDatatable({
                 rows.on("click", function (e) {
                     if (
                         $(e.target).closest(
-                            "button, a, .hs-dropdown, .hs-dropdown-menu",
+                            "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label",
                         ).length
                     ) {
                         return;

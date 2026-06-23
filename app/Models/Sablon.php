@@ -15,6 +15,7 @@ class Sablon extends Model
     protected $fillable = [
         'supplier_id',
         'fabric_id',
+        'fabric_detail_id',
         'image_fabric_id',
         'type_color_id',
         'type_fabric_id',
@@ -41,6 +42,11 @@ class Sablon extends Model
     public function fabric(): BelongsTo
     {
         return $this->belongsTo(Fabric::class, 'fabric_id');
+    }
+
+    public function fabricDetail(): BelongsTo
+    {
+        return $this->belongsTo(FabricDetail::class, 'fabric_detail_id');
     }
 
     public function imageFabric(): BelongsTo

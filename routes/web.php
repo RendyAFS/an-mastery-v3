@@ -101,4 +101,12 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
     });
     Route::resource('presences', App\Http\Controllers\PresenceController::class)->names('presences');
+
+    // Fabric
+    Route::prefix('fabrics')->as('fabrics.')->group(function () {
+        Route::put('{fabric}/restore', [App\Http\Controllers\FabricController::class, 'restore'])->name('restore');
+        Route::delete('{fabric}/force-delete', [App\Http\Controllers\FabricController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/fabrics', [App\Http\Controllers\FabricController::class, 'select'])->name('select');
+    });
+    Route::resource('fabrics', App\Http\Controllers\FabricController::class)->names('fabrics');
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FabricDetail extends Model
 {
@@ -26,5 +27,10 @@ class FabricDetail extends Model
     public function colorFabric(): BelongsTo
     {
         return $this->belongsTo(ColorFabric::class, 'color_fabric_id');
+    }
+
+    public function historyStocks(): HasMany
+    {
+        return $this->hasMany(HistoryStock::class, 'fabric_detail_id');
     }
 }

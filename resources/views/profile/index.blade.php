@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <div class="max-w-3xl mx-auto space-y-10">
+    <div class="max-w-5xl mx-auto space-y-10">
 
         {{-- PROFILE --}}
         <form id="profile-form" class="space-y-6 bg-(--color-light) dark:bg-(--color-dark) p-6 rounded-xl">

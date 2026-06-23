@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="image-fabric-form" data-mode="edit" data-id="{{ $imageFabric->id }}" class="max-w-4xl mx-auto">
+    <form id="image-fabric-form" data-mode="edit" data-id="{{ $imageFabric->id }}" class="max-w-6xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray)
                shadow-2xs rounded-xl
