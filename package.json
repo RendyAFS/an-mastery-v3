@@ -5,9 +5,10 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "get-update": "git pull origin develop && composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && npm run build && npm run dev",
-        "update": "composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && npm run build && npm run dev",
-        "seeder": "composer install && npm install && php artisan migrate:fresh && php artisan db:seed && npm run build && npm run dev"
+        "local": "vite build && vite",
+        "get-update": "git pull origin develop && composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && vite build && vite",
+        "update": "composer install && npm install && php artisan migrate && php artisan db:seed --class=MenuPermissionSeeder && vite build && vite",
+        "seeder": "composer install && npm install && php artisan migrate:fresh && php artisan db:seed && vite build && vite"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.11",
