@@ -24,15 +24,7 @@ class FabricResource extends JsonResource
             'updated_by'     => $this->updated_by,
             'deleted_by'     => $this->deleted_by,
             'supplier'       => new SupplierResource($this->whenLoaded('supplier')),
-            'fabric_details' => $this->whenLoaded('fabricDetails', function () {
-                return $this->fabricDetails->map(fn($detail) => [
-                    'id'              => $detail->id,
-                    'color_fabric_id' => $detail->color_fabric_id,
-                    'color_name'      => $detail->colorFabric?->name,
-                    'stock'           => $detail->stock,
-                    'notes'           => $detail->notes,
-                ]);
-            }),
+            'fabric_details' => FabricDetailResource::collection($this->whenLoaded('fabricDetails')),
         ];
     }
 }

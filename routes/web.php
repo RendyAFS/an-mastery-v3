@@ -109,4 +109,12 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('select/fabrics', [App\Http\Controllers\FabricController::class, 'select'])->name('select');
     });
     Route::resource('fabrics', App\Http\Controllers\FabricController::class)->names('fabrics');
+
+    // Sablon
+    Route::prefix('sablons')->as('sablons.')->group(function () {
+        Route::get('fabrics-by-supplier/{supplier}', [App\Http\Controllers\SablonController::class, 'fabricsBySupplier'])->name('fabrics-by-supplier');
+        Route::put('{sablon}/restore', [App\Http\Controllers\SablonController::class, 'restore'])->name('restore');
+        Route::delete('{sablon}/force-delete', [App\Http\Controllers\SablonController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('sablons', App\Http\Controllers\SablonController::class)->names('sablons');
 });

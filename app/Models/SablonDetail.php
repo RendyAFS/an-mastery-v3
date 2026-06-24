@@ -9,6 +9,7 @@ class SablonDetail extends Model
 {
     protected $fillable = [
         'sablon_id',
+        'fabric_detail_id',
         'color_fabric_id',
         'long_fabric',
     ];
@@ -16,6 +17,11 @@ class SablonDetail extends Model
     public function sablon(): BelongsTo
     {
         return $this->belongsTo(Sablon::class, 'sablon_id');
+    }
+
+    public function fabricDetail(): BelongsTo
+    {
+        return $this->belongsTo(FabricDetail::class, 'fabric_detail_id');
     }
 
     public function colorFabric(): BelongsTo
