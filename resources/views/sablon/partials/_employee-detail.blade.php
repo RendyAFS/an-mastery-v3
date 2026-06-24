@@ -4,10 +4,6 @@
         <h3 class="text-sm font-semibold uppercase tracking-wide text-(--color-dark-gray)">
             Employee Detail (Employee & Fee)
         </h3>
-        <button type="button" @click="addEmployeeRow()"
-            class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
-            <i data-lucide="plus" class="size-4"></i> Add Employee
-        </button>
     </div>
 
     <div class="space-y-4">
@@ -195,5 +191,11 @@
         <template x-if="employeeRows.length === 0">
             <div class="text-center text-(--color-dark-gray) py-6">Belum ada employee detail</div>
         </template>
+    </div>
+    <div class="p-4 flex justify-end">
+        <button type="button" @click="addEmployeeRow()"
+            class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
+            <i data-lucide="plus" class="size-4"></i> Add Employee
+        </button>
     </div>
 </div>

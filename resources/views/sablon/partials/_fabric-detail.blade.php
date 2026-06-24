@@ -4,10 +4,6 @@
         <h3 class="text-sm font-semibold uppercase tracking-wide text-(--color-dark-gray)">
             Fabric Detail (Color - Stock)
         </h3>
-        <button type="button" @click="addFabricRow()"
-            class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
-            <i data-lucide="plus" class="size-4"></i> Add Detail
-        </button>
     </div>
 
     <div class="relative overflow-visible rounded-lg border border-(--color-gray) dark:border-(--color-slate)">
@@ -82,5 +78,11 @@
                 </template>
             </tbody>
         </table>
+        <div class="p-4 flex justify-end">
+            <button type="button" @click="addFabricRow()"
+                class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
+                <i data-lucide="plus" class="size-4"></i> Add Detail
+            </button>
+        </div>
     </div>
 </div>

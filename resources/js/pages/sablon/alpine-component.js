@@ -122,31 +122,22 @@ export default function sablonForm(
         },
 
         _refreshFabricSelectOptions(options) {
-            const fabricEl = document.getElementById("fabric_id");
-            if (!fabricEl) return;
+    const fabricEl = document.getElementById("fabric_id");
+    if (!fabricEl) return;
 
-            // hapus wrapper Preline lama
-            const wrapper = fabricEl.closest(".hs-select");
+    const hsInstance = window.HSSelect?.getInstance(fabricEl);
+    if (!hsInstance) return;
 
-            if (wrapper) {
-                wrapper.before(fabricEl);
-                wrapper.remove();
-            }
+    // 1. Hapus semua option yang ada (kecuali placeholder kosong)
+    [...fabricEl.options].forEach((opt) => {
+        if (opt.value !== "") hsInstance.removeOption(opt.value);
+    });
 
-            fabricEl.innerHTML = '<option value=""></option>';
-
-            Object.entries(options).forEach(([id, label]) => {
-                const opt = document.createElement("option");
-                opt.value = id;
-                opt.textContent = label;
-                fabricEl.appendChild(opt);
-            });
-
-            this.$nextTick(() => {
-                new window.HSSelect(fabricEl);
-                window.lucide?.createIcons();
-            });
-        },
+    // 2. Tambah option baru satu per satu
+    Object.entries(options).forEach(([id, label]) => {
+        hsInstance.addOption({ title: label, val: id });
+    });
+},
 
         onSupplierChange(e) {
             this._handleSupplierChange(e.target.value || null);

@@ -19,7 +19,7 @@ const PageScript = (function () {
         const fabricDetailsHtml = item.sablonDetails?.length
             ? `
                     <div class="space-y-1">
-                        <p class="text-xs font-semibold">
+                        <p class="text-[11px] font-medium text-(--color-dark-gray) uppercase tracking-wide mb-1.5">
                             Fabric Details
                         </p>
 
@@ -64,45 +64,51 @@ const PageScript = (function () {
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
 
             <div class="flex items-start justify-between">
-                <div>
-                    <p class="font-semibold text-sm">${item.fabric?.code ?? "-"}</p>
-                    <p class="text-xs text-(--color-gray)">${item.supplier?.name ?? "-"}</p>
-                    <p class="text-xs text-(--color-gray)">Image :${item.imageFabric?.name ?? "-"}</p>
-                    <p class="text-xs text-(--color-gray)">Type :${item.typeFabric?.name ?? "-"}</p>
-                </div>
+            <div>
+                <p class="font-bold text-sm">
+                    ${item.fabric?.code ?? "-"}
+                </p>
+                <p class="text-sm text-(--color-dark-gray)">
+                    ${[
+                        item.supplier?.name,
+                        item.imageFabric?.name,
+                        item.typeFabric?.name
+                    ].filter(Boolean).join(' • ') || '-'}
+                </p>
+            </div>
 
                 <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
                     ${item.status?.replaceAll("_", " ") ?? "-"}
                 </span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 text-xs text-(--color-dark) dark:text-(--color-light)">
-                <div>
-                    <p class="text-(--color-gray)">Date</p>
-                    <p class="font-medium">${item.date_sablon ?? "-"}</p>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
+                    <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
                 </div>
-                <div>
-                    <p class="text-(--color-gray)">Total Sablon</p>
-                    <p class="font-medium">${item.total_sablon_formated ?? 0}</p>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
+                    <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
                 </div>
-                <div>
-                    <p class="text-(--color-gray)">Long Fabric</p>
-                    <p class="font-medium">${item.total_long_fabric ?? 0}</p>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+                    <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
                 </div>
-                <div>
-                    <p class="text-(--color-gray)">Type Color</p>
-                    <p class="font-medium">${item.typeColor?.name ?? "-"} Warna</p>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
+                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
                 </div>
             </div>
             ${fabricDetailsHtml}
             ${employeeDetailsHtml}
-            ${item.notes ? `<p class="text-xs text-(--color-gray) line-clamp-2">${item.notes}</p>` : ""}
+            ${item.notes ? `<p class="text-xs text-(--color-dark-gray) line-clamp-2">${item.notes}</p>` : ""}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 ${
                     isDeleted
                         ? `
-                        <span class="text-xs text-(--color-gray) font-medium flex items-center gap-1">
+                        <span class="text-xs text-(--color-dark-gray) font-medium flex items-center gap-1">
                             <i data-lucide="trash-2" class="size-3"></i> Deleted
                         </span>
 
@@ -116,7 +122,7 @@ const PageScript = (function () {
                         </div>
                     `
                         : `
-                        <span class="text-xs text-(--color-gray)">
+                        <span class="text-xs text-(--color-dark-gray)">
                             ${item.created_at ?? ""}
                         </span>
 
