@@ -26,28 +26,26 @@
     $isApi = !empty($apiUrl);
 @endphp
 
-<div class="mb-6 space-y-2">
-    @if ($label)
-        <div class="flex justify-between items-center">
-            <label for="{{ $id }}"
-                class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                {{ $label }}
-            </label>
+@if ($label)
+    <div class="flex justify-between items-center">
+        <label for="{{ $id }}" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+            {{ $label }}
+        </label>
 
-            @if ($clearable)
-                <button type="button" data-clear-select="{{ $id }}" style="display: none;"
-                    class="text-sm font-semibold transition ease-in-out
+        @if ($clearable)
+            <button type="button" data-clear-select="{{ $id }}" style="display: none;"
+                class="text-sm font-semibold transition ease-in-out
                        text-(--color-danger) cursor-pointer
                        hover:text-(--color-danger)/70">
-                    Clear
-                </button>
-            @endif
-        </div>
-    @endif
+                Clear
+            </button>
+        @endif
+    </div>
+@endif
 
-    <select name="{{ $name }}" id="{{ $id }}" {{ $multiple ? 'multiple' : '' }}
-        @if ($isApi && $value) data-default-value="{{ $value }}" @endif
-        data-hs-select='{
+<select name="{{ $name }}" id="{{ $id }}" {{ $multiple ? 'multiple' : '' }}
+    @if ($isApi && $value) data-default-value="{{ $value }}" @endif
+    data-hs-select='{
             @if ($isApi) "apiUrl": "{{ $apiUrl }}",
                 "apiDataPart": "{{ $apiDataPart }}",
                 "apiLoadMore": {
@@ -73,17 +71,15 @@
             "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><i data-lucide=\"check\" class=\"size-4 text-(--color-dark) dark:text-(--color-light)\"></i></span></div>",
             "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><i data-lucide=\"chevrons-up-down\" class=\"size-4 text-(--color-dark) dark:text-(--color-light)\"></i></div>"
         }'
-        class="hidden">
+    class="hidden">
 
-        <option value=""></option>
+    <option value=""></option>
 
-        @if (!$isApi)
-            @foreach ($options as $key => $text)
-                <option value="{{ $key }}"
-                    {{ (string) old($name, $value) === (string) $key ? 'selected' : '' }}>
-                    {{ $text }}
-                </option>
-            @endforeach
-        @endif
-    </select>
-</div>
+    @if (!$isApi)
+        @foreach ($options as $key => $text)
+            <option value="{{ $key }}" {{ (string) old($name, $value) === (string) $key ? 'selected' : '' }}>
+                {{ $text }}
+            </option>
+        @endforeach
+    @endif
+</select>

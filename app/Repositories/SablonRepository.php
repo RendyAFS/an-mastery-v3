@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\StatusSablonEnum;
 use App\Helpers\RupiahHelper;
 use App\Models\Employee;
 use App\Models\Fabric;
@@ -18,7 +19,16 @@ class SablonRepository
     public function getAll(string $filter = 'active', ?string $search = null, int $perPage = 12)
     {
         $query = Sablon::query()
-            ->with('supplier', 'fabric', 'imageFabric', 'typeColor', 'typeFabric', 'priceEmployee')
+            ->with([
+                'supplier',
+                'fabric',
+                'imageFabric',
+                'typeColor',
+                'typeFabric',
+                'priceEmployee',
+                'sablonDetails.colorFabric',
+                'sablonEmployeeDetails.employee',
+            ])
             ->orderBy('date_sablon', 'desc');
 
         if ($filter === 'deleted') {
@@ -67,17 +77,31 @@ class SablonRepository
             'typeColors'        => TypeColor::orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray(),
             'typeColorsRaw'     => TypeColor::orderBy('name')->get(['id', 'name'])->mapWithKeys(fn($t) => [$t->id => (float) $t->name])->toArray(),
             'typeFabrics'       => TypeFabric::orderBy('name')->pluck('name', 'id'),
-            'priceEmployees'    => PriceEmployee::orderBy('id')->get()->mapWithKeys(fn($item) => [$item->id => RupiahHelper::format($item->price)])->toArray(),
+            'priceEmployees'    => PriceEmployee::with('typeColor')->orderBy('id')->get()->mapWithKeys(fn($item) => [$item->id => RupiahHelper::format($item->price) . ' - ' . $item->typeColor?->name . ' Warna'])->toArray(),
             'priceEmployeesRaw' => PriceEmployee::orderBy('id')->pluck('price', 'id')->toArray(),
             'employees'         => Employee::orderBy('name')->pluck('name', 'id'),
-            'fabricDetails'     => FabricDetail::with('colorFabric')->get()
-                ->map(fn($d) => [
-                    'id'              => $d->id,
-                    'fabric_id'       => $d->fabric_id,
-                    'color_fabric_id' => $d->color_fabric_id,
-                    'color_name'      => $d->colorFabric->name ?? '',
-                    'stock'           => $d->stock,
-                ])
+            'fabricDetails'     => FabricDetail::with([
+                'colorFabric',
+                'sablonDetails.sablon',
+            ])
+                ->get()
+                ->map(function ($d) {
+
+                    $usedStock = $d->sablonDetails
+                        ->filter(function ($detail) {
+                            return $detail->sablon
+                                && $detail->sablon->status !== StatusSablonEnum::RETURNED;
+                        })
+                        ->count();
+
+                    return [
+                        'id'              => $d->id,
+                        'fabric_id'       => $d->fabric_id,
+                        'color_fabric_id' => $d->color_fabric_id,
+                        'color_name'      => $d->colorFabric->name ?? '',
+                        'stock'           => max(0, $d->stock - $usedStock),
+                    ];
+                })
                 ->values(),
         ];
     }

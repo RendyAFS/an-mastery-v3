@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SablonDetail extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'sablon_id',
         'fabric_detail_id',

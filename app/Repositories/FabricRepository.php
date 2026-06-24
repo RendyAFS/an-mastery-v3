@@ -45,11 +45,26 @@ class FabricRepository
 
     public function getBySupplierAsOptions(int $supplierId): array
     {
-        return Fabric::query()
+        return Fabric::with([
+            'fabricDetails.colorFabric',
+            'fabricDetails.sablonDetails.sablon',
+        ])
             ->where('supplier_id', $supplierId)
             ->orderBy('code')
-            ->get(['id', 'code', 'stock_total'])
-            ->mapWithKeys(fn($f) => [$f->id => "{$f->code} - {$f->stock_total} pcs"])
+            ->get()
+            ->mapWithKeys(function ($fabric) {
+
+                $summary = $fabric->available_stock_summary;
+
+                return [
+                    $fabric->id => sprintf(
+                        '%s (%d Seri / %d Pcs)',
+                        $fabric->code,
+                        $summary['seri'],
+                        $summary['total_pcs']
+                    ),
+                ];
+            })
             ->toArray();
     }
 }

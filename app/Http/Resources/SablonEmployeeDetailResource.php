@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\RupiahHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,7 @@ class SablonEmployeeDetailResource extends JsonResource
             'fee'                => $this->fee,
             'additional_fee'     => $this->additional_fee,
             'total'              => $this->total,
+            'total_formated'     => RupiahHelper::format($this->total),
             'is_change'          => $this->is_change,
             'employee_change_id' => $this->employee_change_id,
             'is_payed'           => $this->is_payed,
@@ -31,7 +33,7 @@ class SablonEmployeeDetailResource extends JsonResource
             'updated_at'         => $this->updated_at?->format('Y-m-d H:i:s'),
             'created_by'         => $this->created_by,
             'updated_by'         => $this->updated_by,
-            
+
             'sablon'             => new SablonResource($this->whenLoaded('sablon')),
             'fabricDetail'       => new FabricDetailResource($this->whenLoaded('fabricDetail')),
             'employee'           => new EmployeeResource($this->whenLoaded('employee')),
