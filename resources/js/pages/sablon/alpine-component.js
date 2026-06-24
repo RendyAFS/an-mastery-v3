@@ -125,12 +125,16 @@ export default function sablonForm(
             const fabricEl = document.getElementById("fabric_id");
             if (!fabricEl) return;
 
-            if (window.HSSelect) {
-                const hsInstance = window.HSSelect.getInstance(fabricEl);
-                hsInstance?.destroy();
+            // hapus wrapper Preline lama
+            const wrapper = fabricEl.closest(".hs-select");
+
+            if (wrapper) {
+                wrapper.before(fabricEl);
+                wrapper.remove();
             }
 
             fabricEl.innerHTML = '<option value=""></option>';
+
             Object.entries(options).forEach(([id, label]) => {
                 const opt = document.createElement("option");
                 opt.value = id;
@@ -138,9 +142,10 @@ export default function sablonForm(
                 fabricEl.appendChild(opt);
             });
 
-            if (window.HSSelect) {
+            this.$nextTick(() => {
                 new window.HSSelect(fabricEl);
-            }
+                window.lucide?.createIcons();
+            });
         },
 
         onSupplierChange(e) {
