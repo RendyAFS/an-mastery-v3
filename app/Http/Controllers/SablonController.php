@@ -6,6 +6,7 @@ use App\Actions\Sablon\SaveSablonAction;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Http\Resources\SablonResource;
 use App\Models\Sablon;
+use App\Models\Supplier;
 use App\Repositories\FabricRepository;
 use App\Repositories\SablonRepository;
 use Illuminate\Http\Request;
@@ -113,7 +114,7 @@ class SablonController extends Controller
         ]);
     }
 
-    public function fabricsBySupplier(\App\Models\Supplier $supplier)
+    public function fabricsBySupplier(Supplier $supplier)
     {
         $this->authorize('sablons.create');
 

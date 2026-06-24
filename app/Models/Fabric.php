@@ -24,28 +24,49 @@ class Fabric extends Model
         'stock_total' => 'integer',
     ];
 
-    public function getStockSummaryAttribute(): array
+    public function getAvailableStockSummaryAttribute(): array
     {
         $details = $this->fabricDetails;
 
         if ($details->isEmpty()) {
             return [
                 'total_pcs' => 0,
-                'seri' => 0,
-                'colors' => []
+                'seri'      => 0,
+                'colors'    => [],
             ];
         }
 
-        $stocks = $details->pluck('stock');
+        $stocks = $details->map(function ($detail) {
+
+            // jumlah fabric yang sudah dipakai
+            $used = $detail->sablonDetails()
+                ->whereHas('sablon', function ($q) {
+                    // sesuaikan dengan kebutuhan bisnis Anda
+                    // contoh: stock dianggap terpakai selama belum RETURNED
+                    $q->where('status', '!=', 'RETURNED');
+                })
+                ->count();
+
+            return max($detail->stock - $used, 0);
+        });
 
         $seri = $stocks->min();
         $totalPcs = $stocks->sum();
 
-        $colors = $details->map(function ($detail) use ($seri) {
+        $colors = $details->map(function ($detail) {
+
+            $used = $detail->sablonDetails()
+                ->whereHas('sablon', function ($q) {
+                    $q->where('status', '!=', 'RETURNED');
+                })
+                ->count();
+
+            $available = max($detail->stock - $used, 0);
+
             return [
-                'name'   => $detail->colorFabric?->name,
-                'color'  => $detail->colorFabric?->code_color,
-                'stock'  => $detail->stock,
+                'name'  => $detail->colorFabric?->name,
+                'color' => $detail->colorFabric?->code_color,
+                'stock' => $available,
             ];
         });
 
