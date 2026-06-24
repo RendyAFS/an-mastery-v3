@@ -58,17 +58,12 @@ document.addEventListener("alpine:init", () => {
 
                     window.lucide?.createIcons();
 
-                    // FIX #1: Pasang listener pada elemen select native untuk supplier
-                    // x-select (hs-select) mengubah nilai di <select> native
-                    // tapi event "change" kadang tidak bubble dengan benar ke Alpine.
-                    // Solusi: intercept langsung dari native select element.
                     this._bindNativeSelectChange("supplier_id", (val) => {
                         this._handleSupplierChange(val);
                     });
 
                     this._bindNativeSelectChange("fabric_id", (val) => {
                         this.selectedFabricId = val || null;
-                        // FIX #4: auto-populate fabric rows dari fabricDetailOptions
                         this._autoPopulateFabricRows();
                     });
 
@@ -82,11 +77,6 @@ document.addEventListener("alpine:init", () => {
                 });
             },
 
-            /**
-             * Bind event "change" pada native <select> (yang dikendalikan hs-select).
-             * Ini lebih reliable daripada x-on:change di blade karena hs-select
-             * men-dispatch event ke elemen <select> native, bukan ke wrapper.
-             */
             _bindNativeSelectChange(id, callback) {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -95,18 +85,15 @@ document.addEventListener("alpine:init", () => {
                 });
             },
 
-            // ===== FIX #1: Supplier change =====
             async _handleSupplierChange(supplierId) {
                 this.selectedSupplierId = supplierId || null;
                 this.fabricOptions = [];
                 this.selectedFabricId = null;
                 this.fabricRows = [this.buildFabricRow()];
 
-                // Reset visual x-select fabric
                 const fabricEl = document.getElementById("fabric_id");
                 if (fabricEl) {
                     fabricEl.value = "";
-                    // Trigger hs-select refresh jika tersedia
                     if (window.HSSelect) {
                         const hsInstance =
                             window.HSSelect.getInstance(fabricEl);
@@ -129,28 +116,21 @@ document.addEventListener("alpine:init", () => {
                         ([id, label]) => ({ id, label }),
                     );
 
-                    // Update options di native <select> fabric agar hs-select menampilkannya
                     this._refreshFabricSelectOptions(options);
                 } catch (err) {
                     console.error("Failed to load fabrics by supplier", err);
                 }
             },
 
-            /**
-             * Inject options baru ke dalam <select#fabric_id> native
-             * lalu re-init hs-select agar dropdown-nya refresh.
-             */
             _refreshFabricSelectOptions(options) {
                 const fabricEl = document.getElementById("fabric_id");
                 if (!fabricEl) return;
 
-                // Destroy instance hs-select lama
                 if (window.HSSelect) {
                     const hsInstance = window.HSSelect.getInstance(fabricEl);
                     hsInstance?.destroy();
                 }
 
-                // Rebuild options
                 fabricEl.innerHTML = '<option value=""></option>';
                 Object.entries(options).forEach(([id, label]) => {
                     const opt = document.createElement("option");
@@ -159,20 +139,11 @@ document.addEventListener("alpine:init", () => {
                     fabricEl.appendChild(opt);
                 });
 
-                // Re-init hs-select
                 if (window.HSSelect) {
-                    window.HSSelect.autoInit();
-                    // Pasang ulang listener setelah re-init
-                    this._bindNativeSelectChange("fabric_id", (val) => {
-                        this.selectedFabricId = val || null;
-                        this._autoPopulateFabricRows();
-                    });
+                    new window.HSSelect(fabricEl);
                 }
             },
-
-            // Handler untuk x-on:change di blade (tetap disimpan sebagai fallback)
             onSupplierChange(e) {
-                // Sudah ditangani oleh _bindNativeSelectChange, ini fallback
                 this._handleSupplierChange(e.target.value || null);
             },
 
@@ -189,7 +160,6 @@ document.addEventListener("alpine:init", () => {
                 this.selectedTypeColorId = e.target.value || null;
             },
 
-            // ===== FIX #4: Auto-populate fabric rows dari FabricDetail =====
             _autoPopulateFabricRows() {
                 if (!this.selectedFabricId) {
                     this.fabricRows = [this.buildFabricRow()];
@@ -232,24 +202,24 @@ document.addEventListener("alpine:init", () => {
             },
 
             buildEmployeeRow(row = {}) {
-                let additionalFee = { nominal: 0, notes: "" };
-                if (
-                    row.additional_fee &&
-                    typeof row.additional_fee === "object" &&
-                    !Array.isArray(row.additional_fee)
-                ) {
-                    additionalFee = {
-                        nominal: row.additional_fee.nominal ?? 0,
-                        notes: row.additional_fee.notes ?? "",
-                    };
+                let additionalFee = [];
+                if (Array.isArray(row.additional_fee)) {
+                    additionalFee = row.additional_fee.map((f) => ({
+                        uid: crypto.randomUUID(),
+                        nominal: f.nominal ?? 0,
+                        notes: f.notes ?? "",
+                    }));
                 } else if (
-                    Array.isArray(row.additional_fee) &&
-                    row.additional_fee.length > 0
+                    row.additional_fee &&
+                    typeof row.additional_fee === "object"
                 ) {
-                    additionalFee = {
-                        nominal: row.additional_fee[0]?.nominal ?? 0,
-                        notes: row.additional_fee[0]?.notes ?? "",
-                    };
+                    additionalFee = [
+                        {
+                            uid: crypto.randomUUID(),
+                            nominal: row.additional_fee.nominal ?? 0,
+                            notes: row.additional_fee.notes ?? "",
+                        },
+                    ];
                 }
 
                 return {
@@ -260,7 +230,7 @@ document.addEventListener("alpine:init", () => {
                     employee_id: row.employee_id ? String(row.employee_id) : "",
                     layers: row.layers ?? "",
                     fee: row.fee ?? 0,
-                    additional_fee: additionalFee, // {nominal, notes}
+                    additional_fee: additionalFee,
                     total: row.total ?? 0,
                     is_change: !!row.is_change,
                     employee_change_id: row.employee_change_id
@@ -289,12 +259,22 @@ document.addEventListener("alpine:init", () => {
                 this.employeeRows.splice(index, 1);
             },
 
-            // ===== FIX #2: Additional fee actions =====
             addAdditionalFee(row) {
-                row.additional_fee.push({ nominal: 0, notes: "" });
+                if (!Array.isArray(row.additional_fee)) {
+                    row.additional_fee = [];
+                }
+                row.additional_fee.push({
+                    uid: crypto.randomUUID(),
+                    nominal: 0,
+                    notes: "",
+                });
+                this.$nextTick(() => window.lucide?.createIcons());
             },
+
             removeAdditionalFee(row, feeIndex) {
-                row.additional_fee.splice(feeIndex, 1);
+                if (Array.isArray(row.additional_fee)) {
+                    row.additional_fee.splice(feeIndex, 1);
+                }
             },
 
             filteredFabricDetails(search) {
@@ -360,9 +340,12 @@ document.addEventListener("alpine:init", () => {
                 return fee;
             },
 
-            // FIX #2: total menjumlahkan semua additional_fee
             additionalFeeTotal(row) {
-                return Number(row.additional_fee?.nominal) || 0;
+                if (!Array.isArray(row.additional_fee)) return 0;
+                return row.additional_fee.reduce(
+                    (sum, f) => sum + (Number(f.nominal) || 0),
+                    0,
+                );
             },
 
             rowTotal(row) {
@@ -425,16 +408,20 @@ const PageScript = (function () {
     function getEmployeeDetails(data) {
         return data.employeeRows.map((row) => {
             data.rowTotal(row);
+
+            const additionalFees = Array.isArray(row.additional_fee)
+                ? row.additional_fee.map((f) => ({
+                      nominal: Number(f.nominal) || 0,
+                      notes: f.notes || "",
+                  }))
+                : [];
+
             return {
                 fabric_detail_id: row.fabric_detail_id || null,
                 employee_id: row.employee_id,
                 layers: row.layers || 0,
                 fee: row.fee || 0,
-                // Kirim sebagai single object, sesuai model
-                additional_fee: {
-                    nominal: row.additional_fee?.nominal || 0,
-                    notes: row.additional_fee?.notes || "",
-                },
+                additional_fee: additionalFees,
                 total: row.total || 0,
                 is_change: row.is_change,
                 employee_change_id: row.is_change

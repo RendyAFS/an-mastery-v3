@@ -32,19 +32,19 @@ const PageScript = (function () {
             <div class="grid grid-cols-2 gap-2 text-xs text-(--color-dark) dark:text-(--color-light)">
                 <div>
                     <p class="text-(--color-gray)">Date</p>
-                    <p class="font-medium">${item.dateSablon ?? "-"}</p>
+                    <p class="font-medium">${item.date_sablon ?? "-"}</p>
                 </div>
                 <div>
                     <p class="text-(--color-gray)">Total Sablon</p>
-                    <p class="font-medium">${item.totalSablon ?? 0}</p>
+                    <p class="font-medium">${item.total_sablon ?? 0}</p>
                 </div>
                 <div>
                     <p class="text-(--color-gray)">Long Fabric</p>
-                    <p class="font-medium">${item.totalLongFabric ?? 0}</p>
+                    <p class="font-medium">${item.total_long_fabric ?? 0}</p>
                 </div>
                 <div>
                     <p class="text-(--color-gray)">Type Color</p>
-                    <p class="font-medium">${item.typeColor?.name ?? "-"}</p>
+                    <p class="font-medium">${item.typeColor?.name + " Warna" ?? "-"}</p>
                 </div>
             </div>
 
