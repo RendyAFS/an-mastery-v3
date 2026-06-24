@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\RupiahHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,24 +16,25 @@ class SablonResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'                => $this->id,
-            'supplier_id'       => $this->supplier_id,
-            'fabric_id'         => $this->fabric_id,
-            'image_fabric_id'   => $this->image_fabric_id,
-            'type_color_id'     => $this->type_color_id,
-            'type_fabric_id'    => $this->type_fabric_id,
-            'price_employee_id' => $this->price_employee_id,
-            'total_long_fabric' => $this->total_long_fabric,
-            'total_sablon'      => $this->total_sablon,
-            'date_sablon'       => $this->date_sablon?->format('Y-m-d'),
-            'status'            => $this->status,
-            'notes'             => $this->notes,
-            'created_at'        => $this->created_at?->format('Y-m-d H:i:s'),
-            'updated_at'        => $this->updated_at?->format('Y-m-d H:i:s'),
-            'deleted_at'        => $this->deleted_at?->format('Y-m-d H:i:s'),
-            'created_by'        => $this->created_by,
-            'updated_by'        => $this->updated_by,
-            'deleted_by'        => $this->deleted_by,
+            'id'                    => $this->id,
+            'supplier_id'           => $this->supplier_id,
+            'fabric_id'             => $this->fabric_id,
+            'image_fabric_id'       => $this->image_fabric_id,
+            'type_color_id'         => $this->type_color_id,
+            'type_fabric_id'        => $this->type_fabric_id,
+            'price_employee_id'     => $this->price_employee_id,
+            'total_long_fabric'     => $this->total_long_fabric,
+            'total_sablon'          => $this->total_sablon,
+            'total_sablon_formated' => RupiahHelper::format($this->total_sablon),
+            'date_sablon'           => $this->date_sablon?->format('Y-m-d'),
+            'status'                => $this->status,
+            'notes'                 => $this->notes,
+            'created_at'            => $this->created_at?->format('Y-m-d H:i:s'),
+            'updated_at'            => $this->updated_at?->format('Y-m-d H:i:s'),
+            'deleted_at'            => $this->deleted_at?->format('Y-m-d H:i:s'),
+            'created_by'            => $this->created_by,
+            'updated_by'            => $this->updated_by,
+            'deleted_by'            => $this->deleted_by,
 
             'supplier'              => new SupplierResource($this->whenLoaded('supplier')),
             'fabric'                => new FabricResource($this->whenLoaded('fabric')),

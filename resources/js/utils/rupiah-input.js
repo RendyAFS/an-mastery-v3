@@ -17,6 +17,7 @@ const RupiahInput = {
         input.addEventListener("input", (e) => {
             const raw = this.unformat(e.target.value);
             e.target.value = this.format(raw);
+            e.target.dataset.raw = raw;
         });
 
         input.form?.addEventListener("submit", () => {

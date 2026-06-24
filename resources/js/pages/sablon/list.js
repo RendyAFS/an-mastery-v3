@@ -36,7 +36,7 @@ const PageScript = (function () {
                 </div>
                 <div>
                     <p class="text-(--color-gray)">Total Sablon</p>
-                    <p class="font-medium">${item.total_sablon ?? 0}</p>
+                    <p class="font-medium">${item.total_sablon_formated ?? 0}</p>
                 </div>
                 <div>
                     <p class="text-(--color-gray)">Long Fabric</p>

@@ -102,7 +102,7 @@
                     class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Total Sablon
                 </label>
-                <input type="text" id="total_sablon" name="total_sablon" :value="computedTotalSablon" readonly
+                <input type="text" :value="formatNumber(computedTotalSablon)" readonly
                     class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                     text-(--color-dark) font-semibold focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                     dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -303,10 +303,10 @@
 
                         <div class="space-y-1">
                             <label class="text-xs font-medium text-(--color-dark-gray)">Fee (otomatis)</label>
-                            <input type="text" :value="formatNumber(row.fee)" disabled
+                            <input type="text" :value="formatNumber(row.fee)" readonly
                                 class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                                     focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                    text-(--color-dark-gray) font-semibold dark:bg-(--color-dark-slate) dark:border-(--color-slate)">
+                                    text-(--color-dark) dark:text-(--color-light) font-semibold dark:bg-(--color-dark-slate) dark:border-(--color-slate)">
                         </div>
 
                         {{-- FIX #3: Additional Fee Multiple (Add/Remove) --}}
@@ -322,13 +322,14 @@
                             <template x-for="(fee, feeIndex) in row.additional_fee" :key="fee.uid">
                                 <div class="flex items-center gap-2">
                                     <div class="flex-1 space-y-1">
-                                        <input type="number" min="0" step="0.01"
-                                            x-model.number="fee.nominal" placeholder="Nominal"
+                                        <input type="text" :value="formatSignedNumber(fee.nominal)"
+                                            @input="fee.nominal = parseSignedNumber($event.target.value)"
+                                            placeholder="contoh: 10000 atau -10000"
                                             class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                                                 focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                                 text-(--color-dark) dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
                                     </div>
-                                    <div class="flex-[2] space-y-1">
+                                    <div class="flex-2 space-y-1">
                                         <input type="text" x-model="fee.notes" placeholder="Notes"
                                             class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                                                 focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
@@ -348,10 +349,10 @@
 
                         <div class="space-y-1">
                             <label class="text-xs font-medium text-(--color-dark-gray)">Total Fee</label>
-                            <input type="text" :value="formatNumber(rowTotal(row))" disabled
+                            <input type="text" :value="formatNumber(rowTotal(row))" readonly
                                 class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                                     focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                    text-(--color-dark-gray) font-bold dark:bg-(--color-dark-slate) dark:border-(--color-slate)">
+                                    text-(--color-dark) dark:text-(--color-light) font-bold dark:bg-(--color-dark-slate) dark:border-(--color-slate)">
                         </div>
 
                         <div class="flex items-center gap-2 pt-5">

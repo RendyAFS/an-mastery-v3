@@ -33,8 +33,11 @@ const PageScript = (function () {
                 },
                 {
                     data: "type_color.name",
-                    className: "text-center",
+                    className: "text-center dt-body-center",
                     width: "20%",
+                    render: function (data, type, row) {
+                        return `${data} Warna`;
+                    },
                 },
                 {
                     data: "price_formatted",

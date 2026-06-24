@@ -77,6 +77,12 @@ document.addEventListener("alpine:init", () => {
                 });
             },
 
+            applyRupiahMask() {
+                this.$nextTick(() => {
+                    RupiahInput.init();
+                });
+            },
+
             _bindNativeSelectChange(id, callback) {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -253,7 +259,10 @@ document.addEventListener("alpine:init", () => {
             },
             addEmployeeRow() {
                 this.employeeRows.push(this.buildEmployeeRow());
-                this.$nextTick(() => window.lucide?.createIcons());
+                this.$nextTick(() => {
+                    window.lucide?.createIcons();
+                    this.applyRupiahMask();
+                });
             },
             removeEmployeeRow(index) {
                 this.employeeRows.splice(index, 1);
@@ -268,7 +277,10 @@ document.addEventListener("alpine:init", () => {
                     nominal: 0,
                     notes: "",
                 });
-                this.$nextTick(() => window.lucide?.createIcons());
+                this.$nextTick(() => {
+                    window.lucide?.createIcons();
+                    this.applyRupiahMask();
+                });
             },
 
             removeAdditionalFee(row, feeIndex) {
@@ -318,20 +330,48 @@ document.addEventListener("alpine:init", () => {
             formatNumber(val) {
                 return new Intl.NumberFormat("id-ID").format(Number(val) || 0);
             },
+
+            formatSignedNumber(val) {
+                const number = Number(val) || 0;
+
+                if (number < 0) {
+                    return (
+                        "-" +
+                        new Intl.NumberFormat("id-ID").format(Math.abs(number))
+                    );
+                }
+
+                return new Intl.NumberFormat("id-ID").format(number);
+            },
+
+            parseSignedNumber(value) {
+                if (!value) return 0;
+
+                const isNegative = value.trim().startsWith("-");
+                const clean = value.replace(/[^\d]/g, "");
+
+                return isNegative ? -(Number(clean) || 0) : Number(clean) || 0;
+            },
+
             get computedTotalSablon() {
                 const totalLong = this.totalLongFabric;
+
                 const price = Number(
                     this.priceEmployeesRaw[this.selectedPriceEmployeeId] || 0,
                 );
-                const colorCount = Number(
-                    this.typeColorsRaw[this.selectedTypeColorId] || 0,
-                );
-                if (!colorCount || !price) return 0;
-                return (totalLong * price) / colorCount;
+
+                if (!price) return 0;
+
+                // Total sablon TIDAK dibagi jumlah warna
+                return totalLong * price;
             },
 
             get ratePerLayer() {
-                return this.computedTotalSablon;
+                const colorCount = Number(
+                    this.typeColorsRaw[this.selectedTypeColorId] || 0,
+                );
+                if (!colorCount) return 0;
+                return this.computedTotalSablon / colorCount;
             },
 
             computeFee(row) {
