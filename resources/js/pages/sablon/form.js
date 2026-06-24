@@ -246,6 +246,8 @@ document.addEventListener("alpine:init", () => {
                     notes: row.notes ?? "",
                     openEmp: false,
                     openEmpChange: false,
+                    searchEmp: "",
+                    searchEmpChange: "",
                 };
             },
 
@@ -287,6 +289,14 @@ document.addEventListener("alpine:init", () => {
                 if (Array.isArray(row.additional_fee)) {
                     row.additional_fee.splice(feeIndex, 1);
                 }
+            },
+
+            filteredEmployees(search) {
+                if (!search) return this.employeeOptions;
+                const q = search.toLowerCase();
+                return this.employeeOptions.filter((e) =>
+                    e.name.toLowerCase().includes(q),
+                );
             },
 
             filteredFabricDetails(search) {
