@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Fabric;
+use Illuminate\Support\Collection;
 
 class FabricRepository
 {
@@ -40,5 +41,15 @@ class FabricRepository
             })
             ->orderBy('code')
             ->paginate($limit, ['*'], 'page', $page);
+    }
+
+    public function getBySupplierAsOptions(int $supplierId): array
+    {
+        return Fabric::query()
+            ->where('supplier_id', $supplierId)
+            ->orderBy('code')
+            ->get(['id', 'code', 'stock_total'])
+            ->mapWithKeys(fn($f) => [$f->id => "{$f->code} - {$f->stock_total} pcs"])
+            ->toArray();
     }
 }

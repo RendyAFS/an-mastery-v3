@@ -97,4 +97,11 @@ return [
         'icon' => 'package',
         'url'  => '/fabrics',
     ],
+
+    // Sablon
+    [
+        'name' => 'Sablon',
+        'icon' => 'paintbrush',
+        'url'  => '/sablons',
+    ],
 ];

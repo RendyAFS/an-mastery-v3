@@ -33,4 +33,9 @@ class FabricDetail extends Model
     {
         return $this->hasMany(HistoryStock::class, 'fabric_detail_id');
     }
+
+    public function sablonDetails(): HasMany
+    {
+        return $this->hasMany(SablonDetail::class, 'fabric_detail_id');
+    }
 }
