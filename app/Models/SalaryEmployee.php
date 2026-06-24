@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\StatusSalaryEmployeeEnum;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Mattiverse\Userstamps\Traits\Userstamps;
+
+class SalaryEmployee extends Model
+{
+    use Userstamps, SoftDeletes;
+
+    protected $fillable = [
+        'employee_id',
+        'fee',
+        'additional_fee',
+        'status',
+        'date',
+        'notes',
+    ];
+
+    protected $casts = [
+        'additional_fee' => 'array',
+        'status'         => StatusSalaryEmployeeEnum::class,
+        'date'           => 'date',
+    ];
+
+    public function employee():BelongsTo
+    {
+        return $this->belongsTo(Employee::class);
+    }
+}
