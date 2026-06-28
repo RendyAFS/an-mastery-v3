@@ -23,11 +23,13 @@ class SaveFabricAction
         $supplier = Supplier::findOrFail($data['supplier_id']);
 
         $fabric = Fabric::create([
-            'supplier_id' => $data['supplier_id'],
-            'code'        => $this->generateCode($supplier->name),
-            'seri'        => $data['seri'],
-            'stock_total' => $this->sumStock($data['fabric_details']),
-            'notes'       => $data['notes'] ?? null,
+            'supplier_id'    => $data['supplier_id'],
+            'code'           => $this->generateCode($supplier->name),
+            'type_fabric_id' => $data['type_fabric_id'],
+            'date_coming'    => $data['date_coming'],
+            'seri'           => $data['seri'],
+            'stock_total'    => $this->sumStock($data['fabric_details']),
+            'notes'          => $data['notes'] ?? null,
         ]);
 
         foreach ($data['fabric_details'] as $detail) {
@@ -40,10 +42,12 @@ class SaveFabricAction
     private function update(Fabric $fabric, array $data): Fabric
     {
         $fabric->update([
-            'supplier_id' => $data['supplier_id'],
-            'seri'        => $data['seri'],
-            'stock_total' => $this->sumStock($data['fabric_details']),
-            'notes'       => $data['notes'] ?? null,
+            'supplier_id'    => $data['supplier_id'],
+            'type_fabric_id' => $data['type_fabric_id'],
+            'date_coming'    => $data['date_coming'],
+            'seri'           => $data['seri'],
+            'stock_total'    => $this->sumStock($data['fabric_details']),
+            'notes'          => $data['notes'] ?? null,
         ]);
 
         $existingColorIds = $fabric->fabricDetails()->pluck('color_fabric_id')->all();

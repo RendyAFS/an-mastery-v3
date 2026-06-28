@@ -62,10 +62,33 @@
                         </td>
 
                         <td class="px-4 py-3">
-                            <input type="number" min="0" step="1" x-model="row.long_fabric"
-                                class="px-3 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                            <div class="py-2 px-3 rounded-lg border border-(--color-gray) bg-(--color-light-gray) dark:bg-(--color-dark-slate) dark:border-(--color-slate)"
+                                data-hs-input-number>
+                                <div class="flex items-center justify-between gap-x-3">
+                                    <div class="grow">
+                                        <input type="number" min="0" step="1" x-model="row.long_fabric"
+                                            data-hs-input-number-input
+                                            class="w-full p-0 bg-transparent border-0 text-(--color-dark) dark:text-(--color-light) placeholder:text-(--color-gray) focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                            style="-moz-appearance: textfield;">
+                                    </div>
+
+                                    <div class="flex items-center gap-x-1">
+                                        <button type="button" tabindex="-1" aria-label="Decrease"
+                                            data-hs-input-number-decrement
+                                            class="size-7 inline-flex items-center justify-center rounded-full border border-(--color-gray) bg-(--color-light) hover:bg-(--color-gray)/20 dark:bg-(--color-dark) dark:border-(--color-slate) dark:hover:bg-(--color-dark-gray)/30 disabled:opacity-50 disabled:pointer-events-none">
+
+                                            <i data-lucide="minus" class="size-3.5"></i>
+                                        </button>
+
+                                        <button type="button" tabindex="-1" aria-label="Increase"
+                                            data-hs-input-number-increment
+                                            class="size-7 inline-flex items-center justify-center rounded-full border border-(--color-gray) bg-(--color-light) hover:bg-(--color-gray)/20 dark:bg-(--color-dark) dark:border-(--color-slate) dark:hover:bg-(--color-dark-gray)/30 disabled:opacity-50 disabled:pointer-events-none">
+
+                                            <i data-lucide="plus" class="size-3.5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
 
                         <td class="px-4 py-3 text-center">

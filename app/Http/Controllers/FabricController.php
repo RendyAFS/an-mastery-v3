@@ -8,6 +8,7 @@ use App\Http\Resources\FabricResource;
 use App\Models\ColorFabric;
 use App\Models\Fabric;
 use App\Models\Supplier;
+use App\Models\TypeFabric;
 use App\Repositories\FabricRepository;
 use Illuminate\Http\Request;
 
@@ -36,10 +37,11 @@ class FabricController extends Controller
     {
         $this->authorize('fabrics.create');
 
-        $suppliers    = Supplier::pluck('name', 'id')->all();
+        $suppliers    = Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id');
         $colorFabrics = ColorFabric::pluck('name', 'id')->all();
+        $typeFabrics  = TypeFabric::pluck('name', 'id')->all();
 
-        return view('fabric.create', compact('suppliers', 'colorFabrics'));
+        return view('fabric.create', compact('suppliers', 'colorFabrics', 'typeFabrics'));
     }
 
     public function store(SaveFabricRequest $request)
@@ -63,8 +65,9 @@ class FabricController extends Controller
         $suppliers    = Supplier::pluck('name', 'id')->all();
         $colorFabrics = ColorFabric::pluck('name', 'id')->all();
         $fabric->load('fabricDetails.colorFabric');
+        $typeFabrics  = TypeFabric::pluck('name', 'id')->all();
 
-        return view('fabric.edit', compact('fabric', 'suppliers', 'colorFabrics'));
+        return view('fabric.edit', compact('fabric', 'suppliers', 'colorFabrics', 'typeFabrics'));
     }
 
     public function update(SaveFabricRequest $request, Fabric $fabric)

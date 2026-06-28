@@ -23,18 +23,18 @@
         <label class="block text-sm font-medium">Name</label>
         <input type="text" name="name" value="{{ isset($imageFabric) ? $imageFabric->name : '' }}"
             placeholder="Enter name" required
-            class="w-full rounded-lg px-4 py-2
-                   bg-(--color-light-gray) dark:bg-(--color-dark-slate)
-                   focus:border-(--color-gray) focus:ring focus:ring-(--color-gray)/30">
+            class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
     </div>
 
     {{-- Notes --}}
     <div class="space-y-2">
         <label class="block text-sm font-medium">Notes</label>
         <textarea name="notes" rows="4" placeholder="Enter notes"
-            class="w-full rounded-lg px-4 py-2
-                   bg-(--color-light-gray) dark:bg-(--color-dark-slate)
-                   focus:border-(--color-gray) focus:ring focus:ring-(--color-gray)/30">{{ isset($imageFabric) ? $imageFabric->notes : '' }}</textarea>
+            class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">{{ isset($imageFabric) ? $imageFabric->notes : '' }}</textarea>
     </div>
 
 </div>

@@ -64,16 +64,38 @@ const PageScript = (function () {
                         }).join("");
 
                         return `
-                            <div class="rounded-xl border border-(--color-gray)/20 dark:border-(--color-dark-gray)/30 overflow-hidden text-left">
-                                <div class="flex items-center gap-2 px-3 py-2.5 bg-(--color-gray)/10 dark:bg-(--color-dark-gray)/20">
-                                    <span class="flex items-center justify-center size-7 rounded-lg bg-(--color-primary)/20 dark:bg-(--color-primary)/10 text-(--color-primary)">
-                                        <i data-lucide="layers" class="size-4"></i>
-                                    </span>
-                                    <span class="font-semibold text-(--color-dark) dark:text-(--color-light) text-sm">
-                                        ${data.total_pcs} pcs / ${data.seri} seri
-                                    </span>
+                            <div class="rounded-xl border border-(--color-gray)/20
+                                dark:border-(--color-dark-gray)/30 overflow-hidden text-left">
+
+                                <div class="px-3 py-2.5 bg-(--color-gray)/10
+                                    dark:bg-(--color-dark-gray)/20">
+
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="flex items-center justify-center size-7 rounded-lg
+                                            bg-(--color-primary)/20
+                                            dark:bg-(--color-primary)/10
+                                            text-(--color-primary)">
+                                            <i data-lucide="layers" class="size-4"></i>
+                                        </span>
+
+                                        <div>
+                                            <div class="font-semibold text-sm">
+                                                ${data.total_pcs} pcs / ${data.seri} seri
+                                            </div>
+
+                                            <div class="text-xs text-(--color-dark-gray)">
+                                                ${data.type_fabric ?? "-"}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-[11px] text-(--color-dark-gray)">
+                                        Incoming : ${data.date_coming ?? "-"}
+                                    </div>
                                 </div>
-                                <div class="divide-y divide-(--color-gray)/10 dark:divide-(--color-dark-gray)/20">
+
+                                <div class="divide-y divide-(--color-gray)/10
+                                    dark:divide-(--color-dark-gray)/20">
                                     ${rows}
                                 </div>
                             </div>
@@ -83,6 +105,13 @@ const PageScript = (function () {
                 {
                     data: "notes",
                     width: "20%",
+                    render(data) {
+                        return `
+                            <div class="whitespace-pre-line">
+                                ${data ?? "-"}
+                            </div>
+                        `;
+                    }
                 },
                 {
                     data: "id",

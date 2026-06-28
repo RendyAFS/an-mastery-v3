@@ -94,6 +94,7 @@ const PageScript = (function () {
     function resetForm() {
         form.reset();
 
+        
         const data = getAlpineData();
         data.rows = Array.from({ length: 4 }, () => data.buildRow());
     }
