@@ -118,4 +118,18 @@ class SupplierController extends Controller
             ]),
         ]);
     }
+
+    public function toggleActive(Supplier $supplier)
+    {
+        $this->authorize('suppliers.update');
+
+        $supplier->update([
+            'is_active' => ! $supplier->is_active,
+        ]);
+
+        return response()->json([
+            'message' => 'Supplier status updated',
+            'is_active' => $supplier->is_active,
+        ]);
+    }
 }

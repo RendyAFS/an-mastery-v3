@@ -9,14 +9,22 @@
     {{-- Fabric Info --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="col-span-1">
-            <div class="mb-6 space-y-2">
+            <div class="mb-2 space-y-2">
                 <x-select id="supplier_id" name="supplier_id" label="Supplier" :options="$suppliers" :value="$fabric->supplier_id ?? null"
                     placeholder="Choose Supplier" search-placeholder="Search supplier..." clearable="true" />
             </div>
         </div>
 
         <div class="col-span-1">
-            <div class="mb-6 space-y-2">
+            <div class="mb-2 space-y-2">
+                <x-select id="type_fabric_id" name="type_fabric_id" label="Type Fabric" :options="$typeFabrics"
+                    :value="$fabric->type_fabric_id ?? null" placeholder="Choose Type Fabric" search-placeholder="Search type fabric..."
+                    clearable="true" />
+            </div>
+        </div>
+
+        <div class="col-span-1">
+            <div class="mb-2 space-y-2">
                 <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Total Stock
                 </label>
@@ -33,7 +41,7 @@
         </div>
 
         <div class="col-span-1">
-            <div class="mb-6 space-y-2">
+            <div class="mb-2 space-y-2">
                 <label for="seri" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Type Seri
                 </label>
@@ -48,7 +56,7 @@
 
         @isset($fabric)
             <div class="col-span-1">
-                <div class="mb-6 space-y-2">
+                <div class="mb-2 space-y-2">
                     <label for="code" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                         Code
                     </label>
@@ -65,8 +73,19 @@
             </div>
         @endisset
 
+        <div class="mb-2 space-y-2">
+            <label for="date_coming" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                Date Coming
+            </label>
+            <input type="date" id="date_coming" name="date_coming"
+                value="{{ old('date_coming', $fabric?->date_coming?->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
+                class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+        </div>
+
         <div class="col-span-1 md:col-span-2">
-            <div class="mb-6 space-y-2">
+            <div class="mb-2 space-y-2">
                 <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Notes
                 </label>
@@ -108,7 +127,8 @@
                 <tbody>
                     <template x-for="(row, index) in rows" :key="row.uid">
                         <tr class="border-t border-(--color-gray) dark:border-(--color-slate)">
-                            <td class="px-4 py-3 text-center text-(--color-dark) dark:text-(--color-light)" x-text="index + 1 + '.'"></td>
+                            <td class="px-4 py-3 text-center text-(--color-dark) dark:text-(--color-light)"
+                                x-text="index + 1 + '.'"></td>
 
                             {{-- Color select, styled like x-select supplier --}}
                             <td class="px-4 py-3">

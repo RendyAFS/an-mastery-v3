@@ -19,6 +19,7 @@ class EmployeeResource extends JsonResource
             'name'       => $this->name,
             'address'    => $this->address,
             'contact'    => $this->contact,
+            'is_active'  => $this->is_active,
             'notes'      => $this->notes,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),

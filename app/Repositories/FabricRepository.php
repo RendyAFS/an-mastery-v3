@@ -3,13 +3,18 @@
 namespace App\Repositories;
 
 use App\Models\Fabric;
+use Illuminate\Support\Collection;
 
 class FabricRepository
 {
     public function getAll($filter = 'active')
     {
         $query = Fabric::query()
-            ->with(['supplier'])
+            ->with([
+                'supplier',
+                'typeFabric',
+                'fabricDetails.colorFabric',
+            ])
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {
@@ -27,8 +32,8 @@ class FabricRepository
         int $page = 1
     ) {
         return Fabric::query()
-            ->with('supplier:id,name')
-            ->select('id', 'supplier_id', 'code')
+            ->with(['supplier:id,name', 'typeFabric:id,name'])
+            ->select('id', 'supplier_id', 'type_fabric_id', 'code', 'date_coming')
             ->when($id, function ($query) use ($id) {
                 $query->whereKey($id);
             })
@@ -40,5 +45,36 @@ class FabricRepository
             })
             ->orderBy('code')
             ->paginate($limit, ['*'], 'page', $page);
+    }
+
+    public function getBySupplierAsOptions(int $supplierId): array
+    {
+        return Fabric::with([
+            'fabricDetails.colorFabric',
+            'fabricDetails.sablonDetails.sablon',
+            'typeFabric',
+        ])
+            ->where('supplier_id', $supplierId)
+            ->orderBy('code')
+            ->get()
+            ->mapWithKeys(function ($fabric) {
+
+                $summary = $fabric->available_stock_summary;
+
+                return [
+                    $fabric->id => [
+                        'label' => sprintf(
+                            '(%d Seri / %d Pcs) - %s (%s)',
+                            // $fabric->supplier?->name ?? '-',
+                            $summary['seri'],
+                            $summary['total_pcs'],
+                            $fabric->typeFabric?->name ?? '-',
+                            $fabric->date_coming?->format('d F Y') ?? '-'
+                        ),
+                        'type_fabric_id' => $fabric->type_fabric_id,
+                    ]
+                ];
+            })
+            ->toArray();
     }
 }

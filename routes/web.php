@@ -35,6 +35,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     // Suppliers
     Route::prefix('suppliers')->as('suppliers.')->group(function () {
+        Route::put('{supplier}/toggle-active', [App\Http\Controllers\SupplierController::class, 'toggleActive'])->name('toggle-active');
         Route::put('{supplier}/restore', [App\Http\Controllers\SupplierController::class, 'restore'])->name('restore');
         Route::delete('{supplier}/force-delete', [App\Http\Controllers\SupplierController::class, 'forceDelete'])->name('force-delete');
         Route::get('select/suppliers', [App\Http\Controllers\SupplierController::class, 'select'])->name('select');
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     // Employees
     Route::prefix('employees')->as('employees.')->group(function () {
+        Route::put('{employee}/toggle-active', [App\Http\Controllers\EmployeeController::class, 'toggleActive'])->name('toggle-active');
         Route::put('{employee}/restore', [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
         Route::delete('{employee}/force-delete', [App\Http\Controllers\EmployeeController::class, 'forceDelete'])->name('force-delete');
         Route::get('select/employees', [App\Http\Controllers\EmployeeController::class, 'select'])->name('select');
@@ -109,4 +111,12 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('select/fabrics', [App\Http\Controllers\FabricController::class, 'select'])->name('select');
     });
     Route::resource('fabrics', App\Http\Controllers\FabricController::class)->names('fabrics');
+
+    // Sablon
+    Route::prefix('sablons')->as('sablons.')->group(function () {
+        Route::get('fabrics-by-supplier/{supplier}', [App\Http\Controllers\SablonController::class, 'fabricsBySupplier'])->name('fabrics-by-supplier');
+        Route::put('{sablon}/restore', [App\Http\Controllers\SablonController::class, 'restore'])->name('restore');
+        Route::delete('{sablon}/force-delete', [App\Http\Controllers\SablonController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('sablons', App\Http\Controllers\SablonController::class)->names('sablons');
 });

@@ -118,4 +118,18 @@ class EmployeeController extends Controller
             ]),
         ]);
     }
+
+    public function toggleActive(Employee $employee)
+    {
+        $this->authorize('employees.update');
+
+        $employee->update([
+            'is_active' => ! $employee->is_active,
+        ]);
+
+        return response()->json([
+            'message' => 'Employee status updated',
+            'is_active' => $employee->is_active,
+        ]);
+    }
 }

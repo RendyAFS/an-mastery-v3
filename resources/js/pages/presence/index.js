@@ -14,6 +14,15 @@ const DAYS = [
     "sunday",
 ];
 
+const GENERATE_DAYS = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+];
+
 const DAY_LABELS = {
     monday: "Senin",
     tuesday: "Selasa",
@@ -81,6 +90,14 @@ const PageScript = (function () {
             const date = new Date(mondayDate);
             date.setDate(mondayDate.getDate() + index);
             $(`#th-${day} .th-date`).text(formatThDate(date));
+        });
+    };
+
+    const updateModalDates = (mondayDate) => {
+        DAYS.forEach((day, index) => {
+            const date = new Date(mondayDate);
+            date.setDate(mondayDate.getDate() + index);
+            $(`#${day}-date`).text(`(${formatThDate(date)})`);
         });
     };
 
@@ -178,7 +195,7 @@ const PageScript = (function () {
 
     const toggleFormDisabled = (disabled) => {
         $("#presence-form")
-            .find("input, textarea, button[type='submit']")
+            .find("input, textarea, button[type='submit'], #btn-generate")
             .prop("disabled", disabled);
     };
 
@@ -198,12 +215,17 @@ const PageScript = (function () {
 
         DAYS.forEach((day) => {
             const input = document.getElementById(day);
-
             input.value = data[day] ?? 0;
             RupiahInput.refresh(input);
         });
 
         $("#notes").val(data.notes ?? "");
+        $("#generate_value").val("");
+        RupiahInput.refresh(document.getElementById("generate_value"));
+
+        updateModalDates(
+            isoWeekToMonday(dateToIsoWeek(new Date(currentWeekOf))),
+        );
 
         const isDeleted = !!data.employee?.deleted_at;
         toggleFormDisabled(isDeleted);
@@ -254,6 +276,18 @@ const PageScript = (function () {
         }
     };
 
+    const generateValues = () => {
+        const value = rawNumber($("#generate_value").val());
+
+        GENERATE_DAYS.forEach((day) => {
+            const input = document.getElementById(day);
+            input.value = value;
+            RupiahInput.refresh(input);
+        });
+
+        updateModalTotal();
+    };
+
     const bindEvents = () => {
         $("#filter-week").on("change", function () {
             const value = $(this).val();
@@ -271,6 +305,11 @@ const PageScript = (function () {
         });
 
         $(document).on("input", ".day-input", updateModalTotal);
+
+        $(document).on("click", "#btn-generate", function (e) {
+            e.preventDefault();
+            generateValues();
+        });
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
