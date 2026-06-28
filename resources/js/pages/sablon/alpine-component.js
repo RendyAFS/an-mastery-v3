@@ -14,6 +14,7 @@ export default function sablonForm(
     return {
         fabricRows: [],
         employeeRows: [],
+        fabricRawData: {},
         fabricDetailOptions: fabricDetails,
         fabricOptions: Object.entries(initialFabricOptions).map(
             ([id, label]) => ({ id, label }),
@@ -30,6 +31,7 @@ export default function sablonForm(
             : null,
         selectedPriceEmployeeId: null,
         selectedTypeColorId: null,
+        selectedTypeFabricId: null,
         totalSablon: 0,
 
         init() {
@@ -58,6 +60,22 @@ export default function sablonForm(
 
                 this._bindNativeSelectChange("fabric_id", (val) => {
                     this.selectedFabricId = val || null;
+
+                    const typeFabricEl =
+                        document.getElementById("type_fabric_id");
+
+                    if (typeFabricEl) {
+                        const typeFabricId =
+                            this.fabricRawData[val]?.type_fabric_id ?? "";
+
+                        typeFabricEl.value = typeFabricId;
+
+                        const hsInstance =
+                            window.HSSelect?.getInstance(typeFabricEl);
+
+                        hsInstance?.setValue(String(typeFabricId));
+                    }
+
                     this._autoPopulateFabricRows();
                 });
 
@@ -111,8 +129,13 @@ export default function sablonForm(
                 );
                 const options = await res.json();
 
+                this.fabricRawData = options;
+
                 this.fabricOptions = Object.entries(options).map(
-                    ([id, label]) => ({ id, label }),
+                    ([id, item]) => ({
+                        id,
+                        label: item.label,
+                    }),
                 );
 
                 this._refreshFabricSelectOptions(options);
@@ -122,22 +145,23 @@ export default function sablonForm(
         },
 
         _refreshFabricSelectOptions(options) {
-    const fabricEl = document.getElementById("fabric_id");
-    if (!fabricEl) return;
+            const fabricEl = document.getElementById("fabric_id");
+            if (!fabricEl) return;
 
-    const hsInstance = window.HSSelect?.getInstance(fabricEl);
-    if (!hsInstance) return;
+            const hsInstance = window.HSSelect?.getInstance(fabricEl);
+            if (!hsInstance) return;
 
-    // 1. Hapus semua option yang ada (kecuali placeholder kosong)
-    [...fabricEl.options].forEach((opt) => {
-        if (opt.value !== "") hsInstance.removeOption(opt.value);
-    });
+            [...fabricEl.options].forEach((opt) => {
+                if (opt.value !== "") hsInstance.removeOption(opt.value);
+            });
 
-    // 2. Tambah option baru satu per satu
-    Object.entries(options).forEach(([id, label]) => {
-        hsInstance.addOption({ title: label, val: id });
-    });
-},
+            Object.entries(options).forEach(([id, item]) => {
+                hsInstance.addOption({
+                    title: item.label,
+                    val: id,
+                });
+            });
+        },
 
         onSupplierChange(e) {
             this._handleSupplierChange(e.target.value || null);
