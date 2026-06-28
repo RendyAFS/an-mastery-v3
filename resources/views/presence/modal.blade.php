@@ -15,34 +15,55 @@
                  <input type="hidden" id="employee_id" name="employee_id" />
                  <input type="hidden" id="week_of" name="week_of" />
 
-                 @php
-                    $dayLabels = [
-                        'monday' => 'Senin',
-                        'tuesday' => 'Selasa',
-                        'wednesday' => 'Rabu',
-                        'thursday' => 'Kamis',
-                        'friday' => 'Jumat',
-                        'saturday' => 'Sabtu',
-                        'sunday' => 'Minggu',
-                    ];
-                @endphp
+                 {{-- Generate section --}}
+                 <div class="flex items-end gap-2">
+                     <div class="flex-1">
+                         <label for="generate_value"
+                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                             Nominal per Hari
+                         </label>
+                         <input type="text" inputmode="numeric" id="generate_value" data-rupiah
+                             class="mt-1 px-4 py-2 block w-full rounded-lg
+                    bg-(--color-light-gray) border border-(--color-gray)
+                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
+                     </div>
+                     <button type="button" id="btn-generate"
+                         class="py-2 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                         Generate
+                     </button>
+                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    @foreach ($dayLabels as $day => $label)
-                        <div>
-                            <label for="{{ $day }}"
-                                class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                                {{ $label }}
-                            </label>
-                            <input type="text" inputmode="numeric" id="{{ $day }}"
-                                name="{{ $day }}" data-rupiah
-                                class="day-input mt-1 px-4 py-2 block w-full rounded-lg
+                 @php
+                     $dayLabels = [
+                         'monday' => 'Senin',
+                         'tuesday' => 'Selasa',
+                         'wednesday' => 'Rabu',
+                         'thursday' => 'Kamis',
+                         'friday' => 'Jumat',
+                         'saturday' => 'Sabtu',
+                         'sunday' => 'Minggu',
+                     ];
+                 @endphp
+
+                 <div class="grid grid-cols-2 gap-3">
+                     @foreach ($dayLabels as $day => $label)
+                         <div>
+                             <label for="{{ $day }}"
+                                 class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                                 {{ $label }}
+                                 <span id="{{ $day }}-date" class="text-xs font-normal text-(--color-gray)">
+                                 </span>
+                             </label>
+                             <input type="text" inputmode="numeric" id="{{ $day }}"
+                                 name="{{ $day }}" data-rupiah
+                                 class="day-input mt-1 px-4 py-2 block w-full rounded-lg
                                     bg-(--color-light-gray) border border-(--color-gray)
                                     text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                     dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
-                        </div>
-                    @endforeach
-                </div>
+                         </div>
+                     @endforeach
+                 </div>
 
                  <div class="col-span-full">
                      <label for="notes"
