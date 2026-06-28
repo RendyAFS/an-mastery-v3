@@ -19,7 +19,7 @@ const PageScript = (function () {
         const fabricDetailsHtml = item.sablonDetails?.length
             ? `
                     <div class="space-y-1">
-                        <p class="text-[11px] font-medium text-(--color-dark-gray) uppercase tracking-wide mb-1.5">
+                        <p class="text-xs font-semibold">
                             Fabric Details
                         </p>
 
@@ -41,23 +41,87 @@ const PageScript = (function () {
 
         const employeeDetailsHtml = item.sablonEmployeeDetails?.length
             ? `
-                    <div class="space-y-1">
-                        <p class="text-xs font-semibold">Employee Details</p>
+                <div class="space-y-2">
+                    <p class="text-xs font-semibold">Employee Details</p>
 
-                        <ul class="space-y-1 text-xs">
-                            ${item.sablonEmployeeDetails
-                                .map(
-                                    (detail) => `
-                                        <li class="flex justify-between">
-                                            <span>• ${detail.employee?.name ?? "-"}</span>
-                                            <span class="font-medium">${detail.total_formated ?? "Rp 0"}</span>
-                                        </li>
-                                    `,
+                    <div class="space-y-2">
+                        ${item.sablonEmployeeDetails
+                            .map((detail) => {
+                                const additionalFees = Array.isArray(
+                                    detail.additional_fee,
                                 )
-                                .join("")}
-                        </ul>
+                                    ? detail.additional_fee
+                                    : [];
+
+                                const additionalFeeHtml = additionalFees.length
+                                    ? `
+                                        <div class="mt-2 ml-4 space-y-1">
+                                            ${additionalFees
+                                                .map(
+                                                    (fee) => `
+                                                        <div class="flex justify-between text-[11px] text-(--color-dark-gray)">
+                                                            <span>
+                                                                ↳ ${fee.notes || "Additional Fee"}
+                                                            </span>
+                                                            <span class="${
+                                                                Number(
+                                                                    fee.nominal,
+                                                                ) < 0
+                                                                    ? "text-(--color-red)"
+                                                                    : "text-(--color-success)"
+                                                            }">
+                                                                ${
+                                                                    Number(
+                                                                        fee.nominal,
+                                                                    ) < 0
+                                                                        ? "-"
+                                                                        : "+"
+                                                                } Rp ${Math.abs(
+                                                                    fee.nominal ||
+                                                                        0,
+                                                                ).toLocaleString(
+                                                                    "id-ID",
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    `,
+                                                )
+                                                .join("")}
+                                        </div>
+                                    `
+                                    : "";
+
+                                return `
+                                    <div class="rounded-lg bg-(--color-gray)/10 p-2">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <p class="text-xs font-medium">
+                                                    ${detail.employee?.name ?? "-"}
+                                                </p>
+
+                                                <p class="text-[11px] text-(--color-dark-gray)">
+                                                    ${detail.layers ?? 0} Layer
+                                                    ${
+                                                        detail.is_change
+                                                            ? `• Ganti ke ${detail.employeeChange?.name ?? "-"}`
+                                                            : ""
+                                                    }
+                                                </p>
+                                            </div>
+
+                                            <span class="text-xs font-semibold">
+                                                ${detail.total_formated ?? "Rp 0"}
+                                            </span>
+                                        </div>
+
+                                        ${additionalFeeHtml}
+                                    </div>
+                                `;
+                            })
+                            .join("")}
                     </div>
-                `
+                </div>
+            `
             : "";
 
         return `
@@ -66,14 +130,10 @@ const PageScript = (function () {
             <div class="flex items-start justify-between">
             <div>
                 <p class="font-bold text-sm">
-                    ${item.fabric?.code ?? "-"}
+                    ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
                 </p>
                 <p class="text-sm text-(--color-dark-gray)">
-                    ${[
-                        item.supplier?.name,
-                        item.imageFabric?.name,
-                        item.typeFabric?.name
-                    ].filter(Boolean).join(' • ') || '-'}
+                    ${item.fabric?.date_coming}
                 </p>
             </div>
 

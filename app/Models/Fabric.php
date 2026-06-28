@@ -14,6 +14,8 @@ class Fabric extends Model
 
     protected $fillable = [
         'supplier_id',
+        'type_fabric_id',
+        'date_coming',
         'code',
         'seri',
         'stock_total',
@@ -21,6 +23,7 @@ class Fabric extends Model
     ];
 
     protected $casts = [
+        'date_coming' => 'date',
         'stock_total' => 'integer',
     ];
 
@@ -30,19 +33,18 @@ class Fabric extends Model
 
         if ($details->isEmpty()) {
             return [
-                'total_pcs' => 0,
-                'seri'      => 0,
-                'colors'    => [],
+                'total_pcs'   => 0,
+                'seri'        => 0,
+                'type_fabric' => $this->typeFabric?->name,
+                'date_coming' => $this->date_coming?->format('Y-m-d'),
+                'colors'      => [],
             ];
         }
 
         $stocks = $details->map(function ($detail) {
 
-            // jumlah fabric yang sudah dipakai
             $used = $detail->sablonDetails()
                 ->whereHas('sablon', function ($q) {
-                    // sesuaikan dengan kebutuhan bisnis Anda
-                    // contoh: stock dianggap terpakai selama belum RETURNED
                     $q->where('status', '!=', 'RETURNED');
                 })
                 ->count();
@@ -71,15 +73,22 @@ class Fabric extends Model
         });
 
         return [
-            'total_pcs' => $totalPcs,
-            'seri'      => $seri,
-            'colors'    => $colors,
+            'total_pcs'   => $totalPcs,
+            'seri'        => $seri,
+            'type_fabric' => $this->typeFabric?->name,
+            'date_coming' => $this->date_coming?->format('Y-m-d'),
+            'colors'      => $colors,
         ];
     }
 
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    public function typeFabric(): BelongsTo
+    {
+        return $this->belongsTo(TypeFabric::class, 'type_fabric_id');
     }
 
     public function fabricDetails(): HasMany

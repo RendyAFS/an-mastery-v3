@@ -25,6 +25,7 @@ class SaveSupplierRequest extends FormRequest
             'name'      => 'required|string|max:255',
             'address'   => 'required|string',
             'contact'   => 'nullable|string',
+            'is_active' => 'nullable|boolean',
             'notes'     => 'nullable|string',
         ];
     }

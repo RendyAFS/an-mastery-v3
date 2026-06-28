@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 gap-4">
     <div class="col-span-1">
-        <div class="mb-6 space-y-2">
+        <div class="mb-2 space-y-2">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Name
             </label>

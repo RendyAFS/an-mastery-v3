@@ -51,6 +51,13 @@ const PageScript = (function () {
                 {
                     data: "notes",
                     width: "15%",
+                    render(data) {
+                        return `
+                            <div class="whitespace-pre-line">
+                                ${data ?? "-"}
+                            </div>
+                        `;
+                    },
                 },
                 {
                     data: "id",

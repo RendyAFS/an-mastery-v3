@@ -29,9 +29,9 @@ class PriceSupplierController extends Controller
 
             return PriceSupplierResource::collection($priceSuppliers);
         }
-        $suppliers = Supplier::pluck('name', 'id')->all();
+        $suppliers   = Supplier::pluck('name', 'id')->all();
         $typeFabrics = TypeFabric::pluck('name', 'id')->all();
-        $typeColors = TypeColor::pluck('name', 'id')->all();
+        $typeColors  = TypeColor::orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray();
 
         return view('price-supplier.index', compact('suppliers', 'typeFabrics', 'typeColors'));
     }

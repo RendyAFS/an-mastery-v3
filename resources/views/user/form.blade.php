@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="col-span-1">
-        <div class="mb-6 space-y-2">
+        <div class="mb-2 space-y-2">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Name
             </label>
@@ -11,7 +11,7 @@
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
         </div>
 
-        <div class="mb-6 space-y-2">
+        <div class="mb-2 space-y-2">
             <label for="email" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Email
             </label>
@@ -22,7 +22,7 @@
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
         </div>
 
-        <div class="mb-6 space-y-2" x-data="{ show: false }">
+        <div class="mb-2 space-y-2" x-data="{ show: false }">
             <label for="password" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Password
             </label>
@@ -51,7 +51,7 @@
             @endisset
         </div>
 
-        <div class="mb-6 space-y-2" x-data="{ showConfirm: false }">
+        <div class="mb-2 space-y-2" x-data="{ showConfirm: false }">
             <label for="password_confirmation"
                 class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 Confirm Password
@@ -83,7 +83,7 @@
         </div>
     </div>
     <div class="col-span-1">
-        <div class="mb-6 space-y-2">
+        <div class="mb-2 space-y-2">
             <x-select id="roles" name="roles" label="Role" :options="$roles" :value="$user->role_id ?? null"
                 placeholder="Choose Role" search-placeholder="Search role..." clearable="true" />
         </div>

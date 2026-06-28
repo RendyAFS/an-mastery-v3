@@ -10,7 +10,11 @@ class FabricRepository
     public function getAll($filter = 'active')
     {
         $query = Fabric::query()
-            ->with(['supplier'])
+            ->with([
+                'supplier',
+                'typeFabric',
+                'fabricDetails.colorFabric',
+            ])
             ->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {
@@ -28,8 +32,8 @@ class FabricRepository
         int $page = 1
     ) {
         return Fabric::query()
-            ->with('supplier:id,name')
-            ->select('id', 'supplier_id', 'code')
+            ->with(['supplier:id,name', 'typeFabric:id,name'])
+            ->select('id', 'supplier_id', 'type_fabric_id', 'code', 'date_coming')
             ->when($id, function ($query) use ($id) {
                 $query->whereKey($id);
             })
@@ -48,6 +52,7 @@ class FabricRepository
         return Fabric::with([
             'fabricDetails.colorFabric',
             'fabricDetails.sablonDetails.sablon',
+            'typeFabric',
         ])
             ->where('supplier_id', $supplierId)
             ->orderBy('code')
@@ -58,10 +63,12 @@ class FabricRepository
 
                 return [
                     $fabric->id => sprintf(
-                        '%s (%d Seri / %d Pcs)',
+                        '%s (%d Seri / %d Pcs) - %s (%s)',
                         $fabric->code,
                         $summary['seri'],
-                        $summary['total_pcs']
+                        $summary['total_pcs'],
+                        $fabric->typeFabric?->name ?? '-',
+                        $fabric->date_coming?->format('d M Y') ?? '-'
                     ),
                 ];
             })

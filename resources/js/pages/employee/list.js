@@ -27,22 +27,49 @@ const PageScript = (function () {
             columns: [
                 {
                     data: "name",
-                    width: "25%",
+                    width: "20%",
                 },
                 {
                     data: "address",
-                    width: "25%",
+                    width: "20%",
                     className: "text-center",
                 },
                 {
                     data: "contact",
-                    width: "20%",
+                    width: "15%",
                     className: "text-center",
                     type: "string",
                 },
                 {
+                    data: "is_active",
+                    width: "15%",
+                    orderable: false,
+                    searchable: false,
+                    className: "px-4 py-3 text-center",
+                    render(data, type, row) {
+                        const checked = data ? "checked" : "";
+
+                        return `
+                            <div class="flex items-center justify-center gap-x-3">
+                                <label for="toggle-active-${row.id}" class="relative inline-block w-11 h-6 cursor-pointer">
+                                    <input type="checkbox" id="toggle-active-${row.id}" class="peer sr-only toggle-active" data-employee-id="${row.id}" ${checked}>
+                                    <span class="absolute inset-0 bg-(--color-dark-gray) rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-(--color-success) peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                    <span class="absolute top-1/2 inset-s-0.5 -translate-y-1/2 size-5 bg-(--color-light) rounded-full shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                                </label>
+                            </div>
+                        `;
+                    },
+                },
+                {
                     data: "notes",
                     width: "25%",
+                    render(data) {
+                        return `
+                            <div class="whitespace-pre-line">
+                                ${data ?? "-"}
+                            </div>
+                        `;
+                    },
                 },
                 {
                     data: "id",
@@ -258,6 +285,11 @@ const PageScript = (function () {
             handleEdit($(this).data("id"));
         });
 
+        $(document).on("change", ".toggle-active", function () {
+            const employeeId = $(this).data("employee-id");
+            handleToggleActive(employeeId, this);
+        });
+
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -287,6 +319,31 @@ const PageScript = (function () {
         $(document).on("click", ".btn-force-delete", function () {
             handleForceDelete($(this).data("id"));
         });
+    };
+
+    const handleToggleActive = async (userId, checkbox) => {
+        const confirmed = await Confirm.show(
+            "Are you sure you want to change this employee status?",
+            "Confirmation",
+            "Yes",
+            "Cancel",
+        );
+
+        if (!confirmed) {
+            checkbox.checked = !checkbox.checked;
+            return;
+        }
+
+        try {
+            await ApiProvider.put(route("employees.toggle-active", userId));
+
+            Toast.success("Success", "Employee status updated");
+            reloadDatatable();
+        } catch (error) {
+            checkbox.checked = !checkbox.checked;
+            Toast.error("Error", "Failed to update employee status");
+            console.error(error);
+        }
     };
 
     return {

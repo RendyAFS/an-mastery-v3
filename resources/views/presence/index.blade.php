@@ -16,7 +16,7 @@
                 <label for="filter-week" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Week Of
                 </label>
-                <input type="week" id="filter-week"
+                <input type="week" id="filter-week" value="2026-W26"
                     class="mt-1 px-4 py-2 block w-full rounded-lg
                         bg-(--color-light) border border-(--color-gray)
                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30

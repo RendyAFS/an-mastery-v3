@@ -19,6 +19,8 @@ class SaveFabricRequest extends FormRequest
     {
         return [
             'supplier_id'                      => 'required|exists:suppliers,id',
+            'type_fabric_id'                   => 'required|exists:type_fabrics,id',
+            'date_coming'                      => 'required|date',
             'seri'                             => 'required|integer|min:1',
             'notes'                            => 'nullable|string|max:255',
             // fabric_details
@@ -34,6 +36,10 @@ class SaveFabricRequest extends FormRequest
         return [
             'supplier_id.required'                      => 'Supplier is required',
             'supplier_id.exists'                        => 'Supplier does not exist',
+            'type_fabric_id.required'                   => 'Type Fabric is required',
+            'type_fabric_id.exists'                     => 'Type Fabric does not exist',
+            'date_coming.required'                      => 'Date Comming is required',
+            'date_coming.date'                          => 'Date Comming must be a date',
             'seri.required'                             => 'Seri is required',
             'seri.integer'                              => 'Seri must be a number',
             'seri.min'                                  => 'Seri must be at least 1',

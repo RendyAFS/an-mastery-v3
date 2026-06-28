@@ -71,7 +71,7 @@ class SablonRepository
     public function getFormData(): array
     {
         return [
-            'suppliers'         => Supplier::orderBy('name')->pluck('name', 'id'),
+            'suppliers'         => Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id'),
             'fabrics'           => [],
             'imageFabrics'      => ImageFabric::orderBy('name')->pluck('name', 'id'),
             'typeColors'        => TypeColor::orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray(),
