@@ -45,8 +45,4 @@ const RupiahInput = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    RupiahInput.init();
-});
-
 export default RupiahInput;

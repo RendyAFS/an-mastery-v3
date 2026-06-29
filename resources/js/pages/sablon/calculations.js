@@ -1,3 +1,7 @@
+export function roundToHundreds(value) {
+    return Math.round((Number(value) || 0) / 100) * 100;
+}
+
 export function formatNumber(val) {
     return new Intl.NumberFormat("id-ID").format(Number(val) || 0);
 }
@@ -54,7 +58,9 @@ export function computeRatePerLayer(totalSablon, colorCount) {
  * Fee per employee row = rate per layer x jumlah layers di row tersebut.
  */
 export function computeFee(ratePerLayer, layers) {
-    return ratePerLayer * (Number(layers) || 0);
+    const fee = ratePerLayer * (Number(layers) || 0);
+
+    return roundToHundreds(fee);
 }
 
 /**
@@ -69,5 +75,5 @@ export function additionalFeeTotal(additionalFee) {
  * Total fee per row = fee + total additional fee.
  */
 export function computeRowTotal(fee, additionalFee) {
-    return fee + additionalFeeTotal(additionalFee);
+    return roundToHundreds(fee + additionalFeeTotal(additionalFee));
 }

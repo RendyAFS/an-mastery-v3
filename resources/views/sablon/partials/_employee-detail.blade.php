@@ -64,11 +64,64 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-(--color-dark-gray)">Layers</label>
-                        <input type="number" min="1" x-model.number="row.layers"
-                            class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                                focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                text-(--color-dark) dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                        <label class="text-xs font-medium text-(--color-dark-gray)">
+                            Layers
+                        </label>
+
+                        <div class="py-2 px-3 rounded-lg border border-(--color-gray)
+                            bg-(--color-light-gray)
+                            dark:bg-(--color-dark-slate)
+                            dark:border-(--color-slate)"
+                            data-hs-input-number>
+
+                            <div class="flex items-center justify-between gap-x-3">
+                                <div class="grow">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        step="1"
+                                        x-model.number="row.layers"
+                                        @input="row.layers = Number($event.target.value)"
+                                        @change="row.layers = Number($event.target.value)"
+                                        data-hs-input-number-input
+                                        class="w-full p-0 bg-transparent border-0
+                                            text-(--color-dark)
+                                            dark:text-(--color-light)
+                                            placeholder:text-(--color-gray)
+                                            focus:ring-0
+                                            [&::-webkit-inner-spin-button]:appearance-none
+                                            [&::-webkit-outer-spin-button]:appearance-none"
+                                        style="-moz-appearance:textfield;"
+                                    >
+                                </div>
+
+                                <div class="flex items-center gap-x-1">
+                                    <button type="button" tabindex="-1" data-hs-input-number-decrement
+                                        class="size-7 inline-flex items-center justify-center rounded-full
+                                            border border-(--color-gray)
+                                            bg-(--color-light)
+                                            hover:bg-(--color-gray)/20
+                                            dark:bg-(--color-dark)
+                                            dark:border-(--color-slate)
+                                            dark:hover:bg-(--color-dark-gray)/30">
+
+                                        <i data-lucide="minus" class="size-3.5"></i>
+                                    </button>
+
+                                    <button type="button" tabindex="-1" data-hs-input-number-increment
+                                        class="size-7 inline-flex items-center justify-center rounded-full
+                                            border border-(--color-gray)
+                                            bg-(--color-light)
+                                            hover:bg-(--color-gray)/20
+                                            dark:bg-(--color-dark)
+                                            dark:border-(--color-slate)
+                                            dark:hover:bg-(--color-dark-gray)/30">
+
+                                        <i data-lucide="plus" class="size-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="space-y-1">

@@ -28,8 +28,8 @@ class PriceEmployeeController extends Controller
 
             return PriceEmployeeResource::collection($priceEmployees);
         }
-        $typeFabrics = TypeFabric::pluck('name', 'id')->all();
-        $typeColors  = TypeColor::orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray();
+        $typeFabrics = TypeFabric::query()->orderBy('name')->pluck('name', 'id');
+        $typeColors  = TypeColor::query()->orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray();
 
         return view('price-employee.index', compact('typeFabrics', 'typeColors'));
     }

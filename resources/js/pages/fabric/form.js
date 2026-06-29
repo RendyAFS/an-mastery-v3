@@ -6,9 +6,9 @@ import { startLoading, stopLoading } from "@/utils/button-loading";
 document.addEventListener("alpine:init", () => {
     Alpine.data("fabricForm", (initialRows = [], colorFabrics = {}) => ({
         rows: [],
-        colorOptions: Object.entries(colorFabrics).map(([id, name]) => ({
-            id,
-            name,
+        colorOptions: colorFabrics.map((item) => ({
+            id: item.id,
+            name: item.name,
         })),
 
         init() {
@@ -94,7 +94,6 @@ const PageScript = (function () {
     function resetForm() {
         form.reset();
 
-        
         const data = getAlpineData();
         data.rows = Array.from({ length: 4 }, () => data.buildRow());
     }

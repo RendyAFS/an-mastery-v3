@@ -38,8 +38,8 @@ class FabricController extends Controller
         $this->authorize('fabrics.create');
 
         $suppliers    = Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id');
-        $colorFabrics = ColorFabric::pluck('name', 'id')->all();
-        $typeFabrics  = TypeFabric::pluck('name', 'id')->all();
+        $colorFabrics = ColorFabric::query()->orderBy('name')->get(['id', 'name'])->toArray();
+        $typeFabrics  = TypeFabric::query()->orderBy('name')->pluck('name', 'id');
 
         return view('fabric.create', compact('suppliers', 'colorFabrics', 'typeFabrics'));
     }
@@ -62,10 +62,10 @@ class FabricController extends Controller
     {
         $this->authorize('fabrics.update');
 
-        $suppliers    = Supplier::pluck('name', 'id')->all();
-        $colorFabrics = ColorFabric::pluck('name', 'id')->all();
+        $suppliers    = Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id');
+        $colorFabrics = ColorFabric::query()->orderBy('name')->get(['id', 'name'])->toArray();
         $fabric->load('fabricDetails.colorFabric');
-        $typeFabrics  = TypeFabric::pluck('name', 'id')->all();
+        $typeFabrics  = TypeFabric::query()->orderBy('name')->pluck('name', 'id');
 
         return view('fabric.edit', compact('fabric', 'suppliers', 'colorFabrics', 'typeFabrics'));
     }
