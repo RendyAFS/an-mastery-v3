@@ -115,6 +115,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     // Sablon
     Route::prefix('sablons')->as('sablons.')->group(function () {
         Route::get('fabrics-by-supplier/{supplier}', [App\Http\Controllers\SablonController::class, 'fabricsBySupplier'])->name('fabrics-by-supplier');
+        Route::get('fabrics/{fabric}/get-type-fabric', [App\Http\Controllers\SablonController::class, 'getTypeFabric'])->name('get-type-fabric');
         Route::put('{sablon}/restore', [App\Http\Controllers\SablonController::class, 'restore'])->name('restore');
         Route::delete('{sablon}/force-delete', [App\Http\Controllers\SablonController::class, 'forceDelete'])->name('force-delete');
     });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Sablon\SaveSablonAction;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Http\Resources\SablonResource;
+use App\Models\Fabric;
 use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Repositories\FabricRepository;
@@ -121,5 +122,15 @@ class SablonController extends Controller
         $options = $this->fabricRepository->getBySupplierAsOptions($supplier->id);
 
         return response()->json($options);
+    }
+
+    public function getTypeFabric(Fabric $fabric)
+    {
+        $this->authorize('sablons.create');
+
+        return response()->json([
+            'id' => $fabric->id,
+            'type_fabric_id' => $fabric->type_fabric_id,
+        ]);
     }
 }

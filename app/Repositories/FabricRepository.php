@@ -62,17 +62,14 @@ class FabricRepository
                 $summary = $fabric->available_stock_summary;
 
                 return [
-                    $fabric->id => [
-                        'label' => sprintf(
-                            '(%d Seri / %d Pcs) - %s (%s)',
-                            // $fabric->supplier?->name ?? '-',
-                            $summary['seri'],
-                            $summary['total_pcs'],
-                            $fabric->typeFabric?->name ?? '-',
-                            $fabric->date_coming?->format('d F Y') ?? '-'
-                        ),
-                        'type_fabric_id' => $fabric->type_fabric_id,
-                    ]
+                    $fabric->id => sprintf(
+                        '%s (%d Seri / %d Pcs) - %s (%s)',
+                        $fabric->code,
+                        $summary['seri'],
+                        $summary['total_pcs'],
+                        $fabric->typeFabric?->name ?? '-',
+                        $fabric->date_coming?->format('d M Y') ?? '-'
+                    ),
                 ];
             })
             ->toArray();

@@ -1,4 +1,5 @@
 import * as calc from "./calculations";
+import reInitUi from "@/utils/reinit-ui";
 
 export default function sablonForm(
     initialFabricRows = [],
@@ -52,28 +53,46 @@ export default function sablonForm(
                 this.selectedTypeColorId = colorEl?.value || null;
                 this.totalSablon = Number(totalEl?.value || 0);
 
-                window.lucide?.createIcons();
+                reInitUi();
+
+                this.$nextTick(() => {
+                    document.addEventListener("click", (e) => {
+                        const btn = e.target.closest(
+                            "[data-hs-input-number-increment], [data-hs-input-number-decrement]",
+                        );
+
+                        if (!btn) return;
+
+                        setTimeout(() => {
+                            const wrapper = btn.closest(
+                                "[data-hs-input-number]",
+                            );
+                            const input = wrapper?.querySelector(
+                                "[data-hs-input-number-input]",
+                            );
+
+                            if (!input) return;
+
+                            input.dispatchEvent(
+                                new Event("input", { bubbles: true }),
+                            );
+                        }, 0);
+                    });
+                });
+
+                if (this.selectedFabricId) {
+                    this.loadFabricDetail(this.selectedFabricId);
+                }
 
                 this._bindNativeSelectChange("supplier_id", (val) => {
                     this._handleSupplierChange(val);
                 });
 
-                this._bindNativeSelectChange("fabric_id", (val) => {
+                this._bindNativeSelectChange("fabric_id", async (val) => {
                     this.selectedFabricId = val || null;
 
-                    const typeFabricEl =
-                        document.getElementById("type_fabric_id");
-
-                    if (typeFabricEl) {
-                        const typeFabricId =
-                            this.fabricRawData[val]?.type_fabric_id ?? "";
-
-                        typeFabricEl.value = typeFabricId;
-
-                        const hsInstance =
-                            window.HSSelect?.getInstance(typeFabricEl);
-
-                        hsInstance?.setValue(String(typeFabricId));
+                    if (val) {
+                        await this.loadFabricDetail(val);
                     }
 
                     this._autoPopulateFabricRows();
@@ -132,15 +151,38 @@ export default function sablonForm(
                 this.fabricRawData = options;
 
                 this.fabricOptions = Object.entries(options).map(
-                    ([id, item]) => ({
+                    ([id, label]) => ({
                         id,
-                        label: item.label,
+                        label,
                     }),
                 );
 
                 this._refreshFabricSelectOptions(options);
             } catch (err) {
                 console.error("Failed to load fabrics by supplier", err);
+            }
+        },
+
+        async loadFabricDetail(fabricId) {
+            try {
+                const res = await fetch(
+                    route("sablons.get-type-fabric", fabricId),
+                );
+
+                const fabric = await res.json();
+
+                const typeFabricEl = document.getElementById("type_fabric_id");
+
+                if (typeFabricEl) {
+                    typeFabricEl.value = fabric.type_fabric_id ?? "";
+
+                    const hsInstance =
+                        window.HSSelect?.getInstance(typeFabricEl);
+
+                    hsInstance?.setValue(String(fabric.type_fabric_id ?? ""));
+                }
+            } catch (err) {
+                console.error("Failed to load fabric detail", err);
             }
         },
 
@@ -155,9 +197,9 @@ export default function sablonForm(
                 if (opt.value !== "") hsInstance.removeOption(opt.value);
             });
 
-            Object.entries(options).forEach(([id, item]) => {
+            Object.entries(options).forEach(([id, label]) => {
                 hsInstance.addOption({
-                    title: item.label,
+                    title: label,
                     val: id,
                 });
             });
@@ -202,7 +244,7 @@ export default function sablonForm(
                 this.fabricRows = [this.buildFabricRow()];
             }
 
-            this.$nextTick(() => window.lucide?.createIcons());
+            this.$nextTick(() => reInitUi());
         },
 
         buildFabricRow(row = {}) {
@@ -266,7 +308,7 @@ export default function sablonForm(
 
         addFabricRow() {
             this.fabricRows.push(this.buildFabricRow());
-            this.$nextTick(() => window.lucide?.createIcons());
+            this.$nextTick(() => reInitUi());
         },
 
         removeFabricRow(index) {
@@ -276,10 +318,7 @@ export default function sablonForm(
 
         addEmployeeRow() {
             this.employeeRows.push(this.buildEmployeeRow());
-            this.$nextTick(() => {
-                window.lucide?.createIcons();
-                this.applyRupiahMask();
-            });
+            this.$nextTick(() => reInitUi());
         },
 
         removeEmployeeRow(index) {
@@ -295,10 +334,7 @@ export default function sablonForm(
                 nominal: 0,
                 notes: "",
             });
-            this.$nextTick(() => {
-                window.lucide?.createIcons();
-                this.applyRupiahMask();
-            });
+            this.$nextTick(() => reInitUi());
         },
 
         removeAdditionalFee(row, feeIndex) {
