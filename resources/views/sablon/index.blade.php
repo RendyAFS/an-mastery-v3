@@ -21,4 +21,6 @@
 
         <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="12" :lengthOptions="[12, 24, 48]" />
     </div>
+
+    @include('sablon.partials._modal-update-status')
 @endsection

@@ -44,6 +44,7 @@ CREATE TABLE `bill_suppliers` (
   `sablon_id` bigint(20) unsigned DEFAULT NULL,
   `total_fee` int(11) DEFAULT NULL,
   `date_bill` date DEFAULT NULL,
+  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
   `notes` longtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -479,7 +480,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
@@ -519,7 +520,8 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 (33,'2026_06_24_081413_create_salary_employees_table',4),
 (34,'2026_06_24_082750_remove_fabric_detail_id_to_sablons',4),
 (35,'2026_06_28_175622_add_is_active_to_employess_and_suppliers',5),
-(37,'2026_06_28_190726_add_some_column_to_fabrics',6);
+(37,'2026_06_28_190726_add_some_column_to_fabrics',6),
+(38,'2026_07_01_081614_add_is_paid_to_bill_suppliers',7);
 
 /*Table structure for table `model_has_permissions` */
 

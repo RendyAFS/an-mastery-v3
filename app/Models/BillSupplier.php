@@ -17,12 +17,14 @@ class BillSupplier extends Model
         'sablon_id',
         'total_fee',
         'date_bill',
+        'is_paid',
         'notes',
     ];
 
     protected $casts = [
         'total_fee' => 'integer',
         'date_bill' => 'date',
+        'is_paid' => 'boolean',
     ];
 
     public function supplier(): BelongsTo

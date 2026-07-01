@@ -104,4 +104,11 @@ return [
         'icon' => 'paintbrush',
         'url'  => '/sablons',
     ],
+
+    // Bill Supplier
+    [
+        'name' => 'Bill Supplier',
+        'icon' => 'receipt-text',
+        'url'  => '/bill-suppliers',
+    ],
 ];
