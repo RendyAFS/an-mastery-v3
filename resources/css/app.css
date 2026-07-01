@@ -1,8 +1,10 @@
 @import "./theme.css";
 @import "tailwindcss";
 @import "./loading.css";
+
 /* Toggling Manual Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));
+
 /* Preline UI */
 @import "../../node_modules/preline/variants.css";
 @source "../../node_modules/preline/dist/*.js";
@@ -12,3 +14,10 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+
+/* Components */
+@import "./components/badge.css";
+@import "./components/checkbox.css";
+@import "./components/scrollbar.css";
+@import "./components/datatable.css";
+@import "./components/form.css";
