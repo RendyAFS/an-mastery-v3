@@ -289,9 +289,12 @@ const PageScript = (function () {
     };
 
     const bindEvents = () => {
-        $(document).on("change", "#week_of-hidden", function () {
+        $("#filter-week").on("change", function () {
             const value = $(this).val();
-            setCurrentWeek(parseDateStr(value));
+            if (!value) return;
+
+            const monday = isoWeekToMonday(value);
+            setCurrentWeek(monday);
             reloadDatatable();
         });
 
@@ -336,8 +339,7 @@ const PageScript = (function () {
             monday.setDate(monday.getDate() + diff);
 
             setCurrentWeek(monday);
-            initDatepicker(document); 
-            getInstance("filter-week")?.selectDate(monday);
+            $("#filter-week").val(dateToIsoWeek(monday));
 
             initDataTable();
             bindEvents();

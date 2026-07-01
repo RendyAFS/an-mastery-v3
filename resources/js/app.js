@@ -8,7 +8,6 @@ import "./utils/toggle-dark-mode";
 import "./utils/custom-alert";
 import "./utils/sidebar-state";
 import "./utils/custom-select";
-import "./utils/datepicker";
 
 import disableNumberScroll from "./utils/disable-number-scroll";
 import initUi from "./utils/ui-init";
