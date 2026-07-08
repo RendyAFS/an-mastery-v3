@@ -3,6 +3,7 @@ import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
+import BulkGenerateModal from "./bulk-generate";
 
 const DAYS = [
     "monday",
@@ -220,7 +221,7 @@ const PageScript = (function () {
         });
 
         $("#notes").val(data.notes ?? "");
-        $("#generate_value").val("");
+        $("#generate_value").val(10000);
         RupiahInput.refresh(document.getElementById("generate_value"));
 
         updateModalDates(
@@ -343,6 +344,11 @@ const PageScript = (function () {
 
             initDataTable();
             bindEvents();
+
+            BulkGenerateModal.init({
+                currentWeekOf: () => new Date(currentWeekOf),
+                onGenerated: reloadDatatable,
+            });
         },
     };
 })();

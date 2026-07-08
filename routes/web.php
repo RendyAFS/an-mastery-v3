@@ -99,6 +99,8 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('presences')->as('presences.')->group(function () {
         Route::get('/', [App\Http\Controllers\PresenceController::class, 'index'])->name('index');
         Route::get('data', [App\Http\Controllers\PresenceController::class, 'data'])->name('data');
+        Route::get('employees', [App\Http\Controllers\PresenceController::class, 'employees'])->name('employees');
+        Route::post('bulk-generate', [App\Http\Controllers\PresenceController::class, 'bulkGenerate'])->name('bulkGenerate');
         Route::get('{employee}/show', [App\Http\Controllers\PresenceController::class, 'show'])->name('show');
         Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
     });

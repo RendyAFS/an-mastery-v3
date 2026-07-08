@@ -12,15 +12,22 @@
                 <p class="text-sm">Manage weekly employee presence data</p>
             </div>
 
-            <div>
-                <label for="filter-week" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    Week Of
-                </label>
-                <input type="week" id="filter-week" value="2026-W26"
-                    class="form-input mt-1 px-4 py-2 block w-full rounded-lg
+            <div class="flex items-end gap-3">
+                <div>
+                    <label for="filter-week" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                        Week Of
+                    </label>
+                    <input type="week" id="filter-week" value="2026-W26"
+                        class="form-input mt-1 px-4 py-2 block w-full rounded-lg
                         bg-(--color-light) border border-(--color-gray)
                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                         dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
+                </div>
+                <button type="button" id="btn-bulk-generate"
+                    class="flex items-center gap-2 py-2.5 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                    <i data-lucide="calendar-plus" class="size-4"></i>
+                    Generate Presence
+                </button>
             </div>
         </div>
 
@@ -91,4 +98,5 @@
     </div>
 
     @include('presence.modal')
+    @include('presence.bulk-generate-modal')
 @endsection
