@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\Presence;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class PresenceRepository
 {
@@ -61,5 +62,31 @@ class PresenceRepository
                 'notes' => $notes,
             ])
         );
+    }
+
+    public function bulkGenerate(array $employeeIds, Carbon $weekOf, int $amount): int
+    {
+        $generateDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+        $values = array_fill_keys($generateDays, $amount);
+        $values['sunday'] = 0;
+        $values['total']  = $amount * count($generateDays);
+
+        return DB::transaction(function () use ($employeeIds, $weekOf, $values) {
+            $count = 0;
+
+            foreach ($employeeIds as $employeeId) {
+                Presence::updateOrCreate(
+                    [
+                        'employee_id' => $employeeId,
+                        'week_of'     => $weekOf->toDateString(),
+                    ],
+                    $values
+                );
+                $count++;
+            }
+
+            return $count;
+        });
     }
 }

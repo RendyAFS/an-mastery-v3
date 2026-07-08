@@ -20,7 +20,7 @@
                      <div class="flex-1">
                          <label for="generate_value"
                              class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                             Nominal per Hari
+                             Nominal per day
                          </label>
                          <input type="text" inputmode="numeric" id="generate_value" data-rupiah
                              class="mt-1 px-4 py-2 block w-full rounded-lg

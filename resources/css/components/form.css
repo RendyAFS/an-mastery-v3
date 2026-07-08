@@ -1,0 +1,82 @@
+.form-label {
+    @apply block mb-1 text-sm font-medium;
+    color: var(--color-dark);
+}
+
+.dark .form-label {
+    color: var(--color-light);
+}
+
+.form-input {
+    @apply w-full rounded-xl px-4 py-2.5 text-sm transition-all duration-200 outline-none;
+
+    background: var(--color-light);
+    color: var(--color-dark);
+
+    border: 1px solid var(--color-gray);
+}
+
+.form-input::placeholder {
+    color: var(--color-dark-gray);
+}
+
+.form-input:hover {
+    border-color: color-mix(
+        in srgb,
+        var(--color-primary) 35%,
+        var(--color-gray)
+    );
+}
+
+.form-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px
+        color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+/* Disabled */
+
+.form-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dark */
+
+.dark .form-input {
+    background: var(--color-dark);
+    color: var(--color-light);
+
+    border-color: var(--color-slate);
+}
+
+.dark .form-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Calendar / Week / Date icon */
+
+.form-input[type="date"],
+.form-input[type="week"],
+.form-input[type="month"],
+.form-input[type="time"],
+.form-input[type="datetime-local"] {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* Chrome */
+
+.form-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+.form-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.dark .form-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

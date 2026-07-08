@@ -1,6 +1,5 @@
 import "./bootstrap";
 import "preline";
-
 import * as FloatingUIDOM from "@floating-ui/dom";
 window.FloatingUIDOM = FloatingUIDOM;
 

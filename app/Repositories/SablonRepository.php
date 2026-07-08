@@ -13,10 +13,11 @@ use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Models\TypeColor;
 use App\Models\TypeFabric;
+use Carbon\Carbon;
 
 class SablonRepository
 {
-    public function getAll(string $filter = 'active', ?string $search = null, int $perPage = 12)
+    public function getAll(string $filter = 'active', ?string $search = null, int $perPage = 12, ?string $weekOf = null)
     {
         $query = Sablon::query()
             ->with([
@@ -43,6 +44,13 @@ class SablonRepository
                     ->orWhereHas('supplier', fn($s) => $s->where('name', 'like', "%{$search}%"))
                     ->orWhereHas('fabric', fn($f) => $f->where('code', 'like', "%{$search}%"));
             });
+        }
+
+        if ($weekOf) {
+            $start = Carbon::parse($weekOf)->startOfWeek(Carbon::MONDAY)->toDateString();
+            $end   = Carbon::parse($weekOf)->endOfWeek(Carbon::SUNDAY)->toDateString();
+
+            $query->whereBetween('date_sablon', [$start, $end]);
         }
 
         return $query->paginate($perPage);

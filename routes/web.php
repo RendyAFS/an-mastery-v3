@@ -99,6 +99,8 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('presences')->as('presences.')->group(function () {
         Route::get('/', [App\Http\Controllers\PresenceController::class, 'index'])->name('index');
         Route::get('data', [App\Http\Controllers\PresenceController::class, 'data'])->name('data');
+        Route::get('employees', [App\Http\Controllers\PresenceController::class, 'employees'])->name('employees');
+        Route::post('bulk-generate', [App\Http\Controllers\PresenceController::class, 'bulkGenerate'])->name('bulkGenerate');
         Route::get('{employee}/show', [App\Http\Controllers\PresenceController::class, 'show'])->name('show');
         Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
     });
@@ -116,8 +118,16 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('sablons')->as('sablons.')->group(function () {
         Route::get('fabrics-by-supplier/{supplier}', [App\Http\Controllers\SablonController::class, 'fabricsBySupplier'])->name('fabrics-by-supplier');
         Route::get('fabrics/{fabric}/get-type-fabric', [App\Http\Controllers\SablonController::class, 'getTypeFabric'])->name('get-type-fabric');
+        Route::put('{sablon}/status', [App\Http\Controllers\SablonController::class, 'updateStatus'])->name('update-status');
         Route::put('{sablon}/restore', [App\Http\Controllers\SablonController::class, 'restore'])->name('restore');
         Route::delete('{sablon}/force-delete', [App\Http\Controllers\SablonController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('sablons', App\Http\Controllers\SablonController::class)->names('sablons');
+
+    // Bill Supplier
+    Route::prefix('bill-suppliers')->as('bill_suppliers.')->group(function () {
+        Route::put('{billSupplier}/restore', [App\Http\Controllers\BillSupplierController::class, 'restore'])->name('restore');
+        Route::delete('{billSupplier}/force-delete', [App\Http\Controllers\BillSupplierController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('bill-suppliers', App\Http\Controllers\BillSupplierController::class)->names('bill_suppliers');
 });

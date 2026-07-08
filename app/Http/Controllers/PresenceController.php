@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Presence\BulkGeneratePresenceRequest;
 use App\Http\Requests\Presence\SavePresenceRequest;
 use App\Http\Resources\PresenceResource;
 use App\Models\Employee;
@@ -80,5 +81,28 @@ class PresenceController extends Controller
     private function resolveWeekOf(?string $date): Carbon
     {
         return ($date ? Carbon::parse($date) : Carbon::now())->startOfWeek(Carbon::MONDAY);
+    }
+
+
+    public function employees()
+    {
+        return response()->json([
+        'data' => Employee::query()->where('is_active', true)->orderBy('name')->get(['id', 'name']),
+        ]);
+    }
+
+    public function bulkGenerate(BulkGeneratePresenceRequest $request)
+    {
+        $weekOf = Carbon::parse($request->validated('week_of'))->startOfWeek(Carbon::MONDAY);
+
+        $count = $this->presenceRepository->bulkGenerate(
+            $request->validated('employee_ids'),
+            $weekOf,
+            $request->validated('amount')
+        );
+
+        return response()->json([
+            'message' => "Presence generated successfully for {$count} employee(s)",
+        ]);
     }
 }
