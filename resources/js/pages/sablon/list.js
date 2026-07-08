@@ -1,5 +1,11 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
+import {
+    isoWeekToDateStr,
+    dateToIsoWeek,
+    currentMonday,
+    toDateStr,
+} from "@/utils/week";
 
 const statusColor = {
     ON_PROGRESS: "bg-yellow-500/10 text-yellow-600",
@@ -10,6 +16,7 @@ const statusColor = {
 
 const PageScript = (function () {
     let cardgrid;
+    let currentWeekOf;
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
@@ -251,6 +258,9 @@ const PageScript = (function () {
             filterSelector: "#filter-sablon",
             ajax: {
                 url: route("sablons.index"),
+                data: function () {
+                    return { week_of: currentWeekOf };
+                },
             },
             renderCard,
             pageLength: 12,
@@ -270,9 +280,7 @@ const PageScript = (function () {
 
             try {
                 await ApiProvider.delete(route("sablons.destroy", id));
-
                 Toast.success("Success", "Sablon deleted successfully");
-
                 cardgrid.reload();
             } catch (e) {
                 console.error(e);
@@ -286,13 +294,10 @@ const PageScript = (function () {
                 "Restore this Sablon?",
                 "Confirmation",
             );
-
             if (!confirmed) return;
 
             await ApiProvider.put(route("sablons.restore", id));
-
             Toast.success("Success", "Sablon restored");
-
             cardgrid.reload();
         });
 
@@ -302,19 +307,28 @@ const PageScript = (function () {
             const confirmed = await Confirm.delete(
                 "This will permanently delete the Sablon. Continue?",
             );
-
             if (!confirmed) return;
 
             await ApiProvider.delete(route("sablons.force-delete", id));
-
             Toast.success("Success", "Sablon permanently deleted");
+            cardgrid.reload();
+        });
 
+        $("#filter-week-sablon").on("change", function () {
+            const value = $(this).val();
+            if (!value) return;
+
+            currentWeekOf = isoWeekToDateStr(value);
             cardgrid.reload();
         });
     };
 
     return {
         init() {
+            const monday = currentMonday();
+            currentWeekOf = toDateStr(monday);
+            $("#filter-week-sablon").val(dateToIsoWeek(monday));
+
             CardGrid();
             bindEvents();
             initStatusModal();

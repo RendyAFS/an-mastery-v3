@@ -28,9 +28,10 @@ class SablonController extends Controller
         if (request()->expectsJson()) {
             $filter  = request('filter', 'active');
             $search  = request('search');
+            $weekOf  = request('week_of');
             $perPage = min((int) request('per_page', 12), 100);
 
-            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage);
+            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $weekOf);
 
             return SablonResource::collection($sablons);
         }
