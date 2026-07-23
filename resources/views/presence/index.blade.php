@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <x-datatable id="presences-datatable" filterId="filter-presences" :defaultLength="-1">
+        <x-datatable id="presences-datatable" filterId="filter-presences" :defaultLength="-1" :filter="false" :lengthOptions="[-1]">
             <thead class="border-b">
                 <tr>
                     <th
