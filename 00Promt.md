@@ -4,7 +4,7 @@ Halo! Saya ingin Anda membantu saya mengembangkan fitur baru/memperbaiki bug di 
 
 Sebelum Anda menganalisis kode atau menulis berkas baru apa pun:
 
-1. BACA berkas entry point khusus AI di `.ai/AGENTS.md` terlebih dahulu.
+1. BACA berkas entry point khusus AI di `AGENTS.md` terlebih dahulu.
 2. Ikuti instruksi "Urutan Membaca Berkas" yang tertulis di dalam file tersebut untuk memetakan arsitektur, konvensi penamaan, dan standar coding di proyek ini.
 3. Patuhi dokumen `.ai/best-practice.md` untuk mengetahui hal-hal yang wajib dilakukan (Dos), dilarang keras (Don'ts), dan penanganan error.
 
