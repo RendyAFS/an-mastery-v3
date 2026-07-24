@@ -36,4 +36,28 @@ class SupplierRepository
             ->orderBy('name')
             ->paginate($limit, ['*'], 'page', $page);
     }
+
+    public function getBillSupplierCards(?string $search = null, int $perPage = 12)
+    {
+        $query = Supplier::query()
+            ->withTrashed()
+            ->withCount([
+                'sablons as unbilled_sablons_count' => function ($q) {
+                    $q->whereDoesntHave('billSupplier');
+                },
+                'billSuppliers as unpaid_bills_count' => function ($q) {
+                    $q->where('is_paid', false);
+                },
+            ])
+            ->withSum(['billSuppliers as total_unpaid' => function ($q) {
+                $q->where('is_paid', false);
+            }], 'total_fee')
+            ->orderBy('name');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        return $query->paginate($perPage);
+    }
 }

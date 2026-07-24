@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
 
@@ -40,5 +41,10 @@ class BillSupplier extends Model
     public function sablon(): BelongsTo
     {
         return $this->belongsTo(Sablon::class, 'sablon_id');
+    }
+
+    public function details(): HasMany
+    {
+        return $this->hasMany(BillSupplierDetail::class, 'bill_supplier_id');
     }
 }
