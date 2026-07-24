@@ -129,6 +129,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('by-supplier/{supplier}', [App\Http\Controllers\BillSupplierController::class, 'bySupplier'])->name('by-supplier');
         Route::get('available-sablons/{supplier}', [App\Http\Controllers\BillSupplierController::class, 'availableSablons'])->name('available-sablons');
         Route::get('sablon/{sablon}/calculate', [App\Http\Controllers\BillSupplierController::class, 'calculate'])->name('calculate');
+        Route::post('calculate-bulk', [App\Http\Controllers\BillSupplierController::class, 'calculateBulk'])->name('calculate-bulk');
         Route::put('{billSupplier}/restore', [App\Http\Controllers\BillSupplierController::class, 'restore'])->name('restore');
         Route::delete('{billSupplier}/force-delete', [App\Http\Controllers\BillSupplierController::class, 'forceDelete'])->name('force-delete');
     });

@@ -11,6 +11,7 @@ use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Repositories\BillSupplierRepository;
 use App\Repositories\SupplierRepository;
+use Illuminate\Http\Request;
 
 class BillSupplierController extends Controller
 {
@@ -71,12 +72,12 @@ class BillSupplierController extends Controller
 
         return response()->json([
             'data' => $sablons->map(fn($s) => [
-                'id'                => $s->id,
-                'label'             => sprintf(
-                    '%s - %s - %s (%s m)',
-                    $s->fabric?->name,
+                'id' => $s->id,
+                'label' => sprintf(
+                    '%s - warna %s - %s (%s m)',
+                    $s->imageFabric?->name,
                     $s->typeColor?->name,
-                    $s->date_sablon?->format('d M Y'),
+                    $s->date_sablon?->format('d F Y'),
                     $s->total_long_fabric
                 ),
                 'total_long_fabric' => $s->total_long_fabric,
@@ -89,6 +90,49 @@ class BillSupplierController extends Controller
         $this->authorize('bill-suppliers.create');
 
         return response()->json($this->billSupplierRepository->calculatePreview($sablon));
+    }
+
+    public function calculateBulk(Request $request)
+    {
+        $this->authorize('bill-suppliers.create');
+
+        $sablonIds = $request->input('sablon_ids', []);
+
+        $sablons = Sablon::whereIn('id', $sablonIds)
+            ->with(['fabric', 'imageFabric', 'typeColor'])
+            ->get();
+
+        $items = $sablons->map(function ($sablon) {
+            $preview = $this->billSupplierRepository->calculatePreview($sablon);
+            return [
+                ...$preview,
+                'fabric_name' => $sablon->fabric?->name ?? $sablon->imageFabric?->name ?? 'Tanpa Nama Fabric',
+                'color_name'  => $sablon->typeColor?->name ?? 'Tanpa Warna',
+            ];
+        });
+
+        $grouped = $items->groupBy('fabric_name');
+
+        $groupedData = $grouped->map(function ($group) {
+            return [
+                'fabric_name'       => $group->first()['fabric_name'],
+                'items'             => $group->map(fn($item) => [
+                    'color_name'    => $item['color_name'],
+                    'long_fabric'   => $item['total_long_fabric'],
+                    'total_fee'     => $item['total_fee'],
+                ])->values(),
+                'total_long_fabric' => $group->sum('total_long_fabric'),
+                'total_fee'         => $group->sum('total_fee'),
+            ];
+        })->values();
+
+        return response()->json([
+            'grouped_data'      => $groupedData,
+            'total_long_fabric' => $items->sum('total_long_fabric'),
+            'total_fee'         => $items->sum('total_fee'),
+            'count'             => $items->count(),
+            'has_missing_price' => $items->some(fn($item) => !$item['price_supplier_id']),
+        ]);
     }
 
     public function create()
@@ -104,9 +148,9 @@ class BillSupplierController extends Controller
     {
         $this->authorize('bill-suppliers.create');
 
-        $billSupplier = $action->handle($request);
+        $billSuppliers = $action->handle($request);
 
-        return new BillSupplierResource($billSupplier);
+        return BillSupplierResource::collection($billSuppliers);
     }
 
     public function show(BillSupplier $billSupplier)
