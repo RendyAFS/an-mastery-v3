@@ -39,7 +39,7 @@ class BillSupplierRepository
         return $grouped
             ->map(function ($items, $weekStart) {
                 $weekLabel = $weekStart !== 'no-date'
-                    ? Carbon::parse($weekStart)->format('d M Y') . ' - ' . Carbon::parse($weekStart)->endOfWeek()->format('d M Y')
+                    ? Carbon::parse($weekStart)->translatedFormat('d F Y') . ' - ' . Carbon::parse($weekStart)->endOfWeek()->translatedFormat('d F Y')
                     : 'Tanpa Tanggal';
 
                 return [

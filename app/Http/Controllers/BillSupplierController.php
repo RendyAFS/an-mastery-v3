@@ -74,10 +74,10 @@ class BillSupplierController extends Controller
             'data' => $sablons->map(fn($s) => [
                 'id' => $s->id,
                 'label' => sprintf(
-                    '%s - warna %s - %s (%s m)',
+                    '%s - %s Warna - %s (%s m)',
                     $s->imageFabric?->name,
                     $s->typeColor?->name,
-                    $s->date_sablon?->format('d F Y'),
+                    $s->date_sablon?->translatedFormat('d F Y'),
                     $s->total_long_fabric
                 ),
                 'total_long_fabric' => $s->total_long_fabric,
