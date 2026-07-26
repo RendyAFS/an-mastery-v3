@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v13.1.1 (32 bit)
-MySQL - 10.11.16-MariaDB-log : Database - an_mastery
+SQLyog Ultimate v13.1.1 (64 bit)
+MySQL - 8.0.30 : Database - an_mastery
 *********************************************************************
 */
 
@@ -12,113 +12,72 @@ MySQL - 10.11.16-MariaDB-log : Database - an_mastery
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`an_mastery` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`an_mastery` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `an_mastery`;
-
-/*Table structure for table `bill_supplier_details` */
-
-DROP TABLE IF EXISTS `bill_supplier_details`;
-
-CREATE TABLE `bill_supplier_details` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `bill_supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `sablon_detail_id` bigint(20) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `bill_supplier_details_bill_supplier_id_foreign` (`bill_supplier_id`),
-  KEY `bill_supplier_details_sablon_detail_id_foreign` (`sablon_detail_id`),
-  CONSTRAINT `bill_supplier_details_bill_supplier_id_foreign` FOREIGN KEY (`bill_supplier_id`) REFERENCES `bill_suppliers` (`id`),
-  CONSTRAINT `bill_supplier_details_sablon_detail_id_foreign` FOREIGN KEY (`sablon_detail_id`) REFERENCES `sablon_details` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Data for the table `bill_supplier_details` */
 
 /*Table structure for table `bill_suppliers` */
 
 DROP TABLE IF EXISTS `bill_suppliers`;
 
 CREATE TABLE `bill_suppliers` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `price_supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `sablon_id` bigint(20) unsigned DEFAULT NULL,
-  `total_fee` int(11) DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `batch` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `supplier_id` bigint unsigned DEFAULT NULL,
+  `price_supplier_id` bigint unsigned DEFAULT NULL,
+  `sablon_id` bigint unsigned DEFAULT NULL,
+  `total_fee` int DEFAULT NULL,
   `date_bill` date DEFAULT NULL,
-  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
-  `notes` longtext DEFAULT NULL,
+  `is_paid` tinyint(1) NOT NULL DEFAULT '0',
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `bill_suppliers_supplier_id_foreign` (`supplier_id`),
   KEY `bill_suppliers_price_supplier_id_foreign` (`price_supplier_id`),
   KEY `bill_suppliers_sablon_id_foreign` (`sablon_id`),
+  KEY `bill_suppliers_batch_index` (`batch`),
   CONSTRAINT `bill_suppliers_price_supplier_id_foreign` FOREIGN KEY (`price_supplier_id`) REFERENCES `price_suppliers` (`id`),
   CONSTRAINT `bill_suppliers_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`),
   CONSTRAINT `bill_suppliers_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `bill_suppliers` */
+
+insert  into `bill_suppliers`(`id`,`batch`,`supplier_id`,`price_supplier_id`,`sablon_id`,`total_fee`,`date_bill`,`is_paid`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
+(1,'20260726121818205302',1,2,1,573400,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
+(2,'20260726121818205302',1,2,2,545950,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
+(3,'20260726121818205302',1,1,3,534000,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
+(4,'20260726122534402442',1,1,4,508500,'2026-07-26',0,NULL,'2026-07-26 12:25:34','2026-07-26 12:25:34',51,51,NULL,NULL);
 
 /*Table structure for table `cache` */
 
 DROP TABLE IF EXISTS `cache`;
 
 CREATE TABLE `cache` (
-  `key` varchar(255) NOT NULL,
-  `value` mediumtext NOT NULL,
-  `expiration` int(11) NOT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `cache` */
 
 insert  into `cache`(`key`,`value`,`expiration`) values 
-('anmastery-cache-435347697ac176274c06c637e5d6b4d3','i:1;',1782644022),
-('anmastery-cache-435347697ac176274c06c637e5d6b4d3:timer','i:1782644022;',1782644022),
-('anmastery-cache-lv:v3.24.0:file:137e820c-laravel-2026-01-08.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:1e60ed52-laravel-2026-01-30.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:246f5e45-laravel.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:3f2e2949-laravel-2026-04-26.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:443ba0b1-laravel-2026-06-21.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:4b3e9c51-laravel-2026-01-25.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:5048ee2a-laravel-2026-01-26.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:5dd0d3dc-laravel-2026-01-19.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:7ccd1981-laravel-2026-01-10.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:7cdd8daf-laravel-2026-01-09.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:a74e7a41-laravel-2026-01-20.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:a7f20b77-laravel-2026-01-24.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:d143e3bf-laravel-2026-01-27.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:ee9393f6-laravel-2026-01-22.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-lv:v3.24.0:file:fbf5032c-laravel-2026-01-11.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1782625929),
-('anmastery-cache-spatie.permission.cache','a:3:{s:5:\"alias\";a:8:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"d\";s:7:\"menu_id\";s:1:\"r\";s:5:\"roles\";s:1:\"l\";s:10:\"created_by\";s:1:\"m\";s:10:\"updated_by\";s:1:\"o\";s:10:\"deleted_by\";}s:11:\"permissions\";a:105:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"dashboard.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:1;s:1:\"r\";a:1:{i:0;i:2;}}i:1;a:5:{s:1:\"a\";i:2;s:1:\"b\";s:10:\"users.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:2;a:5:{s:1:\"a\";i:3;s:1:\"b\";s:12:\"users.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:3;a:5:{s:1:\"a\";i:4;s:1:\"b\";s:10:\"users.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:4;a:5:{s:1:\"a\";i:5;s:1:\"b\";s:10:\"users.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:5;a:5:{s:1:\"a\";i:6;s:1:\"b\";s:12:\"users.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:6;a:5:{s:1:\"a\";i:7;s:1:\"b\";s:12:\"users.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:7;a:5:{s:1:\"a\";i:8;s:1:\"b\";s:13:\"users.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:8;a:5:{s:1:\"a\";i:9;s:1:\"b\";s:17:\"users.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:10:\"roles.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:12:\"roles.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:10:\"roles.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:10:\"roles.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:12:\"roles.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:12:\"roles.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:13:\"roles.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:17:\"roles.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:14:\"suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:16:\"suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:14:\"suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:14:\"suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:16:\"suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:16:\"suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:17:\"suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:21:\"suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:25;a:5:{s:1:\"a\";i:26;s:1:\"b\";s:14:\"employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;s:1:\"r\";a:1:{i:0;i:3;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:16:\"employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:14:\"employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:14:\"employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:16:\"employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:16:\"employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:21:\"employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:33;a:5:{s:1:\"a\";i:34;s:1:\"b\";s:18:\"image-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;s:1:\"r\";a:1:{i:0;i:3;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:20:\"image-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:18:\"image-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:18:\"image-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:20:\"image-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:20:\"image-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:21:\"image-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:25:\"image-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:41;a:5:{s:1:\"a\";i:42;s:1:\"b\";s:18:\"color-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;s:1:\"r\";a:1:{i:0;i:3;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:20:\"color-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:18:\"color-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:18:\"color-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:20:\"color-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:20:\"color-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:21:\"color-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:25:\"color-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:49;a:5:{s:1:\"a\";i:50;s:1:\"b\";s:17:\"type-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;s:1:\"r\";a:1:{i:0;i:3;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:19:\"type-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:17:\"type-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:17:\"type-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"type-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:19:\"type-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:20:\"type-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:24:\"type-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:57;a:5:{s:1:\"a\";i:58;s:1:\"b\";s:16:\"type-colors.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;s:1:\"r\";a:1:{i:0;i:3;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:18:\"type-colors.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:16:\"type-colors.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:16:\"type-colors.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:18:\"type-colors.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:18:\"type-colors.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"type-colors.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:23:\"type-colors.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:20:\"price-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:22:\"price-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:20:\"price-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:20:\"price-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:22:\"price-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:22:\"price-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:23:\"price-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:27:\"price-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:20:\"price-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:22:\"price-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:20:\"price-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:20:\"price-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:22:\"price-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:22:\"price-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:23:\"price-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:27:\"price-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:14:\"presences.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:16:\"presences.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:14:\"presences.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:14:\"presences.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:16:\"presences.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:16:\"presences.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:17:\"presences.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:21:\"presences.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:12:\"fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:14:\"fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:12:\"fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:12:\"fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:14:\"fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:14:\"fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:15:\"fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:19:\"fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:97;a:4:{s:1:\"a\";i:98;s:1:\"b\";s:12:\"sablons.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:98;a:4:{s:1:\"a\";i:99;s:1:\"b\";s:14:\"sablons.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:99;a:4:{s:1:\"a\";i:100;s:1:\"b\";s:12:\"sablons.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:100;a:4:{s:1:\"a\";i:101;s:1:\"b\";s:12:\"sablons.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:101;a:4:{s:1:\"a\";i:102;s:1:\"b\";s:14:\"sablons.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:102;a:4:{s:1:\"a\";i:103;s:1:\"b\";s:14:\"sablons.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:103;a:4:{s:1:\"a\";i:104;s:1:\"b\";s:15:\"sablons.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:104;a:4:{s:1:\"a\";i:105;s:1:\"b\";s:19:\"sablons.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}}s:5:\"roles\";a:2:{i:0;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}i:1;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:8:\"Employee\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}}}',1782720860),
-('laravel-cache-435347697ac176274c06c637e5d6b4d3','i:1;',1783492615),
-('laravel-cache-435347697ac176274c06c637e5d6b4d3:timer','i:1783492615;',1783492615),
-('laravel-cache-lv:v3.24.0:file:0c401bb7-laravel-2026-06-23.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:1199d6c9-laravel-2026-05-16.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:246f5e45-laravel.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:486268b3-laravel-2026-06-22.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:55d1c80d-laravel-2026-05-19.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:59d98ac4-laravel-2026-05-15.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:7639766d-laravel-2026-06-09.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:98aefad9-laravel-2026-06-24.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:ecf8427e:chunk:0','a:44:{i:1782871510;a:1:{s:5:\"ERROR\";a:1:{i:0;i:0;}}i:1782871538;a:1:{s:5:\"ERROR\";a:1:{i:1;i:41191;}}i:1782871548;a:1:{s:5:\"ERROR\";a:1:{i:2;i:82382;}}i:1782871551;a:1:{s:5:\"ERROR\";a:1:{i:3;i:123576;}}i:1782871630;a:1:{s:5:\"ERROR\";a:1:{i:4;i:164770;}}i:1782871634;a:1:{s:5:\"ERROR\";a:1:{i:5;i:205968;}}i:1782871681;a:1:{s:5:\"ERROR\";a:1:{i:6;i:247166;}}i:1782871684;a:1:{s:5:\"ERROR\";a:1:{i:7;i:288364;}}i:1782871692;a:1:{s:5:\"ERROR\";a:1:{i:8;i:329562;}}i:1782871708;a:1:{s:5:\"ERROR\";a:1:{i:9;i:370753;}}i:1782871711;a:1:{s:5:\"ERROR\";a:1:{i:10;i:411944;}}i:1782871723;a:1:{s:5:\"ERROR\";a:1:{i:11;i:453135;}}i:1782871749;a:1:{s:5:\"ERROR\";a:1:{i:12;i:494326;}}i:1782871754;a:1:{s:5:\"ERROR\";a:1:{i:13;i:535517;}}i:1782871756;a:1:{s:5:\"ERROR\";a:1:{i:14;i:576708;}}i:1782871758;a:1:{s:5:\"ERROR\";a:1:{i:15;i:617899;}}i:1782871762;a:1:{s:5:\"ERROR\";a:1:{i:16;i:659090;}}i:1782871764;a:1:{s:5:\"ERROR\";a:1:{i:17;i:700281;}}i:1782871782;a:1:{s:5:\"ERROR\";a:1:{i:18;i:741472;}}i:1782871790;a:1:{s:5:\"ERROR\";a:1:{i:19;i:782663;}}i:1782871794;a:1:{s:5:\"ERROR\";a:1:{i:20;i:823854;}}i:1782871810;a:1:{s:5:\"ERROR\";a:1:{i:21;i:865045;}}i:1782871840;a:1:{s:5:\"ERROR\";a:1:{i:22;i:906236;}}i:1782871847;a:1:{s:5:\"ERROR\";a:1:{i:23;i:947427;}}i:1782871867;a:1:{s:5:\"ERROR\";a:1:{i:24;i:988618;}}i:1782871884;a:1:{s:5:\"ERROR\";a:1:{i:25;i:1029809;}}i:1782871907;a:1:{s:5:\"ERROR\";a:1:{i:26;i:1071000;}}i:1782872021;a:1:{s:5:\"ERROR\";a:1:{i:27;i:1112191;}}i:1782872045;a:1:{s:5:\"ERROR\";a:1:{i:28;i:1153382;}}i:1782872048;a:1:{s:5:\"ERROR\";a:1:{i:29;i:1194573;}}i:1782872110;a:1:{s:5:\"ERROR\";a:1:{i:30;i:1235764;}}i:1782872145;a:1:{s:5:\"ERROR\";a:1:{i:31;i:1276955;}}i:1782872154;a:1:{s:5:\"ERROR\";a:1:{i:32;i:1318146;}}i:1782872377;a:1:{s:5:\"ERROR\";a:1:{i:33;i:1359337;}}i:1782872380;a:1:{s:5:\"ERROR\";a:1:{i:34;i:1400528;}}i:1782872398;a:1:{s:5:\"ERROR\";a:1:{i:35;i:1441719;}}i:1782872467;a:1:{s:5:\"ERROR\";a:1:{i:36;i:1482910;}}i:1782872470;a:1:{s:5:\"ERROR\";a:1:{i:37;i:1524101;}}i:1782872518;a:1:{s:5:\"ERROR\";a:1:{i:38;i:1565292;}}i:1782872544;a:1:{s:5:\"ERROR\";a:1:{i:39;i:1606483;}}i:1782872557;a:1:{s:5:\"ERROR\";a:1:{i:40;i:1647674;}}i:1782872567;a:1:{s:5:\"ERROR\";a:1:{i:41;i:1688865;}}i:1782872570;a:1:{s:5:\"ERROR\";a:1:{i:42;i:1730056;}}i:1782875599;a:1:{s:5:\"ERROR\";a:1:{i:43;i:1771247;}}}',1783480416),
-('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:ecf8427e:metadata','a:9:{s:5:\"query\";s:0:\"\";s:10:\"identifier\";s:8:\"ecf8427e\";s:26:\"last_scanned_file_position\";i:1812438;s:18:\"last_scanned_index\";i:44;s:24:\"next_log_index_to_create\";i:44;s:14:\"max_chunk_size\";i:50000;s:19:\"current_chunk_index\";i:0;s:17:\"chunk_definitions\";a:0:{}s:24:\"current_chunk_definition\";a:5:{s:5:\"index\";i:0;s:4:\"size\";i:44;s:18:\"earliest_timestamp\";i:1782871510;s:16:\"latest_timestamp\";i:1782875599;s:12:\"level_counts\";a:1:{s:5:\"ERROR\";i:44;}}}',1783480416),
-('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:metadata','a:8:{s:4:\"type\";s:7:\"laravel\";s:4:\"name\";s:22:\"laravel-2026-07-01.log\";s:4:\"path\";s:64:\"D:\\laragon\\www\\an-mastery-v3\\storage\\logs\\laravel-2026-07-01.log\";s:4:\"size\";i:1812438;s:18:\"earliest_timestamp\";i:1782871510;s:16:\"latest_timestamp\";i:1782875599;s:26:\"last_scanned_file_position\";i:1812438;s:15:\"related_indices\";a:1:{s:8:\"ecf8427e\";a:2:{s:5:\"query\";s:0:\"\";s:26:\"last_scanned_file_position\";i:1812438;}}}',1783480416),
-('laravel-cache-lv:v3.24.0:file:e05a32d6-laravel-2026-06-29.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1783480414),
-('laravel-cache-spatie.permission.cache','a:3:{s:5:\"alias\";a:8:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"d\";s:7:\"menu_id\";s:1:\"r\";s:5:\"roles\";s:1:\"l\";s:10:\"created_by\";s:1:\"m\";s:10:\"updated_by\";s:1:\"o\";s:10:\"deleted_by\";}s:11:\"permissions\";a:113:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"dashboard.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:1;s:1:\"r\";a:1:{i:0;i:2;}}i:1;a:5:{s:1:\"a\";i:2;s:1:\"b\";s:10:\"users.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:2;a:5:{s:1:\"a\";i:3;s:1:\"b\";s:12:\"users.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:3;a:5:{s:1:\"a\";i:4;s:1:\"b\";s:10:\"users.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:4;a:5:{s:1:\"a\";i:5;s:1:\"b\";s:10:\"users.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:5;a:5:{s:1:\"a\";i:6;s:1:\"b\";s:12:\"users.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:6;a:5:{s:1:\"a\";i:7;s:1:\"b\";s:12:\"users.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:7;a:5:{s:1:\"a\";i:8;s:1:\"b\";s:13:\"users.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:8;a:5:{s:1:\"a\";i:9;s:1:\"b\";s:17:\"users.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:10:\"roles.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:12:\"roles.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:10:\"roles.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:10:\"roles.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:12:\"roles.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:12:\"roles.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:13:\"roles.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:17:\"roles.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:14:\"suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:16:\"suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:14:\"suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:14:\"suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:16:\"suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:16:\"suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:17:\"suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:21:\"suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:25;a:5:{s:1:\"a\";i:26;s:1:\"b\";s:14:\"employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;s:1:\"r\";a:1:{i:0;i:3;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:16:\"employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:14:\"employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:14:\"employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:16:\"employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:16:\"employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:21:\"employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:33;a:5:{s:1:\"a\";i:34;s:1:\"b\";s:18:\"image-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;s:1:\"r\";a:1:{i:0;i:3;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:20:\"image-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:18:\"image-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:18:\"image-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:20:\"image-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:20:\"image-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:21:\"image-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:25:\"image-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:41;a:5:{s:1:\"a\";i:42;s:1:\"b\";s:18:\"color-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;s:1:\"r\";a:1:{i:0;i:3;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:20:\"color-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:18:\"color-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:18:\"color-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:20:\"color-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:20:\"color-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:21:\"color-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:25:\"color-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:49;a:5:{s:1:\"a\";i:50;s:1:\"b\";s:17:\"type-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;s:1:\"r\";a:1:{i:0;i:3;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:19:\"type-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:17:\"type-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:17:\"type-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"type-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:19:\"type-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:20:\"type-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:24:\"type-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:57;a:5:{s:1:\"a\";i:58;s:1:\"b\";s:16:\"type-colors.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;s:1:\"r\";a:1:{i:0;i:3;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:18:\"type-colors.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:16:\"type-colors.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:16:\"type-colors.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:18:\"type-colors.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:18:\"type-colors.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"type-colors.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:23:\"type-colors.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:20:\"price-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:22:\"price-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:20:\"price-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:20:\"price-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:22:\"price-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:22:\"price-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:23:\"price-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:27:\"price-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:20:\"price-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:22:\"price-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:20:\"price-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:20:\"price-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:22:\"price-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:22:\"price-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:23:\"price-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:27:\"price-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:14:\"presences.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:16:\"presences.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:14:\"presences.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:14:\"presences.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:16:\"presences.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:16:\"presences.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:17:\"presences.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:21:\"presences.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:12:\"fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:14:\"fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:12:\"fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:12:\"fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:14:\"fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:14:\"fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:15:\"fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:19:\"fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:97;a:4:{s:1:\"a\";i:98;s:1:\"b\";s:12:\"sablons.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:98;a:4:{s:1:\"a\";i:99;s:1:\"b\";s:14:\"sablons.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:99;a:4:{s:1:\"a\";i:100;s:1:\"b\";s:12:\"sablons.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:100;a:4:{s:1:\"a\";i:101;s:1:\"b\";s:12:\"sablons.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:101;a:4:{s:1:\"a\";i:102;s:1:\"b\";s:14:\"sablons.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:102;a:4:{s:1:\"a\";i:103;s:1:\"b\";s:14:\"sablons.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:103;a:4:{s:1:\"a\";i:104;s:1:\"b\";s:15:\"sablons.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:104;a:4:{s:1:\"a\";i:105;s:1:\"b\";s:19:\"sablons.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:105;a:4:{s:1:\"a\";i:106;s:1:\"b\";s:19:\"bill-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:106;a:4:{s:1:\"a\";i:107;s:1:\"b\";s:21:\"bill-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:107;a:4:{s:1:\"a\";i:108;s:1:\"b\";s:19:\"bill-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:108;a:4:{s:1:\"a\";i:109;s:1:\"b\";s:19:\"bill-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:109;a:4:{s:1:\"a\";i:110;s:1:\"b\";s:21:\"bill-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:110;a:4:{s:1:\"a\";i:111;s:1:\"b\";s:21:\"bill-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:111;a:4:{s:1:\"a\";i:112;s:1:\"b\";s:22:\"bill-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:112;a:4:{s:1:\"a\";i:113;s:1:\"b\";s:26:\"bill-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}}s:5:\"roles\";a:2:{i:0;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}i:1;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:8:\"Employee\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}}}',1783578956);
+('anmastery-cache-spatie.permission.cache','a:3:{s:5:\"alias\";a:8:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"d\";s:7:\"menu_id\";s:1:\"r\";s:5:\"roles\";s:1:\"l\";s:10:\"created_by\";s:1:\"m\";s:10:\"updated_by\";s:1:\"o\";s:10:\"deleted_by\";}s:11:\"permissions\";a:113:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"dashboard.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:1;s:1:\"r\";a:1:{i:0;i:2;}}i:1;a:5:{s:1:\"a\";i:2;s:1:\"b\";s:10:\"users.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:2;a:5:{s:1:\"a\";i:3;s:1:\"b\";s:12:\"users.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:3;a:5:{s:1:\"a\";i:4;s:1:\"b\";s:10:\"users.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:4;a:5:{s:1:\"a\";i:5;s:1:\"b\";s:10:\"users.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:5;a:5:{s:1:\"a\";i:6;s:1:\"b\";s:12:\"users.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:6;a:5:{s:1:\"a\";i:7;s:1:\"b\";s:12:\"users.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:7;a:5:{s:1:\"a\";i:8;s:1:\"b\";s:13:\"users.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:8;a:5:{s:1:\"a\";i:9;s:1:\"b\";s:17:\"users.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:10:\"roles.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:12:\"roles.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:10:\"roles.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:10:\"roles.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:12:\"roles.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:12:\"roles.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:13:\"roles.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:17:\"roles.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:14:\"suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:16:\"suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:14:\"suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:14:\"suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:16:\"suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:16:\"suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:17:\"suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:21:\"suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:25;a:5:{s:1:\"a\";i:26;s:1:\"b\";s:14:\"employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;s:1:\"r\";a:1:{i:0;i:3;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:16:\"employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:14:\"employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:14:\"employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:16:\"employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:16:\"employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:21:\"employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:33;a:5:{s:1:\"a\";i:34;s:1:\"b\";s:18:\"image-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;s:1:\"r\";a:1:{i:0;i:3;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:20:\"image-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:18:\"image-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:18:\"image-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:20:\"image-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:20:\"image-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:21:\"image-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:25:\"image-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:41;a:5:{s:1:\"a\";i:42;s:1:\"b\";s:18:\"color-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;s:1:\"r\";a:1:{i:0;i:3;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:20:\"color-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:18:\"color-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:18:\"color-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:20:\"color-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:20:\"color-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:21:\"color-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:25:\"color-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:49;a:5:{s:1:\"a\";i:50;s:1:\"b\";s:17:\"type-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;s:1:\"r\";a:1:{i:0;i:3;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:19:\"type-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:17:\"type-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:17:\"type-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"type-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:19:\"type-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:20:\"type-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:24:\"type-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:57;a:5:{s:1:\"a\";i:58;s:1:\"b\";s:16:\"type-colors.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;s:1:\"r\";a:1:{i:0;i:3;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:18:\"type-colors.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:16:\"type-colors.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:16:\"type-colors.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:18:\"type-colors.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:18:\"type-colors.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"type-colors.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:23:\"type-colors.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:20:\"price-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:22:\"price-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:20:\"price-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:20:\"price-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:22:\"price-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:22:\"price-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:23:\"price-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:27:\"price-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:20:\"price-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:22:\"price-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:20:\"price-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:20:\"price-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:22:\"price-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:22:\"price-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:23:\"price-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:27:\"price-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:14:\"presences.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:16:\"presences.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:14:\"presences.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:14:\"presences.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:16:\"presences.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:16:\"presences.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:17:\"presences.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:21:\"presences.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:12:\"fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:14:\"fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:12:\"fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:12:\"fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:14:\"fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:14:\"fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:15:\"fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:19:\"fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:97;a:4:{s:1:\"a\";i:98;s:1:\"b\";s:12:\"sablons.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:98;a:4:{s:1:\"a\";i:99;s:1:\"b\";s:14:\"sablons.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:99;a:4:{s:1:\"a\";i:100;s:1:\"b\";s:12:\"sablons.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:100;a:4:{s:1:\"a\";i:101;s:1:\"b\";s:12:\"sablons.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:101;a:4:{s:1:\"a\";i:102;s:1:\"b\";s:14:\"sablons.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:102;a:4:{s:1:\"a\";i:103;s:1:\"b\";s:14:\"sablons.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:103;a:4:{s:1:\"a\";i:104;s:1:\"b\";s:15:\"sablons.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:104;a:4:{s:1:\"a\";i:105;s:1:\"b\";s:19:\"sablons.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:105;a:4:{s:1:\"a\";i:106;s:1:\"b\";s:19:\"bill-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:106;a:4:{s:1:\"a\";i:107;s:1:\"b\";s:21:\"bill-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:107;a:4:{s:1:\"a\";i:108;s:1:\"b\";s:19:\"bill-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:108;a:4:{s:1:\"a\";i:109;s:1:\"b\";s:19:\"bill-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:109;a:4:{s:1:\"a\";i:110;s:1:\"b\";s:21:\"bill-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:110;a:4:{s:1:\"a\";i:111;s:1:\"b\";s:21:\"bill-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:111;a:4:{s:1:\"a\";i:112;s:1:\"b\";s:22:\"bill-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:112;a:4:{s:1:\"a\";i:113;s:1:\"b\";s:26:\"bill-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}}s:5:\"roles\";a:2:{i:0;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}i:1;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:8:\"Employee\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}}}',1785134491);
 
 /*Table structure for table `cache_locks` */
 
 DROP TABLE IF EXISTS `cache_locks`;
 
 CREATE TABLE `cache_locks` (
-  `key` varchar(255) NOT NULL,
-  `owner` varchar(255) NOT NULL,
-  `expiration` int(11) NOT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -129,16 +88,16 @@ CREATE TABLE `cache_locks` (
 DROP TABLE IF EXISTS `color_fabrics`;
 
 CREATE TABLE `color_fabrics` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `code_color` varchar(255) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -158,18 +117,18 @@ insert  into `color_fabrics`(`id`,`name`,`code_color`,`notes`,`created_at`,`upda
 DROP TABLE IF EXISTS `employees`;
 
 CREATE TABLE `employees` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `contact` varchar(255) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -200,11 +159,11 @@ insert  into `employees`(`id`,`name`,`address`,`contact`,`is_active`,`notes`,`cr
 DROP TABLE IF EXISTS `fabric_details`;
 
 CREATE TABLE `fabric_details` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `color_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `stock` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `fabric_id` bigint unsigned DEFAULT NULL,
+  `color_fabric_id` bigint unsigned DEFAULT NULL,
+  `stock` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -221,30 +180,30 @@ insert  into `fabric_details`(`id`,`fabric_id`,`color_fabric_id`,`stock`,`notes`
 (2,1,2,10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
 (3,1,3,10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
 (4,1,4,10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
-(5,2,7,5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(6,2,2,5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(7,2,1,5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(8,2,3,5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42');
+(5,2,7,10,NULL,'2026-07-26 09:44:55','2026-07-26 09:44:55'),
+(6,2,3,10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56'),
+(7,2,4,10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56'),
+(8,2,1,10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56');
 
 /*Table structure for table `fabrics` */
 
 DROP TABLE IF EXISTS `fabrics`;
 
 CREATE TABLE `fabrics` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `type_fabric_id` bigint(20) unsigned DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned DEFAULT NULL,
+  `type_fabric_id` bigint unsigned DEFAULT NULL,
   `date_coming` date DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL COMMENT 'auto *example {name_supplier}{timestamp()} SUNAR17829012',
-  `seri` int(11) DEFAULT NULL,
-  `stock_total` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'auto *example {name_supplier}{timestamp()} SUNAR17829012',
+  `seri` int DEFAULT NULL,
+  `stock_total` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fabrics_supplier_id_foreign` (`supplier_id`),
   KEY `fabrics_type_fabric_id_foreign` (`type_fabric_id`),
@@ -256,20 +215,20 @@ CREATE TABLE `fabrics` (
 
 insert  into `fabrics`(`id`,`supplier_id`,`type_fabric_id`,`date_coming`,`code`,`seri`,`stock_total`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
 (1,1,1,'2026-06-27','SUNAR-20260628181445',4,40,'aman\ntes\n\n12','2026-06-28 18:14:45','2026-06-28 19:28:38',51,51,NULL,NULL),
-(2,1,2,'2026-06-29','SUNAR-20260629114542',4,20,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:55',51,51,NULL,NULL);
+(2,1,2,'2026-07-26','SUNAR-20260726094455',4,40,NULL,'2026-07-26 09:44:55','2026-07-26 09:44:55',51,51,NULL,NULL);
 
 /*Table structure for table `failed_jobs` */
 
 DROP TABLE IF EXISTS `failed_jobs`;
 
 CREATE TABLE `failed_jobs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -281,11 +240,11 @@ CREATE TABLE `failed_jobs` (
 DROP TABLE IF EXISTS `history_stocks`;
 
 CREATE TABLE `history_stocks` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `fabric_detail_id` bigint(20) unsigned DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL COMMENT 'enum StatusSablonEnum',
-  `total` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `fabric_detail_id` bigint unsigned DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'enum StatusSablonEnum',
+  `total` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -300,25 +259,25 @@ insert  into `history_stocks`(`id`,`fabric_detail_id`,`status`,`total`,`notes`,`
 (2,2,'IN',10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
 (3,3,'IN',10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
 (4,4,'IN',10,NULL,'2026-06-28 18:14:45','2026-06-28 18:14:45'),
-(5,5,'IN',5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(6,6,'IN',5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(7,7,'IN',5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42'),
-(8,8,'IN',5,NULL,'2026-06-29 11:45:42','2026-06-29 11:45:42');
+(5,5,'IN',10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56'),
+(6,6,'IN',10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56'),
+(7,7,'IN',10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56'),
+(8,8,'IN',10,NULL,'2026-07-26 09:44:56','2026-07-26 09:44:56');
 
 /*Table structure for table `image_fabrics` */
 
 DROP TABLE IF EXISTS `image_fabrics`;
 
 CREATE TABLE `image_fabrics` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -365,16 +324,16 @@ insert  into `image_fabrics`(`id`,`name`,`notes`,`created_at`,`updated_at`,`crea
 DROP TABLE IF EXISTS `job_batches`;
 
 CREATE TABLE `job_batches` (
-  `id` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `total_jobs` int(11) NOT NULL,
-  `pending_jobs` int(11) NOT NULL,
-  `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
-  `cancelled_at` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL,
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -385,13 +344,13 @@ CREATE TABLE `job_batches` (
 DROP TABLE IF EXISTS `jobs`;
 
 CREATE TABLE `jobs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` tinyint(3) unsigned NOT NULL,
-  `reserved_at` int(10) unsigned DEFAULT NULL,
-  `available_at` int(10) unsigned NOT NULL,
-  `created_at` int(10) unsigned NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `jobs_queue_index` (`queue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -403,22 +362,22 @@ CREATE TABLE `jobs` (
 DROP TABLE IF EXISTS `media`;
 
 CREATE TABLE `media` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `model_type` varchar(255) NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
-  `uuid` char(36) DEFAULT NULL,
-  `collection_name` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
-  `mime_type` varchar(255) DEFAULT NULL,
-  `disk` varchar(255) NOT NULL,
-  `conversions_disk` varchar(255) DEFAULT NULL,
-  `size` bigint(20) unsigned NOT NULL,
-  `manipulations` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`manipulations`)),
-  `custom_properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`custom_properties`)),
-  `generated_conversions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`generated_conversions`)),
-  `responsive_images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`responsive_images`)),
-  `order_column` int(10) unsigned DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_id` bigint unsigned NOT NULL,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `collection_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mime_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `disk` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `conversions_disk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` bigint unsigned NOT NULL,
+  `manipulations` json NOT NULL,
+  `custom_properties` json NOT NULL,
+  `generated_conversions` json NOT NULL,
+  `responsive_images` json NOT NULL,
+  `order_column` int unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -434,8 +393,8 @@ CREATE TABLE `media` (
 DROP TABLE IF EXISTS `menu_permissions`;
 
 CREATE TABLE `menu_permissions` (
-  `menu_id` bigint(20) unsigned NOT NULL,
-  `permission_id` bigint(20) unsigned NOT NULL,
+  `menu_id` bigint unsigned NOT NULL,
+  `permission_id` bigint unsigned NOT NULL,
   KEY `menu_permissions_menu_id_foreign` (`menu_id`),
   KEY `menu_permissions_permission_id_foreign` (`permission_id`),
   CONSTRAINT `menu_permissions_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`),
@@ -449,13 +408,13 @@ CREATE TABLE `menu_permissions` (
 DROP TABLE IF EXISTS `menus`;
 
 CREATE TABLE `menus` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` bigint(20) unsigned DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `sort_order` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint unsigned DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort_order` int NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -484,18 +443,18 @@ insert  into `menus`(`id`,`parent_id`,`name`,`icon`,`url`,`sort_order`,`is_activ
 (17,NULL,'Employee Presence','calendar-check-2','/presences',6,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (18,NULL,'Inventory Fabric','package','/fabrics',7,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (19,NULL,'Sablon','paintbrush','/sablons',8,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
-(20,NULL,'Bill Supplier','receipt-text','/bill-suppliers',9,1,'2026-07-01 10:39:00','2026-07-01 10:39:00');
+(20,NULL,'Bill Supplier','receipt-text','/bill-suppliers',9,1,'2026-07-26 09:39:54','2026-07-26 09:39:54');
 
 /*Table structure for table `migrations` */
 
 DROP TABLE IF EXISTS `migrations`;
 
 CREATE TABLE `migrations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
@@ -536,16 +495,19 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 (34,'2026_06_24_082750_remove_fabric_detail_id_to_sablons',4),
 (35,'2026_06_28_175622_add_is_active_to_employess_and_suppliers',5),
 (37,'2026_06_28_190726_add_some_column_to_fabrics',6),
-(38,'2026_07_01_081614_add_is_paid_to_bill_suppliers',7);
+(38,'2026_07_01_081614_add_is_paid_to_bill_suppliers',7),
+(39,'2026_07_26_120016_add_batch_to_bill_suppliers',8),
+(40,'2026_07_26_131402_drop_table_to_bill_supplier_details',9),
+(41,'2026_07_26_133559_create_supplier_cover_styles_table',10);
 
 /*Table structure for table `model_has_permissions` */
 
 DROP TABLE IF EXISTS `model_has_permissions`;
 
 CREATE TABLE `model_has_permissions` (
-  `permission_id` bigint(20) unsigned NOT NULL,
-  `model_type` varchar(255) NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
+  `permission_id` bigint unsigned NOT NULL,
+  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_id` bigint unsigned NOT NULL,
   PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
   KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`),
   CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
@@ -558,9 +520,9 @@ CREATE TABLE `model_has_permissions` (
 DROP TABLE IF EXISTS `model_has_roles`;
 
 CREATE TABLE `model_has_roles` (
-  `role_id` bigint(20) unsigned NOT NULL,
-  `model_type` varchar(255) NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
+  `role_id` bigint unsigned NOT NULL,
+  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_id` bigint unsigned NOT NULL,
   PRIMARY KEY (`role_id`,`model_id`,`model_type`),
   KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`),
   CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
@@ -569,17 +531,17 @@ CREATE TABLE `model_has_roles` (
 /*Data for the table `model_has_roles` */
 
 insert  into `model_has_roles`(`role_id`,`model_type`,`model_id`) values 
+(3,'App\\Models\\User',49),
 (1,'App\\Models\\User',51),
-(2,'App\\Models\\User',52),
-(3,'App\\Models\\User',49);
+(2,'App\\Models\\User',52);
 
 /*Table structure for table `password_reset_tokens` */
 
 DROP TABLE IF EXISTS `password_reset_tokens`;
 
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -591,10 +553,10 @@ CREATE TABLE `password_reset_tokens` (
 DROP TABLE IF EXISTS `permissions`;
 
 CREATE TABLE `permissions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `guard_name` varchar(255) NOT NULL,
-  `menu_id` bigint(20) unsigned DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `menu_id` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -711,83 +673,64 @@ insert  into `permissions`(`id`,`name`,`guard_name`,`menu_id`,`created_at`,`upda
 (103,'sablons.delete','web',19,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (104,'sablons.restore','web',19,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (105,'sablons.forceDelete','web',19,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
-(106,'bill-suppliers.view','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(107,'bill-suppliers.create','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(108,'bill-suppliers.read','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(109,'bill-suppliers.edit','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(110,'bill-suppliers.update','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(111,'bill-suppliers.delete','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(112,'bill-suppliers.restore','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00'),
-(113,'bill-suppliers.forceDelete','web',20,'2026-07-01 10:39:00','2026-07-01 10:39:00');
+(106,'bill-suppliers.view','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(107,'bill-suppliers.create','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(108,'bill-suppliers.read','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(109,'bill-suppliers.edit','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(110,'bill-suppliers.update','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(111,'bill-suppliers.delete','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(112,'bill-suppliers.restore','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(113,'bill-suppliers.forceDelete','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54');
 
 /*Table structure for table `presences` */
 
 DROP TABLE IF EXISTS `presences`;
 
 CREATE TABLE `presences` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `employee_id` bigint(20) unsigned DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `employee_id` bigint unsigned DEFAULT NULL,
   `week_of` date DEFAULT NULL,
-  `monday` int(11) DEFAULT NULL,
-  `tuesday` int(11) DEFAULT NULL,
-  `wednesday` int(11) DEFAULT NULL,
-  `thursday` int(11) DEFAULT NULL,
-  `friday` int(11) DEFAULT NULL,
-  `saturday` int(11) DEFAULT NULL,
-  `sunday` int(11) DEFAULT NULL,
-  `total` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `monday` int DEFAULT NULL,
+  `tuesday` int DEFAULT NULL,
+  `wednesday` int DEFAULT NULL,
+  `thursday` int DEFAULT NULL,
+  `friday` int DEFAULT NULL,
+  `saturday` int DEFAULT NULL,
+  `sunday` int DEFAULT NULL,
+  `total` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_employee_id_foreign` (`employee_id`),
   CONSTRAINT `presences_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `presences` */
 
 insert  into `presences`(`id`,`employee_id`,`week_of`,`monday`,`tuesday`,`wednesday`,`thursday`,`friday`,`saturday`,`sunday`,`total`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
-(1,12,'2026-06-22',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-06-28 15:24:07','2026-06-28 15:24:07',51,51,NULL,NULL),
-(2,12,'2026-06-29',7000,7000,7000,7000,7000,7000,0,42000,NULL,'2026-06-29 11:20:24','2026-06-29 11:20:24',51,51,NULL,NULL),
-(3,12,'2026-07-06',9000,9000,9000,9000,9000,9000,0,54000,NULL,'2026-07-08 13:55:42','2026-07-08 13:58:36',51,51,NULL,NULL),
-(4,1,'2026-07-06',9000,9000,9000,9000,9000,9000,0,54000,NULL,'2026-07-08 13:55:42','2026-07-08 13:58:36',51,51,NULL,NULL),
-(5,6,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(6,14,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(7,15,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(8,17,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(9,4,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(10,7,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(11,16,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(12,3,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(13,10,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(14,2,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(15,9,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(16,8,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(17,18,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(18,5,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(19,13,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL),
-(20,11,'2026-07-06',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-07-08 13:55:42','2026-07-08 13:55:42',51,51,NULL,NULL);
+(1,12,'2026-06-22',10000,10000,10000,10000,10000,10000,0,60000,NULL,'2026-06-28 15:24:07','2026-06-28 15:24:07',51,51,NULL,NULL);
 
 /*Table structure for table `price_employees` */
 
 DROP TABLE IF EXISTS `price_employees`;
 
 CREATE TABLE `price_employees` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `type_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `type_color_id` bigint(20) unsigned DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `type_fabric_id` bigint unsigned DEFAULT NULL,
+  `type_color_id` bigint unsigned DEFAULT NULL,
+  `price` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `price_employees_type_fabric_id_foreign` (`type_fabric_id`),
   KEY `price_employees_type_color_id_foreign` (`type_color_id`),
@@ -807,18 +750,18 @@ insert  into `price_employees`(`id`,`type_fabric_id`,`type_color_id`,`price`,`no
 DROP TABLE IF EXISTS `price_suppliers`;
 
 CREATE TABLE `price_suppliers` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `type_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `type_color_id` bigint(20) unsigned DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned DEFAULT NULL,
+  `type_fabric_id` bigint unsigned DEFAULT NULL,
+  `type_color_id` bigint unsigned DEFAULT NULL,
+  `price` int DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `price_suppliers_supplier_id_foreign` (`supplier_id`),
   KEY `price_suppliers_type_fabric_id_foreign` (`type_fabric_id`),
@@ -826,20 +769,22 @@ CREATE TABLE `price_suppliers` (
   CONSTRAINT `price_suppliers_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
   CONSTRAINT `price_suppliers_type_color_id_foreign` FOREIGN KEY (`type_color_id`) REFERENCES `type_colors` (`id`),
   CONSTRAINT `price_suppliers_type_fabric_id_foreign` FOREIGN KEY (`type_fabric_id`) REFERENCES `type_fabrics` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `price_suppliers` */
 
 insert  into `price_suppliers`(`id`,`supplier_id`,`type_fabric_id`,`type_color_id`,`price`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
-(1,1,2,1,1400,NULL,'2026-05-24 11:12:04','2026-05-24 11:12:04',51,51,NULL,NULL);
+(1,1,2,3,1500,NULL,'2026-05-24 11:12:04','2026-07-26 09:47:41',51,51,NULL,NULL),
+(2,1,1,3,1525,NULL,'2026-07-26 09:38:03','2026-07-26 09:41:55',51,51,NULL,NULL),
+(3,1,2,2,1400,NULL,'2026-07-26 09:47:24','2026-07-26 09:47:24',51,51,NULL,NULL);
 
 /*Table structure for table `role_has_permissions` */
 
 DROP TABLE IF EXISTS `role_has_permissions`;
 
 CREATE TABLE `role_has_permissions` (
-  `permission_id` bigint(20) unsigned NOT NULL,
-  `role_id` bigint(20) unsigned NOT NULL,
+  `permission_id` bigint unsigned NOT NULL,
+  `role_id` bigint unsigned NOT NULL,
   PRIMARY KEY (`permission_id`,`role_id`),
   KEY `role_has_permissions_role_id_foreign` (`role_id`),
   CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
@@ -869,15 +814,15 @@ insert  into `role_has_permissions`(`permission_id`,`role_id`) values
 DROP TABLE IF EXISTS `roles`;
 
 CREATE TABLE `roles` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `guard_name` varchar(255) NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -894,11 +839,11 @@ insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`,`created
 DROP TABLE IF EXISTS `sablon_details`;
 
 CREATE TABLE `sablon_details` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `sablon_id` bigint(20) unsigned DEFAULT NULL,
-  `fabric_detail_id` bigint(20) unsigned DEFAULT NULL,
-  `color_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `long_fabric` int(11) DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `sablon_id` bigint unsigned DEFAULT NULL,
+  `fabric_detail_id` bigint unsigned DEFAULT NULL,
+  `color_fabric_id` bigint unsigned DEFAULT NULL,
+  `long_fabric` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sablon_details_sablon_id_foreign` (`sablon_id`),
   KEY `sablon_details_color_fabric_id_foreign` (`color_fabric_id`),
@@ -906,7 +851,7 @@ CREATE TABLE `sablon_details` (
   CONSTRAINT `sablon_details_color_fabric_id_foreign` FOREIGN KEY (`color_fabric_id`) REFERENCES `color_fabrics` (`id`),
   CONSTRAINT `sablon_details_fabric_detail_id_foreign` FOREIGN KEY (`fabric_detail_id`) REFERENCES `fabric_details` (`id`) ON DELETE SET NULL,
   CONSTRAINT `sablon_details_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `sablon_details` */
 
@@ -915,32 +860,40 @@ insert  into `sablon_details`(`id`,`sablon_id`,`fabric_detail_id`,`color_fabric_
 (42,1,2,2,93),
 (43,1,3,3,94),
 (44,1,4,4,96),
-(45,2,1,1,85),
-(46,2,2,2,92),
-(47,2,3,3,91),
-(48,2,4,4,90),
 (49,3,5,7,90),
-(50,3,6,2,92),
-(51,3,7,1,91),
-(52,3,8,3,91);
+(50,3,6,3,92),
+(51,3,7,4,87),
+(52,3,8,1,87),
+(53,2,1,1,85),
+(54,2,2,2,92),
+(55,2,3,3,91),
+(56,2,4,4,90),
+(57,4,5,7,90),
+(58,4,6,3,80),
+(59,4,7,4,82),
+(60,4,8,1,87),
+(61,5,1,1,91),
+(62,5,2,2,87),
+(63,5,3,3,86),
+(64,5,4,4,85);
 
 /*Table structure for table `sablon_employee_details` */
 
 DROP TABLE IF EXISTS `sablon_employee_details`;
 
 CREATE TABLE `sablon_employee_details` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `sablon_id` bigint(20) unsigned DEFAULT NULL,
-  `fabric_detail_id` bigint(20) unsigned DEFAULT NULL,
-  `employee_id` bigint(20) unsigned DEFAULT NULL,
-  `layers` int(11) DEFAULT NULL,
-  `fee` int(11) DEFAULT NULL,
-  `additional_fee` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`additional_fee`)),
-  `total` int(11) DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `sablon_id` bigint unsigned DEFAULT NULL,
+  `fabric_detail_id` bigint unsigned DEFAULT NULL,
+  `employee_id` bigint unsigned DEFAULT NULL,
+  `layers` int DEFAULT NULL,
+  `fee` int DEFAULT NULL,
+  `additional_fee` json DEFAULT NULL,
+  `total` int DEFAULT NULL,
   `is_change` tinyint(1) DEFAULT NULL,
-  `employee_change_id` bigint(20) unsigned DEFAULT NULL,
+  `employee_change_id` bigint unsigned DEFAULT NULL,
   `is_payed` tinyint(1) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -952,7 +905,7 @@ CREATE TABLE `sablon_employee_details` (
   CONSTRAINT `sablon_employee_details_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
   CONSTRAINT `sablon_employee_details_fabric_detail_id_foreign` FOREIGN KEY (`fabric_detail_id`) REFERENCES `fabric_details` (`id`),
   CONSTRAINT `sablon_employee_details_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `sablon_employee_details` */
 
@@ -960,34 +913,41 @@ insert  into `sablon_employee_details`(`id`,`sablon_id`,`fabric_detail_id`,`empl
 (25,1,NULL,14,1,65800,'[{\"notes\": \"\", \"nominal\": -60000}]',5800,0,NULL,0,NULL,'2026-06-28 19:40:51','2026-06-28 19:40:51'),
 (26,1,NULL,15,1,65800,'[{\"notes\": \"\", \"nominal\": -30000}]',35800,0,NULL,0,NULL,'2026-06-28 19:40:51','2026-06-28 19:40:51'),
 (27,1,NULL,17,1,65800,'[{\"notes\": \"\", \"nominal\": -45000}]',20800,0,NULL,0,NULL,'2026-06-28 19:40:51','2026-06-28 19:40:51'),
-(28,2,NULL,4,2,125300,'[{\"notes\": \"\", \"nominal\": -60000}]',65300,0,NULL,0,NULL,'2026-06-28 19:40:58','2026-06-28 19:40:58'),
-(29,2,NULL,6,1,62650,'[{\"notes\": \"\", \"nominal\": -30000}]',32650,0,NULL,0,NULL,'2026-06-28 19:40:58','2026-06-28 19:40:58'),
-(30,3,NULL,12,1,91000,'[{\"nominal\":-30000,\"notes\":\"\"}]',61000,0,NULL,0,NULL,'2026-06-29 13:52:53','2026-06-29 13:52:53'),
-(31,3,NULL,9,1,91000,'[{\"nominal\":25000,\"notes\":\"\"}]',116000,0,NULL,0,NULL,'2026-06-29 13:52:53','2026-06-29 13:52:53');
+(30,3,NULL,5,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
+(31,3,NULL,3,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
+(32,3,NULL,9,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
+(33,2,NULL,4,2,125300,'[{\"notes\": \"\", \"nominal\": -60000}]',65300,0,NULL,0,NULL,'2026-07-26 11:40:51','2026-07-26 11:40:51'),
+(34,2,NULL,6,1,62700,'[{\"notes\": \"\", \"nominal\": -30000}]',32700,0,NULL,0,NULL,'2026-07-26 11:40:51','2026-07-26 11:40:51'),
+(35,4,NULL,1,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
+(36,4,NULL,2,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
+(37,4,NULL,5,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
+(38,5,NULL,1,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10'),
+(39,5,NULL,2,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10'),
+(40,5,NULL,3,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10');
 
 /*Table structure for table `sablons` */
 
 DROP TABLE IF EXISTS `sablons`;
 
 CREATE TABLE `sablons` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `image_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `type_color_id` bigint(20) unsigned DEFAULT NULL,
-  `type_fabric_id` bigint(20) unsigned DEFAULT NULL,
-  `price_employee_id` bigint(20) unsigned DEFAULT NULL,
-  `total_long_fabric` int(11) DEFAULT NULL,
-  `total_sablon` int(11) DEFAULT NULL COMMENT 'total long fabric * price employee',
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned DEFAULT NULL,
+  `fabric_id` bigint unsigned DEFAULT NULL,
+  `image_fabric_id` bigint unsigned DEFAULT NULL,
+  `type_color_id` bigint unsigned DEFAULT NULL,
+  `type_fabric_id` bigint unsigned DEFAULT NULL,
+  `price_employee_id` bigint unsigned DEFAULT NULL,
+  `total_long_fabric` int DEFAULT NULL,
+  `total_sablon` int DEFAULT NULL COMMENT 'total long fabric * price employee',
   `date_sablon` date DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL COMMENT 'enum StatusSablonEnum',
-  `notes` longtext DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'enum StatusSablonEnum',
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sablons_supplier_id_foreign` (`supplier_id`),
   KEY `sablons_fabric_id_foreign` (`fabric_id`),
@@ -1001,33 +961,35 @@ CREATE TABLE `sablons` (
   CONSTRAINT `sablons_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
   CONSTRAINT `sablons_type_color_id_foreign` FOREIGN KEY (`type_color_id`) REFERENCES `type_colors` (`id`),
   CONSTRAINT `sablons_type_fabric_id_foreign` FOREIGN KEY (`type_fabric_id`) REFERENCES `type_fabrics` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `sablons` */
 
 insert  into `sablons`(`id`,`supplier_id`,`fabric_id`,`image_fabric_id`,`type_color_id`,`type_fabric_id`,`price_employee_id`,`total_long_fabric`,`total_sablon`,`date_sablon`,`status`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
-(1,1,1,34,3,1,3,376,197400,'2026-06-29','DELIVERED',NULL,'2026-06-28 18:23:32','2026-07-01 08:48:31',51,51,NULL,NULL),
-(2,1,1,25,3,1,3,358,187950,'2026-06-29','DELIVERED',NULL,'2026-06-28 18:55:15','2026-07-01 08:47:53',51,51,NULL,NULL),
-(3,1,2,10,2,2,2,364,182000,'2026-06-29','DELIVERED',NULL,'2026-06-29 13:52:53','2026-07-01 08:47:58',51,51,NULL,NULL);
+(1,1,1,34,3,1,3,376,197400,'2026-07-26','DONE',NULL,'2026-07-26 09:43:19','2026-07-26 11:39:24',51,51,NULL,NULL),
+(2,1,1,25,3,1,3,358,187950,'2026-07-26','DONE',NULL,'2026-07-26 09:43:19','2026-07-26 11:40:51',51,51,NULL,NULL),
+(3,1,2,12,3,2,3,356,186900,'2026-07-26','DONE',NULL,'2026-07-26 09:46:59','2026-07-26 11:40:57',51,51,NULL,NULL),
+(4,1,2,14,3,2,2,339,169500,'2026-07-26','DONE',NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17',51,51,NULL,NULL),
+(5,1,1,17,3,1,3,349,183225,'2026-07-26','DONE',NULL,'2026-07-26 13:20:10','2026-07-26 13:20:42',51,51,NULL,NULL);
 
 /*Table structure for table `salary_employees` */
 
 DROP TABLE IF EXISTS `salary_employees`;
 
 CREATE TABLE `salary_employees` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `employee_id` bigint(20) unsigned DEFAULT NULL,
-  `fee` int(11) DEFAULT NULL,
-  `additional_fee` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`additional_fee`)),
-  `status` varchar(255) DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `employee_id` bigint unsigned DEFAULT NULL,
+  `fee` int DEFAULT NULL,
+  `additional_fee` json DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `salary_employees_employee_id_foreign` (`employee_id`),
   CONSTRAINT `salary_employees_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE SET NULL
@@ -1040,12 +1002,12 @@ CREATE TABLE `salary_employees` (
 DROP TABLE IF EXISTS `sessions`;
 
 CREATE TABLE `sessions` (
-  `id` varchar(255) NOT NULL,
-  `user_id` bigint(20) unsigned DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `payload` longtext NOT NULL,
-  `last_activity` int(11) NOT NULL,
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `sessions_user_id_index` (`user_id`),
   KEY `sessions_last_activity_index` (`last_activity`)
@@ -1054,25 +1016,48 @@ CREATE TABLE `sessions` (
 /*Data for the table `sessions` */
 
 insert  into `sessions`(`id`,`user_id`,`ip_address`,`user_agent`,`payload`,`last_activity`) values 
-('59X8zsgB8f4xT2dNodPWRZwZBOknVuvlzbihVGID',51,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36','YTo2OntzOjY6Il90b2tlbiI7czo0MDoia1dDYzU3WDVwQks1bkw2dW94NXEzNVNUVExTdnNGdmMyalhRYVp2NSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM0OiJodHRwczovL2FuLW1hc3RlcnktdjMudGVzdC9zYWJsb25zIjtzOjU6InJvdXRlIjtzOjEzOiJzYWJsb25zLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NTE7czoyMjoiUEhQREVCVUdCQVJfU1RBQ0tfREFUQSI7YTowOnt9fQ==',1782650459);
+('x8WbXYzzneZqkpsjWOjmXzO1dW4K6dMbO9E28ogV',51,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36','YTo2OntzOjY6Il90b2tlbiI7czo0MDoia2pPaHQ5TVNWNXBqR2QyRWFUTnNzWERWQ09CVTQxeUQ1SGxBWUxybSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjc5OiJodHRwczovL2FuLW1hc3RlcnktdjMudGVzdC9iaWxsLXN1cHBsaWVycz93ZWVrX2VuZD0yMDI2LVczMCZ3ZWVrX3N0YXJ0PTIwMjYtVzMwIjtzOjU6InJvdXRlIjtzOjIwOiJiaWxsX3N1cHBsaWVycy5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjUxO3M6MjI6IlBIUERFQlVHQkFSX1NUQUNLX0RBVEEiO2E6MDp7fX0=',1785050547);
+
+/*Table structure for table `supplier_cover_styles` */
+
+DROP TABLE IF EXISTS `supplier_cover_styles`;
+
+CREATE TABLE `supplier_cover_styles` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned NOT NULL,
+  `color_from` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `color_to` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'book-marked',
+  `pattern` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'stripes',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `supplier_cover_styles_supplier_id_unique` (`supplier_id`),
+  CONSTRAINT `supplier_cover_styles_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `supplier_cover_styles` */
+
+insert  into `supplier_cover_styles`(`id`,`supplier_id`,`color_from`,`color_to`,`icon`,`pattern`,`created_at`,`updated_at`) values 
+(1,1,'#cee70d','#03a03f','book-marked','stripes','2026-07-26 14:15:38','2026-07-26 14:15:38');
 
 /*Table structure for table `suppliers` */
 
 DROP TABLE IF EXISTS `suppliers`;
 
 CREATE TABLE `suppliers` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `contact` varchar(255) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1095,15 +1080,15 @@ insert  into `suppliers`(`id`,`name`,`address`,`contact`,`is_active`,`notes`,`cr
 DROP TABLE IF EXISTS `type_colors`;
 
 CREATE TABLE `type_colors` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` int(11) NOT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` int NOT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1119,15 +1104,15 @@ insert  into `type_colors`(`id`,`name`,`notes`,`created_at`,`updated_at`,`create
 DROP TABLE IF EXISTS `type_fabrics`;
 
 CREATE TABLE `type_fabrics` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `notes` longtext DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1142,22 +1127,22 @@ insert  into `type_fabrics`(`id`,`name`,`notes`,`created_at`,`updated_at`,`creat
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `two_factor_secret` text DEFAULT NULL,
-  `two_factor_recovery_codes` text DEFAULT NULL,
+  `two_factor_secret` text COLLATE utf8mb4_unicode_ci,
+  `two_factor_recovery_codes` text COLLATE utf8mb4_unicode_ci,
   `two_factor_confirmed_at` timestamp NULL DEFAULT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_by` bigint(20) unsigned DEFAULT NULL,
-  `updated_by` bigint(20) unsigned DEFAULT NULL,
+  `created_by` bigint unsigned DEFAULT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
+  `deleted_by` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
