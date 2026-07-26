@@ -55,31 +55,6 @@ export default function sablonForm(
 
                 reInitUi();
 
-                this.$nextTick(() => {
-                    document.addEventListener("click", (e) => {
-                        const btn = e.target.closest(
-                            "[data-hs-input-number-increment], [data-hs-input-number-decrement]",
-                        );
-
-                        if (!btn) return;
-
-                        setTimeout(() => {
-                            const wrapper = btn.closest(
-                                "[data-hs-input-number]",
-                            );
-                            const input = wrapper?.querySelector(
-                                "[data-hs-input-number-input]",
-                            );
-
-                            if (!input) return;
-
-                            input.dispatchEvent(
-                                new Event("input", { bubbles: true }),
-                            );
-                        }, 0);
-                    });
-                });
-
                 if (this.selectedFabricId) {
                     this.loadFabricDetail(this.selectedFabricId);
                 }
@@ -237,7 +212,7 @@ export default function sablonForm(
                     this.buildFabricRow({
                         fabric_detail_id: d.id,
                         color_fabric_id: d.color_fabric_id,
-                        long_fabric: "",
+                        long_fabric: 0,
                     }),
                 );
             } else {
@@ -256,7 +231,7 @@ export default function sablonForm(
                 color_fabric_id: row.color_fabric_id
                     ? String(row.color_fabric_id)
                     : "",
-                long_fabric: row.long_fabric ?? "",
+                long_fabric: row.long_fabric ?? 0,
                 open: false,
                 search: "",
             };
