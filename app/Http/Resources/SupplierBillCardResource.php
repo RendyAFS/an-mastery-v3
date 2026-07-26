@@ -19,6 +19,7 @@ class SupplierBillCardResource extends JsonResource
             'unbilled_sablons_count' => $this->unbilled_sablons_count ?? 0,
             'unpaid_bills_count'     => $this->unpaid_bills_count ?? 0,
             'total_unpaid'           => (int) ($this->total_unpaid ?? 0),
+            'cover_style'            => $this->resolvedCoverStyle(),
             'total_unpaid_formatted' => RupiahHelper::format($this->total_unpaid ?? 0),
             'deleted_at'             => $this->deleted_at?->format('Y-m-d H:i:s'),
         ];

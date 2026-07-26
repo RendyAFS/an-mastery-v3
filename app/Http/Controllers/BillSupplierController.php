@@ -11,6 +11,7 @@ use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Repositories\BillSupplierRepository;
 use App\Repositories\SupplierRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BillSupplierController extends Controller
@@ -28,12 +29,37 @@ class BillSupplierController extends Controller
             $search  = request('search');
             $perPage = min((int) request('per_page', 12), 100);
 
-            $suppliers = $this->supplierRepository->getBillSupplierCards($search, $perPage);
+            $dateFrom = $this->parseWeekBoundary(request('week_start'), false);
+            $dateTo   = $this->parseWeekBoundary(request('week_end'), true);
+
+            $suppliers = $this->supplierRepository->getBillSupplierCards($search, $perPage, $dateFrom, $dateTo);
 
             return SupplierBillCardResource::collection($suppliers);
         }
 
-        return view('bill-supplier.index');
+        $iconOptions = collect(config('cover-styles.icons'))
+            ->mapWithKeys(fn($icon) => [$icon => \Illuminate\Support\Str::headline($icon)])
+            ->toArray();
+
+        $patternOptions = config('cover-styles.patterns');
+
+        return view('bill-supplier.index', compact('iconOptions', 'patternOptions'));
+    }
+
+    private function parseWeekBoundary(?string $week, bool $isEnd): ?Carbon
+    {
+        if (!$week || !preg_match('/^(\d{4})-W(\d{2})$/', $week, $matches)) {
+            return null;
+        }
+
+        $year = (int) $matches[1];
+        $weekNumber = (int) $matches[2];
+
+        $date = Carbon::now()->setISODate($year, $weekNumber);
+
+        return $isEnd
+            ? $date->endOfWeek(Carbon::SUNDAY)
+            : $date->startOfWeek(Carbon::MONDAY);
     }
 
     public function bySupplier(Supplier $supplier)

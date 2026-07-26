@@ -138,8 +138,12 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::put('batch/{batch}/restore', [App\Http\Controllers\BillSupplierController::class, 'restoreBatch'])->name('batch.restore');
         Route::delete('batch/{batch}/force-delete', [App\Http\Controllers\BillSupplierController::class, 'forceDeleteBatch'])->name('batch.force-delete');
     });
+    Route::resource('bill-suppliers', App\Http\Controllers\BillSupplierController::class)->only(['index', 'create', 'store', 'show'])->names('bill_suppliers');
 
-    Route::resource('bill-suppliers', App\Http\Controllers\BillSupplierController::class)
-        ->only(['index', 'create', 'store', 'show'])
-        ->names('bill_suppliers');
+    // Supplier Cover Style
+    Route::prefix('suppliers/{supplier}/cover-style')->as('suppliers.cover-style.')->group(function () {
+        Route::get('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'edit'])->name('edit');
+        Route::put('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'update'])->name('update');
+        Route::delete('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'destroy'])->name('destroy');
+    });
 });
