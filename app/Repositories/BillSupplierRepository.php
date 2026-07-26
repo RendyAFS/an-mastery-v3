@@ -13,7 +13,7 @@ class BillSupplierRepository
     {
         $query = BillSupplier::query()
             ->withTrashed()
-            ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor'])
+            ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor', 'sablon.fabric.typeFabric'])
             ->where('supplier_id', $supplierId)
             ->orderByDesc('date_bill');
 
@@ -49,6 +49,7 @@ class BillSupplierRepository
                         'items'      => $group->map(fn($bs) => [
                             'image_fabric'      => $bs->sablon?->imageFabric?->name ?? '-',
                             'type_color'        => $bs->sablon?->typeColor?->name ?? '-',
+                            'type_fabric'       => $bs->sablon?->fabric?->typeFabric?->name ?? '-',
                             'total_fee'         => (int) $bs->total_fee,
                             'total_long_fabric' => $bs->sablon?->total_long_fabric,
                         ])->values(),

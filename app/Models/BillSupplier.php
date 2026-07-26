@@ -43,9 +43,4 @@ class BillSupplier extends Model
     {
         return $this->belongsTo(Sablon::class, 'sablon_id');
     }
-
-    public function details(): HasMany
-    {
-        return $this->hasMany(BillSupplierDetail::class, 'bill_supplier_id');
-    }
 }
