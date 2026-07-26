@@ -50,14 +50,7 @@ class BillSupplierController extends Controller
                     'name'       => $supplier->name,
                     'deleted_at' => $supplier->deleted_at?->format('Y-m-d H:i:s'),
                 ],
-                'data' => $grouped->map(fn($week) => [
-                    'week_start'   => $week['week_start'],
-                    'week_label'   => $week['week_label'],
-                    'total_unpaid' => $week['total_unpaid'],
-                    'total_paid'   => $week['total_paid'],
-                    'unpaid'       => BillSupplierResource::collection($week['unpaid']),
-                    'paid'         => BillSupplierResource::collection($week['paid']),
-                ]),
+                'data' => $grouped,
             ]);
         }
 
@@ -71,25 +64,8 @@ class BillSupplierController extends Controller
         $sablons = $this->billSupplierRepository->getAvailableSablons($supplier->id, request('search'));
 
         return response()->json([
-            'data' => $sablons->map(fn($s) => [
-                'id' => $s->id,
-                'label' => sprintf(
-                    '%s - %s Warna - %s (%s m)',
-                    $s->imageFabric?->name,
-                    $s->typeColor?->name,
-                    $s->date_sablon?->translatedFormat('d F Y'),
-                    $s->total_long_fabric
-                ),
-                'total_long_fabric' => $s->total_long_fabric,
-            ]),
+            'data' => $sablons->map(fn($s) => $this->billSupplierRepository->calculatePreview($s)),
         ]);
-    }
-
-    public function calculate(Sablon $sablon)
-    {
-        $this->authorize('bill-suppliers.create');
-
-        return response()->json($this->billSupplierRepository->calculatePreview($sablon));
     }
 
     public function calculateBulk(Request $request)
@@ -99,38 +75,37 @@ class BillSupplierController extends Controller
         $sablonIds = $request->input('sablon_ids', []);
 
         $sablons = Sablon::whereIn('id', $sablonIds)
-            ->with(['fabric', 'imageFabric', 'typeColor'])
+            ->with(['imageFabric', 'typeFabric', 'typeColor', 'sablonDetails.colorFabric'])
             ->get();
 
-        $items = $sablons->map(function ($sablon) {
-            $preview = $this->billSupplierRepository->calculatePreview($sablon);
-            return [
-                ...$preview,
-                'fabric_name' => $sablon->fabric?->name ?? $sablon->imageFabric?->name ?? 'Tanpa Nama Fabric',
-                'color_name'  => $sablon->typeColor?->name ?? 'Tanpa Warna',
-            ];
-        });
-
-        $grouped = $items->groupBy('fabric_name');
-
-        $groupedData = $grouped->map(function ($group) {
-            return [
-                'fabric_name'       => $group->first()['fabric_name'],
-                'items'             => $group->map(fn($item) => [
-                    'color_name'    => $item['color_name'],
-                    'long_fabric'   => $item['total_long_fabric'],
-                    'total_fee'     => $item['total_fee'],
-                ])->values(),
-                'total_long_fabric' => $group->sum('total_long_fabric'),
-                'total_fee'         => $group->sum('total_fee'),
-            ];
-        })->values();
+        $items = $sablons->map(fn($sablon) => $this->billSupplierRepository->calculatePreview($sablon));
 
         return response()->json([
-            'grouped_data'      => $groupedData,
+            'items'             => $items->values(),
+            'count'             => $items->count(),
             'total_long_fabric' => $items->sum('total_long_fabric'),
             'total_fee'         => $items->sum('total_fee'),
+            'has_missing_price' => $items->some(fn($item) => !$item['price_supplier_id']),
+        ]);
+    }
+
+    public function calculateBatch(string $batch)
+    {
+        $this->authorize('bill-suppliers.update');
+
+        $billSuppliers = BillSupplier::where('batch', $batch)
+            ->with('sablon.imageFabric', 'sablon.typeFabric', 'sablon.typeColor', 'sablon.sablonDetails.colorFabric')
+            ->get();
+
+        abort_if($billSuppliers->isEmpty(), 404);
+
+        $items = $billSuppliers->map(fn($bs) => $this->billSupplierRepository->calculatePreview($bs->sablon));
+
+        return response()->json([
+            'items'             => $items->values(),
             'count'             => $items->count(),
+            'total_long_fabric' => $items->sum('total_long_fabric'),
+            'total_fee'         => $items->sum('total_fee'),
             'has_missing_price' => $items->some(fn($item) => !$item['price_supplier_id']),
         ]);
     }
@@ -158,54 +133,71 @@ class BillSupplierController extends Controller
         $this->authorize('bill-suppliers.view');
 
         return new BillSupplierResource(
-            $billSupplier->load(['sablon.fabric', 'sablon.typeFabric', 'sablon.typeColor', 'priceSupplier', 'details.sablonDetail'])
+            $billSupplier->load(['sablon.imageFabric', 'sablon.typeFabric', 'sablon.typeColor'])
         );
     }
 
-    public function edit(BillSupplier $billSupplier)
+    public function editBatch(string $batch)
     {
         $this->authorize('bill-suppliers.update');
 
-        $billSupplier->load(['sablon.fabric', 'sablon.typeFabric', 'sablon.typeColor', 'priceSupplier']);
+        $billSuppliers = BillSupplier::withTrashed()
+            ->where('batch', $batch)
+            ->with([
+                'sablon.imageFabric',
+                'sablon.typeFabric',
+                'sablon.typeColor',
+                'sablon.sablonDetails.colorFabric',
+            ])
+            ->get();
 
-        return view('bill-supplier.edit', compact('billSupplier'));
+        abort_if($billSuppliers->isEmpty(), 404);
+
+        $first = $billSuppliers->first();
+
+        return view('bill-supplier.edit', [
+            'batch'         => $batch,
+            'supplierId'    => $first->supplier_id,
+            'dateBill'      => $first->date_bill,
+            'isPaid'        => $first->is_paid,
+            'notes'         => $first->notes,
+            'billSuppliers' => $billSuppliers,
+        ]);
     }
 
-    public function update(SaveBillSupplierRequest $request, BillSupplier $billSupplier, SaveBillSupplierAction $action)
+    public function updateBatch(SaveBillSupplierRequest $request, string $batch, SaveBillSupplierAction $action)
     {
         $this->authorize('bill-suppliers.update');
 
-        $billSupplier = $action->handle($request, $billSupplier);
+        $billSuppliers = $action->handleBatchUpdate($batch, $request);
 
-        return new BillSupplierResource($billSupplier);
+        return BillSupplierResource::collection($billSuppliers);
     }
 
-    public function destroy(BillSupplier $billSupplier)
+    public function destroyBatch(string $batch)
     {
         $this->authorize('bill-suppliers.delete');
 
-        $billSupplier->delete();
+        BillSupplier::where('batch', $batch)->get()->each->delete();
 
         return response()->noContent();
     }
 
-    public function restore(int $id)
+    public function restoreBatch(string $batch)
     {
         $this->authorize('bill-suppliers.restore');
 
-        $billSupplier = BillSupplier::onlyTrashed()->findOrFail($id);
-        $billSupplier->restore();
+        BillSupplier::onlyTrashed()->where('batch', $batch)->get()->each->restore();
 
-        return response()->json(['message' => 'Bill Supplier restored successfully']);
+        return response()->json(['message' => 'Batch restored successfully']);
     }
 
-    public function forceDelete(int $id)
+    public function forceDeleteBatch(string $batch)
     {
         $this->authorize('bill-suppliers.forceDelete');
 
-        $billSupplier = BillSupplier::onlyTrashed()->findOrFail($id);
-        $billSupplier->forceDelete();
+        BillSupplier::onlyTrashed()->where('batch', $batch)->get()->each->forceDelete();
 
-        return response()->json(['message' => 'Bill Supplier permanently deleted']);
+        return response()->json(['message' => 'Batch permanently deleted']);
     }
 }

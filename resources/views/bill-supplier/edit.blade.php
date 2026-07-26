@@ -5,8 +5,8 @@
 @endpush
 
 @section('content')
-    <form id="bill-supplier-form" data-mode="edit" data-id="{{ $billSupplier->id }}"
-        data-supplier-id="{{ $billSupplier->supplier_id }}" class="max-w-4xl mx-auto">
+    <form id="bill-supplier-form" data-mode="edit" data-batch="{{ $batch }}" data-supplier-id="{{ $supplierId }}"
+        class="max-w-8xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl
                dark:bg-(--color-dark) dark:border-(--color-slate)">
@@ -15,7 +15,12 @@
                 <h3 class="text-2xl font-bold text-(--color-dark) dark:text-(--color-light)">Edit Bill Supplier</h3>
 
                 <div class="mt-6">
-                    @include('bill-supplier.form', ['billSupplier' => $billSupplier])
+                    @include('bill-supplier.form', [
+                        'billSuppliers' => $billSuppliers,
+                        'dateBill' => $dateBill,
+                        'isPaid' => $isPaid,
+                        'notes' => $notes,
+                    ])
                 </div>
             </div>
 
@@ -28,7 +33,7 @@
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
-                <a href="{{ route('bill_suppliers.by-supplier', $billSupplier->supplier_id) }}"
+                <a href="{{ route('bill_suppliers.by-supplier', $supplierId) }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
                        bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">

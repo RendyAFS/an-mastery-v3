@@ -2,77 +2,59 @@
 
 namespace App\Actions\BillSupplier;
 
+use App\Http\Requests\BillSupplier\SaveBillSupplierRequest;
 use App\Models\BillSupplier;
-use App\Models\PriceSupplier;
 use App\Models\Sablon;
-use Illuminate\Http\Request;
+use App\Repositories\BillSupplierRepository;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class SaveBillSupplierAction
 {
-    public function handle(Request $request, ?BillSupplier $billSupplier = null): BillSupplier|Collection
-    {
-        return DB::transaction(function () use ($request, $billSupplier) {
+    public function __construct(
+        private BillSupplierRepository $billSupplierRepository
+    ) {}
 
-            if (! $billSupplier) {
-                return $this->createBulk($request);
-            }
-
-            $billSupplier->update([
-                'date_bill' => $request->input('date_bill'),
-                'is_paid'   => $request->boolean('is_paid'),
-                'notes'     => $request->input('notes'),
-            ]);
-
-            return $billSupplier->load(['sablon', 'priceSupplier', 'details']);
-        });
-    }
-
-    private function createBulk(Request $request): Collection
+    public function handle(SaveBillSupplierRequest $request): Collection
     {
         $sablonIds = $request->input('sablon_ids', []);
+        $batch     = now()->format('YmdHis') . now()->micro;
 
-        $createdBills = collect();
+        $sablons = Sablon::whereIn('id', $sablonIds)->get();
 
-        foreach ($sablonIds as $sablonId) {
-            $sablon = Sablon::findOrFail($sablonId);
+        return $sablons->map(function ($sablon) use ($request, $batch) {
+            $preview = $this->billSupplierRepository->calculatePreview($sablon);
 
-            $priceSupplier = PriceSupplier::query()
-                ->where('supplier_id', $sablon->supplier_id)
-                ->where('type_fabric_id', $sablon->type_fabric_id)
-                ->where('type_color_id', $sablon->type_color_id)
-                ->first();
-
-            if (! $priceSupplier) {
-                throw ValidationException::withMessages([
-                    'sablon_ids' => "Harga supplier untuk sablon #{$sablon->id} belum tersedia.",
-                ]);
-            }
-
-            $bill = BillSupplier::create([
+            return BillSupplier::create([
                 'supplier_id'       => $sablon->supplier_id,
-                'price_supplier_id' => $priceSupplier->id,
                 'sablon_id'         => $sablon->id,
-                'total_fee'         => $sablon->total_long_fabric * $priceSupplier->price,
+                'price_supplier_id' => $preview['price_supplier_id'],
+                'batch'             => $batch,
+                'total_fee'         => $preview['total_fee'],
                 'date_bill'         => $request->input('date_bill'),
                 'is_paid'           => $request->boolean('is_paid'),
                 'notes'             => $request->input('notes'),
             ]);
+        });
+    }
 
-            $details = $sablon->sablonDetails->map(fn($detail) => [
-                'bill_supplier_id' => $bill->id,
-                'sablon_detail_id' => $detail->id,
-            ])->toArray();
+    public function handleBatchUpdate(string $batch, SaveBillSupplierRequest $request): Collection
+    {
+        $billSuppliers = BillSupplier::where('batch', $batch)
+            ->with('sablon')
+            ->get();
 
-            if (! empty($details)) {
-                $bill->details()->insert($details);
-            }
+        $billSuppliers->each(function (BillSupplier $billSupplier) use ($request) {
+            $preview = $this->billSupplierRepository->calculatePreview($billSupplier->sablon);
 
-            $createdBills->push($bill->load(['sablon', 'priceSupplier', 'details']));
-        }
+            $billSupplier->update([
+                'total_fee'         => $preview['total_fee'],
+                'price_supplier_id' => $preview['price_supplier_id'],
+                'date_bill'         => $request->input('date_bill'),
+                'is_paid'           => $request->boolean('is_paid'),
+                'notes'             => $request->input('notes'),
+            ]);
+        });
 
-        return $createdBills;
+        return $billSuppliers->fresh();
     }
 }

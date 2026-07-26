@@ -23,6 +23,41 @@ const PageScript = (function () {
         const badge =
             statusColor[item.status] ?? "bg-gray-500/10 text-gray-600";
 
+        const sablonHeaderHtml = `
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="font-bold text-sm">
+                        ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
+                    </p>
+                    <p class="text-sm text-(--color-dark-gray)">
+                        ${item.fabric?.date_coming}
+                    </p>
+                </div>
+
+                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
+                    ${item.status?.replaceAll("_", " ") ?? "-"}
+                </span>
+            </div>`;
+        const sablonSumaryHtml = `
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
+                    <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
+                    <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+                    <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
+                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
+                </div>
+            </div>`;
+
         const fabricDetailsHtml = item.sablonDetails?.length
             ? `
                     <div class="space-y-1">
@@ -133,44 +168,11 @@ const PageScript = (function () {
 
         return `
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
-
-            <div class="flex items-start justify-between">
-            <div>
-                <p class="font-bold text-sm">
-                    ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
-                </p>
-                <p class="text-sm text-(--color-dark-gray)">
-                    ${item.fabric?.date_coming}
-                </p>
-            </div>
-
-                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
-                    ${item.status?.replaceAll("_", " ") ?? "-"}
-                </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
-                    <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
-                    <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
-                    <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
-                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
-                </div>
-            </div>
+            ${sablonHeaderHtml}
+            ${sablonSumaryHtml}
             ${fabricDetailsHtml}
             ${employeeDetailsHtml}
             ${item.notes ? `<p class="text-xs text-(--color-dark-gray) line-clamp-2">${item.notes}</p>` : ""}
-
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 ${
                     isDeleted

@@ -6,43 +6,56 @@ const PageScript = (function () {
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
 
-    const billRow = (bill) => {
-        const isDeleted = bill.deleted_at !== null;
+    const batchItemRow = (item) => `
+        <div class="flex items-center justify-between text-xs py-1">
+            <span class="truncate">${item.image_fabric ?? "-"} · ${item.type_color + " Warna"?? "-"} · ${item.total_long_fabric + " Meter"?? "-"} </span>
+            <span class="font-medium">${formatCurrency(item.total_fee)}</span>
+        </div>`;
+
+    const batchCard = (batch) => {
+        const isDeleted = batch.deleted_at !== null;
+        const items = batch.items ?? [];
 
         return `
-        <div class="flex items-center justify-between gap-3 p-3 rounded-lg
-            bg-(--color-light-gray)/50 dark:bg-(--color-dark-slate)/50
+        <div class="p-3 rounded-lg bg-(--color-light-gray)/50 dark:bg-(--color-dark-slate)/50 space-y-2
             ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
 
-            <div class="min-w-0">
-                <p class="text-sm font-medium truncate">${bill.sablon?.fabric ?? "-"} · ${bill.sablon?.type_color ?? "-"}</p>
-                <p class="text-xs text-(--color-gray)">${bill.date_bill ?? "-"} · ${bill.sablon?.total_long_fabric ?? 0} m</p>
-            </div>
+            <div class="flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <p class="text-sm font-medium truncate">
+                        ${batch.count} Sablon${batch.notes ? " · " + batch.notes : ""}
+                    </p>
+                    <p class="text-xs text-(--color-gray)">${batch.date_bill ?? "-"}</p>
+                </div>
 
-            <div class="flex items-center gap-3 shrink-0">
-                <span class="font-semibold text-sm">${formatCurrency(bill.total_fee)}</span>
-
-                ${
-                    isDeleted
-                        ? `
-                        <div class="flex items-center gap-1">
-                            <button data-id="${bill.id}" class="btn-restore p-1.5 rounded-lg text-(--color-success) hover:bg-(--color-gray)/20 cursor-pointer">
+                <div class="flex items-center gap-1 shrink-0">
+                    ${
+                        isDeleted
+                            ? `
+                            <button data-batch="${batch.batch}" class="btn-restore p-1.5 rounded-lg text-(--color-success) hover:bg-(--color-gray)/20 cursor-pointer">
                                 <i data-lucide="rotate-ccw" class="size-4"></i>
                             </button>
-                            <button data-id="${bill.id}" class="btn-force-delete p-1.5 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
+                            <button data-batch="${batch.batch}" class="btn-force-delete p-1.5 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
                                 <i data-lucide="trash" class="size-4"></i>
-                            </button>
-                        </div>`
-                        : `
-                        <div class="flex items-center gap-1">
-                            <a href="${route("bill_suppliers.edit", bill.id)}" class="p-1.5 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
+                            </button>`
+                            : `
+                            <a href="${route("bill_suppliers.batch.edit", batch.batch)}" class="p-1.5 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
                                 <i data-lucide="square-pen" class="size-4"></i>
                             </a>
-                            <button data-id="${bill.id}" class="btn-delete p-1.5 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
+                            <button data-batch="${batch.batch}" class="btn-delete p-1.5 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
                                 <i data-lucide="trash-2" class="size-4"></i>
-                            </button>
-                        </div>`
-                }
+                            </button>`
+                    }
+                </div>
+            </div>
+
+            <div class="border-t border-(--color-gray)/20 pt-2 space-y-0.5">
+                ${items.length ? items.map(batchItemRow).join("") : `<p class="text-xs text-(--color-gray)">Tidak ada rincian</p>`}
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
+                <span class="text-xs font-semibold text-(--color-dark) dark:text-(--color-light)">Total</span>
+                <span class="font-bold text-sm text-(--color-primary)">${formatCurrency(batch.total_fee)}</span>
             </div>
         </div>`;
     };
@@ -61,13 +74,13 @@ const PageScript = (function () {
                 <div>
                     <p class="text-xs font-medium text-(--color-red) mb-2 uppercase">Belum Lunas</p>
                     <div class="space-y-2">
-                        ${week.unpaid.length ? week.unpaid.map(billRow).join("") : `<p class="text-xs text-(--color-gray)">Tidak ada data</p>`}
+                        ${week.unpaid.length ? week.unpaid.map(batchCard).join("") : `<p class="text-xs text-(--color-gray)">Tidak ada data</p>`}
                     </div>
                 </div>
                 <div>
                     <p class="text-xs font-medium text-(--color-success) mb-2 uppercase">Lunas</p>
                     <div class="space-y-2">
-                        ${week.paid.length ? week.paid.map(billRow).join("") : `<p class="text-xs text-(--color-gray)">Tidak ada data</p>`}
+                        ${week.paid.length ? week.paid.map(batchCard).join("") : `<p class="text-xs text-(--color-gray)">Tidak ada data</p>`}
                     </div>
                 </div>
             </div>
@@ -104,36 +117,40 @@ const PageScript = (function () {
 
     const bindEvents = () => {
         $(document).on("click", ".btn-delete", async function () {
-            const id = $(this).data("id");
+            const batch = $(this).data("batch");
             const confirmed = await Confirm.delete(
-                "Yakin ingin menghapus bill supplier ini?",
+                "Yakin ingin menghapus batch tagihan ini?",
             );
             if (!confirmed) return;
-            await ApiProvider.delete(route("bill_suppliers.destroy", id));
-            Toast.success("Success", "Bill Supplier deleted successfully");
+            await ApiProvider.delete(
+                route("bill_suppliers.batch.destroy", batch),
+            );
+            Toast.success("Success", "Batch tagihan deleted successfully");
             load();
         });
 
         $(document).on("click", ".btn-restore", async function () {
-            const id = $(this).data("id");
+            const batch = $(this).data("batch");
             const confirmed = await Confirm.show(
-                "Restore bill supplier ini?",
+                "Restore batch tagihan ini?",
                 "Confirmation",
             );
             if (!confirmed) return;
-            await ApiProvider.put(route("bill_suppliers.restore", id));
-            Toast.success("Success", "Bill Supplier restored");
+            await ApiProvider.put(route("bill_suppliers.batch.restore", batch));
+            Toast.success("Success", "Batch tagihan restored");
             load();
         });
 
         $(document).on("click", ".btn-force-delete", async function () {
-            const id = $(this).data("id");
+            const batch = $(this).data("batch");
             const confirmed = await Confirm.delete(
-                "Ini akan menghapus permanen bill supplier. Lanjutkan?",
+                "Ini akan menghapus permanen batch tagihan. Lanjutkan?",
             );
             if (!confirmed) return;
-            await ApiProvider.delete(route("bill_suppliers.force-delete", id));
-            Toast.success("Success", "Bill Supplier permanently deleted");
+            await ApiProvider.delete(
+                route("bill_suppliers.batch.force-delete", batch),
+            );
+            Toast.success("Success", "Batch tagihan permanently deleted");
             load();
         });
     };

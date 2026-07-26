@@ -13,6 +13,7 @@ class BillSupplier extends Model
     use Userstamps, SoftDeletes;
 
     protected $fillable = [
+        'batch',
         'supplier_id',
         'price_supplier_id',
         'sablon_id',

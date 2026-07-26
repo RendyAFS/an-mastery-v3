@@ -1,109 +1,177 @@
-@php $isEdit = isset($billSupplier); @endphp
+@php $isEdit = isset($billSuppliers) && $billSuppliers !== null; @endphp
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="col-span-1 md:col-span-2">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+    {{-- KIRI: Daftar Sablon --}}
+    <div class="lg:col-span-7 space-y-2">
         @if (!$isEdit)
-            <div class="mb-2 space-y-2">
+            <div class="flex items-center justify-between gap-2">
                 <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     Sablon (Belum Ditagih)
                 </label>
-
-                <button type="button" id="btn-select-sablon" data-hs-overlay="#hs-select-sablon-modal"
-                    class="w-full flex items-center justify-between px-4 py-2 rounded-lg
-                       bg-(--color-light-gray) border border-(--color-gray)
-                       text-(--color-dark) hover:bg-(--color-gray)/20
-                       dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
-                       cursor-pointer">
-                    <span id="sablon-selected-summary" class="text-sm text-(--color-gray)">
-                        Belum ada sablon dipilih
-                    </span>
-                    <i data-lucide="chevron-down" class="size-4"></i>
-                </button>
-
-                <small class="text-xs text-(--color-dark-gray)">
-                    Klik untuk memilih sablon yang akan ditagih. Semua sablon terpilih akan dibuatkan bill sekaligus.
-                </small>
+                <span id="sablon-selected-summary" class="text-xs text-(--color-gray)">
+                    Belum ada sablon dipilih
+                </span>
             </div>
+
+            <div class="mb-2">
+                <input type="text" id="sablon-search" placeholder="Cari fabric..."
+                    class="w-full px-4 py-2 rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                       text-(--color-dark) text-sm focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                       dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+            </div>
+
+            <div class="flex items-center gap-2 pb-2 border-b border-(--color-gray)/20">
+                <input type="checkbox" id="sablon-check-all" class="checkbox-custom" checked>
+                <label for="sablon-check-all"
+                    class="text-sm font-medium text-(--color-dark) dark:text-(--color-light) cursor-pointer">
+                    Pilih Semua
+                </label>
+            </div>
+
+            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-[70vh] overflow-y-auto">
+                <div id="sablon-modal-loading" class="hidden text-center text-sm text-(--color-gray) py-10">
+                    Loading data...
+                </div>
+
+                <div id="sablon-modal-empty" class="hidden text-center text-sm text-(--color-gray) py-10">
+                    Tidak ada sablon yang belum ditagih
+                </div>
+
+                <div id="sablon-modal-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+
+            <small class="text-xs text-(--color-dark-gray) block">
+                Centang sablon yang akan ditagih. Semua sablon terpilih akan dibuatkan bill sekaligus dalam satu
+                batch. Hanya sablon berstatus <b>Done</b> yang bisa ditagih.
+            </small>
         @else
-            <div class="mb-2 p-4 rounded-lg bg-(--color-light-gray) dark:bg-(--color-dark-slate)">
-                <p class="text-xs text-(--color-gray)">Sablon</p>
-                <p class="text-sm font-medium">
-                    {{ $billSupplier->sablon?->fabric?->name ?? '-' }} ·
-                    {{ $billSupplier->sablon?->typeColor?->name ?? '-' }} ·
-                    {{ $billSupplier->sablon?->total_long_fabric ?? 0 }} m
-                </p>
+            <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                Sablon dalam Batch Ini
+            </label>
+
+            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-[70vh] overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @foreach ($billSuppliers as $bs)
+                        @php
+                            $sablon = $bs->sablon;
+                            $statusColor = match ($sablon?->status?->value) {
+                                'ON_PROGRESS' => 'bg-yellow-500/10 text-yellow-600',
+                                'DONE' => 'bg-blue-500/10 text-blue-600',
+                                'DELIVERED' => 'bg-green-500/10 text-green-600',
+                                'RETURNED' => 'bg-red-500/10 text-red-600',
+                                default => 'bg-gray-500/10 text-gray-600',
+                            };
+                        @endphp
+
+                        <div
+                            class="p-3 rounded-lg border border-(--color-gray)/10 bg-(--color-light-gray) dark:bg-(--color-dark-slate) space-y-2">
+                            {{-- Header --}}
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <p class="font-bold text-sm truncate">
+                                        {{ $sablon?->imageFabric?->name ?? '-' }} |
+                                        {{ $sablon?->typeFabric?->name ?? '-' }}
+                                    </p>
+                                    <p class="text-xs text-(--color-dark-gray)">
+                                        {{ $sablon?->date_sablon?->translatedFormat('d F Y') ?? '-' }}
+                                    </p>
+                                </div>
+                                <span
+                                    class="shrink-0 text-[11px] px-2 py-0.5 rounded-full font-medium {{ $statusColor }}">
+                                    {{ $sablon?->status?->labels() ?? '-' }}
+                                </span>
+                            </div>
+
+                            {{-- Summary --}}
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+                                    <p class="text-sm font-medium">{{ $sablon?->total_long_fabric ?? 0 }} m</p>
+                                </div>
+                                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
+                                    <p class="text-sm font-medium">{{ $sablon?->typeColor?->name ?? '-' }} Warna</p>
+                                </div>
+                                <div class="bg-(--color-gray)/10 rounded-lg p-2 col-span-2">
+                                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Fee</p>
+                                    <p class="text-sm font-semibold text-(--color-primary)">
+                                        {{ \App\Helpers\RupiahHelper::format($bs->total_fee) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Fabric Details --}}
+                            @if ($sablon?->sablonDetails?->isNotEmpty())
+                                <div class="space-y-1">
+                                    <p class="text-xs font-semibold">Fabric Details</p>
+                                    <ul class="space-y-1 text-xs">
+                                        @foreach ($sablon->sablonDetails as $detail)
+                                            <li class="flex justify-between">
+                                                <span>• {{ $detail->colorFabric?->name ?? '-' }}</span>
+                                                <span class="font-medium">{{ $detail->long_fabric ?? 0 }} m</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
             </div>
+
+            <small class="text-xs text-(--color-dark-gray) block">
+                Sablon dalam satu batch tidak dapat diubah setelah dibuat.
+            </small>
         @endif
     </div>
 
-    <div class="col-span-1">
-        <div class="mb-2 space-y-2">
-            <label for="date_bill" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Tanggal Bill
-            </label>
+    {{-- KANAN: Input & Summary --}}
+    <div class="lg:col-span-5 space-y-4">
+        <div>
+            <div class="mb-2 space-y-2">
+                <label for="date_bill" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                    Tanggal Bill
+                </label>
 
-            <input type="date" id="date_bill" name="date_bill"
-                value="{{ $isEdit ? $billSupplier->date_bill?->format('Y-m-d') : now()->format('Y-m-d') }}" required
-                class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
-        </div>
-
-        <div class="mb-6 flex items-center">
-            <input type="checkbox" id="is_paid" name="is_paid" value="1"
-                {{ $isEdit && $billSupplier->is_paid ? 'checked' : '' }} class="checkbox-custom">
-
-            <label for="is_paid"
-                class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
-                Sudah Dibayar
-            </label>
-        </div>
-    </div>
-
-    <div class="col-span-1">
-        <div class="mb-2 space-y-2">
-            <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Notes
-            </label>
-
-            <textarea id="notes" name="notes" rows="3"
-                class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                   dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">{{ $isEdit ? $billSupplier->notes : '' }}</textarea>
-        </div>
-    </div>
-
-    <div class="col-span-1 md:col-span-2">
-        @if ($isEdit)
-            <div id="bs-calc-preview" class="p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5">
-                <p class="text-xs text-(--color-gray) mb-2">Rincian Perhitungan</p>
-                <div class="grid grid-cols-3 gap-3 text-sm">
-                    <div>
-                        <p class="text-xs text-(--color-gray)">Total Panjang Kain</p>
-                        <p class="font-medium">{{ $billSupplier->sablon?->total_long_fabric ?? 0 }} m</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-(--color-gray)">Harga / m</p>
-                        <p class="font-medium">
-                            {{ \App\Helpers\RupiahHelper::format($billSupplier->priceSupplier?->price ?? 0) }}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-(--color-gray)">Total Fee</p>
-                        <p class="font-bold text-(--color-primary)">
-                            {{ \App\Helpers\RupiahHelper::format($billSupplier->total_fee ?? 0) }}
-                        </p>
-                    </div>
-                </div>
+                <input type="date" id="date_bill" name="date_bill"
+                    value="{{ $isEdit ? $dateBill?->format('Y-m-d') : now()->format('Y-m-d') }}" required
+                    class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                       text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                       dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
             </div>
-        @else
-            <div id="bs-calc-preview"
-                class="hidden p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5">
-                <p class="text-xs text-(--color-gray) mb-2">Rincian Perhitungan (Total Gabungan)</p>
+
+            <div class="mb-4 flex items-center">
+                <input type="checkbox" id="is_paid" name="is_paid" value="1"
+                    {{ $isEdit && $isPaid ? 'checked' : '' }} class="checkbox-custom">
+
+                <label for="is_paid"
+                    class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
+                    Sudah Dibayar
+                </label>
+            </div>
+
+            <div class="mb-2 space-y-2">
+                <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                    Notes
+                </label>
+
+                <textarea id="notes" name="notes" rows="3"
+                    class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
+                       text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                       dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">{{ $isEdit ? $notes : '' }}</textarea>
+            </div>
+        </div>
+
+        <div id="bs-calc-preview"
+            class="{{ $isEdit ? '' : 'hidden' }} p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5 space-y-3 sticky top-4">
+            <div>
+                <p class="text-xs text-(--color-gray) mb-2">Rincian Perhitungan (Total Batch)</p>
                 <div class="grid grid-cols-3 gap-3 text-sm">
                     <div>
                         <p class="text-xs text-(--color-gray)">Jumlah Sablon</p>
-                        <p class="font-medium" id="calc-count">0 sablon</p>
+                        <p class="font-medium" id="calc-count">
+                            {{ $isEdit ? count($billSuppliers) . ' sablon' : '0 sablon' }}
+                        </p>
                     </div>
                     <div>
                         <p class="text-xs text-(--color-gray)">Total Panjang Kain</p>
@@ -115,65 +183,8 @@
                     </div>
                 </div>
             </div>
-        @endif
-    </div>
-</div>
-
-@unless ($isEdit)
-    {{-- Modal Pilih Sablon --}}
-    <div id="hs-select-sablon-modal"
-        class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none">
-        <div
-            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-            <div
-                class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-sm rounded-xl pointer-events-auto
-                   dark:bg-(--color-dark) dark:border-(--color-slate) max-h-[90vh]">
-
-                <div class="flex justify-between items-center py-3 px-4 border-b border-(--color-gray)/20">
-                    <h3 class="font-bold text-(--color-dark) dark:text-(--color-light)">
-                        Pilih Sablon
-                    </h3>
-                    <button type="button" data-hs-overlay="#hs-select-sablon-modal"
-                        class="size-8 inline-flex justify-center items-center rounded-full
-                           text-(--color-gray) hover:bg-(--color-gray)/20 cursor-pointer">
-                        <i data-lucide="x" class="size-4"></i>
-                    </button>
-                </div>
-
-                <div class="p-4 overflow-y-auto space-y-3">
-                    <div class="flex items-center gap-2 pb-2 border-b border-(--color-gray)/20">
-                        <input type="checkbox" id="sablon-check-all" class="checkbox-custom" checked>
-                        <label for="sablon-check-all"
-                            class="text-sm font-medium text-(--color-dark) dark:text-(--color-light) cursor-pointer">
-                            Pilih Semua
-                        </label>
-                    </div>
-
-                    <div id="sablon-modal-loading" class="text-center text-sm text-(--color-gray) py-6">
-                        Loading data...
-                    </div>
-
-                    <div id="sablon-modal-empty" class="hidden text-center text-sm text-(--color-gray) py-6">
-                        Tidak ada sablon yang belum ditagih
-                    </div>
-
-                    <div id="sablon-modal-list" class="hidden space-y-1"></div>
-                </div>
-
-                <div class="flex justify-end gap-2 py-3 px-4 border-t border-(--color-gray)/20">
-                    <button type="button" data-hs-overlay="#hs-select-sablon-modal"
-                        class="px-4 py-2 text-sm font-semibold rounded-lg
-                           bg-(--color-light-gray) hover:bg-(--color-gray)/20
-                           text-(--color-dark) dark:text-(--color-light) cursor-pointer">
-                        Batal
-                    </button>
-                    <button type="button" id="btn-confirm-sablon"
-                        class="px-4 py-2 text-sm font-semibold rounded-lg
-                           bg-(--color-primary) hover:bg-(--color-primary)/80 text-white cursor-pointer">
-                        Pilih
-                    </button>
-                </div>
+            <div id="calc-item-list" class="space-y-1 border-t border-(--color-gray)/20 pt-2 max-h-64 overflow-y-auto">
             </div>
         </div>
     </div>
-@endunless
+</div>

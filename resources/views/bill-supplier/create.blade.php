@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="bill-supplier-form" data-mode="create" data-supplier-id="{{ $supplier->id }}" class="max-w-4xl mx-auto">
+    <form id="bill-supplier-form" data-mode="create" data-supplier-id="{{ $supplier->id }}" class="max-w-8xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl
                dark:bg-(--color-dark) dark:border-(--color-slate)">
@@ -16,7 +16,7 @@
                 </h3>
 
                 <div class="mt-6">
-                    @include('bill-supplier.form', ['billSupplier' => null])
+                    @include('bill-supplier.form', ['billSuppliers' => null])
                 </div>
             </div>
 

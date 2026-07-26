@@ -2,9 +2,58 @@ import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
+import {
+    sablonHeaderHtml,
+    sablonSummaryHtml,
+    fabricDetailsHtml,
+} from "@/utils/sablon-card";
 
 const PageScript = (function () {
-    let form, mode, id, supplierId;
+    let form, mode, batch, supplierId;
+
+    const renderSablonCards = (sablons) => {
+        const listContainer = $("#sablon-modal-list");
+
+        if (!sablons.length) {
+            listContainer.addClass("hidden");
+            $("#sablon-modal-empty").removeClass("hidden");
+            return;
+        }
+
+        $("#sablon-modal-empty").addClass("hidden");
+
+        listContainer.html(
+            sablons
+                .map((s) => {
+                    const disabled = s.status !== "DONE";
+
+                    return `
+                    <label class="flex items-start gap-3 p-3 rounded-lg border border-(--color-gray)/10
+                        ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-(--color-gray)/10 cursor-pointer"}"
+                        data-fabric-name="${(s.image_fabric ?? "").toLowerCase()}">
+                        <input type="checkbox" class="checkbox-custom sablon-checkbox mt-1"
+                            value="${s.sablon_id}" ${disabled ? "disabled" : "checked"}>
+                        <div class="flex-1 min-w-0 space-y-2">
+                            ${sablonHeaderHtml(s)}
+                            ${sablonSummaryHtml(s)}
+                            ${fabricDetailsHtml(s)}
+                            ${
+                                disabled
+                                    ? `<p class="text-[11px] text-(--color-red)">Hanya sablon berstatus Done yang bisa ditagih</p>`
+                                    : ""
+                            }
+                        </div>
+                    </label>`;
+                })
+                .join(""),
+        );
+
+        listContainer.removeClass("hidden");
+        $("#sablon-check-all")
+            .prop("checked", true)
+            .prop("indeterminate", false);
+        syncSelection();
+    };
 
     const loadSablonList = async () => {
         const listContainer = $("#sablon-modal-list");
@@ -19,36 +68,24 @@ const PageScript = (function () {
             const response = await ApiProvider.get(
                 route("bill_suppliers.available-sablons", supplierId),
             );
-            const sablons = response.data ?? [];
-
-            if (!sablons.length) {
-                emptyEl.removeClass("hidden");
-                return;
-            }
-
-            listContainer.html(
-                sablons
-                    .map(
-                        (s) => `
-                        <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-(--color-gray)/10 cursor-pointer">
-                            <input type="checkbox" class="checkbox-custom sablon-checkbox" value="${s.id}" checked>
-                            <span class="text-sm">${s.label}</span>
-                        </label>
-                    `,
-                    )
-                    .join(""),
-            );
-
-            listContainer.removeClass("hidden");
-
-            $("#sablon-check-all").prop("checked", true).prop("indeterminate", false);
-
-            syncSelection();
+            renderSablonCards(response.data ?? []);
         } catch (error) {
             console.error("Load available sablons error:", error);
         } finally {
             loadingEl.addClass("hidden");
         }
+    };
+
+    const filterSablonCards = (keyword) => {
+        const query = keyword.trim().toLowerCase();
+
+        $("#sablon-modal-list > label").each(function () {
+            const name = $(this).data("fabric-name") ?? "";
+            $(this).toggleClass(
+                "hidden",
+                query.length > 0 && !name.includes(query),
+            );
+        });
     };
 
     const getCheckedIds = () =>
@@ -62,8 +99,8 @@ const PageScript = (function () {
         const checkAll = document.getElementById("sablon-check-all");
         if (!checkAll) return;
 
-        const total = $(".sablon-checkbox").length;
-        const checked = $(".sablon-checkbox:checked").length;
+        const total = $(".sablon-checkbox:not(:disabled)").length;
+        const checked = $(".sablon-checkbox:not(:disabled):checked").length;
 
         checkAll.checked = total > 0 && checked === total;
         checkAll.indeterminate = checked > 0 && checked < total;
@@ -72,11 +109,41 @@ const PageScript = (function () {
     const syncSelection = () => {
         const ids = getCheckedIds();
 
-        const summaryEl = $("#sablon-selected-summary");
-        summaryEl.text(ids.length ? `${ids.length} sablon dipilih` : "Belum ada sablon dipilih");
+        $("#sablon-selected-summary").text(
+            ids.length
+                ? `${ids.length} sablon dipilih`
+                : "Belum ada sablon dipilih",
+        );
 
         syncCheckAllState();
         loadBulkPreview(ids);
+    };
+
+    const renderPreview = (calc) => {
+        $("#calc-count").text(`${calc.count ?? 0} sablon`);
+        $("#calc-total-long-fabric").text(`${calc.total_long_fabric ?? 0} m`);
+        $("#calc-total-fee").text(
+            `Rp${RupiahInput.format(calc.total_fee ?? 0)}`,
+        );
+
+        $("#calc-item-list").html(
+            (calc.items ?? [])
+                .map(
+                    (item) => `
+                    <div class="flex items-center justify-between text-xs py-1">
+                        <span class="truncate">${item.image_fabric ?? "-"} · ${item.type_color ?? "-"} Warna · ${item.total_long_fabric ?? 0} Meter</span>
+                        <span class="font-medium">Rp${RupiahInput.format(item.total_fee ?? 0)}</span>
+                    </div>`,
+                )
+                .join(""),
+        );
+
+        if (calc.has_missing_price) {
+            Toast.error(
+                "Perhatian",
+                "Beberapa sablon belum memiliki harga supplier untuk kombinasi fabric & warna",
+            );
+        }
     };
 
     const loadBulkPreview = async (ids) => {
@@ -88,27 +155,29 @@ const PageScript = (function () {
         }
 
         try {
-            const calc = await ApiProvider.post(route("bill_suppliers.calculate-bulk"), {
-                sablon_ids: ids,
-            });
-
-            $("#calc-count").text(`${ids.length} sablon`);
-            $("#calc-total-long-fabric").text(`${calc.total_long_fabric ?? 0} m`);
-            $("#calc-total-fee").text(`Rp${RupiahInput.format(calc.total_fee ?? 0)}`);
-
-            const missingPrice = (calc.data ?? []).some((item) => !item.price_supplier_id);
-
-            if (missingPrice) {
-                Toast.error(
-                    "Perhatian",
-                    "Beberapa sablon belum memiliki harga supplier untuk kombinasi fabric & warna",
-                );
-            }
-
+            const calc = await ApiProvider.post(
+                route("bill_suppliers.calculate-bulk"),
+                {
+                    sablon_ids: ids,
+                },
+            );
+            renderPreview(calc);
             preview.removeClass("hidden");
         } catch (error) {
             console.error("Calculate bulk error:", error);
             preview.addClass("hidden");
+        }
+    };
+
+    // Hitung ulang total batch secara dinamis (mengikuti harga supplier terbaru)
+    const loadBatchPreview = async () => {
+        try {
+            const calc = await ApiProvider.get(
+                route("bill_suppliers.batch.calculate", batch),
+            );
+            renderPreview(calc);
+        } catch (error) {
+            console.error("Calculate batch error:", error);
         }
     };
 
@@ -120,7 +189,10 @@ const PageScript = (function () {
             const sablonIds = getCheckedIds();
 
             if (!sablonIds.length) {
-                Toast.error("Perhatian", "Pilih minimal 1 sablon terlebih dahulu");
+                Toast.error(
+                    "Perhatian",
+                    "Pilih minimal 1 sablon terlebih dahulu",
+                );
                 stopLoading(submitter);
                 return;
             }
@@ -137,11 +209,17 @@ const PageScript = (function () {
             }
 
             if (mode === "edit") {
-                await ApiProvider.put(route("bill_suppliers.update", id), payload);
+                await ApiProvider.put(
+                    route("bill_suppliers.batch.update", batch),
+                    payload,
+                );
                 Toast.success("Success", "Bill Supplier Successfully Updated");
             }
 
-            window.location.href = route("bill_suppliers.by-supplier", supplierId);
+            window.location.href = route(
+                "bill_suppliers.by-supplier",
+                supplierId,
+            );
         } catch (error) {
             // error sudah ditangani ApiProvider
         } finally {
@@ -151,16 +229,16 @@ const PageScript = (function () {
 
     const bindEvents = () => {
         $(document).on("change", "#sablon-check-all", function () {
-            $(".sablon-checkbox").prop("checked", this.checked);
+            $(".sablon-checkbox:not(:disabled)").prop("checked", this.checked);
+            syncSelection();
         });
 
         $(document).on("change", ".sablon-checkbox", function () {
-            syncCheckAllState();
+            syncSelection();
         });
 
-        $(document).on("click", "#btn-confirm-sablon", function () {
-            syncSelection();
-            HSOverlay.close("#hs-select-sablon-modal");
+        $(document).on("input", "#sablon-search", function () {
+            filterSablonCards($(this).val());
         });
 
         form.addEventListener("submit", async (e) => {
@@ -181,13 +259,17 @@ const PageScript = (function () {
             if (!form) return;
 
             mode = form.dataset.mode;
-            id = form.dataset.id;
+            batch = form.dataset.batch;
             supplierId = form.dataset.supplierId;
 
             bindEvents();
 
             if (mode === "create") {
                 loadSablonList();
+            }
+
+            if (mode === "edit") {
+                loadBatchPreview();
             }
         },
     };
