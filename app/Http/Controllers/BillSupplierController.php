@@ -67,8 +67,16 @@ class BillSupplierController extends Controller
         $this->authorize('bill-suppliers.view');
         $supplier = Supplier::withTrashed()->findOrFail($supplier->id);
 
+        $dateFrom = $this->parseWeekBoundary(request('week_start'), false);
+        $dateTo   = $this->parseWeekBoundary(request('week_end'), true);
+
         if (request()->expectsJson()) {
-            $grouped = $this->billSupplierRepository->getGroupedBySupplier($supplier->id, request('search'));
+            $grouped = $this->billSupplierRepository->getGroupedBySupplier(
+                $supplier->id,
+                request('search'),
+                $dateFrom,
+                $dateTo
+            );
 
             return response()->json([
                 'supplier' => [

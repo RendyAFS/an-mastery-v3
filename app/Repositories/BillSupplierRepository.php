@@ -9,8 +9,12 @@ use Carbon\Carbon;
 
 class BillSupplierRepository
 {
-    public function getGroupedBySupplier(int $supplierId, ?string $search = null)
-    {
+    public function getGroupedBySupplier(
+        int $supplierId,
+        ?string $search = null,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null
+    ) {
         $query = BillSupplier::query()
             ->withTrashed()
             ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor', 'sablon.fabric.typeFabric'])
@@ -19,6 +23,10 @@ class BillSupplierRepository
 
         if ($search) {
             $query->where('notes', 'like', "%{$search}%");
+        }
+
+        if ($dateFrom && $dateTo) {
+            $query->whereBetween('date_bill', [$dateFrom, $dateTo]);
         }
 
         $bills = $query->get();
@@ -45,7 +53,6 @@ class BillSupplierRepository
                         'notes'      => $first->notes,
                         'count'      => $group->count(),
                         'total_fee'  => (int) $group->sum('total_fee'),
-                        // rincian per sablon dalam batch ini
                         'items'      => $group->map(fn($bs) => [
                             'image_fabric'      => $bs->sablon?->imageFabric?->name ?? '-',
                             'type_color'        => $bs->sablon?->typeColor?->name ?? '-',
@@ -53,7 +60,6 @@ class BillSupplierRepository
                             'total_fee'         => (int) $bs->total_fee,
                             'total_long_fabric' => $bs->sablon?->total_long_fabric,
                         ])->values(),
-                        // batch dianggap "deleted" hanya jika seluruh row-nya sudah soft-deleted
                         'deleted_at' => $group->every(fn($b) => $b->deleted_at !== null)
                             ? $first->deleted_at?->format('Y-m-d H:i:s')
                             : null,

@@ -3,6 +3,8 @@ import RupiahInput from "@/utils/rupiah-input";
 
 const PageScript = (function () {
     let supplierId;
+    let weekStart;
+    let weekEnd;
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
 
@@ -152,6 +154,20 @@ const PageScript = (function () {
             </div>
         </div>`;
 
+    const buildBackLink = () => {
+        const params = new URLSearchParams();
+        if (weekStart) params.set("week_start", weekStart);
+        if (weekEnd) params.set("week_end", weekEnd);
+
+        const query = params.toString();
+        const baseUrl = route("bill_suppliers.index");
+
+        $("#bs-back-link").attr(
+            "href",
+            query ? `${baseUrl}?${query}` : baseUrl,
+        );
+    };
+
     const load = async () => {
         $("#bs-loading").removeClass("hidden");
         $("#bs-weeks").addClass("hidden");
@@ -159,9 +175,16 @@ const PageScript = (function () {
         $("#bs-summary").addClass("hidden");
 
         try {
-            const response = await ApiProvider.get(
-                route("bill_suppliers.by-supplier", supplierId),
-            );
+            const params = new URLSearchParams();
+            if (weekStart) params.set("week_start", weekStart);
+            if (weekEnd) params.set("week_end", weekEnd);
+
+            const query = params.toString();
+            const url = query
+                ? `${route("bill_suppliers.by-supplier", supplierId)}?${query}`
+                : route("bill_suppliers.by-supplier", supplierId);
+
+            const response = await ApiProvider.get(url);
             const weeks = response.data ?? [];
 
             if (!weeks.length) {
@@ -226,7 +249,12 @@ const PageScript = (function () {
 
     return {
         init() {
-            supplierId = $("#bill-supplier-show").data("supplier-id");
+            const container = $("#bill-supplier-show");
+            supplierId = container.data("supplier-id");
+            weekStart = container.data("week-start") || null;
+            weekEnd = container.data("week-end") || null;
+
+            buildBackLink();
             bindEvents();
             load();
         },

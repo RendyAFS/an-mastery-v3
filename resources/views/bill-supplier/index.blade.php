@@ -39,10 +39,10 @@
                         dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
             </div>
 
-            <div class="flex items-end">
+            <div class="flex items-center pt-5">
                 <button type="button" id="filter-week-reset"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm
-                        border border-(--color-gray)/30 hover:bg-(--color-gray)/10 cursor-pointer">
+                        bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
                     <i data-lucide="rotate-ccw" class="size-4"></i>
                     Reset ke Minggu Ini
                 </button>

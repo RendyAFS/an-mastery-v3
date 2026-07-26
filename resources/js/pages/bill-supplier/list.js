@@ -25,10 +25,30 @@ const PageScript = (function () {
         return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
     };
 
+    const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const applyFiltersFromUrl = () => {
+        const params = getUrlParams();
+        const currentWeek = getISOWeekString(new Date());
+
+        $("#filter-week-start").val(params.get("week_start") || currentWeek);
+        $("#filter-week-end").val(params.get("week_end") || currentWeek);
+    };
+
+    const syncUrl = () => {
+        const params = getUrlParams();
+        params.set("week_start", $("#filter-week-start").val());
+        params.set("week_end", $("#filter-week-end").val());
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
     const setDefaultWeekFilters = () => {
         const currentWeek = getISOWeekString(new Date());
         $("#filter-week-start").val(currentWeek);
         $("#filter-week-end").val(currentWeek);
+        syncUrl();
     };
 
     const patternSvg = (pattern) => {
@@ -293,6 +313,7 @@ const PageScript = (function () {
             "change",
             "#filter-week-start, #filter-week-end",
             function () {
+                syncUrl();
                 cardgrid?.reload();
             },
         );
@@ -305,7 +326,8 @@ const PageScript = (function () {
 
     return {
         init() {
-            setDefaultWeekFilters();
+            applyFiltersFromUrl();
+            syncUrl();
             bindEvents();
 
             cardgrid = initCardgrid({
@@ -321,8 +343,14 @@ const PageScript = (function () {
                 },
                 renderCard,
                 pageLength: 12,
-                cardClickRoute: (row) =>
-                    route("bill_suppliers.by-supplier", row.id),
+                cardClickRoute: (row) => {
+                    const params = new URLSearchParams({
+                        week_start: $("#filter-week-start").val(),
+                        week_end: $("#filter-week-end").val(),
+                    });
+
+                    return `${route("bill_suppliers.by-supplier", row.id)}?${params.toString()}`;
+                },
             });
 
             if (window.lucide) window.lucide.createIcons();
