@@ -11,44 +11,33 @@
                 <h1 class="text-2xl md:text-3xl font-bold">Bill Supplier</h1>
                 <p class="text-sm text-(--color-gray) mt-1">Pilih supplier untuk melihat data tagihan</p>
             </div>
-        </div>
+            <div class="flex flex-wrap items-end gap-4">
+                <div class="w-full sm:w-56">
+                    <label for="filter-week-start"
+                        class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                        Start Week
+                    </label>
 
-        <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4">
-            <div>
-                <label for="filter-week-start"
-                    class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    Start Week
-                </label>
-                <input type="week" id="filter-week-start"
-                    class="form-input mt-1 px-4 py-2 block w-full rounded-lg
-                        bg-(--color-light) border border-(--color-gray)
-                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                        dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
-            </div>
+                    <input type="week" id="filter-week-start" class="form-input mt-1 w-full" />
+                </div>
 
-            <div>
-                <label for="filter-week-end"
-                    class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    End Week
-                </label>
-                <input type="week" id="filter-week-end"
-                    class="form-input mt-1 px-4 py-2 block w-full rounded-lg
-                        bg-(--color-light) border border-(--color-gray)
-                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                        dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
-            </div>
+                <div class="w-full sm:w-56">
+                    <label for="filter-week-end"
+                        class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                        End Week
+                    </label>
 
-            <div class="flex items-center pt-5">
+                    <input type="week" id="filter-week-end" class="form-input mt-1 w-full" />
+                </div>
+
                 <button type="button" id="filter-week-reset"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm
-                        bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
+                    class="h-10 inline-flex items-center gap-2 px-4 rounded-lg text-sm
+                    bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
                     <i data-lucide="rotate-ccw" class="size-4"></i>
                     Reset ke Minggu Ini
                 </button>
             </div>
         </div>
-
         <x-cardgrid id="bill-supplier-cardgrid" :filter="false" :lengthOptions="[12, 24, 48]" :defaultLength="12" />
     </div>
 
