@@ -11,6 +11,11 @@
                 <h1 class="text-2xl md:text-3xl font-bold">Bill Supplier</h1>
                 <p class="text-sm text-(--color-gray) mt-1">Pilih supplier untuk melihat data tagihan</p>
             </div>
+        </div>
+
+        <div
+            class="flex flex-wrap justify-between items-center gap-4 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4">
+            <div class="font-bold text-(--color-dark) dark:text-(--color-light)">Filter berdasarkan minggu</div>
             <div class="flex flex-wrap items-end gap-4">
                 <div class="w-full sm:w-56">
                     <label for="filter-week-start"
@@ -31,8 +36,8 @@
                 </div>
 
                 <button type="button" id="filter-week-reset"
-                    class="h-10 inline-flex items-center gap-2 px-4 rounded-lg text-sm
-                    bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
+                    class="h-[42px] inline-flex items-center gap-2 px-4 rounded-lg text-sm
+                bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
                     <i data-lucide="rotate-ccw" class="size-4"></i>
                     Reset ke Minggu Ini
                 </button>

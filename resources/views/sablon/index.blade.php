@@ -6,13 +6,13 @@
 
 @section('content')
     <div class="space-y-6">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-wrap justify-between items-center gap-4">
             <div>
                 <h1 class="text-3xl font-bold">Sablon</h1>
                 <p class="text-sm">Manage sablon data</p>
             </div>
 
-            <div class="flex items-end gap-3">
+            <div class="flex flex-wrap items-end gap-3">
                 <div>
                     <label for="filter-week-sablon"
                         class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
