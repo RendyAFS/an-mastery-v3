@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\StatusSalaryEmployeeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
 
@@ -27,8 +28,13 @@ class SalaryEmployee extends Model
         'date'           => 'date',
     ];
 
-    public function employee():BelongsTo
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function sablonEmployeeDetails(): HasMany
+    {
+        return $this->hasMany(SablonEmployeeDetail::class, 'salary_employee_id');
     }
 }

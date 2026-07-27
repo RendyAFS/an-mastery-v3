@@ -11,6 +11,7 @@ class SablonEmployeeDetail extends Model
         'sablon_id',
         'fabric_detail_id',
         'employee_id',
+        'salary_employee_id',
         'layers',
         'fee',
         'additional_fee',
@@ -45,5 +46,10 @@ class SablonEmployeeDetail extends Model
     public function employeeChange(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_change_id');
+    }
+
+    public function salaryEmployee(): BelongsTo
+    {
+        return $this->belongsTo(SalaryEmployee::class, 'salary_employee_id');
     }
 }

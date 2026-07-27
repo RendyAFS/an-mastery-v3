@@ -111,4 +111,11 @@ return [
         'icon' => 'receipt-text',
         'url'  => '/bill-suppliers',
     ],
+
+    // Salary Employee
+    [
+        'name' => 'Salary Employee',
+        'icon' => 'banknote',
+        'url'  => '/salary-employees',
+    ],
 ];

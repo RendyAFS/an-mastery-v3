@@ -2,12 +2,19 @@
 
 namespace App\Actions\Sablon;
 
+use App\Actions\SalaryEmployee\AccumulateSalaryEmployeeAction;
+use App\Enums\StatusSalaryEmployeeEnum;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Models\Sablon;
+use App\Models\SalaryEmployee;
 use Illuminate\Support\Facades\DB;
 
 class SaveSablonAction
 {
+    public function __construct(
+        private AccumulateSalaryEmployeeAction $accumulateSalaryEmployeeAction
+    ) {}
+
     public function handle(SaveSablonRequest $request, ?Sablon $sablon = null): Sablon
     {
         $data = $request->validated();
@@ -44,11 +51,14 @@ class SaveSablonAction
 
     private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): void
     {
+        $affectedSalaryIds = $sablon->sablonEmployeeDetails()
+            ->whereNotNull('salary_employee_id')
+            ->pluck('salary_employee_id')
+            ->unique();
+
         $sablon->sablonEmployeeDetails()->delete();
 
         foreach ($employeeDetails as $detail) {
-            // FIX #2: additional_fee adalah array of {nominal, notes}
-            // Pastikan selalu disimpan sebagai array yang bersih
             $additionalFee = [];
             if (isset($detail['additional_fee']) && is_array($detail['additional_fee'])) {
                 $additionalFee = array_values(
@@ -59,11 +69,10 @@ class SaveSablonAction
                 );
             }
 
-            // Hitung total dari semua additional_fee
             $additionalTotal = array_sum(array_column($additionalFee, 'nominal'));
             $fee             = (float) ($detail['fee'] ?? 0);
 
-            $sablon->sablonEmployeeDetails()->create([
+            $newDetail = $sablon->sablonEmployeeDetails()->create([
                 'fabric_detail_id'   => $detail['fabric_detail_id'] ?? null,
                 'employee_id'        => $detail['employee_id'],
                 'layers'             => $detail['layers'] ?? 0,
@@ -75,6 +84,17 @@ class SaveSablonAction
                 'is_payed'           => $detail['is_payed'] ?? false,
                 'notes'              => $detail['notes'] ?? null,
             ]);
+
+            $this->accumulateSalaryEmployeeAction->handle($newDetail);
+        }
+
+        foreach ($affectedSalaryIds as $salaryId) {
+            $salary = SalaryEmployee::where('status', StatusSalaryEmployeeEnum::PENDING)
+                ->find($salaryId);
+
+            if ($salary) {
+                $this->accumulateSalaryEmployeeAction->recalculate($salary);
+            }
         }
     }
 }
