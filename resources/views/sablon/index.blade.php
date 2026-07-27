@@ -19,7 +19,7 @@
                         Week Of
                     </label>
                     <input type="week" id="filter-week-sablon"
-                        class="form-input mt-1 px-4 py-2 block w-full rounded-lg
+                        class="form-input mt-1 px-4 py-2 block w-56 rounded-lg
                             bg-(--color-light) border border-(--color-gray)
                             text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
