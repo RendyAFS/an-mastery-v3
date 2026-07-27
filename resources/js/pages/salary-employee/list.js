@@ -1,7 +1,6 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
 import { initLucide } from "@/utils/lucide";
-import RupiahInput from "@/utils/rupiah-input";
 import {
     isoWeekToDateStr,
     dateToIsoWeek,
@@ -12,6 +11,48 @@ import {
 const statusColor = {
     PENDING: "bg-yellow-500/10 text-yellow-600",
     DONE: "bg-blue-500/10 text-blue-600",
+};
+
+const formatSignedRupiah = (value) => {
+    const raw = String(value ?? "").replace(/[^0-9-]/g, "");
+
+    const isNegative = raw.startsWith("-");
+    const digits = raw.replace(/-/g, "");
+
+    if (!digits) return isNegative ? "-" : "";
+
+    const formatted = Number(digits).toLocaleString("id-ID");
+
+    return isNegative ? `-${formatted}` : formatted;
+};
+
+const unformatSignedRupiah = (el) => {
+    if (!el) return 0;
+
+    const raw = String(el.value ?? "").replace(/[^0-9-]/g, "");
+
+    const isNegative = raw.startsWith("-");
+    const digits = raw.replace(/-/g, "");
+
+    if (!digits) return 0;
+
+    const value = Number(digits);
+
+    return isNegative ? -value : value;
+};
+
+const bindSignedRupiahInput = (el) => {
+    el.addEventListener("input", () => {
+        const cursorAtEnd =
+            el.selectionStart === el.value.length &&
+            el.selectionEnd === el.value.length;
+
+        el.value = formatSignedRupiah(el.value);
+
+        if (cursorAtEnd) {
+            el.setSelectionRange(el.value.length, el.value.length);
+        }
+    });
 };
 
 const PageScript = (function () {
@@ -101,7 +142,7 @@ const PageScript = (function () {
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
                 <button data-id="${item.id}" data-additional-fee='${JSON.stringify(additionalFees)}'
                     class="btn-additional-fee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
-                    <i data-lucide="wallet" class="size-3.5"></i> Fee
+                    <i data-lucide="wallet" class="size-3.5"></i> Additional Fee
                 </button>
                 <button data-id="${item.id}" data-status="${item.status}"
                     class="btn-status p-1.5 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
@@ -116,14 +157,14 @@ const PageScript = (function () {
         const row = tpl.content.cloneNode(true);
 
         const nominalInput = row.querySelector(".af-nominal");
-        nominalInput.value = nominal;
+        nominalInput.value = nominal !== "" ? formatSignedRupiah(nominal) : "";
 
         row.querySelector(".af-notes").value = notes;
 
         document.getElementById("additional-fee-rows").append(row);
 
         initLucide();
-        RupiahInput.refresh(nominalInput);
+        bindSignedRupiahInput(nominalInput);
     };
 
     const initStatusModal = () => {
@@ -201,10 +242,10 @@ const PageScript = (function () {
             const additionalFee = $("#additional-fee-rows .additional-fee-row")
                 .map(function () {
                     const nominalEl = $(this).find(".af-nominal")[0];
-                    const nominal = RupiahInput.unformat(nominalEl);
+                    const nominal = unformatSignedRupiah(nominalEl);
                     const notes = $(this).find(".af-notes").val();
                     return {
-                        nominal: Number(nominal) || 0,
+                        nominal,
                         notes: notes || "",
                     };
                 })

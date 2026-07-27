@@ -59,7 +59,7 @@
                     "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-y-auto",
                     "optionClasses": "ps-3 py-2 px-4 w-auto text-sm text-(--color-dark) dark:text-(--color-light) cursor-pointer hover:bg-(--color-dark-gray)/50 rounded-lg",
                     "optionTemplate": "<div class=\"flex justify-between items-center w-auto\"><span data-title></span><span class=\"hidden hs-selected:block\"><i data-lucide=\"check\" class=\"size-4\"></i></span></div>",
-                    "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><i data-lucide=\"filter\" class=\"size-4\"></i></div>"
+                    "extraMarkup": "<div class=\"absolute top-1/2 inset-e-3 -translate-y-1/2\"><i data-lucide=\"filter\" class=\"size-4\"></i></div>"
                 }'>
                 @foreach ($filterOptions as $value => $label)
                     <option value="{{ $value }}" @selected($value == $filterDefault)>
@@ -81,7 +81,7 @@
                             "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-(--color-gray) [&::-webkit-scrollbar-thumb]:bg-(--color-gray)",
                             "optionClasses": "ps-3 py-2 px-4 w-auto text-sm text-(--color-dark) dark:text-(--color-light) cursor-pointer hover:bg-(--color-dark-gray)/50 rounded-lg focus:outline-hidden focus:bg-(--color-gray) hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50",
                             "optionTemplate": "<div class=\"flex justify-between items-center w-auto\"><span data-title></span><span class=\"hidden hs-selected:block\"><i data-lucide=\"check\" class=\"size-4 text-(--color-dark) dark:text-(--color-light)\"></i></span></div>",
-                            "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><i data-lucide=\"chevrons-up-down\" class=\"size-4 text-(--color-dark) dark:text-(--color-light)\"></i></div>"
+                            "extraMarkup": "<div class=\"absolute top-1/2 inset-e-3 -translate-y-1/2\"><i data-lucide=\"chevrons-up-down\" class=\"size-4 text-(--color-dark) dark:text-(--color-light)\"></i></div>"
                         }'
                 class="hidden py-2 px-3 text-sm rounded-lg border">
                 @foreach ($lengthOptions as $opt)

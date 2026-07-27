@@ -64,7 +64,7 @@
     <div
         class="additional-fee-row relative grid grid-cols-2 gap-3 p-3 rounded-lg border border-(--color-gray)/40 dark:border-(--color-dark-gray)">
         <button type="button"
-            class="btn-remove-af-row absolute top-2 end-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
+            class="btn-remove-af-row absolute top-2 inset-e-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
             <i data-lucide="trash-2" class="size-3.5"></i>
         </button>
 
