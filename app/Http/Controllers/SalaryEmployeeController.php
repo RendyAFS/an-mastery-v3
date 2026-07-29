@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Helpers\WeekHelper;
 use App\Http\Resources\SalaryEmployeeResource;
 use App\Models\Employee;
 use App\Repositories\SalaryEmployeeRepository;
@@ -24,10 +25,11 @@ class SalaryEmployeeController extends Controller
         if (request()->expectsJson()) {
             $filter  = request('filter', 'all');
             $search  = request('search');
-            $weekOf  = request('week_of');
             $perPage = min((int) request('per_page', 12), 100);
 
-            $salaries = $this->salaryEmployeeRepository->getAll($filter, $search, $perPage, $weekOf);
+            [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
+
+            $salaries = $this->salaryEmployeeRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo);
 
             return SalaryEmployeeResource::collection($salaries);
         }

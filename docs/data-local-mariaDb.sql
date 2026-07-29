@@ -16,23 +16,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`an_mastery` /*!40100 DEFAULT CHARACTER 
 
 USE `an_mastery`;
 
-/*Table structure for table `bill_supplier_details` */
-
-DROP TABLE IF EXISTS `bill_supplier_details`;
-
-CREATE TABLE `bill_supplier_details` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `bill_supplier_id` bigint(20) unsigned DEFAULT NULL,
-  `sablon_detail_id` bigint(20) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `bill_supplier_details_bill_supplier_id_foreign` (`bill_supplier_id`),
-  KEY `bill_supplier_details_sablon_detail_id_foreign` (`sablon_detail_id`),
-  CONSTRAINT `bill_supplier_details_bill_supplier_id_foreign` FOREIGN KEY (`bill_supplier_id`) REFERENCES `bill_suppliers` (`id`),
-  CONSTRAINT `bill_supplier_details_sablon_detail_id_foreign` FOREIGN KEY (`sablon_detail_id`) REFERENCES `sablon_details` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Data for the table `bill_supplier_details` */
-
 /*Table structure for table `bill_suppliers` */
 
 DROP TABLE IF EXISTS `bill_suppliers`;
@@ -51,8 +34,6 @@ CREATE TABLE `bill_suppliers` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `created_by` bigint(20) unsigned DEFAULT NULL,
   `updated_by` bigint(20) unsigned DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `deleted_by` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `bill_suppliers_supplier_id_foreign` (`supplier_id`),
   KEY `bill_suppliers_price_supplier_id_foreign` (`price_supplier_id`),
@@ -61,15 +42,16 @@ CREATE TABLE `bill_suppliers` (
   CONSTRAINT `bill_suppliers_price_supplier_id_foreign` FOREIGN KEY (`price_supplier_id`) REFERENCES `price_suppliers` (`id`),
   CONSTRAINT `bill_suppliers_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`),
   CONSTRAINT `bill_suppliers_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `bill_suppliers` */
 
-insert  into `bill_suppliers`(`id`,`batch`,`supplier_id`,`price_supplier_id`,`sablon_id`,`total_fee`,`date_bill`,`is_paid`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
-(1,'20260726121818205302',1,2,1,573400,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
-(2,'20260726121818205302',1,2,2,545950,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
-(3,'20260726121818205302',1,1,3,534000,'2026-07-26',1,NULL,'2026-07-26 12:18:18','2026-07-26 12:18:30',51,51,NULL,NULL),
-(4,'20260726122534402442',1,1,4,508500,'2026-07-26',0,NULL,'2026-07-26 12:25:34','2026-07-26 12:25:34',51,51,NULL,NULL);
+insert  into `bill_suppliers`(`id`,`batch`,`supplier_id`,`price_supplier_id`,`sablon_id`,`total_fee`,`date_bill`,`is_paid`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`) values 
+(20,'202607291530211683',1,2,1,573400,'2026-07-29',1,NULL,'2026-07-29 15:30:21','2026-07-29 15:30:49',51,51),
+(21,'202607291530211683',1,2,2,545950,'2026-07-29',1,NULL,'2026-07-29 15:30:21','2026-07-29 15:30:49',51,51),
+(22,'202607291530211683',1,1,3,534000,'2026-07-29',1,NULL,'2026-07-29 15:30:21','2026-07-29 15:30:49',51,51),
+(23,'202607291530211683',1,1,4,508500,'2026-07-29',1,NULL,'2026-07-29 15:30:21','2026-07-29 15:30:49',51,51),
+(25,'202607291530211683',1,2,5,532225,'2026-07-29',1,NULL,'2026-07-29 15:30:41','2026-07-29 15:30:49',51,51);
 
 /*Table structure for table `cache` */
 
@@ -85,7 +67,25 @@ CREATE TABLE `cache` (
 /*Data for the table `cache` */
 
 insert  into `cache`(`key`,`value`,`expiration`) values 
-('laravel-cache-spatie.permission.cache','a:3:{s:5:\"alias\";a:8:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"d\";s:7:\"menu_id\";s:1:\"r\";s:5:\"roles\";s:1:\"l\";s:10:\"created_by\";s:1:\"m\";s:10:\"updated_by\";s:1:\"o\";s:10:\"deleted_by\";}s:11:\"permissions\";a:113:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"dashboard.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:1;s:1:\"r\";a:1:{i:0;i:2;}}i:1;a:5:{s:1:\"a\";i:2;s:1:\"b\";s:10:\"users.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:2;a:5:{s:1:\"a\";i:3;s:1:\"b\";s:12:\"users.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:3;a:5:{s:1:\"a\";i:4;s:1:\"b\";s:10:\"users.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:4;a:5:{s:1:\"a\";i:5;s:1:\"b\";s:10:\"users.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:5;a:5:{s:1:\"a\";i:6;s:1:\"b\";s:12:\"users.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:6;a:5:{s:1:\"a\";i:7;s:1:\"b\";s:12:\"users.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:7;a:5:{s:1:\"a\";i:8;s:1:\"b\";s:13:\"users.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:8;a:5:{s:1:\"a\";i:9;s:1:\"b\";s:17:\"users.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:10:\"roles.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:12:\"roles.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:10:\"roles.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:10:\"roles.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:12:\"roles.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:12:\"roles.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:13:\"roles.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:17:\"roles.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:14:\"suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:16:\"suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:14:\"suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:14:\"suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:16:\"suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:16:\"suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:17:\"suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:21:\"suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:25;a:5:{s:1:\"a\";i:26;s:1:\"b\";s:14:\"employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;s:1:\"r\";a:1:{i:0;i:3;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:16:\"employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:14:\"employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:14:\"employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:16:\"employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:16:\"employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:21:\"employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:33;a:5:{s:1:\"a\";i:34;s:1:\"b\";s:18:\"image-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;s:1:\"r\";a:1:{i:0;i:3;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:20:\"image-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:18:\"image-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:18:\"image-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:20:\"image-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:20:\"image-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:21:\"image-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:25:\"image-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:41;a:5:{s:1:\"a\";i:42;s:1:\"b\";s:18:\"color-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;s:1:\"r\";a:1:{i:0;i:3;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:20:\"color-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:18:\"color-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:18:\"color-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:20:\"color-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:20:\"color-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:21:\"color-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:25:\"color-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:49;a:5:{s:1:\"a\";i:50;s:1:\"b\";s:17:\"type-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;s:1:\"r\";a:1:{i:0;i:3;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:19:\"type-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:17:\"type-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:17:\"type-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"type-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:19:\"type-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:20:\"type-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:24:\"type-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:57;a:5:{s:1:\"a\";i:58;s:1:\"b\";s:16:\"type-colors.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;s:1:\"r\";a:1:{i:0;i:3;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:18:\"type-colors.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:16:\"type-colors.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:16:\"type-colors.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:18:\"type-colors.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:18:\"type-colors.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"type-colors.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:23:\"type-colors.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:20:\"price-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:22:\"price-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:20:\"price-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:20:\"price-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:22:\"price-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:22:\"price-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:23:\"price-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:27:\"price-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:20:\"price-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:22:\"price-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:20:\"price-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:20:\"price-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:22:\"price-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:22:\"price-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:23:\"price-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:27:\"price-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:14:\"presences.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:16:\"presences.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:14:\"presences.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:14:\"presences.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:16:\"presences.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:16:\"presences.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:17:\"presences.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:21:\"presences.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:12:\"fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:14:\"fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:12:\"fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:12:\"fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:14:\"fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:14:\"fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:15:\"fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:19:\"fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:97;a:4:{s:1:\"a\";i:98;s:1:\"b\";s:12:\"sablons.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:98;a:4:{s:1:\"a\";i:99;s:1:\"b\";s:14:\"sablons.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:99;a:4:{s:1:\"a\";i:100;s:1:\"b\";s:12:\"sablons.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:100;a:4:{s:1:\"a\";i:101;s:1:\"b\";s:12:\"sablons.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:101;a:4:{s:1:\"a\";i:102;s:1:\"b\";s:14:\"sablons.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:102;a:4:{s:1:\"a\";i:103;s:1:\"b\";s:14:\"sablons.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:103;a:4:{s:1:\"a\";i:104;s:1:\"b\";s:15:\"sablons.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:104;a:4:{s:1:\"a\";i:105;s:1:\"b\";s:19:\"sablons.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:105;a:4:{s:1:\"a\";i:106;s:1:\"b\";s:19:\"bill-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:106;a:4:{s:1:\"a\";i:107;s:1:\"b\";s:21:\"bill-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:107;a:4:{s:1:\"a\";i:108;s:1:\"b\";s:19:\"bill-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:108;a:4:{s:1:\"a\";i:109;s:1:\"b\";s:19:\"bill-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:109;a:4:{s:1:\"a\";i:110;s:1:\"b\";s:21:\"bill-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:110;a:4:{s:1:\"a\";i:111;s:1:\"b\";s:21:\"bill-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:111;a:4:{s:1:\"a\";i:112;s:1:\"b\";s:22:\"bill-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:112;a:4:{s:1:\"a\";i:113;s:1:\"b\";s:26:\"bill-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}}s:5:\"roles\";a:2:{i:0;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}i:1;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:8:\"Employee\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}}}',1785224262);
+('laravel-cache-435347697ac176274c06c637e5d6b4d3','i:1;',1785305482),
+('laravel-cache-435347697ac176274c06c637e5d6b4d3:timer','i:1785305482;',1785305482),
+('laravel-cache-lv:v3.24.0:file:0c401bb7-laravel-2026-06-23.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:1199d6c9-laravel-2026-05-16.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:203121f2-laravel-2026-07-08.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:2081b5df-laravel-2026-07-23.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:246f5e45-laravel.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:30f415e2-laravel-2026-07-24.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:486268b3-laravel-2026-06-22.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:55d1c80d-laravel-2026-05-19.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:59d98ac4-laravel-2026-05-15.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:7639766d-laravel-2026-06-09.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:98aefad9-laravel-2026-06-24.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:ecf8427e:chunk:0','a:48:{i:1782871510;a:1:{s:5:\"ERROR\";a:1:{i:0;i:0;}}i:1782871538;a:1:{s:5:\"ERROR\";a:1:{i:1;i:41191;}}i:1782871548;a:1:{s:5:\"ERROR\";a:1:{i:2;i:82382;}}i:1782871551;a:1:{s:5:\"ERROR\";a:1:{i:3;i:123576;}}i:1782871630;a:1:{s:5:\"ERROR\";a:1:{i:4;i:164770;}}i:1782871634;a:1:{s:5:\"ERROR\";a:1:{i:5;i:205968;}}i:1782871681;a:1:{s:5:\"ERROR\";a:1:{i:6;i:247166;}}i:1782871684;a:1:{s:5:\"ERROR\";a:1:{i:7;i:288364;}}i:1782871692;a:1:{s:5:\"ERROR\";a:1:{i:8;i:329562;}}i:1782871708;a:1:{s:5:\"ERROR\";a:1:{i:9;i:370753;}}i:1782871711;a:1:{s:5:\"ERROR\";a:1:{i:10;i:411944;}}i:1782871723;a:1:{s:5:\"ERROR\";a:1:{i:11;i:453135;}}i:1782871749;a:1:{s:5:\"ERROR\";a:1:{i:12;i:494326;}}i:1782871754;a:1:{s:5:\"ERROR\";a:1:{i:13;i:535517;}}i:1782871756;a:1:{s:5:\"ERROR\";a:1:{i:14;i:576708;}}i:1782871758;a:1:{s:5:\"ERROR\";a:1:{i:15;i:617899;}}i:1782871762;a:1:{s:5:\"ERROR\";a:1:{i:16;i:659090;}}i:1782871764;a:1:{s:5:\"ERROR\";a:1:{i:17;i:700281;}}i:1782871782;a:1:{s:5:\"ERROR\";a:1:{i:18;i:741472;}}i:1782871790;a:1:{s:5:\"ERROR\";a:1:{i:19;i:782663;}}i:1782871794;a:1:{s:5:\"ERROR\";a:1:{i:20;i:823854;}}i:1782871810;a:1:{s:5:\"ERROR\";a:1:{i:21;i:865045;}}i:1782871840;a:1:{s:5:\"ERROR\";a:1:{i:22;i:906236;}}i:1782871847;a:1:{s:5:\"ERROR\";a:1:{i:23;i:947427;}}i:1782871867;a:1:{s:5:\"ERROR\";a:1:{i:24;i:988618;}}i:1782871884;a:1:{s:5:\"ERROR\";a:1:{i:25;i:1029809;}}i:1782871907;a:1:{s:5:\"ERROR\";a:1:{i:26;i:1071000;}}i:1782872021;a:1:{s:5:\"ERROR\";a:1:{i:27;i:1112191;}}i:1782872045;a:1:{s:5:\"ERROR\";a:1:{i:28;i:1153382;}}i:1782872048;a:1:{s:5:\"ERROR\";a:1:{i:29;i:1194573;}}i:1782872110;a:1:{s:5:\"ERROR\";a:1:{i:30;i:1235764;}}i:1782872145;a:1:{s:5:\"ERROR\";a:1:{i:31;i:1276955;}}i:1782872154;a:1:{s:5:\"ERROR\";a:1:{i:32;i:1318146;}}i:1782872377;a:1:{s:5:\"ERROR\";a:1:{i:33;i:1359337;}}i:1782872380;a:1:{s:5:\"ERROR\";a:1:{i:34;i:1400528;}}i:1782872398;a:1:{s:5:\"ERROR\";a:1:{i:35;i:1441719;}}i:1782872467;a:1:{s:5:\"ERROR\";a:1:{i:36;i:1482910;}}i:1782872470;a:1:{s:5:\"ERROR\";a:1:{i:37;i:1524101;}}i:1782872518;a:1:{s:5:\"ERROR\";a:1:{i:38;i:1565292;}}i:1782872544;a:1:{s:5:\"ERROR\";a:1:{i:39;i:1606483;}}i:1782872557;a:1:{s:5:\"ERROR\";a:1:{i:40;i:1647674;}}i:1782872567;a:1:{s:5:\"ERROR\";a:1:{i:41;i:1688865;}}i:1782872570;a:1:{s:5:\"ERROR\";a:1:{i:42;i:1730056;}}i:1782875599;a:1:{s:5:\"ERROR\";a:1:{i:43;i:1771247;}}i:1782876685;a:1:{s:5:\"ERROR\";a:1:{i:44;i:1812438;}}i:1782888077;a:1:{s:5:\"ERROR\";a:1:{i:45;i:1853629;}}i:1782888098;a:1:{s:5:\"ERROR\";a:1:{i:46;i:1894827;}}i:1782888121;a:1:{s:5:\"ERROR\";a:1:{i:47;i:1936025;}}}',1785748170),
+('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:ecf8427e:metadata','a:9:{s:5:\"query\";s:0:\"\";s:10:\"identifier\";s:8:\"ecf8427e\";s:26:\"last_scanned_file_position\";i:1977223;s:18:\"last_scanned_index\";i:48;s:24:\"next_log_index_to_create\";i:48;s:14:\"max_chunk_size\";i:50000;s:19:\"current_chunk_index\";i:0;s:17:\"chunk_definitions\";a:0:{}s:24:\"current_chunk_definition\";a:5:{s:5:\"index\";i:0;s:4:\"size\";i:48;s:18:\"earliest_timestamp\";i:1782871510;s:16:\"latest_timestamp\";i:1782888121;s:12:\"level_counts\";a:1:{s:5:\"ERROR\";i:48;}}}',1785748170),
+('laravel-cache-lv:v3.24.0:file:b9e48455-laravel-2026-07-01.log:metadata','a:8:{s:4:\"type\";s:7:\"laravel\";s:4:\"name\";s:22:\"laravel-2026-07-01.log\";s:4:\"path\";s:64:\"D:\\laragon\\www\\an-mastery-v3\\storage\\logs\\laravel-2026-07-01.log\";s:4:\"size\";i:1977223;s:18:\"earliest_timestamp\";i:1782871510;s:16:\"latest_timestamp\";i:1782888121;s:26:\"last_scanned_file_position\";i:1977223;s:15:\"related_indices\";a:1:{s:8:\"ecf8427e\";a:2:{s:5:\"query\";s:0:\"\";s:26:\"last_scanned_file_position\";i:1977223;}}}',1785748170),
+('laravel-cache-lv:v3.24.0:file:bbcbd03b-laravel-2026-07-27.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-lv:v3.24.0:file:e05a32d6-laravel-2026-06-29.log:metadata','a:1:{s:4:\"type\";s:7:\"laravel\";}',1785748169),
+('laravel-cache-spatie.permission.cache','a:3:{s:5:\"alias\";a:8:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"d\";s:7:\"menu_id\";s:1:\"r\";s:5:\"roles\";s:1:\"l\";s:10:\"created_by\";s:1:\"m\";s:10:\"updated_by\";s:1:\"o\";s:10:\"deleted_by\";}s:11:\"permissions\";a:121:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"dashboard.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:1;s:1:\"r\";a:1:{i:0;i:2;}}i:1;a:5:{s:1:\"a\";i:2;s:1:\"b\";s:10:\"users.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:2;a:5:{s:1:\"a\";i:3;s:1:\"b\";s:12:\"users.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:3;a:5:{s:1:\"a\";i:4;s:1:\"b\";s:10:\"users.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:4;a:5:{s:1:\"a\";i:5;s:1:\"b\";s:10:\"users.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:5;a:5:{s:1:\"a\";i:6;s:1:\"b\";s:12:\"users.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:6;a:5:{s:1:\"a\";i:7;s:1:\"b\";s:12:\"users.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:7;a:5:{s:1:\"a\";i:8;s:1:\"b\";s:13:\"users.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:8;a:5:{s:1:\"a\";i:9;s:1:\"b\";s:17:\"users.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:3;s:1:\"r\";a:1:{i:0;i:2;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:10:\"roles.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:12:\"roles.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:10:\"roles.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:10:\"roles.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:12:\"roles.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:12:\"roles.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:13:\"roles.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:17:\"roles.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:4;}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:14:\"suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:16:\"suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:14:\"suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:14:\"suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:16:\"suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:16:\"suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:17:\"suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:21:\"suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:6;}i:25;a:5:{s:1:\"a\";i:26;s:1:\"b\";s:14:\"employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;s:1:\"r\";a:1:{i:0;i:3;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:16:\"employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:14:\"employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:14:\"employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:16:\"employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:16:\"employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:21:\"employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:7;}i:33;a:5:{s:1:\"a\";i:34;s:1:\"b\";s:18:\"image-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;s:1:\"r\";a:1:{i:0;i:3;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:20:\"image-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:18:\"image-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:18:\"image-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:20:\"image-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:20:\"image-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:21:\"image-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:25:\"image-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:8;}i:41;a:5:{s:1:\"a\";i:42;s:1:\"b\";s:18:\"color-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;s:1:\"r\";a:1:{i:0;i:3;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:20:\"color-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:18:\"color-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:18:\"color-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:20:\"color-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:20:\"color-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:21:\"color-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:25:\"color-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:9;}i:49;a:5:{s:1:\"a\";i:50;s:1:\"b\";s:17:\"type-fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;s:1:\"r\";a:1:{i:0;i:3;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:19:\"type-fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:17:\"type-fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:17:\"type-fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"type-fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:19:\"type-fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:20:\"type-fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:24:\"type-fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:10;}i:57;a:5:{s:1:\"a\";i:58;s:1:\"b\";s:16:\"type-colors.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;s:1:\"r\";a:1:{i:0;i:3;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:18:\"type-colors.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:16:\"type-colors.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:16:\"type-colors.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:18:\"type-colors.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:18:\"type-colors.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"type-colors.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:23:\"type-colors.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:11;}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:20:\"price-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:22:\"price-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:20:\"price-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:20:\"price-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:22:\"price-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:22:\"price-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:23:\"price-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:27:\"price-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:12;}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:20:\"price-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:22:\"price-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:20:\"price-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:20:\"price-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:22:\"price-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:22:\"price-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:23:\"price-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:27:\"price-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:13;}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:14:\"presences.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:16:\"presences.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:14:\"presences.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:14:\"presences.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:16:\"presences.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:16:\"presences.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:17:\"presences.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:21:\"presences.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:17;}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:12:\"fabrics.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:14:\"fabrics.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:12:\"fabrics.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:12:\"fabrics.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:14:\"fabrics.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:14:\"fabrics.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:15:\"fabrics.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:19:\"fabrics.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:18;}i:97;a:4:{s:1:\"a\";i:98;s:1:\"b\";s:12:\"sablons.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:98;a:4:{s:1:\"a\";i:99;s:1:\"b\";s:14:\"sablons.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:99;a:4:{s:1:\"a\";i:100;s:1:\"b\";s:12:\"sablons.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:100;a:4:{s:1:\"a\";i:101;s:1:\"b\";s:12:\"sablons.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:101;a:4:{s:1:\"a\";i:102;s:1:\"b\";s:14:\"sablons.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:102;a:4:{s:1:\"a\";i:103;s:1:\"b\";s:14:\"sablons.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:103;a:4:{s:1:\"a\";i:104;s:1:\"b\";s:15:\"sablons.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:104;a:4:{s:1:\"a\";i:105;s:1:\"b\";s:19:\"sablons.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:19;}i:105;a:4:{s:1:\"a\";i:106;s:1:\"b\";s:19:\"bill-suppliers.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:106;a:4:{s:1:\"a\";i:107;s:1:\"b\";s:21:\"bill-suppliers.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:107;a:4:{s:1:\"a\";i:108;s:1:\"b\";s:19:\"bill-suppliers.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:108;a:4:{s:1:\"a\";i:109;s:1:\"b\";s:19:\"bill-suppliers.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:109;a:4:{s:1:\"a\";i:110;s:1:\"b\";s:21:\"bill-suppliers.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:110;a:4:{s:1:\"a\";i:111;s:1:\"b\";s:21:\"bill-suppliers.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:111;a:4:{s:1:\"a\";i:112;s:1:\"b\";s:22:\"bill-suppliers.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:112;a:4:{s:1:\"a\";i:113;s:1:\"b\";s:26:\"bill-suppliers.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:20;}i:113;a:4:{s:1:\"a\";i:114;s:1:\"b\";s:21:\"salary-employees.view\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:114;a:4:{s:1:\"a\";i:115;s:1:\"b\";s:23:\"salary-employees.create\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:115;a:4:{s:1:\"a\";i:116;s:1:\"b\";s:21:\"salary-employees.read\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:116;a:4:{s:1:\"a\";i:117;s:1:\"b\";s:21:\"salary-employees.edit\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:117;a:4:{s:1:\"a\";i:118;s:1:\"b\";s:23:\"salary-employees.update\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:118;a:4:{s:1:\"a\";i:119;s:1:\"b\";s:23:\"salary-employees.delete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:119;a:4:{s:1:\"a\";i:120;s:1:\"b\";s:24:\"salary-employees.restore\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}i:120;a:4:{s:1:\"a\";i:121;s:1:\"b\";s:28:\"salary-employees.forceDelete\";s:1:\"c\";s:3:\"web\";s:1:\"d\";i:21;}}s:5:\"roles\";a:2:{i:0;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}i:1;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:8:\"Employee\";s:1:\"c\";s:3:\"web\";s:1:\"l\";N;s:1:\"m\";N;s:1:\"o\";N;}}}',1785391823);
 
 /*Table structure for table `cache_locks` */
 
@@ -437,7 +437,7 @@ CREATE TABLE `menus` (
   PRIMARY KEY (`id`),
   KEY `menus_parent_id_foreign` (`parent_id`),
   CONSTRAINT `menus_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `menus` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `menus` */
 
@@ -460,7 +460,8 @@ insert  into `menus`(`id`,`parent_id`,`name`,`icon`,`url`,`sort_order`,`is_activ
 (17,NULL,'Employee Presence','calendar-check-2','/presences',6,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (18,NULL,'Inventory Fabric','package','/fabrics',7,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
 (19,NULL,'Sablon','paintbrush','/sablons',8,1,'2026-06-28 15:14:18','2026-06-28 15:14:18'),
-(20,NULL,'Bill Supplier','receipt-text','/bill-suppliers',9,1,'2026-07-26 09:39:54','2026-07-26 09:39:54');
+(20,NULL,'Bill Supplier','receipt-text','/bill-suppliers',9,1,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(21,NULL,'Salary Employee','banknote','/salary-employees',10,1,'2026-07-27 15:57:21','2026-07-27 16:02:52');
 
 /*Table structure for table `migrations` */
 
@@ -471,7 +472,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
@@ -515,7 +516,13 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 (38,'2026_07_01_081614_add_is_paid_to_bill_suppliers',7),
 (39,'2026_07_26_120016_add_batch_to_bill_suppliers',8),
 (40,'2026_07_26_131402_drop_table_to_bill_supplier_details',9),
-(41,'2026_07_26_133559_create_supplier_cover_styles_table',10);
+(41,'2026_07_26_133559_create_supplier_cover_styles_table',10),
+(42,'2026_07_27_152047_add_salary_employee_id_to_sablon_employee_details',11),
+(44,'2026_07_29_131754_add_is_bon_to_sablon_employee_details',12),
+(45,'2026_07_29_140347_drop_some_column_to_sablon_employee_details',13),
+(46,'2026_07_29_142748_rename_is_payed_to_is_paid_in_sablon_employee_details_table',14),
+(47,'2026_07_29_131402_drop_table_to_bill_supplier_details',15),
+(49,'2026_07_29_152049_drop_soft_deletes_to_bill_suppliers',16);
 
 /*Table structure for table `model_has_permissions` */
 
@@ -580,7 +587,7 @@ CREATE TABLE `permissions` (
   UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`),
   KEY `permissions_menu_id_foreign` (`menu_id`),
   CONSTRAINT `permissions_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `permissions` */
 
@@ -697,7 +704,15 @@ insert  into `permissions`(`id`,`name`,`guard_name`,`menu_id`,`created_at`,`upda
 (110,'bill-suppliers.update','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
 (111,'bill-suppliers.delete','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
 (112,'bill-suppliers.restore','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
-(113,'bill-suppliers.forceDelete','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54');
+(113,'bill-suppliers.forceDelete','web',20,'2026-07-26 09:39:54','2026-07-26 09:39:54'),
+(114,'salary-employees.view','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(115,'salary-employees.create','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(116,'salary-employees.read','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(117,'salary-employees.edit','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(118,'salary-employees.update','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(119,'salary-employees.delete','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(120,'salary-employees.restore','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21'),
+(121,'salary-employees.forceDelete','web',21,'2026-07-27 15:57:21','2026-07-27 15:57:21');
 
 /*Table structure for table `presences` */
 
@@ -868,31 +883,31 @@ CREATE TABLE `sablon_details` (
   CONSTRAINT `sablon_details_color_fabric_id_foreign` FOREIGN KEY (`color_fabric_id`) REFERENCES `color_fabrics` (`id`),
   CONSTRAINT `sablon_details_fabric_detail_id_foreign` FOREIGN KEY (`fabric_detail_id`) REFERENCES `fabric_details` (`id`) ON DELETE SET NULL,
   CONSTRAINT `sablon_details_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `sablon_details` */
 
 insert  into `sablon_details`(`id`,`sablon_id`,`fabric_detail_id`,`color_fabric_id`,`long_fabric`) values 
-(49,3,5,7,90),
-(50,3,6,3,92),
-(51,3,7,4,87),
-(52,3,8,1,87),
-(53,2,1,1,85),
-(54,2,2,2,92),
-(55,2,3,3,91),
-(56,2,4,4,90),
-(57,4,5,7,90),
-(58,4,6,3,80),
-(59,4,7,4,82),
-(60,4,8,1,87),
 (61,5,1,1,91),
 (62,5,2,2,87),
 (63,5,3,3,86),
 (64,5,4,4,85),
-(65,1,1,1,93),
-(66,1,2,2,93),
-(67,1,3,3,94),
-(68,1,4,4,96);
+(77,1,1,1,93),
+(78,1,2,2,93),
+(79,1,3,3,94),
+(80,1,4,4,96),
+(81,2,1,1,85),
+(82,2,2,2,92),
+(83,2,3,3,91),
+(84,2,4,4,90),
+(85,3,5,7,90),
+(86,3,6,3,92),
+(87,3,7,4,87),
+(88,3,8,1,87),
+(89,4,5,7,90),
+(90,4,6,3,80),
+(91,4,7,4,82),
+(92,4,8,1,87);
 
 /*Table structure for table `sablon_employee_details` */
 
@@ -903,13 +918,13 @@ CREATE TABLE `sablon_employee_details` (
   `sablon_id` bigint(20) unsigned DEFAULT NULL,
   `fabric_detail_id` bigint(20) unsigned DEFAULT NULL,
   `employee_id` bigint(20) unsigned DEFAULT NULL,
+  `salary_employee_id` bigint(20) unsigned DEFAULT NULL,
   `layers` int(11) DEFAULT NULL,
   `fee` int(11) DEFAULT NULL,
-  `additional_fee` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`additional_fee`)),
-  `total` int(11) DEFAULT NULL,
   `is_change` tinyint(1) DEFAULT NULL,
   `employee_change_id` bigint(20) unsigned DEFAULT NULL,
-  `is_payed` tinyint(1) DEFAULT NULL,
+  `is_bon` tinyint(1) NOT NULL DEFAULT 0,
+  `is_paid` tinyint(1) DEFAULT NULL,
   `notes` longtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -918,29 +933,31 @@ CREATE TABLE `sablon_employee_details` (
   KEY `sablon_employee_details_fabric_detail_id_foreign` (`fabric_detail_id`),
   KEY `sablon_employee_details_employee_id_foreign` (`employee_id`),
   KEY `sablon_employee_details_employee_change_id_foreign` (`employee_change_id`),
+  KEY `sablon_employee_details_salary_employee_id_foreign` (`salary_employee_id`),
   CONSTRAINT `sablon_employee_details_employee_change_id_foreign` FOREIGN KEY (`employee_change_id`) REFERENCES `employees` (`id`) ON DELETE SET NULL,
   CONSTRAINT `sablon_employee_details_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
   CONSTRAINT `sablon_employee_details_fabric_detail_id_foreign` FOREIGN KEY (`fabric_detail_id`) REFERENCES `fabric_details` (`id`),
-  CONSTRAINT `sablon_employee_details_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `sablon_employee_details_sablon_id_foreign` FOREIGN KEY (`sablon_id`) REFERENCES `sablons` (`id`),
+  CONSTRAINT `sablon_employee_details_salary_employee_id_foreign` FOREIGN KEY (`salary_employee_id`) REFERENCES `salary_employees` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `sablon_employee_details` */
 
-insert  into `sablon_employee_details`(`id`,`sablon_id`,`fabric_detail_id`,`employee_id`,`layers`,`fee`,`additional_fee`,`total`,`is_change`,`employee_change_id`,`is_payed`,`notes`,`created_at`,`updated_at`) values 
-(30,3,NULL,5,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
-(31,3,NULL,3,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
-(32,3,NULL,9,1,62300,'[]',62300,0,NULL,0,NULL,'2026-07-26 09:46:59','2026-07-26 09:46:59'),
-(33,2,NULL,4,2,125300,'[{\"notes\": \"\", \"nominal\": -60000}]',65300,0,NULL,0,NULL,'2026-07-26 11:40:51','2026-07-26 11:40:51'),
-(34,2,NULL,6,1,62700,'[{\"notes\": \"\", \"nominal\": -30000}]',32700,0,NULL,0,NULL,'2026-07-26 11:40:51','2026-07-26 11:40:51'),
-(35,4,NULL,1,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
-(36,4,NULL,2,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
-(37,4,NULL,5,1,56500,'[]',56500,0,NULL,0,NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17'),
-(38,5,NULL,1,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10'),
-(39,5,NULL,2,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10'),
-(40,5,NULL,3,1,61100,'[]',61100,0,NULL,0,NULL,'2026-07-26 13:20:10','2026-07-26 13:20:10'),
-(41,1,NULL,14,1,65800,'[{\"nominal\":-60000,\"notes\":\"\"}]',5800,0,NULL,0,NULL,'2026-07-27 15:03:09','2026-07-27 15:03:09'),
-(42,1,NULL,15,1,65800,'[{\"nominal\":-30000,\"notes\":\"\"},{\"nominal\":-5000,\"notes\":\"bon pulsa\"}]',30800,0,NULL,0,NULL,'2026-07-27 15:03:09','2026-07-27 15:03:09'),
-(43,1,NULL,17,1,65800,'[{\"nominal\":-45000,\"notes\":\"\"}]',20800,0,NULL,0,NULL,'2026-07-27 15:03:09','2026-07-27 15:03:09');
+insert  into `sablon_employee_details`(`id`,`sablon_id`,`fabric_detail_id`,`employee_id`,`salary_employee_id`,`layers`,`fee`,`is_change`,`employee_change_id`,`is_bon`,`is_paid`,`notes`,`created_at`,`updated_at`) values 
+(38,5,NULL,1,NULL,1,61100,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(39,5,NULL,2,NULL,1,61100,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(40,5,NULL,3,NULL,1,61100,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(44,1,NULL,14,NULL,1,65800,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 16:51:50'),
+(45,1,NULL,15,NULL,1,65800,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(46,1,NULL,17,NULL,1,65800,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(47,2,NULL,4,NULL,2,125300,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(48,2,NULL,6,NULL,1,62700,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(49,3,NULL,5,NULL,1,62300,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(50,3,NULL,3,NULL,1,62300,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(51,3,NULL,9,NULL,1,62300,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(52,4,NULL,1,NULL,1,56500,0,NULL,0,0,NULL,'2026-07-27 15:26:08','2026-07-29 14:39:27'),
+(53,4,NULL,2,NULL,1,56500,0,NULL,0,0,NULL,'2026-07-27 09:43:19','2026-07-29 14:39:27'),
+(54,4,NULL,5,NULL,1,56500,0,NULL,0,0,NULL,'2026-07-27 15:26:08','2026-07-29 14:39:27');
 
 /*Table structure for table `sablons` */
 
@@ -983,11 +1000,11 @@ CREATE TABLE `sablons` (
 /*Data for the table `sablons` */
 
 insert  into `sablons`(`id`,`supplier_id`,`fabric_id`,`image_fabric_id`,`type_color_id`,`type_fabric_id`,`price_employee_id`,`total_long_fabric`,`total_sablon`,`date_sablon`,`status`,`notes`,`created_at`,`updated_at`,`created_by`,`updated_by`,`deleted_at`,`deleted_by`) values 
-(1,1,1,34,3,1,3,376,197400,'2026-07-26','DONE',NULL,'2026-07-26 09:43:19','2026-07-26 11:39:24',51,51,NULL,NULL),
-(2,1,1,25,3,1,3,358,187950,'2026-07-26','DONE',NULL,'2026-07-26 09:43:19','2026-07-26 11:40:51',51,51,NULL,NULL),
-(3,1,2,12,3,2,3,356,186900,'2026-07-26','DONE',NULL,'2026-07-26 09:46:59','2026-07-26 11:40:57',51,51,NULL,NULL),
-(4,1,2,14,3,2,2,339,169500,'2026-07-26','DONE',NULL,'2026-07-26 12:21:17','2026-07-26 12:21:17',51,51,NULL,NULL),
-(5,1,1,17,3,1,3,349,183225,'2026-07-26','DONE',NULL,'2026-07-26 13:20:10','2026-07-26 13:20:42',51,51,NULL,NULL);
+(1,1,1,34,3,1,3,376,197400,'2026-07-27','DONE',NULL,'2026-07-27 09:43:19','2026-07-27 09:43:19',51,51,NULL,NULL),
+(2,1,1,25,3,1,3,358,187950,'2026-07-27','DONE',NULL,'2026-07-27 09:43:19','2026-07-27 09:43:19',51,51,NULL,NULL),
+(3,1,2,12,3,2,3,356,186900,'2026-07-27','DONE',NULL,'2026-07-27 09:43:19','2026-07-27 09:43:19',51,51,NULL,NULL),
+(4,1,2,14,3,2,2,339,169500,'2026-07-27','DONE',NULL,'2026-07-27 09:43:19','2026-07-27 09:43:19',51,51,NULL,NULL),
+(5,1,1,17,3,1,3,349,183225,'2026-07-27','DONE',NULL,'2026-07-27 09:43:19','2026-07-26 13:20:42',51,51,NULL,NULL);
 
 /*Table structure for table `salary_employees` */
 
@@ -1010,7 +1027,7 @@ CREATE TABLE `salary_employees` (
   PRIMARY KEY (`id`),
   KEY `salary_employees_employee_id_foreign` (`employee_id`),
   CONSTRAINT `salary_employees_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `salary_employees` */
 

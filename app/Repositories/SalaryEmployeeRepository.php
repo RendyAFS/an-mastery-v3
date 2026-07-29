@@ -10,9 +10,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class SalaryEmployeeRepository
 {
-    public function getAll(string $filter = 'all', ?string $search = null, int $perPage = 12, ?string $weekOf = null)
-    {
-        [$start, $end] = $this->resolveWeekRange($weekOf);
+    public function getAll(
+        string $filter = 'all',
+        ?string $search = null,
+        int $perPage = 12,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null
+    ) {
+        [$start, $end] = $this->resolveWeekRange($dateFrom, $dateTo);
 
         $existingSalaries = SalaryEmployee::query()
             ->with([
@@ -20,37 +25,52 @@ class SalaryEmployeeRepository
                 'sablonEmployeeDetails.sablon.supplier',
                 'sablonEmployeeDetails.sablon.imageFabric',
             ])
-            ->where('date', $start)
+            ->whereBetween('date', [$start, $end])
             ->get();
 
-        $existingEmployeeIds = $existingSalaries->pluck('employee_id')->all();
+        $existingKeys = $existingSalaries
+            ->map(fn($s) => $s->employee_id . '|' . Carbon::parse($s->date)->toDateString())
+            ->all();
 
         $eligibleDetails = SablonEmployeeDetail::query()
             ->whereNull('salary_employee_id')
-            ->whereNotIn('employee_id', $existingEmployeeIds)
             ->eligibleForSalary()
             ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
             ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
             ->get()
-            ->groupBy('employee_id');
+            ->groupBy(function (SablonEmployeeDetail $detail) {
+                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->toDateString();
 
-        $virtualSalaries = $eligibleDetails->map(function ($details) use ($start) {
-            $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+                return $detail->employee_id . '|' . $weekStart;
+            });
 
-            $salary = new SalaryEmployee([
-                'employee_id'    => $details->first()->employee_id,
-                'fee'            => $totalFee,
-                'additional_fee' => [],
-                'status'         => StatusSalaryEmployeeEnum::PENDING,
-                'date'           => $start,
-                'notes'          => null,
-            ]);
+        $virtualSalaries = $eligibleDetails
+            ->reject(fn($details, $key) => in_array($key, $existingKeys))
+            ->map(function ($details) {
+                $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+                $first    = $details->first();
 
-            $salary->setRelation('employee', $details->first()->employee);
-            $salary->setRelation('sablonEmployeeDetails', $details);
+                $weekStart = Carbon::parse($first->sablon->date_sablon)
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->toDateString();
 
-            return $salary;
-        })->values();
+                $salary = new SalaryEmployee([
+                    'employee_id'    => $first->employee_id,
+                    'fee'            => $totalFee,
+                    'additional_fee' => [],
+                    'status'         => StatusSalaryEmployeeEnum::PENDING,
+                    'date'           => $weekStart,
+                    'notes'          => null,
+                ]);
+
+                $salary->setRelation('employee', $first->employee);
+                $salary->setRelation('sablonEmployeeDetails', $details);
+
+                return $salary;
+            })
+            ->values();
 
         $collection = $existingSalaries->concat($virtualSalaries);
 
@@ -65,7 +85,9 @@ class SalaryEmployeeRepository
             );
         }
 
-        $collection = $collection->sortBy(fn($s) => $s->employee?->name)->values();
+        $collection = $collection
+            ->sortByDesc(fn($s) => Carbon::parse($s->date)->format('Y-m-d'))
+            ->values();
 
         $page  = (int) request('page', 1);
         $items = $collection->forPage($page, $perPage)->values();
@@ -79,9 +101,13 @@ class SalaryEmployeeRepository
         );
     }
 
-    private function resolveWeekRange(?string $weekOf): array
+    private function resolveWeekRange(?Carbon $dateFrom, ?Carbon $dateTo): array
     {
-        $reference = $weekOf ? Carbon::parse($weekOf) : Carbon::now();
+        if ($dateFrom && $dateTo) {
+            return [$dateFrom->toDateString(), $dateTo->toDateString()];
+        }
+
+        $reference = Carbon::now();
 
         return [
             $reference->copy()->startOfWeek(Carbon::MONDAY)->toDateString(),

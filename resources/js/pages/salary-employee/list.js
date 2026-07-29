@@ -1,12 +1,7 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
+import { startLoading, stopLoading } from "@/utils/button-loading";
 import { initLucide } from "@/utils/lucide";
-import {
-    isoWeekToDateStr,
-    dateToIsoWeek,
-    currentMonday,
-    toDateStr,
-} from "@/utils/week";
 
 const statusColor = {
     PENDING: "bg-yellow-500/10 text-yellow-600",
@@ -55,7 +50,68 @@ const bindSignedRupiahInput = (el) => {
 
 const PageScript = (function () {
     let cardgrid;
-    let currentWeekOf;
+
+    const getISOWeekString = (date) => {
+        const target = new Date(date.valueOf());
+        const dayNr = (date.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+
+        if (target.getDay() !== 4) {
+            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+        }
+
+        const week = 1 + Math.round((firstThursday - target) / 604800000);
+
+        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    };
+
+    const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const applyFiltersFromUrl = () => {
+        const params = getUrlParams();
+        const currentWeek = getISOWeekString(new Date());
+
+        $("#filter-week-start").val(params.get("week_start") || currentWeek);
+        $("#filter-week-end").val(params.get("week_end") || currentWeek);
+        $("#sync-week-salary").val(currentWeek);
+    };
+
+    const syncUrl = () => {
+        const params = getUrlParams();
+        params.set("week_start", $("#filter-week-start").val());
+        params.set("week_end", $("#filter-week-end").val());
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
+    const setDefaultWeekFilters = () => {
+        const currentWeek = getISOWeekString(new Date());
+        $("#filter-week-start").val(currentWeek);
+        $("#filter-week-end").val(currentWeek);
+        syncUrl();
+    };
+
+    const isoWeekToDateStr = (isoWeek) => {
+        const [yearStr, weekStr] = isoWeek.split("-W");
+        const year = parseInt(yearStr, 10);
+        const week = parseInt(weekStr, 10);
+
+        const simple = new Date(year, 0, 1 + (week - 1) * 7);
+        const dayOfWeek = simple.getDay();
+        const isoWeekStart = new Date(simple);
+
+        if (dayOfWeek <= 4) {
+            isoWeekStart.setDate(simple.getDate() - simple.getDay() + 1);
+        } else {
+            isoWeekStart.setDate(simple.getDate() + 8 - simple.getDay());
+        }
+
+        return isoWeekStart.toISOString().slice(0, 10);
+    };
 
     const renderCard = (item) => {
         const badge =
@@ -139,6 +195,7 @@ const PageScript = (function () {
 
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
                 <button data-employee-id="${item.employee_id}" data-status="${item.status}"
+                    data-date="${item.date ?? ""}"
                     data-additional-fee='${JSON.stringify(additionalFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
                     <i data-lucide="wallet" class="size-3.5"></i> Kelola
@@ -168,10 +225,11 @@ const PageScript = (function () {
 
             const employeeId = $(this).data("employee-id");
             const status = $(this).data("status");
+            const date = $(this).data("date");
             const existing = $(this).data("additional-fee") || [];
 
             $("#salary-employee-id").val(employeeId);
-            $("#salary-week-of").val(currentWeekOf);
+            $("#salary-week-of").val(date);
             $("#additional-fee-rows").empty();
 
             const instance = HSSelect.getInstance("#modal-salary-status");
@@ -218,7 +276,7 @@ const PageScript = (function () {
 
             try {
                 await ApiProvider.put(
-                    route("salary-employees.update", employeeId),
+                    route("salary_employees.update", employeeId),
                     {
                         week_of: weekOf,
                         status,
@@ -237,30 +295,17 @@ const PageScript = (function () {
         });
     };
 
-    const initSyncButton = () => {
-        $(document).on("click", "#btn-sync-salary", async function () {
-            try {
-                await ApiProvider.put(route("salary-employees.sync"), {
-                    week_of: currentWeekOf,
-                });
-
-                Toast.success("Success", "Salary employee synced successfully");
-
-                cardgrid.reload();
-            } catch (err) {
-                console.error(err);
-            }
-        });
-    };
-
     const CardGrid = () => {
         cardgrid = initCardgrid({
             containerId: "#salary-employee-cardgrid",
             filterSelector: "#filter-salary-employee",
             ajax: {
-                url: route("salary-employees.index"),
+                url: route("salary_employees.index"),
                 data: function () {
-                    return { week_of: currentWeekOf };
+                    return {
+                        week_start: $("#filter-week-start").val(),
+                        week_end: $("#filter-week-end").val(),
+                    };
                 },
             },
             renderCard,
@@ -269,25 +314,57 @@ const PageScript = (function () {
     };
 
     const bindEvents = () => {
-        $("#filter-week-salary").on("change", function () {
-            const value = $(this).val();
-            if (!value) return;
+        $(document).on(
+            "change",
+            "#filter-week-start, #filter-week-end",
+            function () {
+                syncUrl();
+                cardgrid.reload();
+            },
+        );
 
-            currentWeekOf = isoWeekToDateStr(value);
+        $(document).on("click", "#filter-week-reset", function () {
+            setDefaultWeekFilters();
             cardgrid.reload();
+        });
+
+        $(document).on("click", "#btn-sync-salary", async function () {
+            const isoWeek = $("#sync-week-salary").val();
+
+            if (!isoWeek) {
+                Toast.error(
+                    "Perhatian",
+                    "Pilih minggu untuk sync terlebih dahulu",
+                );
+                return;
+            }
+
+            const weekOf = isoWeekToDateStr(isoWeek);
+            startLoading(this);
+
+            try {
+                const response = await ApiProvider.put(
+                    route("salary_employees.sync"),
+                    { week_of: weekOf },
+                );
+                Toast.success("Success", response.message);
+                cardgrid.reload();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                stopLoading(this);
+            }
         });
     };
 
     return {
         init() {
-            const monday = currentMonday();
-            currentWeekOf = toDateStr(monday);
-            $("#filter-week-salary").val(dateToIsoWeek(monday));
+            applyFiltersFromUrl();
+            syncUrl();
 
             CardGrid();
             bindEvents();
             initSalaryModal();
-            initSyncButton();
         },
     };
 })();
