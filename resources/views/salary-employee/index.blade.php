@@ -12,7 +12,7 @@
                 <p class="text-sm">Rekap fee karyawan per minggu</p>
             </div>
 
-            <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-wrap items-center gap-3">
                 <div>
                     <label for="filter-week-salary"
                         class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
@@ -25,10 +25,10 @@
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
 
-                <x-button-loading type="button" id="btn-sync-salary" text="Sync" loadingText="Syncing..."
-                    color="bg-(--color-primary) hover:bg-(--color-primary)/70"
+                <x-button-loading type="button" id="btn-sync-salary" icon="refresh-cw" text="Sync"
+                    loadingText="Syncing..." color="bg-(--color-primary) hover:bg-(--color-primary)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
-                    rounded="rounded-lg" class="cursor-pointer" />
+                    rounded="rounded-lg" class="cursor-pointer mt-6" />
             </div>
         </div>
 

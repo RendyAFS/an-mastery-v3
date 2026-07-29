@@ -89,50 +89,6 @@ const PageScript = (function () {
                     <div class="space-y-2">
                         ${item.sablonEmployeeDetails
                             .map((detail) => {
-                                const additionalFees = Array.isArray(
-                                    detail.additional_fee,
-                                )
-                                    ? detail.additional_fee
-                                    : [];
-
-                                const additionalFeeHtml = additionalFees.length
-                                    ? `
-                                        <div class="mt-2 ml-4 space-y-1">
-                                            ${additionalFees
-                                                .map(
-                                                    (fee) => `
-                                                        <div class="flex justify-between text-[11px] text-(--color-dark-gray)">
-                                                            <span>
-                                                                ↳ ${fee.notes || "Additional Fee"}
-                                                            </span>
-                                                            <span class="${
-                                                                Number(
-                                                                    fee.nominal,
-                                                                ) < 0
-                                                                    ? "text-(--color-red)"
-                                                                    : "text-(--color-success)"
-                                                            }">
-                                                                ${
-                                                                    Number(
-                                                                        fee.nominal,
-                                                                    ) < 0
-                                                                        ? "-"
-                                                                        : "+"
-                                                                } Rp ${Math.abs(
-                                                                    fee.nominal ||
-                                                                        0,
-                                                                ).toLocaleString(
-                                                                    "id-ID",
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                    `,
-                                                )
-                                                .join("")}
-                                        </div>
-                                    `
-                                    : "";
-
                                 return `
                                     <div class="rounded-lg bg-(--color-gray)/10 p-2">
                                         <div class="flex justify-between items-start">
@@ -144,6 +100,16 @@ const PageScript = (function () {
                                                 <p class="text-[11px] text-(--color-dark-gray)">
                                                     ${detail.layers ?? 0} Layer
                                                     ${
+                                                        detail.is_bon
+                                                            ? `• Bon`
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        detail.is_paid
+                                                            ? `• Paid`
+                                                            : ""
+                                                    }
+                                                    ${
                                                         detail.is_change
                                                             ? `• Ganti ke ${detail.employeeChange?.name ?? "-"}`
                                                             : ""
@@ -152,11 +118,9 @@ const PageScript = (function () {
                                             </div>
 
                                             <span class="text-xs font-semibold">
-                                                ${detail.total_formated ?? "Rp 0"}
+                                                ${detail.fee_formated ?? "Rp 0"}
                                             </span>
                                         </div>
-
-                                        ${additionalFeeHtml}
                                     </div>
                                 `;
                             })

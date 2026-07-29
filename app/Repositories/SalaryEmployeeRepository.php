@@ -35,10 +35,7 @@ class SalaryEmployeeRepository
             ->groupBy('employee_id');
 
         $virtualSalaries = $eligibleDetails->map(function ($details) use ($start) {
-            $totalFee = $details->sum(
-                fn(SablonEmployeeDetail $d) => (float) $d->fee
-                    + collect($d->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
-            );
+            $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
 
             $salary = new SalaryEmployee([
                 'employee_id'    => $details->first()->employee_id,

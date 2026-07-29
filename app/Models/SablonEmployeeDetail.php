@@ -16,20 +16,17 @@ class SablonEmployeeDetail extends Model
         'salary_employee_id',
         'layers',
         'fee',
-        'additional_fee',
-        'total',
         'is_change',
         'employee_change_id',
         'is_bon',
-        'is_payed',
+        'is_paid',
         'notes'
     ];
 
     protected $casts = [
-        'is_change'      => 'boolean',
-        'is_bon'         => 'boolean',
-        'is_payed'       => 'boolean',
-        'additional_fee' => 'array'
+        'is_change' => 'boolean',
+        'is_bon'    => 'boolean',
+        'is_paid'  => 'boolean',
     ];
 
     public function sablon(): BelongsTo
@@ -59,7 +56,7 @@ class SablonEmployeeDetail extends Model
 
     public function scopeEligibleForSalary(Builder $query): Builder
     {
-        return $query->where('is_payed', false)
+        return $query->where('is_paid', false)
             ->where(function (Builder $q) {
                 $q->where(function (Builder $q1) {
                     $q1->where('is_bon', false)

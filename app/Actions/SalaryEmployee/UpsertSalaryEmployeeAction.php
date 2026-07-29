@@ -42,10 +42,7 @@ class UpsertSalaryEmployeeAction
                 ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
                 ->get();
 
-            $totalFee = $eligibleDetails->sum(
-                fn(SablonEmployeeDetail $d) => (float) $d->fee
-                    + collect($d->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
-            );
+            $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
 
             $salary->fee = $totalFee;
 
@@ -73,7 +70,7 @@ class UpsertSalaryEmployeeAction
 
             if ($salary->status === StatusSalaryEmployeeEnum::PAID) {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
-                    ->update(['is_payed' => true]);
+                    ->update(['is_paid' => true]);
             }
 
             return $salary->fresh([

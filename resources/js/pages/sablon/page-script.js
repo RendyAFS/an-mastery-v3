@@ -44,27 +44,19 @@ const PageScript = (function () {
 
     function getEmployeeDetails(data) {
         return data.employeeRows.map((row) => {
-            data.rowTotal(row);
-
-            const additionalFees = Array.isArray(row.additional_fee)
-                ? row.additional_fee.map((f) => ({
-                      nominal: Number(f.nominal) || 0,
-                      notes: f.notes || "",
-                  }))
-                : [];
+            const fee = data.computeFee(row);
 
             return {
                 fabric_detail_id: row.fabric_detail_id || null,
                 employee_id: row.employee_id,
                 layers: row.layers || 0,
-                fee: row.fee || 0,
-                additional_fee: additionalFees,
-                total: row.total || 0,
+                fee,
                 is_change: row.is_change,
                 employee_change_id: row.is_change
                     ? row.employee_change_id || null
                     : null,
-                is_payed: row.is_payed,
+                is_bon: row.is_bon,
+                is_paid: row.is_paid,
                 notes: row.notes,
             };
         });

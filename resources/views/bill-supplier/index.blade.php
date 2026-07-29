@@ -36,7 +36,7 @@
                 </div>
 
                 <button type="button" id="filter-week-reset"
-                    class="h-[42px] inline-flex items-center gap-2 px-4 rounded-lg text-sm
+                    class="h-42px inline-flex items-center gap-2 px-4 rounded-lg text-sm
                 bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
                     <i data-lucide="rotate-ccw" class="size-4"></i>
                     Reset ke Minggu Ini

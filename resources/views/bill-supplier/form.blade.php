@@ -28,7 +28,7 @@
                 </label>
             </div>
 
-            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-[70vh] overflow-y-auto">
+            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-70vh overflow-y-auto">
                 <div id="sablon-modal-loading" class="hidden text-center text-sm text-(--color-gray) py-10">
                     Loading data...
                 </div>
@@ -49,7 +49,7 @@
                 Sablon dalam Batch Ini
             </label>
 
-            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-[70vh] overflow-y-auto">
+            <div class="border border-(--color-gray)/20 rounded-xl p-3 max-h-70vh overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach ($billSuppliers as $bs)
                         @php
