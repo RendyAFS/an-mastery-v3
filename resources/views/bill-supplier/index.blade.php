@@ -16,7 +16,7 @@
         <div
             class="flex flex-wrap justify-between items-center gap-4 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4">
             <div class="font-bold text-(--color-dark) dark:text-(--color-light)">Filter berdasarkan minggu</div>
-            <div class="flex flex-wrap items-end gap-4">
+            <div class="flex flex-wrap items-center gap-4">
                 <div class="w-full sm:w-56">
                     <label for="filter-week-start"
                         class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
@@ -35,12 +35,10 @@
                     <input type="week" id="filter-week-end" class="form-input mt-1 w-full" />
                 </div>
 
-                <button type="button" id="filter-week-reset"
-                    class="h-42px inline-flex items-center gap-2 px-4 rounded-lg text-sm
-                bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
-                    <i data-lucide="rotate-ccw" class="size-4"></i>
-                    Reset ke Minggu Ini
-                </button>
+                <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw" text="Reset ke Minggu Ini"
+                    loadingText="Resetting..." color="bg-(--color-primary) hover:bg-(--color-primary)/70"
+                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
+                    rounded="rounded-lg" class="cursor-pointer mt-6" />
             </div>
         </div>
         <x-cardgrid id="bill-supplier-cardgrid" :filter="false" :lengthOptions="[12, 24, 48]" :defaultLength="12" />

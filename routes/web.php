@@ -130,9 +130,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('available-sablons/{supplier}', [App\Http\Controllers\BillSupplierController::class, 'availableSablons'])->name('available-sablons');
         Route::post('calculate-bulk', [App\Http\Controllers\BillSupplierController::class, 'calculateBulk'])->name('calculate-bulk');
 
-        // Batch-based actions (satu batch = satu submission create yang berisi banyak sablon)
         Route::get('batch/{batch}/edit', [App\Http\Controllers\BillSupplierController::class, 'editBatch'])->name('batch.edit');
         Route::get('batch/{batch}/calculate', [App\Http\Controllers\BillSupplierController::class, 'calculateBatch'])->name('batch.calculate');
+        Route::put('batch/{batch}/toggle-paid', [App\Http\Controllers\BillSupplierController::class, 'togglePaidBatch'])->name('batch.toggle-paid');
         Route::put('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'updateBatch'])->name('batch.update');
         Route::delete('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'destroyBatch'])->name('batch.destroy');
         Route::put('batch/{batch}/restore', [App\Http\Controllers\BillSupplierController::class, 'restoreBatch'])->name('batch.restore');

@@ -16,7 +16,6 @@ class BillSupplierRepository
         ?Carbon $dateTo = null
     ) {
         $query = BillSupplier::query()
-            ->withTrashed()
             ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor', 'sablon.fabric.typeFabric'])
             ->where('supplier_id', $supplierId)
             ->orderByDesc('date_bill');
@@ -60,9 +59,6 @@ class BillSupplierRepository
                             'total_fee'         => (int) $bs->total_fee,
                             'total_long_fabric' => $bs->sablon?->total_long_fabric,
                         ])->values(),
-                        'deleted_at' => $group->every(fn($b) => $b->deleted_at !== null)
-                            ? $first->deleted_at?->format('Y-m-d H:i:s')
-                            : null,
                     ];
                 })->values();
 
@@ -79,11 +75,17 @@ class BillSupplierRepository
             ->values();
     }
 
-    public function getAvailableSablons(int $supplierId, ?string $search = null)
+    public function getAvailableSablons(int $supplierId, ?string $search = null, ?string $batch = null)
     {
         $query = Sablon::query()
             ->where('supplier_id', $supplierId)
-            ->whereDoesntHave('billSupplier')
+            ->where(function ($q) use ($batch) {
+                $q->whereDoesntHave('billSupplier');
+
+                if ($batch) {
+                    $q->orWhereHas('billSupplier', fn($b) => $b->where('batch', $batch));
+                }
+            })
             ->with(['imageFabric', 'typeFabric', 'typeColor', 'sablonDetails.colorFabric'])
             ->orderByDesc('date_sablon');
 

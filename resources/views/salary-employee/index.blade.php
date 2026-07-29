@@ -25,7 +25,7 @@
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
 
-                <x-button-loading type="button" id="btn-sync-salary" icon="refresh-cw" text="Sync"
+                <x-button-loading type="button" id="btn-sync-salary" icon="refresh-cw" text="Sync Data"
                     loadingText="Syncing..." color="bg-(--color-primary) hover:bg-(--color-primary)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer mt-6" />

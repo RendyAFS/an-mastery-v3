@@ -63,15 +63,13 @@ const PageScript = (function () {
         </div>`;
 
     const batchCard = (batch) => {
-        const isDeleted = batch.deleted_at !== null;
         const items = batch.items ?? [];
         const statusBadge = batch.is_paid
             ? `<span class="text-xs font-semibold px-2 py-1 rounded-full bg-(--color-success)/10 text-(--color-success)">Lunas</span>`
             : `<span class="text-xs font-semibold px-2 py-1 rounded-full bg-(--color-red)/10 text-(--color-red)">Belum Lunas</span>`;
 
         return `
-        <div class="p-4 rounded-xl border border-(--color-gray)/10 bg-(--color-light) dark:bg-(--color-dark) shadow-sm space-y-3
-            ${isDeleted ? "opacity-60 border-dashed border-(--color-red)/40" : ""}">
+        <div class="p-4 rounded-xl border border-(--color-gray)/10 bg-(--color-light) dark:bg-(--color-dark) shadow-sm space-y-3">
 
             <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0 space-y-1">
@@ -86,23 +84,16 @@ const PageScript = (function () {
                 </div>
 
                 <div class="flex items-center gap-1 shrink-0">
-                    ${
-                        isDeleted
-                            ? `
-                            <button data-batch="${batch.batch}" title="Restore" class="btn-restore p-2 rounded-lg text-(--color-success) hover:bg-(--color-gray)/20 cursor-pointer">
-                                <i data-lucide="rotate-ccw" class="size-4"></i>
-                            </button>
-                            <button data-batch="${batch.batch}" title="Hapus Permanen" class="btn-force-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
-                                <i data-lucide="trash" class="size-4"></i>
-                            </button>`
-                            : `
-                            <a href="${route("bill_suppliers.batch.edit", batch.batch)}" title="Edit" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
-                                <i data-lucide="square-pen" class="size-4"></i>
-                            </a>
-                            <button data-batch="${batch.batch}" title="Hapus" class="btn-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
-                                <i data-lucide="trash-2" class="size-4"></i>
-                            </button>`
-                    }
+                    <button data-batch="${batch.batch}" title="${batch.is_paid ? "Tandai Belum Lunas" : "Tandai Lunas"}"
+                        class="btn-toggle-paid p-2 rounded-lg ${batch.is_paid ? "text-(--color-red)" : "text-(--color-success)"} hover:bg-(--color-gray)/20 cursor-pointer">
+                        <i data-lucide="${batch.is_paid ? "x-circle" : "check-circle-2"}" class="size-4"></i>
+                    </button>
+                    <a href="${route("bill_suppliers.batch.edit", batch.batch)}" title="Edit" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
+                        <i data-lucide="square-pen" class="size-4"></i>
+                    </a>
+                    <button data-batch="${batch.batch}" title="Hapus" class="btn-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
+                        <i data-lucide="trash-2" class="size-4"></i>
+                    </button>
                 </div>
             </div>
 
@@ -208,6 +199,26 @@ const PageScript = (function () {
     };
 
     const bindEvents = () => {
+        $(document).on("click", ".btn-toggle-paid", async function () {
+            const batch = $(this).data("batch");
+
+            const confirmed = await Confirm.show(
+                "Ubah status pembayaran batch ini?",
+                "Konfirmasi",
+            );
+            if (!confirmed) return;
+
+            try {
+                await ApiProvider.put(
+                    route("bill_suppliers.batch.toggle-paid", batch),
+                );
+                Toast.success("Success", "Status pembayaran berhasil diubah");
+                load();
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
         $(document).on("click", ".btn-delete", async function () {
             const batch = $(this).data("batch");
             const confirmed = await Confirm.delete(
@@ -218,31 +229,6 @@ const PageScript = (function () {
                 route("bill_suppliers.batch.destroy", batch),
             );
             Toast.success("Success", "Batch tagihan deleted successfully");
-            load();
-        });
-
-        $(document).on("click", ".btn-restore", async function () {
-            const batch = $(this).data("batch");
-            const confirmed = await Confirm.show(
-                "Restore batch tagihan ini?",
-                "Confirmation",
-            );
-            if (!confirmed) return;
-            await ApiProvider.put(route("bill_suppliers.batch.restore", batch));
-            Toast.success("Success", "Batch tagihan restored");
-            load();
-        });
-
-        $(document).on("click", ".btn-force-delete", async function () {
-            const batch = $(this).data("batch");
-            const confirmed = await Confirm.delete(
-                "Ini akan menghapus permanen batch tagihan. Lanjutkan?",
-            );
-            if (!confirmed) return;
-            await ApiProvider.delete(
-                route("bill_suppliers.batch.force-delete", batch),
-            );
-            Toast.success("Success", "Batch tagihan permanently deleted");
             load();
         });
     };

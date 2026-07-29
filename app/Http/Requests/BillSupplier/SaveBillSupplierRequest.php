@@ -15,9 +15,11 @@ class SaveBillSupplierRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'date_bill' => ['required', 'date'],
-            'is_paid'   => ['nullable', 'boolean'],
-            'notes'     => ['nullable', 'string'],
+            'date_bill'    => ['required', 'date'],
+            'is_paid'      => ['nullable', 'boolean'],
+            'notes'        => ['nullable', 'string'],
+            'sablon_ids'   => 'nullable|array',
+            'sablon_ids.*' => 'exists:sablons,id',
         ];
 
         if ($this->isMethod('post')) {

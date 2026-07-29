@@ -93,12 +93,19 @@ class BillSupplierController extends Controller
 
     public function availableSablons(Supplier $supplier)
     {
-        $this->authorize('bill-suppliers.create');
+        $batch = request('batch');
 
-        $sablons = $this->billSupplierRepository->getAvailableSablons($supplier->id, request('search'));
+        $this->authorize($batch ? 'bill-suppliers.update' : 'bill-suppliers.create');
+
+        $sablons = $this->billSupplierRepository->getAvailableSablons($supplier->id, request('search'), $batch);
 
         return response()->json([
-            'data' => $sablons->map(fn($s) => $this->billSupplierRepository->calculatePreview($s)),
+            'data' => $sablons->map(function ($sablon) use ($batch) {
+                $preview = $this->billSupplierRepository->calculatePreview($sablon);
+                $preview['in_current_batch'] = $batch && $sablon->billSupplier?->batch === $batch;
+
+                return $preview;
+            }),
         ]);
     }
 
@@ -175,8 +182,7 @@ class BillSupplierController extends Controller
     {
         $this->authorize('bill-suppliers.update');
 
-        $billSuppliers = BillSupplier::withTrashed()
-            ->where('batch', $batch)
+        $billSuppliers = BillSupplier::where('batch', $batch)
             ->with([
                 'sablon.imageFabric',
                 'sablon.typeFabric',
@@ -196,6 +202,24 @@ class BillSupplierController extends Controller
             'isPaid'        => $first->is_paid,
             'notes'         => $first->notes,
             'billSuppliers' => $billSuppliers,
+        ]);
+    }
+
+    public function togglePaidBatch(string $batch)
+    {
+        $this->authorize('bill-suppliers.update');
+
+        $billSuppliers = BillSupplier::where('batch', $batch)->get();
+
+        abort_if($billSuppliers->isEmpty(), 404);
+
+        $newState = ! (bool) $billSuppliers->first()->is_paid;
+
+        BillSupplier::where('batch', $batch)->update(['is_paid' => $newState]);
+
+        return response()->json([
+            'message' => 'Payment status updated successfully.',
+            'is_paid' => $newState,
         ]);
     }
 

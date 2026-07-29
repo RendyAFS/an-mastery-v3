@@ -25,33 +25,32 @@ const PageScript = (function () {
         listContainer.html(
             sablons
                 .map((s) => {
-                    const disabled = s.status !== "DONE";
+                    const inBatch = !!s.in_current_batch;
+                    const disabled = s.status !== "DONE" && !inBatch;
+                    const checked = mode === "edit" ? inBatch : !disabled;
 
                     return `
-                    <label class="flex items-start gap-3 p-3 rounded-lg border border-(--color-gray)/10
-                        ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-(--color-gray)/10 cursor-pointer"}"
-                        data-fabric-name="${(s.image_fabric ?? "").toLowerCase()}">
-                        <input type="checkbox" class="checkbox-custom sablon-checkbox mt-1"
-                            value="${s.sablon_id}" ${disabled ? "disabled" : "checked"}>
-                        <div class="flex-1 min-w-0 space-y-2">
-                            ${sablonHeaderHtml(s)}
-                            ${sablonSummaryHtml(s)}
-                            ${fabricDetailsHtml(s)}
-                            ${
-                                disabled
-                                    ? `<p class="text-[11px] text-(--color-red)">Hanya sablon berstatus Done yang bisa ditagih</p>`
-                                    : ""
-                            }
-                        </div>
-                    </label>`;
+                <label class="flex items-start gap-3 p-3 rounded-lg border border-(--color-gray)/10
+                    ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-(--color-gray)/10 cursor-pointer"}"
+                    data-fabric-name="${(s.image_fabric ?? "").toLowerCase()}">
+                    <input type="checkbox" class="checkbox-custom sablon-checkbox mt-1"
+                        value="${s.sablon_id}" ${checked ? "checked" : ""} ${disabled ? "disabled" : ""}>
+                    <div class="flex-1 min-w-0 space-y-2">
+                        ${sablonHeaderHtml(s)}
+                        ${sablonSummaryHtml(s)}
+                        ${fabricDetailsHtml(s)}
+                        ${
+                            disabled
+                                ? `<p class="text-[11px] text-(--color-red)">Hanya sablon berstatus Done yang bisa ditagih</p>`
+                                : ""
+                        }
+                    </div>
+                </label>`;
                 })
                 .join(""),
         );
 
         listContainer.removeClass("hidden");
-        $("#sablon-check-all")
-            .prop("checked", true)
-            .prop("indeterminate", false);
         syncSelection();
     };
 
@@ -65,9 +64,13 @@ const PageScript = (function () {
         emptyEl.addClass("hidden");
 
         try {
-            const response = await ApiProvider.get(
-                route("bill_suppliers.available-sablons", supplierId),
-            );
+            let url = route("bill_suppliers.available-sablons", supplierId);
+
+            if (mode === "edit" && batch) {
+                url += `?batch=${encodeURIComponent(batch)}`;
+            }
+
+            const response = await ApiProvider.get(url);
             renderSablonCards(response.data ?? []);
         } catch (error) {
             console.error("Load available sablons error:", error);
@@ -169,37 +172,19 @@ const PageScript = (function () {
         }
     };
 
-    // Hitung ulang total batch secara dinamis (mengikuti harga supplier terbaru)
-    const loadBatchPreview = async () => {
-        try {
-            const calc = await ApiProvider.get(
-                route("bill_suppliers.batch.calculate", batch),
-            );
-            renderPreview(calc);
-        } catch (error) {
-            console.error("Calculate batch error:", error);
-        }
-    };
-
     const submitForm = async (submitter) => {
         const formData = new FormData(form);
         let payload = Object.fromEntries(formData.entries());
 
-        if (mode === "create") {
-            const sablonIds = getCheckedIds();
+        const sablonIds = getCheckedIds();
 
-            if (!sablonIds.length) {
-                Toast.error(
-                    "Perhatian",
-                    "Pilih minimal 1 sablon terlebih dahulu",
-                );
-                stopLoading(submitter);
-                return;
-            }
-
-            payload.sablon_ids = sablonIds;
+        if (!sablonIds.length) {
+            Toast.error("Perhatian", "Pilih minimal 1 sablon terlebih dahulu");
+            stopLoading(submitter);
+            return;
         }
 
+        payload.sablon_ids = sablonIds;
         payload = normalizeFormInputs(form, payload);
 
         try {
@@ -264,13 +249,7 @@ const PageScript = (function () {
 
             bindEvents();
 
-            if (mode === "create") {
-                loadSablonList();
-            }
-
-            if (mode === "edit") {
-                loadBatchPreview();
-            }
+            loadSablonList();
         },
     };
 })();
