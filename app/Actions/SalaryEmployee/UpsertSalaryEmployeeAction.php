@@ -32,15 +32,20 @@ class UpsertSalaryEmployeeAction
                 $salary->additional_fee = [];
             }
 
-            $eligibleDetails = SablonEmployeeDetail::query()
+            $alreadyLinkedDetails = $salary->exists
+                ? SablonEmployeeDetail::query()
+                ->where('salary_employee_id', $salary->id)
+                ->get()
+                : collect();
+
+            $newEligibleDetails = SablonEmployeeDetail::query()
                 ->where('employee_id', $employeeId)
+                ->whereNull('salary_employee_id')
                 ->eligibleForSalary()
-                ->where(function ($q) use ($salary) {
-                    $q->whereNull('salary_employee_id')
-                        ->orWhere('salary_employee_id', $salary->id);
-                })
                 ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
                 ->get();
+
+            $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
 
             $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
 
@@ -71,6 +76,9 @@ class UpsertSalaryEmployeeAction
             if ($salary->status === StatusSalaryEmployeeEnum::PAID) {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => true]);
+            } else {
+                SablonEmployeeDetail::where('salary_employee_id', $salary->id)
+                    ->update(['is_paid' => false]);
             }
 
             return $salary->fresh([
