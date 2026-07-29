@@ -42,10 +42,13 @@ class SalaryEmployeeController extends Controller
         $this->authorize('salary-employees.update');
 
         $validated = $request->validate([
-            'week_of' => 'required|date',
+            'week_start' => 'required',
+            'week_end'   => 'required',
         ]);
 
-        $count = $this->upsertSalaryEmployeeAction->handleBulk($validated['week_of']);
+        [$dateFrom, $dateTo] = WeekHelper::parseRange($validated['week_start'], $validated['week_end']);
+
+        $count = $this->upsertSalaryEmployeeAction->handleBulk($dateFrom, $dateTo);
 
         return response()->json([
             'message' => "Synced {$count} employee salary records.",

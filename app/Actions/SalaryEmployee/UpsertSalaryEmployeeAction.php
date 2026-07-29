@@ -89,22 +89,31 @@ class UpsertSalaryEmployeeAction
         });
     }
 
-    public function handleBulk(string $weekOf): int
+    public function handleBulk(Carbon $dateFrom, Carbon $dateTo): int
     {
-        $start = Carbon::parse($weekOf)->startOfWeek(Carbon::MONDAY)->toDateString();
-        $end   = Carbon::parse($weekOf)->endOfWeek(Carbon::SUNDAY)->toDateString();
+        $start = $dateFrom->copy()->startOfWeek(Carbon::MONDAY);
+        $end   = $dateTo->copy()->endOfWeek(Carbon::SUNDAY);
 
-        $employeeIds = SablonEmployeeDetail::query()
+        $pairs = SablonEmployeeDetail::query()
             ->whereNull('salary_employee_id')
             ->eligibleForSalary()
-            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
-            ->pluck('employee_id')
+            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start->toDateString(), $end->toDateString()]))
+            ->with('sablon')
+            ->get()
+            ->map(function (SablonEmployeeDetail $detail) {
+                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->toDateString();
+
+                return $detail->employee_id . '|' . $weekStart;
+            })
             ->unique();
 
-        foreach ($employeeIds as $employeeId) {
-            $this->handleForEmployee($employeeId, $weekOf);
+        foreach ($pairs as $pair) {
+            [$employeeId, $weekStart] = explode('|', $pair);
+            $this->handleForEmployee((int) $employeeId, $weekStart);
         }
 
-        return $employeeIds->count();
+        return $pairs->count();
     }
 }

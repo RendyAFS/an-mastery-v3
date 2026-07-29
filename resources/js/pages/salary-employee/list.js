@@ -76,7 +76,6 @@ const PageScript = (function () {
 
         $("#filter-week-start").val(params.get("week_start") || currentWeek);
         $("#filter-week-end").val(params.get("week_end") || currentWeek);
-        $("#sync-week-salary").val(currentWeek);
     };
 
     const syncUrl = () => {
@@ -329,23 +328,23 @@ const PageScript = (function () {
         });
 
         $(document).on("click", "#btn-sync-salary", async function () {
-            const isoWeek = $("#sync-week-salary").val();
+            const weekStart = $("#filter-week-start").val();
+            const weekEnd = $("#filter-week-end").val();
 
-            if (!isoWeek) {
+            if (!weekStart || !weekEnd) {
                 Toast.error(
                     "Perhatian",
-                    "Pilih minggu untuk sync terlebih dahulu",
+                    "Pilih rentang minggu terlebih dahulu",
                 );
                 return;
             }
 
-            const weekOf = isoWeekToDateStr(isoWeek);
             startLoading(this);
 
             try {
                 const response = await ApiProvider.put(
                     route("salary_employees.sync"),
-                    { week_of: weekOf },
+                    { week_start: weekStart, week_end: weekEnd },
                 );
                 Toast.success("Success", response.message);
                 cardgrid.reload();
