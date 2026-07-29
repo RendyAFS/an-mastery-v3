@@ -1,11 +1,5 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
-import {
-    isoWeekToDateStr,
-    dateToIsoWeek,
-    currentMonday,
-    toDateStr,
-} from "@/utils/week";
 
 const statusColor = {
     ON_PROGRESS: "bg-yellow-500/10 text-yellow-600",
@@ -16,7 +10,49 @@ const statusColor = {
 
 const PageScript = (function () {
     let cardgrid;
-    let currentWeekOf;
+
+    const getISOWeekString = (date) => {
+        const target = new Date(date.valueOf());
+        const dayNr = (date.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+
+        if (target.getDay() !== 4) {
+            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+        }
+
+        const week = 1 + Math.round((firstThursday - target) / 604800000);
+
+        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    };
+
+    const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const applyFiltersFromUrl = () => {
+        const params = getUrlParams();
+        const currentWeek = getISOWeekString(new Date());
+
+        $("#filter-week-start").val(params.get("week_start") || currentWeek);
+        $("#filter-week-end").val(params.get("week_end") || currentWeek);
+    };
+
+    const syncUrl = () => {
+        const params = getUrlParams();
+        params.set("week_start", $("#filter-week-start").val());
+        params.set("week_end", $("#filter-week-end").val());
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
+    const setDefaultWeekFilters = () => {
+        const currentWeek = getISOWeekString(new Date());
+        $("#filter-week-start").val(currentWeek);
+        $("#filter-week-end").val(currentWeek);
+        syncUrl();
+    };
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
@@ -225,7 +261,10 @@ const PageScript = (function () {
             ajax: {
                 url: route("sablons.index"),
                 data: function () {
-                    return { week_of: currentWeekOf };
+                    return {
+                        week_start: $("#filter-week-start").val(),
+                        week_end: $("#filter-week-end").val(),
+                    };
                 },
             },
             renderCard,
@@ -280,20 +319,25 @@ const PageScript = (function () {
             cardgrid.reload();
         });
 
-        $("#filter-week-sablon").on("change", function () {
-            const value = $(this).val();
-            if (!value) return;
+        $(document).on(
+            "change",
+            "#filter-week-start, #filter-week-end",
+            function () {
+                syncUrl();
+                cardgrid.reload();
+            },
+        );
 
-            currentWeekOf = isoWeekToDateStr(value);
+        $(document).on("click", "#filter-week-reset", function () {
+            setDefaultWeekFilters();
             cardgrid.reload();
         });
     };
 
     return {
         init() {
-            const monday = currentMonday();
-            currentWeekOf = toDateStr(monday);
-            $("#filter-week-sablon").val(dateToIsoWeek(monday));
+            applyFiltersFromUrl();
+            syncUrl();
 
             CardGrid();
             bindEvents();

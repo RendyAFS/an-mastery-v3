@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BillSupplier\SaveBillSupplierAction;
+use App\Helpers\WeekHelper;
 use App\Http\Requests\BillSupplier\SaveBillSupplierRequest;
 use App\Http\Resources\BillSupplierResource;
 use App\Http\Resources\SupplierBillCardResource;
@@ -29,8 +30,7 @@ class BillSupplierController extends Controller
             $search  = request('search');
             $perPage = min((int) request('per_page', 12), 100);
 
-            $dateFrom = $this->parseWeekBoundary(request('week_start'), false);
-            $dateTo   = $this->parseWeekBoundary(request('week_end'), true);
+            [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
             $suppliers = $this->supplierRepository->getBillSupplierCards($search, $perPage, $dateFrom, $dateTo);
 
@@ -46,29 +46,12 @@ class BillSupplierController extends Controller
         return view('bill-supplier.index', compact('iconOptions', 'patternOptions'));
     }
 
-    private function parseWeekBoundary(?string $week, bool $isEnd): ?Carbon
-    {
-        if (!$week || !preg_match('/^(\d{4})-W(\d{2})$/', $week, $matches)) {
-            return null;
-        }
-
-        $year = (int) $matches[1];
-        $weekNumber = (int) $matches[2];
-
-        $date = Carbon::now()->setISODate($year, $weekNumber);
-
-        return $isEnd
-            ? $date->endOfWeek(Carbon::SUNDAY)
-            : $date->startOfWeek(Carbon::MONDAY);
-    }
-
     public function bySupplier(Supplier $supplier)
     {
         $this->authorize('bill-suppliers.view');
         $supplier = Supplier::withTrashed()->findOrFail($supplier->id);
 
-        $dateFrom = $this->parseWeekBoundary(request('week_start'), false);
-        $dateTo   = $this->parseWeekBoundary(request('week_end'), true);
+        [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
         if (request()->expectsJson()) {
             $grouped = $this->billSupplierRepository->getGroupedBySupplier(
