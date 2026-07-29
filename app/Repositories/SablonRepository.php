@@ -33,7 +33,9 @@ class SablonRepository
                 'typeFabric',
                 'priceEmployee',
                 'sablonDetails.colorFabric',
+                'sablonDetails.fabricDetail',
                 'sablonEmployeeDetails.employee',
+                'sablonEmployeeDetails.employeeChange',
             ])
             ->orderBy('date_sablon', 'desc');
 
