@@ -5,13 +5,13 @@ namespace App\Enums;
 enum StatusSalaryEmployeeEnum: string
 {
     case PENDING = 'PENDING';
-    case DONE = 'DONE';
+    case PAID    = 'PAID';
 
     public function label(): string
     {
         return match($this) {
             self::PENDING => 'Pending',
-            self::DONE    => 'Done',
+            self::PAID    => 'Paid',
         };
     }
 }

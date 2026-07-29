@@ -24,17 +24,21 @@
                             text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
+
+                <x-button-loading type="button" id="btn-sync-salary" text="Sync" loadingText="Syncing..."
+                    color="bg-(--color-primary) hover:bg-(--color-primary)/70"
+                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
+                    rounded="rounded-lg" class="cursor-pointer" />
             </div>
         </div>
 
         <x-cardgrid id="salary-employee-cardgrid" filterId="filter-salary-employee" :defaultLength="12" :lengthOptions="[12, 24, 48]"
             :filterOptions="[
                 'PENDING' => 'Pending',
-                'DONE' => 'Done',
+                'PAID' => 'Paid',
                 'all' => 'All',
             ]" filterDefault="all" />
     </div>
 
-    @include('salary-employee.partials._modal-update-status')
-    @include('salary-employee.partials._modal-additional-fee')
+    @include('salary-employee.partials._modal-salary-employee')
 @endsection

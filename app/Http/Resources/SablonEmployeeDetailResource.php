@@ -27,6 +27,7 @@ class SablonEmployeeDetailResource extends JsonResource
             'total_formated'     => RupiahHelper::format($this->total),
             'is_change'          => $this->is_change,
             'employee_change_id' => $this->employee_change_id,
+            'is_bon'             => $this->is_bon,
             'is_payed'           => $this->is_payed,
             'notes'              => $this->notes,
             'created_at'         => $this->created_at?->format('Y-m-d H:i:s'),

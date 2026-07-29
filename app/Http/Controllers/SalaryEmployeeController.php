@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\SalaryEmployee\UpdateAdditionalFeeAction;
+use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSalaryEmployeeEnum;
 use App\Http\Resources\SalaryEmployeeResource;
-use App\Models\SalaryEmployee;
+use App\Models\Employee;
 use App\Repositories\SalaryEmployeeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -13,7 +13,8 @@ use Illuminate\Validation\Rules\Enum;
 class SalaryEmployeeController extends Controller
 {
     public function __construct(
-        private SalaryEmployeeRepository $salaryEmployeeRepository
+        private SalaryEmployeeRepository $salaryEmployeeRepository,
+        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
     ) {}
 
     public function index()
@@ -34,39 +35,40 @@ class SalaryEmployeeController extends Controller
         return view('salary-employee.index');
     }
 
-    public function updateStatus(Request $request, SalaryEmployee $salaryEmployee)
+    public function sync(Request $request)
     {
         $this->authorize('salary-employees.update');
 
         $validated = $request->validate([
-            'status' => ['required', new Enum(StatusSalaryEmployeeEnum::class)],
+            'week_of' => 'required|date',
         ]);
 
-        $salaryEmployee->update([
-            'status' => $validated['status'],
-        ]);
+        $count = $this->upsertSalaryEmployeeAction->handleBulk($validated['week_of']);
 
         return response()->json([
-            'message' => 'Status updated successfully.',
+            'message' => "Synced {$count} employee salary records.",
         ]);
     }
 
-    public function updateAdditionalFee(Request $request, SalaryEmployee $salaryEmployee, UpdateAdditionalFeeAction $action)
+    public function update(Request $request, Employee $employee)
     {
         $this->authorize('salary-employees.update');
 
         $validated = $request->validate([
-            'additional_fee'             => 'nullable|array',
-            'additional_fee.*.nominal'   => 'required|numeric',
-            'additional_fee.*.notes'     => 'nullable|string|max:255',
+            'week_of'                  => 'required|date',
+            'status'                   => ['required', new Enum(StatusSalaryEmployeeEnum::class)],
+            'additional_fee'           => 'nullable|array',
+            'additional_fee.*.nominal' => 'required|numeric',
+            'additional_fee.*.notes'   => 'nullable|string|max:255',
         ]);
 
-        $salaryEmployee = $action->handle($salaryEmployee, $validated['additional_fee'] ?? []);
+        $salary = $this->upsertSalaryEmployeeAction->handleForEmployee(
+            $employee->id,
+            $validated['week_of'],
+            $validated['status'],
+            $validated['additional_fee'] ?? []
+        );
 
-        return new SalaryEmployeeResource($salaryEmployee->load([
-            'employee',
-            'sablonEmployeeDetails.sablon.supplier',
-            'sablonEmployeeDetails.sablon.imageFabric',
-        ]));
+        return new SalaryEmployeeResource($salary);
     }
 }

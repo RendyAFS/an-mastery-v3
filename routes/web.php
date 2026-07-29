@@ -148,10 +148,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     });
 
     // Salary Employee
-    // Salary Employee
     Route::prefix('salary-employees')->as('salary-employees.')->group(function () {
-        Route::put('{salaryEmployee}/status', [App\Http\Controllers\SalaryEmployeeController::class, 'updateStatus'])->name('update-status');
-        Route::put('{salaryEmployee}/additional-fee', [App\Http\Controllers\SalaryEmployeeController::class, 'updateAdditionalFee'])->name('update-additional-fee');
+        Route::put('sync', [App\Http\Controllers\SalaryEmployeeController::class, 'sync'])->name('sync');
+        Route::put('{employee}', [App\Http\Controllers\SalaryEmployeeController::class, 'update'])->name('update');
     });
     Route::resource('salary-employees', App\Http\Controllers\SalaryEmployeeController::class)->only(['index'])->names('salary-employees');
 });

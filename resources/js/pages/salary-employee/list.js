@@ -10,12 +10,11 @@ import {
 
 const statusColor = {
     PENDING: "bg-yellow-500/10 text-yellow-600",
-    DONE: "bg-blue-500/10 text-blue-600",
+    PAID: "bg-blue-500/10 text-blue-600",
 };
 
 const formatSignedRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
-
     const isNegative = raw.startsWith("-");
     const digits = raw.replace(/-/g, "");
 
@@ -30,7 +29,6 @@ const unformatSignedRupiah = (el) => {
     if (!el) return 0;
 
     const raw = String(el.value ?? "").replace(/[^0-9-]/g, "");
-
     const isNegative = raw.startsWith("-");
     const digits = raw.replace(/-/g, "");
 
@@ -140,13 +138,10 @@ const PageScript = (function () {
             </div>
 
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
-                <button data-id="${item.id}" data-additional-fee='${JSON.stringify(additionalFees)}'
-                    class="btn-additional-fee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
-                    <i data-lucide="wallet" class="size-3.5"></i> Additional Fee
-                </button>
-                <button data-id="${item.id}" data-status="${item.status}"
-                    class="btn-status p-1.5 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
-                    <i data-lucide="badge-check" class="size-4"></i>
+                <button data-employee-id="${item.employee_id}" data-status="${item.status}"
+                    data-additional-fee='${JSON.stringify(additionalFees)}'
+                    class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
+                    <i data-lucide="wallet" class="size-3.5"></i> Kelola
                 </button>
             </div>
         </div>`;
@@ -167,55 +162,20 @@ const PageScript = (function () {
         bindSignedRupiahInput(nominalInput);
     };
 
-    const initStatusModal = () => {
-        $(document).on("click", ".btn-status", function (e) {
+    const initSalaryModal = () => {
+        $(document).on("click", ".btn-salary-employee", function (e) {
             e.stopPropagation();
 
-            const id = $(this).data("id");
+            const employeeId = $(this).data("employee-id");
             const status = $(this).data("status");
+            const existing = $(this).data("additional-fee") || [];
 
-            $("#status-salary-id").val(id);
+            $("#salary-employee-id").val(employeeId);
+            $("#salary-week-of").val(currentWeekOf);
+            $("#additional-fee-rows").empty();
 
             const instance = HSSelect.getInstance("#modal-salary-status");
             instance.setValue(status);
-
-            window.HSStaticMethods.autoInit();
-
-            HSOverlay.open("#modal-update-status-salary");
-        });
-
-        $(document).on("click", "#btn-save-status-salary", async function () {
-            const id = $("#status-salary-id").val();
-            const status = $("#modal-salary-status").val();
-
-            try {
-                await ApiProvider.put(
-                    route("salary-employees.update-status", id),
-                    {
-                        status,
-                    },
-                );
-
-                Toast.success("Success", "Status updated successfully");
-
-                HSOverlay.close("#modal-update-status-salary");
-
-                cardgrid.reload();
-            } catch (err) {
-                console.error(err);
-            }
-        });
-    };
-
-    const initAdditionalFeeModal = () => {
-        $(document).on("click", ".btn-additional-fee", function (e) {
-            e.stopPropagation();
-
-            const id = $(this).data("id");
-            const existing = $(this).data("additional-fee") || [];
-
-            $("#additional-fee-salary-id").val(id);
-            $("#additional-fee-rows").empty();
 
             if (existing.length) {
                 existing.forEach((af) =>
@@ -225,7 +185,9 @@ const PageScript = (function () {
                 addAdditionalFeeRow();
             }
 
-            HSOverlay.open("#modal-additional-fee");
+            window.HSStaticMethods.autoInit();
+
+            HSOverlay.open("#modal-salary-employee");
         });
 
         $(document).on("click", "#btn-add-additional-fee-row", function () {
@@ -236,8 +198,10 @@ const PageScript = (function () {
             $(this).closest(".additional-fee-row").remove();
         });
 
-        $(document).on("click", "#btn-save-additional-fee", async function () {
-            const id = $("#additional-fee-salary-id").val();
+        $(document).on("click", "#btn-save-salary-employee", async function () {
+            const employeeId = $("#salary-employee-id").val();
+            const weekOf = $("#salary-week-of").val();
+            const status = $("#modal-salary-status").val();
 
             const additionalFee = $("#additional-fee-rows .additional-fee-row")
                 .map(function () {
@@ -254,13 +218,33 @@ const PageScript = (function () {
 
             try {
                 await ApiProvider.put(
-                    route("salary-employees.update-additional-fee", id),
-                    { additional_fee: additionalFee },
+                    route("salary-employees.update", employeeId),
+                    {
+                        week_of: weekOf,
+                        status,
+                        additional_fee: additionalFee,
+                    },
                 );
 
-                Toast.success("Success", "Additional fee updated successfully");
+                Toast.success("Success", "Salary updated successfully");
 
-                HSOverlay.close("#modal-additional-fee");
+                HSOverlay.close("#modal-salary-employee");
+
+                cardgrid.reload();
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    };
+
+    const initSyncButton = () => {
+        $(document).on("click", "#btn-sync-salary", async function () {
+            try {
+                await ApiProvider.put(route("salary-employees.sync"), {
+                    week_of: currentWeekOf,
+                });
+
+                Toast.success("Success", "Salary employee synced successfully");
 
                 cardgrid.reload();
             } catch (err) {
@@ -302,8 +286,8 @@ const PageScript = (function () {
 
             CardGrid();
             bindEvents();
-            initStatusModal();
-            initAdditionalFeeModal();
+            initSalaryModal();
+            initSyncButton();
         },
     };
 })();

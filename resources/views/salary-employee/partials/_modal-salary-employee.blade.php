@@ -1,6 +1,6 @@
-<div id="modal-additional-fee"
+<div id="modal-salary-employee"
     class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
-    role="dialog" tabindex="-1" aria-labelledby="modal-additional-fee-label">
+    role="dialog" tabindex="-1" aria-labelledby="modal-salary-employee-label">
 
     <div
         class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500
@@ -10,11 +10,10 @@
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl pointer-events-auto
             dark:bg-(--color-dark) dark:border-(--color-slate)">
 
-            {{-- Header --}}
             <div
                 class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
-                <h3 id="modal-additional-fee-label" class="font-semibold text-(--color-dark) dark:text-(--color-light)">
-                    Additional Fee
+                <h3 id="modal-salary-employee-label" class="font-semibold text-(--color-dark) dark:text-(--color-light)">
+                    Salary Employee
                 </h3>
                 <button type="button"
                     class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full
@@ -22,38 +21,50 @@
                         text-(--color-dark) hover:bg-(--color-gray)/40
                         dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
                         focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-                    aria-label="Close" data-hs-overlay="#modal-additional-fee">
+                    aria-label="Close" data-hs-overlay="#modal-salary-employee">
                     <span class="sr-only">Close</span>
                     <i data-lucide="x" class="text-(--color-dark)/80 dark:text-(--color-light)/80 size-5"></i>
                 </button>
             </div>
 
-            {{-- Body --}}
-            <div class="p-4 overflow-y-auto">
-                <input type="hidden" id="additional-fee-salary-id" />
+            <div class="p-4 overflow-y-auto space-y-4">
+                <input type="hidden" id="salary-employee-id" />
+                <input type="hidden" id="salary-week-of" />
 
-                <div id="additional-fee-rows" class="space-y-4"></div>
+                <x-select id="modal-salary-status" name="modal-salary-status" label="Status" placeholder="Choose Status"
+                    :options="[
+                        'PENDING' => 'Pending',
+                        'PAID' => 'Paid',
+                    ]" />
 
-                <button type="button" id="btn-add-additional-fee-row"
-                    class="mt-3 inline-flex items-center gap-2 text-sm font-medium
-                        text-(--color-primary) hover:opacity-80 cursor-pointer">
-                    <i data-lucide="plus" class="size-4"></i> Add Fee
-                </button>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                            Additional Fee
+                        </label>
+                        <button type="button" id="btn-add-additional-fee-row"
+                            class="inline-flex items-center gap-2 text-sm font-medium
+                                text-(--color-primary) hover:opacity-80 cursor-pointer">
+                            <i data-lucide="plus" class="size-4"></i> Add Fee
+                        </button>
+                    </div>
 
-                {{-- Footer --}}
-                <div class="flex gap-2 pt-5">
-                    <x-button-loading type="button" id="btn-save-additional-fee" text="Save" loadingText="Saving..."
-                        color="bg-(--color-success) hover:bg-(--color-success)/70"
-                        textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
-                        rounded="rounded-lg" class="cursor-pointer" />
-
-                    <button type="button" data-hs-overlay="#modal-additional-fee"
-                        class="px-4 py-2 text-sm font-semibold rounded-lg
-                            bg-(--color-danger) hover:bg-(--color-danger)/70
-                            text-(--color-light) cursor-pointer hover:opacity-90 transition">
-                        Cancel
-                    </button>
+                    <div id="additional-fee-rows" class="space-y-4 mt-2"></div>
                 </div>
+            </div>
+
+            <div class="flex gap-2 p-4 border-t border-(--color-gray)/20">
+                <x-button-loading type="button" id="btn-save-salary-employee" text="Save" loadingText="Saving..."
+                    color="bg-(--color-success) hover:bg-(--color-success)/70"
+                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
+                    rounded="rounded-lg" class="cursor-pointer" />
+
+                <button type="button" data-hs-overlay="#modal-salary-employee"
+                    class="px-4 py-2 text-sm font-semibold rounded-lg
+                        bg-(--color-danger) hover:bg-(--color-danger)/70
+                        text-(--color-light) cursor-pointer hover:opacity-90 transition">
+                    Cancel
+                </button>
             </div>
 
         </div>
