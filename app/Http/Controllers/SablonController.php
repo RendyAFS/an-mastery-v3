@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
 use App\Enums\StatusSablonEnum;
+use App\Helpers\WeekHelper;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Http\Resources\SablonResource;
 use App\Models\Fabric;
@@ -28,10 +29,11 @@ class SablonController extends Controller
         if (request()->expectsJson()) {
             $filter  = request('filter', 'active');
             $search  = request('search');
-            $weekOf  = request('week_of');
             $perPage = min((int) request('per_page', 12), 100);
 
-            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $weekOf);
+            [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
+
+            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo);
 
             return SablonResource::collection($sablons);
         }

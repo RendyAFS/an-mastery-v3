@@ -55,31 +55,6 @@ export default function sablonForm(
 
                 reInitUi();
 
-                this.$nextTick(() => {
-                    document.addEventListener("click", (e) => {
-                        const btn = e.target.closest(
-                            "[data-hs-input-number-increment], [data-hs-input-number-decrement]",
-                        );
-
-                        if (!btn) return;
-
-                        setTimeout(() => {
-                            const wrapper = btn.closest(
-                                "[data-hs-input-number]",
-                            );
-                            const input = wrapper?.querySelector(
-                                "[data-hs-input-number-input]",
-                            );
-
-                            if (!input) return;
-
-                            input.dispatchEvent(
-                                new Event("input", { bubbles: true }),
-                            );
-                        }, 0);
-                    });
-                });
-
                 if (this.selectedFabricId) {
                     this.loadFabricDetail(this.selectedFabricId);
                 }
@@ -237,7 +212,7 @@ export default function sablonForm(
                     this.buildFabricRow({
                         fabric_detail_id: d.id,
                         color_fabric_id: d.color_fabric_id,
-                        long_fabric: "",
+                        long_fabric: 0,
                     }),
                 );
             } else {
@@ -256,33 +231,13 @@ export default function sablonForm(
                 color_fabric_id: row.color_fabric_id
                     ? String(row.color_fabric_id)
                     : "",
-                long_fabric: row.long_fabric ?? "",
+                long_fabric: row.long_fabric ?? 0,
                 open: false,
                 search: "",
             };
         },
 
         buildEmployeeRow(row = {}) {
-            let additionalFee = [];
-            if (Array.isArray(row.additional_fee)) {
-                additionalFee = row.additional_fee.map((f) => ({
-                    uid: crypto.randomUUID(),
-                    nominal: f.nominal ?? 0,
-                    notes: f.notes ?? "",
-                }));
-            } else if (
-                row.additional_fee &&
-                typeof row.additional_fee === "object"
-            ) {
-                additionalFee = [
-                    {
-                        uid: crypto.randomUUID(),
-                        nominal: row.additional_fee.nominal ?? 0,
-                        notes: row.additional_fee.notes ?? "",
-                    },
-                ];
-            }
-
             return {
                 uid: crypto.randomUUID(),
                 fabric_detail_id: row.fabric_detail_id
@@ -291,13 +246,12 @@ export default function sablonForm(
                 employee_id: row.employee_id ? String(row.employee_id) : "",
                 layers: row.layers ?? 1,
                 fee: row.fee ?? 0,
-                additional_fee: additionalFee,
-                total: row.total ?? 0,
                 is_change: !!row.is_change,
                 employee_change_id: row.employee_change_id
                     ? String(row.employee_change_id)
                     : "",
-                is_payed: !!row.is_payed,
+                is_bon: !!row.is_bon,
+                is_paid: !!row.is_paid,
                 notes: row.notes ?? "",
                 openEmp: false,
                 openEmpChange: false,
@@ -323,24 +277,6 @@ export default function sablonForm(
 
         removeEmployeeRow(index) {
             this.employeeRows.splice(index, 1);
-        },
-
-        addAdditionalFee(row) {
-            if (!Array.isArray(row.additional_fee)) {
-                row.additional_fee = [];
-            }
-            row.additional_fee.push({
-                uid: crypto.randomUUID(),
-                nominal: 0,
-                notes: "",
-            });
-            this.$nextTick(() => reInitUi());
-        },
-
-        removeAdditionalFee(row, feeIndex) {
-            if (Array.isArray(row.additional_fee)) {
-                row.additional_fee.splice(feeIndex, 1);
-            }
         },
 
         filteredEmployees(search) {
@@ -388,14 +324,6 @@ export default function sablonForm(
             return calc.formatNumber(val);
         },
 
-        formatSignedNumber(val) {
-            return calc.formatSignedNumber(val);
-        },
-
-        parseSignedNumber(value) {
-            return calc.parseSignedNumber(value);
-        },
-
         get totalLongFabric() {
             return calc.totalLongFabric(this.fabricRows);
         },
@@ -418,17 +346,6 @@ export default function sablonForm(
             const fee = calc.computeFee(this.ratePerLayer, row.layers);
             row.fee = fee;
             return fee;
-        },
-
-        additionalFeeTotal(row) {
-            return calc.additionalFeeTotal(row.additional_fee);
-        },
-
-        rowTotal(row) {
-            const fee = this.computeFee(row);
-            const total = calc.computeRowTotal(fee, row.additional_fee);
-            row.total = total;
-            return total;
         },
     };
 }

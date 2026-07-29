@@ -38,7 +38,7 @@ const BulkGenerateModal = (function () {
         employees.forEach((employee) => {
             $list.append(`
                 <label class="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer">
-                    <input type="checkbox" class="bulk-employee-checkbox rounded border-(--color-gray)" value="${employee.id}" />
+                    <input type="checkbox" class="bulk-employee-checkbox checkbox-custom" value="${employee.id}" />
                     ${employee.name}
                 </label>
             `);

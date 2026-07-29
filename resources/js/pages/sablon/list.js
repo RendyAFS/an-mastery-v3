@@ -1,11 +1,5 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
-import {
-    isoWeekToDateStr,
-    dateToIsoWeek,
-    currentMonday,
-    toDateStr,
-} from "@/utils/week";
 
 const statusColor = {
     ON_PROGRESS: "bg-yellow-500/10 text-yellow-600",
@@ -16,12 +10,89 @@ const statusColor = {
 
 const PageScript = (function () {
     let cardgrid;
-    let currentWeekOf;
+
+    const getISOWeekString = (date) => {
+        const target = new Date(date.valueOf());
+        const dayNr = (date.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+
+        if (target.getDay() !== 4) {
+            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+        }
+
+        const week = 1 + Math.round((firstThursday - target) / 604800000);
+
+        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    };
+
+    const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const applyFiltersFromUrl = () => {
+        const params = getUrlParams();
+        const currentWeek = getISOWeekString(new Date());
+
+        $("#filter-week-start").val(params.get("week_start") || currentWeek);
+        $("#filter-week-end").val(params.get("week_end") || currentWeek);
+    };
+
+    const syncUrl = () => {
+        const params = getUrlParams();
+        params.set("week_start", $("#filter-week-start").val());
+        params.set("week_end", $("#filter-week-end").val());
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
+    const setDefaultWeekFilters = () => {
+        const currentWeek = getISOWeekString(new Date());
+        $("#filter-week-start").val(currentWeek);
+        $("#filter-week-end").val(currentWeek);
+        syncUrl();
+    };
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
         const badge =
             statusColor[item.status] ?? "bg-gray-500/10 text-gray-600";
+
+        const sablonHeaderHtml = `
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="font-bold text-sm">
+                        ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
+                    </p>
+                    <p class="text-sm text-(--color-dark-gray)">
+                        ${item.fabric?.date_coming}
+                    </p>
+                </div>
+
+                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
+                    ${item.status?.replaceAll("_", " ") ?? "-"}
+                </span>
+            </div>`;
+        const sablonSumaryHtml = `
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
+                    <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
+                    <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+                    <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
+                </div>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2">
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
+                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
+                </div>
+            </div>`;
 
         const fabricDetailsHtml = item.sablonDetails?.length
             ? `
@@ -54,50 +125,6 @@ const PageScript = (function () {
                     <div class="space-y-2">
                         ${item.sablonEmployeeDetails
                             .map((detail) => {
-                                const additionalFees = Array.isArray(
-                                    detail.additional_fee,
-                                )
-                                    ? detail.additional_fee
-                                    : [];
-
-                                const additionalFeeHtml = additionalFees.length
-                                    ? `
-                                        <div class="mt-2 ml-4 space-y-1">
-                                            ${additionalFees
-                                                .map(
-                                                    (fee) => `
-                                                        <div class="flex justify-between text-[11px] text-(--color-dark-gray)">
-                                                            <span>
-                                                                ↳ ${fee.notes || "Additional Fee"}
-                                                            </span>
-                                                            <span class="${
-                                                                Number(
-                                                                    fee.nominal,
-                                                                ) < 0
-                                                                    ? "text-(--color-red)"
-                                                                    : "text-(--color-success)"
-                                                            }">
-                                                                ${
-                                                                    Number(
-                                                                        fee.nominal,
-                                                                    ) < 0
-                                                                        ? "-"
-                                                                        : "+"
-                                                                } Rp ${Math.abs(
-                                                                    fee.nominal ||
-                                                                        0,
-                                                                ).toLocaleString(
-                                                                    "id-ID",
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                    `,
-                                                )
-                                                .join("")}
-                                        </div>
-                                    `
-                                    : "";
-
                                 return `
                                     <div class="rounded-lg bg-(--color-gray)/10 p-2">
                                         <div class="flex justify-between items-start">
@@ -109,6 +136,16 @@ const PageScript = (function () {
                                                 <p class="text-[11px] text-(--color-dark-gray)">
                                                     ${detail.layers ?? 0} Layer
                                                     ${
+                                                        detail.is_bon
+                                                            ? `• Bon`
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        detail.is_paid
+                                                            ? `• Paid`
+                                                            : ""
+                                                    }
+                                                    ${
                                                         detail.is_change
                                                             ? `• Ganti ke ${detail.employeeChange?.name ?? "-"}`
                                                             : ""
@@ -117,11 +154,9 @@ const PageScript = (function () {
                                             </div>
 
                                             <span class="text-xs font-semibold">
-                                                ${detail.total_formated ?? "Rp 0"}
+                                                ${detail.fee_formated ?? "Rp 0"}
                                             </span>
                                         </div>
-
-                                        ${additionalFeeHtml}
                                     </div>
                                 `;
                             })
@@ -133,44 +168,11 @@ const PageScript = (function () {
 
         return `
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
-
-            <div class="flex items-start justify-between">
-            <div>
-                <p class="font-bold text-sm">
-                    ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
-                </p>
-                <p class="text-sm text-(--color-dark-gray)">
-                    ${item.fabric?.date_coming}
-                </p>
-            </div>
-
-                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
-                    ${item.status?.replaceAll("_", " ") ?? "-"}
-                </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
-                    <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
-                    <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
-                    <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
-                </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
-                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
-                </div>
-            </div>
+            ${sablonHeaderHtml}
+            ${sablonSumaryHtml}
             ${fabricDetailsHtml}
             ${employeeDetailsHtml}
             ${item.notes ? `<p class="text-xs text-(--color-dark-gray) line-clamp-2">${item.notes}</p>` : ""}
-
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 ${
                     isDeleted
@@ -259,7 +261,10 @@ const PageScript = (function () {
             ajax: {
                 url: route("sablons.index"),
                 data: function () {
-                    return { week_of: currentWeekOf };
+                    return {
+                        week_start: $("#filter-week-start").val(),
+                        week_end: $("#filter-week-end").val(),
+                    };
                 },
             },
             renderCard,
@@ -314,20 +319,25 @@ const PageScript = (function () {
             cardgrid.reload();
         });
 
-        $("#filter-week-sablon").on("change", function () {
-            const value = $(this).val();
-            if (!value) return;
+        $(document).on(
+            "change",
+            "#filter-week-start, #filter-week-end",
+            function () {
+                syncUrl();
+                cardgrid.reload();
+            },
+        );
 
-            currentWeekOf = isoWeekToDateStr(value);
+        $(document).on("click", "#filter-week-reset", function () {
+            setDefaultWeekFilters();
             cardgrid.reload();
         });
     };
 
     return {
         init() {
-            const monday = currentMonday();
-            currentWeekOf = toDateStr(monday);
-            $("#filter-week-sablon").val(dateToIsoWeek(monday));
+            applyFiltersFromUrl();
+            syncUrl();
 
             CardGrid();
             bindEvents();

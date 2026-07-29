@@ -14,16 +14,16 @@ class SupplierSeeder extends Seeder
     public function run(): void
     {
         $suppliers = [
-                            'Sunar',
-                'Yadi',
-                'Bibit',
-                'Santoso',
-                'Mail',
-                'Yanti',
-                'Rusda',
-                'Ahmad',
-                'Sirajudin',
-                'Udin',
+            'Sunar',
+            'Yadi',
+            'Bibit',
+            'Santoso',
+            'Mail',
+            'Yanti',
+            'Rusda',
+            'Ahmad',
+            'Sirajudin',
+            'Udin',
         ];
 
         foreach ($suppliers as $i => $supplier) {

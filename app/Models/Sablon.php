@@ -6,6 +6,7 @@ use App\Enums\StatusSablonEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
 
@@ -72,5 +73,10 @@ class Sablon extends Model
     public function sablonEmployeeDetails(): HasMany
     {
         return $this->hasMany(SablonEmployeeDetail::class, 'sablon_id');
+    }
+
+    public function billSupplier(): HasOne
+    {
+        return $this->hasOne(BillSupplier::class, 'sablon_id');
     }
 }

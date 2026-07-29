@@ -47,32 +47,15 @@ class SaveSablonAction
         $sablon->sablonEmployeeDetails()->delete();
 
         foreach ($employeeDetails as $detail) {
-            // FIX #2: additional_fee adalah array of {nominal, notes}
-            // Pastikan selalu disimpan sebagai array yang bersih
-            $additionalFee = [];
-            if (isset($detail['additional_fee']) && is_array($detail['additional_fee'])) {
-                $additionalFee = array_values(
-                    array_map(fn($af) => [
-                        'nominal' => (float) ($af['nominal'] ?? 0),
-                        'notes'   => (string) ($af['notes'] ?? ''),
-                    ], $detail['additional_fee'])
-                );
-            }
-
-            // Hitung total dari semua additional_fee
-            $additionalTotal = array_sum(array_column($additionalFee, 'nominal'));
-            $fee             = (float) ($detail['fee'] ?? 0);
-
             $sablon->sablonEmployeeDetails()->create([
                 'fabric_detail_id'   => $detail['fabric_detail_id'] ?? null,
                 'employee_id'        => $detail['employee_id'],
                 'layers'             => $detail['layers'] ?? 0,
-                'fee'                => $fee,
-                'additional_fee'     => $additionalFee,
-                'total'              => $detail['total'] ?? ($fee + $additionalTotal),
+                'fee'                => $detail['fee'] ?? 0,
                 'is_change'          => $detail['is_change'] ?? false,
                 'employee_change_id' => $detail['employee_change_id'] ?? null,
-                'is_payed'           => $detail['is_payed'] ?? false,
+                'is_bon'             => $detail['is_bon'] ?? false,
+                'is_paid'           => $detail['is_paid'] ?? false,
                 'notes'              => $detail['notes'] ?? null,
             ]);
         }

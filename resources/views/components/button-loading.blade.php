@@ -6,27 +6,24 @@
     'textColor' => 'text-white',
     'size' => 'py-2.5 px-4 text-sm',
     'rounded' => 'rounded-lg',
-    'icon' => null, // optional heroicon / svg slot
+    'icon' => null,
 ])
 
 <button type="{{ $type }}" data-button-loading data-loading-text="{{ $loadingText }}"
     {{ $attributes->merge([
         'class' => "
-                inline-flex items-center justify-center gap-x-2
-                font-medium transition-all duration-200
-                disabled:opacity-50 disabled:pointer-events-none
-                $size $rounded $color $textColor
-            ",
+                    inline-flex items-center justify-center gap-x-2
+                    font-medium transition-all duration-200
+                    disabled:opacity-50 disabled:pointer-events-none
+                    $size $rounded $color $textColor
+                ",
     ]) }}>
-    {{-- Spinner --}}
     <span class="hidden animate-spin size-4 border-2 border-current border-t-transparent rounded-full" data-spinner
         aria-label="loading" role="status"></span>
 
-    {{-- Icon (optional) --}}
     @if ($icon)
-        <span data-icon>{!! $icon !!}</span>
+        <i data-lucide="{{ $icon }}" class="size-4" data-icon></i>
     @endif
 
-    {{-- Text --}}
     <span data-text>{{ $text }}</span>
 </button>

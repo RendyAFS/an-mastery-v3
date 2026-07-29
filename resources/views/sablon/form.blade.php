@@ -16,11 +16,10 @@
                 'employee_id' => $d->employee_id,
                 'layers' => $d->layers,
                 'fee' => $d->fee,
-                'additional_fee' => $d->additional_fee,
-                'total' => $d->total,
                 'is_change' => $d->is_change,
                 'employee_change_id' => $d->employee_change_id,
-                'is_payed' => $d->is_payed,
+                'is_bon' => $d->is_bon,
+                'is_paid' => $d->is_paid,
                 'notes' => $d->notes,
             ],
         )

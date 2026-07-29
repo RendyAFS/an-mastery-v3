@@ -40,11 +40,10 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.employee_id'        => 'required_with:employee_details|exists:employees,id',
             'employee_details.*.layers'             => 'nullable|integer|min:0',
             'employee_details.*.fee'                => 'nullable|numeric|min:0',
-            'employee_details.*.additional_fee'     => 'nullable|array|min:0',
-            'employee_details.*.total'              => 'nullable|numeric|min:0',
             'employee_details.*.is_change'          => 'nullable|boolean',
             'employee_details.*.employee_change_id' => 'nullable|exists:employees,id|different:employee_details.*.employee_id',
-            'employee_details.*.is_payed'           => 'nullable|boolean',
+            'employee_details.*.is_bon'             => 'nullable|boolean',
+            'employee_details.*.is_paid'           => 'nullable|boolean',
             'employee_details.*.notes'              => 'nullable|string|max:255',
         ];
     }
@@ -75,11 +74,9 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.employee_id.required'        => 'Employee must be selected.',
             'employee_details.*.layers.required'             => 'Layer must be selected.',
             'employee_details.*.fee.required'                => 'Fee must be selected.',
-            'employee_details.*.additional_fee.required'     => 'Additional fee must be selected.',
-            'employee_details.*.total.required'              => 'Total must be selected.',
             'employee_details.*.is_change.required'          => 'Is change must be selected.',
             'employee_details.*.employee_change_id.required' => 'Changed employee must be selected.',
-            'employee_details.*.is_payed.required'           => 'Is payed must be selected.',
+            'employee_details.*.is_paid.required'           => 'Is payed must be selected.',
             'employee_details.*.notes.max'                   => 'Notes must be less than 255 characters.',
         ];
     }

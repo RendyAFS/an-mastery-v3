@@ -17,8 +17,13 @@ use Carbon\Carbon;
 
 class SablonRepository
 {
-    public function getAll(string $filter = 'active', ?string $search = null, int $perPage = 12, ?string $weekOf = null)
-    {
+    public function getAll(
+        string $filter = 'active',
+        ?string $search = null,
+        int $perPage = 12,
+        ?\Carbon\Carbon $dateFrom = null,
+        ?\Carbon\Carbon $dateTo = null
+    ) {
         $query = Sablon::query()
             ->with([
                 'supplier',
@@ -46,11 +51,8 @@ class SablonRepository
             });
         }
 
-        if ($weekOf) {
-            $start = Carbon::parse($weekOf)->startOfWeek(Carbon::MONDAY)->toDateString();
-            $end   = Carbon::parse($weekOf)->endOfWeek(Carbon::SUNDAY)->toDateString();
-
-            $query->whereBetween('date_sablon', [$start, $end]);
+        if ($dateFrom && $dateTo) {
+            $query->whereBetween('date_sablon', [$dateFrom, $dateTo]);
         }
 
         return $query->paginate($perPage);

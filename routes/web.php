@@ -126,8 +126,31 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     // Bill Supplier
     Route::prefix('bill-suppliers')->as('bill_suppliers.')->group(function () {
-        Route::put('{billSupplier}/restore', [App\Http\Controllers\BillSupplierController::class, 'restore'])->name('restore');
-        Route::delete('{billSupplier}/force-delete', [App\Http\Controllers\BillSupplierController::class, 'forceDelete'])->name('force-delete');
+        Route::get('by-supplier/{supplier}', [App\Http\Controllers\BillSupplierController::class, 'bySupplier'])->name('by-supplier');
+        Route::get('available-sablons/{supplier}', [App\Http\Controllers\BillSupplierController::class, 'availableSablons'])->name('available-sablons');
+        Route::post('calculate-bulk', [App\Http\Controllers\BillSupplierController::class, 'calculateBulk'])->name('calculate-bulk');
+
+        Route::get('batch/{batch}/edit', [App\Http\Controllers\BillSupplierController::class, 'editBatch'])->name('batch.edit');
+        Route::get('batch/{batch}/calculate', [App\Http\Controllers\BillSupplierController::class, 'calculateBatch'])->name('batch.calculate');
+        Route::put('batch/{batch}/toggle-paid', [App\Http\Controllers\BillSupplierController::class, 'togglePaidBatch'])->name('batch.toggle-paid');
+        Route::put('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'updateBatch'])->name('batch.update');
+        Route::delete('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'destroyBatch'])->name('batch.destroy');
+        Route::put('batch/{batch}/restore', [App\Http\Controllers\BillSupplierController::class, 'restoreBatch'])->name('batch.restore');
+        Route::delete('batch/{batch}/force-delete', [App\Http\Controllers\BillSupplierController::class, 'forceDeleteBatch'])->name('batch.force-delete');
     });
-    Route::resource('bill-suppliers', App\Http\Controllers\BillSupplierController::class)->names('bill_suppliers');
+    Route::resource('bill-suppliers', App\Http\Controllers\BillSupplierController::class)->only(['index', 'create', 'store', 'show'])->names('bill_suppliers');
+
+    // Supplier Cover Style
+    Route::prefix('suppliers/{supplier}/cover-style')->as('suppliers.cover-style.')->group(function () {
+        Route::get('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'edit'])->name('edit');
+        Route::put('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'update'])->name('update');
+        Route::delete('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'destroy'])->name('destroy');
+    });
+
+    // Salary Employee
+    Route::prefix('salary-employees')->as('salary_employees.')->group(function () {
+        Route::put('sync', [App\Http\Controllers\SalaryEmployeeController::class, 'sync'])->name('sync');
+        Route::put('{employee}', [App\Http\Controllers\SalaryEmployeeController::class, 'update'])->name('update');
+    });
+    Route::resource('salary-employees', App\Http\Controllers\SalaryEmployeeController::class)->only(['index'])->names('salary_employees');
 });

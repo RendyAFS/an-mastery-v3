@@ -63,12 +63,11 @@ class FabricRepository
 
                 return [
                     $fabric->id => sprintf(
-                        '%s (%d Seri / %d Pcs) - %s (%s)',
-                        $fabric->code,
+                        '(%d Seri / %d Pcs) - %s (%s)',
                         $summary['seri'],
                         $summary['total_pcs'],
                         $fabric->typeFabric?->name ?? '-',
-                        $fabric->date_coming?->format('d M Y') ?? '-'
+                        $fabric->date_coming?->translatedFormat('d F Y') ?? '-'
                     ),
                 ];
             })

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\StatusSablonEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -11,20 +13,20 @@ class SablonEmployeeDetail extends Model
         'sablon_id',
         'fabric_detail_id',
         'employee_id',
+        'salary_employee_id',
         'layers',
         'fee',
-        'additional_fee',
-        'total',
         'is_change',
         'employee_change_id',
-        'is_payed',
+        'is_bon',
+        'is_paid',
         'notes'
     ];
 
     protected $casts = [
-        'is_change'      => 'boolean',
-        'is_payed'       => 'boolean',
-        'additional_fee' => 'array'
+        'is_change' => 'boolean',
+        'is_bon'    => 'boolean',
+        'is_paid'  => 'boolean',
     ];
 
     public function sablon(): BelongsTo
@@ -45,5 +47,24 @@ class SablonEmployeeDetail extends Model
     public function employeeChange(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_change_id');
+    }
+
+    public function salaryEmployee(): BelongsTo
+    {
+        return $this->belongsTo(SalaryEmployee::class, 'salary_employee_id');
+    }
+
+    public function scopeEligibleForSalary(Builder $query): Builder
+    {
+        return $query->where('is_paid', false)
+            ->where(function (Builder $q) {
+                $q->where(function (Builder $q1) {
+                    $q1->where('is_bon', false)
+                        ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::DONE));
+                })->orWhere(function (Builder $q2) {
+                    $q2->where('is_bon', true)
+                        ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::ON_PROGRESS));
+                });
+            });
     }
 }

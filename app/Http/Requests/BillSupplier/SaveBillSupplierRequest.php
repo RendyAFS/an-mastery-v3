@@ -2,28 +2,46 @@
 
 namespace App\Http\Requests\BillSupplier;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SaveBillSupplierRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $rules = [
+            'date_bill'    => ['required', 'date'],
+            'is_paid'      => ['nullable', 'boolean'],
+            'notes'        => ['nullable', 'string'],
+            'sablon_ids'   => 'nullable|array',
+            'sablon_ids.*' => 'exists:sablons,id',
+        ];
+
+        if ($this->isMethod('post')) {
+            $rules['sablon_ids']   = ['required', 'array', 'min:1'];
+            $rules['sablon_ids.*'] = [
+                'integer',
+                Rule::exists('sablons', 'id')->whereNull('deleted_at'),
+            ];
+        }
+
+        return $rules;
+    }
+
+    public function messages(): array
+    {
         return [
-            //
+            'sablon_ids.required' => 'Pilih minimal satu sablon.',
+            'sablon_ids.array'    => 'Format sablon tidak valid.',
+            'sablon_ids.min'      => 'Pilih minimal satu sablon.',
+            'sablon_ids.*.exists' => 'Salah satu sablon tidak ditemukan.',
+            'date_bill.required'  => 'Tanggal bill wajib diisi.',
+            'date_bill.date'      => 'Format tanggal tidak valid.',
         ];
     }
 }
