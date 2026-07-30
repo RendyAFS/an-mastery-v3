@@ -25,14 +25,16 @@ class Sablon extends Model
         'total_sablon',
         'date_sablon',
         'status',
+        'is_billed_in_advance',
         'notes',
     ];
 
     protected $casts = [
-        'total_long_fabric' => 'integer',
-        'total_sablon'      => 'integer',
-        'date_sablon'       => 'date',
-        'status'            => StatusSablonEnum::class,
+        'total_long_fabric'    => 'integer',
+        'total_sablon'         => 'integer',
+        'date_sablon'          => 'date',
+        'status'               => StatusSablonEnum::class,
+        'is_billed_in_advance' => 'boolean',
     ];
 
     public function supplier(): BelongsTo

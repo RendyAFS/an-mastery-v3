@@ -28,6 +28,7 @@ class SaveSablonRequest extends FormRequest
             'total_sablon'                          => 'nullable|numeric|min:0',
             'date_sablon'                           => 'required|date',
             'status'                                => 'required|in:ON_PROGRESS,DONE,DELIVERED,RETURNED',
+            'is_billed_in_advance'                  => 'nullable|boolean',
             'notes'                                 => 'nullable|string|max:255',
             // Fabric details (warna & panjang kain yang dipakai)
             'fabric_details'                        => 'required|array|min:1',

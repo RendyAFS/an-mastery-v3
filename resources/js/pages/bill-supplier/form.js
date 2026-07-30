@@ -2,6 +2,7 @@ import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
+import reInitUi from "@/utils/reinit-ui";
 import {
     sablonHeaderHtml,
     sablonSummaryHtml,
@@ -26,7 +27,10 @@ const PageScript = (function () {
             sablons
                 .map((s) => {
                     const inBatch = !!s.in_current_batch;
-                    const disabled = s.status !== "DONE" && !inBatch;
+                    const isBilledInAdvance =
+                        s.status === "ON_PROGRESS" && !!s.is_billed_in_advance;
+                    const disabled =
+                        s.status !== "DONE" && !inBatch && !isBilledInAdvance;
                     const checked = mode === "edit" ? inBatch : !disabled;
 
                     return `
@@ -40,6 +44,13 @@ const PageScript = (function () {
                         ${sablonSummaryHtml(s)}
                         ${fabricDetailsHtml(s)}
                         ${
+                            isBilledInAdvance
+                                ? `<p class="text-[11px] text-(--color-warning) flex items-center gap-1">
+                                        <i data-lucide="info" class="size-3"></i> Ditagih Awal
+                                    </p>`
+                                : ""
+                        }
+                        ${
                             disabled
                                 ? `<p class="text-[11px] text-(--color-red)">Hanya sablon berstatus Done yang bisa ditagih</p>`
                                 : ""
@@ -51,6 +62,7 @@ const PageScript = (function () {
         );
 
         listContainer.removeClass("hidden");
+        reInitUi();
         syncSelection();
     };
 

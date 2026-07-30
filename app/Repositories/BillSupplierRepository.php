@@ -145,15 +145,16 @@ class BillSupplierRepository
         $totalFee = $sablon->total_long_fabric * $price;
 
         return [
-            'sablon_id'         => $sablon->id,
-            'status'            => $sablon->status?->value,
-            'status_label'      => $sablon->status?->labels(),
-            'date_sablon'       => $sablon->date_sablon?->translatedFormat('d F Y'),
-            'image_fabric'      => $sablon->imageFabric?->name,
-            'type_fabric'       => $sablon->typeFabric?->name,
-            'type_color'        => $sablon->typeColor?->name,
-            'total_long_fabric' => $sablon->total_long_fabric,
-            'fabric_details'    => $sablon->relationLoaded('sablonDetails')
+            'sablon_id'             => $sablon->id,
+            'status'                => $sablon->status?->value,
+            'status_label'          => $sablon->status?->labels(),
+            'is_billed_in_advance'  => (bool) $sablon->is_billed_in_advance,
+            'date_sablon'           => $sablon->date_sablon?->translatedFormat('d F Y'),
+            'image_fabric'          => $sablon->imageFabric?->name,
+            'type_fabric'           => $sablon->typeFabric?->name,
+            'type_color'            => $sablon->typeColor?->name,
+            'total_long_fabric'     => $sablon->total_long_fabric,
+            'fabric_details'        => $sablon->relationLoaded('sablonDetails')
                 ? $sablon->sablonDetails->map(fn($d) => [
                     'color_fabric' => $d->colorFabric?->name,
                     'long_fabric'  => $d->long_fabric,
