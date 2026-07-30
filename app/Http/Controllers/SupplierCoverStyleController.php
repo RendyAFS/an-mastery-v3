@@ -35,16 +35,4 @@ class SupplierCoverStyleController extends Controller
             'style'   => $supplier->fresh()->resolvedCoverStyle(),
         ]);
     }
-
-    public function destroy(Supplier $supplier)
-    {
-        $this->authorize('suppliers.update');
-
-        $supplier->coverStyle()->delete();
-
-        return response()->json([
-            'message' => 'Cover style direset ke default',
-            'style'   => $supplier->fresh()->resolvedCoverStyle(),
-        ]);
-    }
 }

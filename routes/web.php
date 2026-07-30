@@ -144,7 +144,6 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('suppliers/{supplier}/cover-style')->as('suppliers.cover-style.')->group(function () {
         Route::get('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'edit'])->name('edit');
         Route::put('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'update'])->name('update');
-        Route::delete('/', [App\Http\Controllers\SupplierCoverStyleController::class, 'destroy'])->name('destroy');
     });
 
     // Salary Employee

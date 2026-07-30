@@ -79,10 +79,7 @@
             <x-select name="cs_pattern" id="cs-pattern" label="Pattern" placeholder="Pilih pattern"
                 searchPlaceholder="Cari pattern..." :options="$patternOptions" :dropdownMaxH="'max-h-40'" />
 
-            <div class="flex items-center justify-between pt-2">
-                <button type="button" id="cs-reset" class="text-sm text-(--color-red) hover:underline cursor-pointer">
-                    Reset ke Default
-                </button>
+            <div class="flex items-center justify-end pt-2">
                 <div class="flex gap-2">
                     <button type="button" data-modal-close
                         class="px-4 py-2 rounded-lg text-sm border border-(--color-gray)/20 cursor-pointer">
