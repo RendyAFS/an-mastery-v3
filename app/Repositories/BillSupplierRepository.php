@@ -5,10 +5,47 @@ namespace App\Repositories;
 use App\Models\BillSupplier;
 use App\Models\PriceSupplier;
 use App\Models\Sablon;
+use App\Models\Supplier;
 use Carbon\Carbon;
 
 class BillSupplierRepository
 {
+    public function getBillSupplierCards(
+        ?string $search = null,
+        int $perPage = 12,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null
+    ) {
+        $query = Supplier::query()
+            ->withTrashed()
+            ->withCount([
+                'sablons as unbilled_sablons_count' => function ($q) {
+                    $q->whereDoesntHave('billSupplier');
+                },
+                'billSuppliers as unpaid_bills_count' => function ($q) use ($dateFrom, $dateTo) {
+                    $q->where('is_paid', false);
+
+                    if ($dateFrom && $dateTo) {
+                        $q->whereBetween('date_bill', [$dateFrom, $dateTo]);
+                    }
+                },
+            ])
+            ->withSum(['billSuppliers as total_unpaid' => function ($q) use ($dateFrom, $dateTo) {
+                $q->where('is_paid', false);
+
+                if ($dateFrom && $dateTo) {
+                    $q->whereBetween('date_bill', [$dateFrom, $dateTo]);
+                }
+            }], 'total_fee')
+            ->orderBy('name');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        return $query->paginate($perPage);
+    }
+
     public function getGroupedBySupplier(
         int $supplierId,
         ?string $search = null,

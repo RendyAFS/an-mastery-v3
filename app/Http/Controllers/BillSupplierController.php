@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 class BillSupplierController extends Controller
 {
     public function __construct(
-        private SupplierRepository $supplierRepository,
         private BillSupplierRepository $billSupplierRepository
     ) {}
 
@@ -32,7 +31,7 @@ class BillSupplierController extends Controller
 
             [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
-            $suppliers = $this->supplierRepository->getBillSupplierCards($search, $perPage, $dateFrom, $dateTo);
+            $suppliers = $this->billSupplierRepository->getBillSupplierCards($search, $perPage, $dateFrom, $dateTo);
 
             return SupplierBillCardResource::collection($suppliers);
         }

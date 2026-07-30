@@ -65,8 +65,8 @@ const PageScript = (function () {
     const batchCard = (batch) => {
         const items = batch.items ?? [];
         const statusBadge = batch.is_paid
-            ? `<span class="text-xs font-semibold px-2 py-1 rounded-full bg-(--color-success)/10 text-(--color-success)">Lunas</span>`
-            : `<span class="text-xs font-semibold px-2 py-1 rounded-full bg-(--color-red)/10 text-(--color-red)">Belum Lunas</span>`;
+            ? `<span class="badge badge-success">Lunas</span>`
+            : `<span class="badge badge-danger">Belum Lunas</span>`;
 
         return `
         <div class="p-4 rounded-xl border border-(--color-gray)/10 bg-(--color-light) dark:bg-(--color-dark) shadow-sm space-y-3">

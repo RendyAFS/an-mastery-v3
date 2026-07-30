@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusSablonEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -75,6 +76,54 @@ class Fabric extends Model
         return [
             'total_pcs'   => $totalPcs,
             'seri'        => $seri,
+            'type_fabric' => $this->typeFabric?->name,
+            'date_coming' => $this->date_coming?->format('Y-m-d'),
+            'colors'      => $colors,
+        ];
+    }
+
+    public function getTotalInventoryFabricAttribute(): array
+    {
+        $details = $this->fabricDetails;
+
+        if ($details->isEmpty()) {
+            return [
+                'total_pcs'   => 0,
+                'type_fabric' => $this->typeFabric?->name,
+                'date_coming' => $this->date_coming?->format('Y-m-d'),
+                'colors'      => [],
+            ];
+        }
+
+        $colors = $details->map(function ($detail) {
+
+            $statuses = collect(StatusSablonEnum::cases())->map(function (StatusSablonEnum $status) use ($detail) {
+
+                $count = $detail->sablonDetails()
+                    ->whereHas('sablon', function ($q) use ($status) {
+                        $q->where('status', $status->value);
+                    })
+                    ->count();
+
+                return [
+                    'status' => $status->value,
+                    'label'  => $status->labels(),
+                    'count'  => $count,
+                ];
+            });
+
+            return [
+                'name'     => $detail->colorFabric?->name,
+                'color'    => $detail->colorFabric?->code_color,
+                'stock'    => $detail->stock,
+                'statuses' => $statuses,
+            ];
+        });
+
+        $totalPcs = $details->sum('stock');
+
+        return [
+            'total_pcs'   => $totalPcs,
             'type_fabric' => $this->typeFabric?->name,
             'date_coming' => $this->date_coming?->format('Y-m-d'),
             'colors'      => $colors,
