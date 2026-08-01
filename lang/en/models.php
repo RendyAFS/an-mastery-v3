@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'BillSupplier'         => 'Bill Supplier',
+    'ColorFabric'          => 'Color Fabric',
+    'Employee'             => 'Employee',
+    'Fabric'               => 'Fabric',
+    'FabricDetail'         => 'Fabric Detail',
+    'HistoryStock'         => 'History Stock',
+    'ImageFabric'          => 'Image Fabric',
+    'Menu'                 => 'Menu',
+    'MenuPermission'       => 'Menu Permission',
+    'Presence'             => 'Presence',
+    'PriceEmployee'        => 'Price Employee',
+    'PriceSupplier'        => 'Price Supplier',
+    'Role'                 => 'Role',
+    'Sablon'               => 'Sablon',
+    'SablonDetail'         => 'Sablon Detail',
+    'SablonEmployeeDetail' => 'Sablon Employee Detail',
+    'SalaryEmployee'       => 'Salary Employee',
+    'Supplier'             => 'Supplier',
+    'SupplierCoverStyle'   => 'Supplier Cover Style',
+    'TypeColor'            => 'Type Color',
+    'TypeFabric'           => 'Type Fabric',
+    'User'                 => 'User',
+];

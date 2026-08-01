@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('landing_page');
 
 Route::middleware(['auth', 'check.active'])->group(function () {
+    Route::get('/locale/{locale}', function (string $locale) {
+        if (in_array($locale, ['id', 'en'])) {
+            session(['locale' => $locale]);
+        }
+        return back();
+    })->name('locale.switch');
+    
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Filepond

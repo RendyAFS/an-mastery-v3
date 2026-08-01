@@ -51,6 +51,9 @@
     <script src="{{ asset('js/dataTables.min.js') }}"></script>
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
 
+    {{-- LANG --}}
+   @include('layouts.lang')
+
     @stack('scripts')
 
     {{-- Js Vite --}}

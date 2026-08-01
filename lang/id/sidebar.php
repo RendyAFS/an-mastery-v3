@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'Dashboard'         => 'Beranda',
+    'Access Management' => 'Manajemen Akses',
+    'Users'             => 'Pengguna',
+    'Roles'             => 'Akses Role',
+    'People'            => 'Orang',
+    'Suppliers'         => 'Konveksi',
+    'Employees'         => 'Karyawan',
+    'Fabric Attribute'  => 'Atribut Kain',
+    'Image Fabrics'     => 'Gambar Kain',
+    'Color Fabrics'     => 'Warna Kain',
+    'Type Fabrics'      => 'Jenis Kain',
+    'Type Colors'       => 'Jenis Warna',
+    'Pricing'           => 'Harga',
+    'Price Supplier'    => 'Harga Konveksi',
+    'Price Employee'    => 'Harga Karyawan',
+    'Employee Presence' => 'Absensi Karyawan',
+    'Inventory Fabric'  => 'Inventaris Kain',
+    'Sablon'            => 'Sablon',
+    'Bill Supplier'     => 'Tagihan Konveksi',
+    'Salary Employee'   => 'Gaji Karyawan',
+];

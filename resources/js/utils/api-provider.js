@@ -76,25 +76,33 @@ const ApiProvider = {
     },
     handleAxiosError(error) {
         const response = error.response;
+        const lang = window.langApiProvider ?? {};
+        const errTitle = window.langCustomAlert?.error ?? "Error";
 
         if (!response) {
-            Toast.error("Error", "Network Error or Server Down");
+            Toast.error(
+                errTitle,
+                lang.networkError ?? "Network Error or Server Down",
+            );
             return;
         }
 
         switch (response.status) {
             case 401:
-                Toast.error("Error", "Invalid Session");
+                Toast.error(errTitle, lang.invalidSession ?? "Invalid Session");
                 setTimeout(() => window.location.reload(), 4000);
                 break;
             case 403:
-                Toast.error("Error", "Access Denied");
+                Toast.error(errTitle, lang.accessDenied ?? "Access Denied");
                 break;
             case 404:
-                Toast.error("Error", "Data not found");
+                Toast.error(errTitle, lang.notFound ?? "Data not found");
                 break;
             case 419:
-                Toast.error("Error", "Page Expired. Refreshing...");
+                Toast.error(
+                    errTitle,
+                    lang.pageExpired ?? "Page Expired. Refreshing...",
+                );
                 setTimeout(() => window.location.reload(), 4000);
                 break;
             case 422:
@@ -102,17 +110,31 @@ const ApiProvider = {
                     Object.values(response.data.errors)
                         .flat()
                         .forEach((msg) => {
-                            Toast.error("Validation Error", msg, 4000);
+                            Toast.error(
+                                lang.validationError ?? "Validation Error",
+                                msg,
+                                4000,
+                            );
                         });
                 } else {
-                    Toast.error("Validation Error", response.data.message);
+                    Toast.error(
+                        lang.validationError ?? "Validation Error",
+                        response.data.message,
+                    );
                 }
                 break;
             case 500:
-                Toast.error("Server Error", "Internal Server Error");
+                Toast.error(
+                    lang.serverError ?? "Server Error",
+                    lang.internalServerError ?? "Internal Server Error",
+                );
                 break;
             default:
-                Toast.error("Error", response.data.message || "Unknown Error");
+                Toast.error(
+                    errTitle,
+                    response.data.message ||
+                        (lang.unknownError ?? "Unknown Error"),
+                );
                 break;
         }
     },
