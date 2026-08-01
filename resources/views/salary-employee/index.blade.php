@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="space-y-6">
-        <div class="flex flex-wrap justify-between items-center gap-4">
+        <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Salary Employee</h1>
                 <p class="text-sm">Rekap fee karyawan per minggu</p>

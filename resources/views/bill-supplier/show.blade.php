@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <div class="space-y-6 max-w-8xl mx-auto px-4 md:px-0" id="bill-supplier-show" data-supplier-id="{{ $supplier->id }}"
+    <div class="space-y-6 " id="bill-supplier-show" data-supplier-id="{{ $supplier->id }}"
         data-week-start="{{ request('week_start') }}" data-week-end="{{ request('week_end') }}">
 
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
