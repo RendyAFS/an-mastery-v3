@@ -64,7 +64,7 @@
                                 <span
                                     class="hs-overlay-minified:group-hover/sidebar:block
                                     hs-overlay-minified:hidden">
-                                    {{ $menu->name }}
+                                    {{ __('sidebar.' . $menu->name) }}
                                 </span>
                             </a>
                         </li>
@@ -78,8 +78,9 @@
 
                                 <i data-lucide="{{ $menu->icon }}" class="size-4"></i>
                                 <span
-                                    class="hs-overlay-minified:group-hover/sidebar:block
-                                    hs-overlay-minified:hidden">{{ $menu->name }}</span>
+                                    class="hs-overlay-minified:group-hover/sidebar:block hs-overlay-minified:hidden">
+                                    {{ __('sidebar.' . $menu->name) }}
+                                </span>
 
                                 <i data-lucide="chevron-down"
                                     class="ms-auto size-4 transition-transform duration-300
@@ -106,7 +107,7 @@
                                                     {{ request()->is(trim($child->url, '/') . '*')
                                                         ? 'bg-(--color-primary) text-(--color-light)'
                                                         : 'text-(--color-dark-gray) dark:text-(--color-light)' }}">
-                                                    {{ $child->name }}
+                                                    {{ __('sidebar.' . $child->name) }}
                                                 </a>
                                             </li>
                                         @endif

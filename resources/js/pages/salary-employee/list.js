@@ -94,27 +94,13 @@ const PageScript = (function () {
         syncUrl();
     };
 
-    const isoWeekToDateStr = (isoWeek) => {
-        const [yearStr, weekStr] = isoWeek.split("-W");
-        const year = parseInt(yearStr, 10);
-        const week = parseInt(weekStr, 10);
-
-        const simple = new Date(year, 0, 1 + (week - 1) * 7);
-        const dayOfWeek = simple.getDay();
-        const isoWeekStart = new Date(simple);
-
-        if (dayOfWeek <= 4) {
-            isoWeekStart.setDate(simple.getDate() - simple.getDay() + 1);
-        } else {
-            isoWeekStart.setDate(simple.getDate() + 8 - simple.getDay());
-        }
-
-        return isoWeekStart.toISOString().slice(0, 10);
+    const statusBadgeMap = {
+        PENDING: "badge-warning",
+        PAID: "badge-success",
     };
 
     const renderCard = (item) => {
-        const badge =
-            statusColor[item.status] ?? "bg-gray-500/10 text-gray-600";
+        const badge = statusBadgeMap[item.status] ?? "badge-primary";
 
         const headerHtml = `
             <div class="flex items-start justify-between">
@@ -122,7 +108,7 @@ const PageScript = (function () {
                     <p class="font-bold text-sm">${item.employee?.name ?? "-"}</p>
                     <p class="text-sm text-(--color-dark-gray)">${item.date ?? "-"}</p>
                 </div>
-                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
+                <span class="badge ${badge}">
                     ${item.status ?? "-"}
                 </span>
             </div>`;
@@ -181,11 +167,21 @@ const PageScript = (function () {
             `
             : "";
 
+        const presenceHtml = item.presence_total
+            ? `
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-medium text-(--color-info)">Presence</span>
+                    <span class="font-medium text-(--color-info)">${item.presence_total_formated ? "+" + item.presence_total_formated : item.presence_total_formated}</span>
+                </div>
+            `
+            : "";
+
         return `
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
             ${headerHtml}
             ${groupsHtml}
             ${additionalFeeHtml}
+            ${presenceHtml}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 <span class="text-sm font-semibold">Total</span>

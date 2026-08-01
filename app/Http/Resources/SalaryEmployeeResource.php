@@ -30,8 +30,9 @@ class SalaryEmployeeResource extends JsonResource
             })
             ->values();
 
+        $presenceTotal = (float) ($this->presence?->total ?? 0);
         $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-        $total = (float) $this->fee + $additionalFeeTotal;
+        $total = (float) $this->fee + $additionalFeeTotal + (float) ($this->presence?->total ?? 0);
 
         return [
             'id'                            => $this->id,
@@ -42,6 +43,8 @@ class SalaryEmployeeResource extends JsonResource
             'additional_fee'                => $this->additional_fee,
             'additional_fee_total'          => $additionalFeeTotal,
             'additional_fee_total_formated' => RupiahHelper::format($additionalFeeTotal),
+            'presence_total'                => $presenceTotal,
+            'presence_total_formated'       => RupiahHelper::format($presenceTotal),
             'total'                         => $total,
             'total_formated'                => RupiahHelper::format($total),
             'status'                        => $this->status,

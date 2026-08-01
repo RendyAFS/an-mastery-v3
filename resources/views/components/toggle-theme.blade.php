@@ -27,7 +27,7 @@
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="light">
             <i data-lucide="sun" class="size-4"></i>
-            Light
+            {{ __('navbar.Light') }}
         </button>
 
         <!-- DARK -->
@@ -37,7 +37,7 @@
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="dark">
             <i data-lucide="moon" class="size-4"></i>
-            Dark
+            {{ __('navbar.Dark') }}
         </button>
 
         <!-- SYSTEM / AUTO -->
@@ -47,7 +47,7 @@
             dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
             data-hs-theme-click-value="auto">
             <i data-lucide="monitor-cog" class="size-4"></i>
-            Auto (System)
+            {{ __('navbar.Auto (System)') }}
         </button>
     </div>
 </div>

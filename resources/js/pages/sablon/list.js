@@ -54,10 +54,16 @@ const PageScript = (function () {
         syncUrl();
     };
 
+    const statusBadgeMap = {
+        ON_PROGRESS: "badge-warning",
+        DONE: "badge-info",
+        DELIVERED: "badge-success",
+        RETURNED: "badge-danger",
+    };
+
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
-        const badge =
-            statusColor[item.status] ?? "bg-gray-500/10 text-gray-600";
+        const badge = statusBadgeMap[item.status] ?? "badge-primary";
 
         const sablonHeaderHtml = `
             <div class="flex items-start justify-between">
@@ -70,7 +76,7 @@ const PageScript = (function () {
                     </p>
                 </div>
 
-                <span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">
+                <span class="badge ${badge}">
                     ${item.status?.replaceAll("_", " ") ?? "-"}
                 </span>
             </div>`;

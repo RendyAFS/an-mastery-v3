@@ -291,24 +291,6 @@ const PageScript = (function () {
             cardgrid?.reload();
         });
 
-        $(document).on("click", "#cs-reset", async function () {
-            if (!activeSupplierId) return;
-
-            const confirmed = await Confirm.show(
-                "Reset cover ke default?",
-                "Confirmation",
-            );
-            if (!confirmed) return;
-
-            await ApiProvider.delete(
-                route("suppliers.cover-style.destroy", activeSupplierId),
-            );
-
-            Toast.success("Success", "Cover style direset ke default");
-            closeModal();
-            cardgrid?.reload();
-        });
-
         $(document).on(
             "change",
             "#filter-week-start, #filter-week-end",

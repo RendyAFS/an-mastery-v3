@@ -6,6 +6,7 @@ use App\Enums\StatusSalaryEmployeeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
 
@@ -36,5 +37,11 @@ class SalaryEmployee extends Model
     public function sablonEmployeeDetails(): HasMany
     {
         return $this->hasMany(SablonEmployeeDetail::class, 'salary_employee_id');
+    }
+
+    public function presence(): HasOne
+    {
+        return $this->hasOne(Presence::class, 'employee_id', 'employee_id')
+            ->where('week_of', $this->date);
     }
 }

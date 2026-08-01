@@ -1,10 +1,10 @@
 import RupiahInput from "@/utils/rupiah-input";
 
-export const statusColor = {
-    ON_PROGRESS: "bg-yellow-500/10 text-yellow-600",
-    DONE: "bg-blue-500/10 text-blue-600",
-    DELIVERED: "bg-green-500/10 text-green-600",
-    RETURNED: "bg-red-500/10 text-red-600",
+export const statusBadgeMap = {
+    ON_PROGRESS: "badge-warning",
+    DONE: "badge-info",
+    DELIVERED: "badge-success",
+    RETURNED: "badge-danger",
 };
 
 export const sablonHeaderHtml = (item) => `
@@ -15,7 +15,7 @@ export const sablonHeaderHtml = (item) => `
             </p>
             <p class="text-xs text-(--color-dark-gray)">${item.date_sablon ?? "-"}</p>
         </div>
-        <span class="shrink-0 text-[11px] px-2 py-0.5 rounded-full font-medium ${statusColor[item.status] ?? "bg-gray-500/10 text-gray-600"}">
+        <span class="badge ${statusBadgeMap[item.status] ?? "badge-primary"} shrink-0">
             ${item.status_label ?? (item.status ? item.status.replaceAll("_", " ") : "-")}
         </span>
     </div>`;

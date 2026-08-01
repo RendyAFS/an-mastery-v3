@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
 use App\Models\SalaryEmployee;
 use Carbon\Carbon;
@@ -46,9 +47,19 @@ class SalaryEmployeeRepository
                 return $detail->employee_id . '|' . $weekStart;
             });
 
+        $presences = Presence::query()
+            ->whereBetween('week_of', [$start, $end])
+            ->get()
+            ->keyBy(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)->toDateString());
+
+        $existingSalaries->each(function (SalaryEmployee $s) use ($presences) {
+            $key = $s->employee_id . '|' . Carbon::parse($s->date)->toDateString();
+            $s->setRelation('presence', $presences->get($key));
+        });
+
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
-            ->map(function ($details) {
+            ->map(function ($details) use ($presences) {
                 $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
                 $first    = $details->first();
 
@@ -67,6 +78,7 @@ class SalaryEmployeeRepository
 
                 $salary->setRelation('employee', $first->employee);
                 $salary->setRelation('sablonEmployeeDetails', $details);
+                $salary->setRelation('presence', $presences->get($first->employee_id . '|' . $weekStart));
 
                 return $salary;
             })

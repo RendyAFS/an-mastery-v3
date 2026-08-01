@@ -136,10 +136,15 @@ export default function initCardgrid({
         const from = (state.page - 1) * state.perPage + 1;
         const to = Math.min(state.page * state.perPage, state.total);
         const infoEl = document.getElementById("cg-info");
+        const lang = window.cardgridLang?.[gridId] ?? {};
+
         if (infoEl) {
             infoEl.textContent = state.total
-                ? `Showing ${from} – ${to} of ${state.total}`
-                : "No results";
+                ? (lang.showing ?? `Showing ${from} – ${to} of ${state.total}`)
+                      .replace(":from", from)
+                      .replace(":to", to)
+                      .replace(":total", state.total)
+                : (lang.noResults ?? "No results");
         }
     };
 

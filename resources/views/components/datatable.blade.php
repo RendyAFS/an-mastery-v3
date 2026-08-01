@@ -5,9 +5,9 @@
     'filter' => true,
     'filterId' => 'dt-filter',
     'filterOptions' => [
-        'all' => 'All',
-        'active' => 'Active',
-        'deleted' => 'Deleted',
+        'all' => __('datatable.All'),
+        'active' => __('datatable.Active'),
+        'deleted' => __('datatable.Deleted'),
     ],
     'filterDefault' => 'active',
     'lengthOptions' => [10, 20, 50, -1],
@@ -35,7 +35,7 @@
                     border border-(--color-gray) dark:border-(--color-dark-gray)
                     bg-(--color-light) dark:bg-(--color-dark)
                     focus:ring-2 focus:ring-(--color-primary)/30"
-                    placeholder="Search...">
+                    placeholder="{{ __('datatable.Search...') }}">
 
                 {{-- Clear Button --}}
                 <button type="button" id="dt-search-clear"
@@ -53,7 +53,7 @@
         @if ($filter)
             <select id="{{ $filterId }}" class="hidden w-auto sm:w-40"
                 data-hs-select='{
-                    "placeholder": "Filter",
+                    "placeholder": "{{ __('datatable.Filter') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
                     "toggleClasses": "relative py-2 ps-4 pe-9 flex gap-x-2 w-auto cursor-pointer bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-(--color-gray)",
                     "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-y-auto",
@@ -72,10 +72,10 @@
 
     @if ($length)
         <div class="flex items-center gap-2 w-auto sm:w-auto justify-end">
-            <span class="text-sm whitespace-nowrap">Show</span>
+            <span class="text-sm whitespace-nowrap">{{ __('datatable.Show') }}</span>
             <select id="dt-length" class="hidden w-auto sm:w-28"
                 data-hs-select='{
-                            "placeholder": "Show",
+                            "placeholder": "{{ __('datatable.Show') }}",
                             "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
                             "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 ps-4 pe-9 flex gap-x-2 text-nowrap w-auto cursor-pointer bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-(--color-gray)",
                             "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-(--color-gray) [&::-webkit-scrollbar-thumb]:bg-(--color-gray)",
@@ -126,7 +126,7 @@
 <template id="dt-pagination-prev-template">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
-        data-page="" aria-label="Previous">
+        data-page="" aria-label="{{ __('datatable.Previous') }}">
         <i data-lucide="chevron-left" class="size-4"></i>
     </button>
 </template>
@@ -134,7 +134,15 @@
 <template id="dt-pagination-next-template">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
-        data-page="" aria-label="Next">
+        data-page="" aria-label="{{ __('datatable.Next') }}">
         <i data-lucide="chevron-right" class="size-4"></i>
     </button>
 </template>
+
+<script>
+    window.langDatatable = window.langDatatable || {};
+    window.langDatatable['{{ $id }}'] = {
+        loading: @json(__('datatable.Loading data...')),
+        showing: @json(__('datatable.Showing :from - :to of :total')),
+    };
+</script>
