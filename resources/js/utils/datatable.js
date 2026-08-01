@@ -21,19 +21,19 @@ export default function initDatatable({
         processing: true,
         language: {
             processing: `
-                <div class="dt-overlay-loader">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="relative">
-                            <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
-                            <div class="size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin absolute inset-0"></div>
-                        </div>
+            <div class="dt-overlay-loader">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative">
+                        <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
+                        <div class="size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin absolute inset-0"></div>
+                    </div>
 
-                        <div class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                            Loading data...
-                        </div>
+                    <div class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                        ${window.langDatatable?.[table.replace("#", "")]?.loading ?? "Loading data..."}
                     </div>
                 </div>
-            `,
+            </div>
+        `,
         },
         serverSide: false,
         ajax,
@@ -247,8 +247,14 @@ export default function initDatatable({
         container.append(nextBtn);
 
         // Update info text
+        const lang = window.langDatatable?.[table.replace("#", "")] ?? {};
+        const template = lang.showing ?? "Showing :from - :to of :total";
+
         $("#dt-info").text(
-            `Showing ${info.start + 1} – ${info.end} of ${info.recordsTotal}`,
+            template
+                .replace(":from", info.start + 1)
+                .replace(":to", info.end)
+                .replace(":total", info.recordsTotal),
         );
 
         initLucide();
