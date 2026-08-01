@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="space-y-6">
-        <div class="flex flex-wrap justify-between items-center gap-4">
+        <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold">Sablon</h1>
                 <p class="text-sm">Manage sablon data</p>
@@ -40,7 +40,7 @@
                 <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw" text="Reset ke Minggu Ini"
                     loadingText="Resetting..." color="bg-(--color-danger) hover:bg-(--color-danger)/80"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
-                    rounded="rounded-lg" class="cursor-pointer"/>
+                    rounded="rounded-lg" class="cursor-pointer" />
 
                 <a href="{{ route('sablons.create') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg

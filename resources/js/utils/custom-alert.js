@@ -36,10 +36,10 @@ function customAlert() {
 
         // Default Titles
         defaultTitles: {
-            success: "Success",
-            info: "Information",
-            warning: "Warning",
-            error: "Error",
+            success: window.langCustomAlert?.success ?? "Success",
+            info: window.langCustomAlert?.info ?? "Information",
+            warning: window.langCustomAlert?.warning ?? "Warning",
+            error: window.langCustomAlert?.error ?? "Error",
         },
 
         // ============ TOAST METHODS ============
@@ -110,7 +110,12 @@ function customAlert() {
         },
 
         // ============ ALERT METHODS ============
-        showAlert(title, message, type = "info", confirmText = "OK") {
+        showAlert(
+            title,
+            message,
+            type = "info",
+            confirmText = window.langCustomAlert?.ok ?? "OK",
+        ) {
             this.alert = {
                 show: true,
                 title: title || this.defaultTitles[type],
@@ -137,14 +142,16 @@ function customAlert() {
         showConfirm(
             title,
             message,
-            confirmText = "Confirm",
-            cancelText = "Cancel",
+            confirmText = window.langCustomAlert?.confirm ?? "Confirm",
+            cancelText = window.langCustomAlert?.cancel ?? "Cancel",
             onConfirm = null,
             onCancel = null,
         ) {
             this.confirm = {
                 show: true,
-                title: title || "Confirmation",
+                title:
+                    title ||
+                    (window.langCustomAlert?.confirmation ?? "Confirmation"),
                 message,
                 confirmText,
                 cancelText,
@@ -267,9 +274,15 @@ window.Confirm = {
     },
 
     delete(
-        message = "Are you sure you want to delete this item? This action cannot be undone.",
+        message = window.langCustomAlert?.deleteMessage ??
+            "Are you sure you want to delete this item? This action cannot be undone.",
     ) {
-        return this.show(message, "Delete Confirmation", "Delete", "Cancel");
+        return this.show(
+            message,
+            window.langCustomAlert?.deleteConfirmation ?? "Delete Confirmation",
+            window.langCustomAlert?.delete ?? "Delete",
+            window.langCustomAlert?.cancel ?? "Cancel",
+        );
     },
 };
 

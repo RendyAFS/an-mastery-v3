@@ -5,9 +5,9 @@
     'filter' => true,
     'filterId' => 'cg-filter',
     'filterOptions' => [
-        'all' => 'All',
-        'active' => 'Active',
-        'deleted' => 'Deleted',
+        'all' => __('cardgrid.All'),
+        'active' => __('cardgrid.Active'),
+        'deleted' => __('cardgrid.Deleted'),
     ],
     'filterDefault' => 'active',
     'lengthOptions' => [12, 24, 48],
@@ -34,7 +34,7 @@
                     border border-(--color-gray) dark:border-(--color-dark-gray)
                     bg-(--color-light) dark:bg-(--color-dark-slate)
                     focus:ring-2 focus:ring-(--color-primary)/30"
-                    placeholder="Search...">
+                    placeholder="{{ __('cardgrid.Search...') }}">
 
                 {{-- Clear Button --}}
                 <button type="button" id="cg-search-clear"
@@ -52,7 +52,7 @@
         @if ($filter)
             <select id="{{ $filterId }}" class="hidden w-auto sm:w-40"
                 data-hs-select='{
-                    "placeholder": "Filter",
+                    "placeholder": "{{ __('cardgrid.Filter') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
                     "toggleClasses": "relative py-2 ps-4 pe-9 flex gap-x-2 w-auto cursor-pointer bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-(--color-gray)",
                     "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-y-auto",
@@ -69,10 +69,10 @@
 
     @if ($length)
         <div class="flex items-center gap-2 w-auto sm:w-auto justify-end">
-            <span class="text-sm whitespace-nowrap">Show</span>
+            <span class="text-sm whitespace-nowrap">{{ __('cardgrid.Show') }}</span>
             <select id="cg-length" class="hidden w-auto sm:w-28"
                 data-hs-select='{
-                    "placeholder": "Show",
+                    "placeholder": "{{ __('cardgrid.Show') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
                     "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 ps-4 pe-9 flex gap-x-2 text-nowrap w-auto cursor-pointer bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-(--color-gray)",
                     "dropdownClasses": "mt-2 z-50 w-auto max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-hidden overflow-y-auto",
@@ -92,7 +92,7 @@
 <div class="relative min-h-40">
     {{-- Loading Overlay --}}
     <div id="{{ $id }}-loading"
-        class="hidden absolute inset-0 z-20 items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
+    class="hidden absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
         <div class="flex flex-col items-center gap-4">
             <div class="relative">
                 <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
@@ -103,7 +103,7 @@
             </div>
 
             <span class="text-sm text-(--color-dark) dark:text-(--color-light)">
-                Loading data...
+                {{ __('cardgrid.Loading data...') }}
             </span>
         </div>
     </div>
@@ -124,7 +124,7 @@
 <div id="{{ $id }}-empty" class="hidden">
     <div class="flex flex-col items-center justify-center py-20 text-(--color-gray)">
         <i data-lucide="inbox" class="size-12 mb-3"></i>
-        <p class="text-sm">No data found</p>
+        <p class="text-sm">{{ __('cardgrid.No data found') }}</p>
     </div>
 </div>
 
@@ -146,14 +146,22 @@
 <template id="cg-pagination-prev-template">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
-        data-page="" aria-label="Previous">
+        data-page="" aria-label="{{ __('cardgrid.Previous') }}">
         <i data-lucide="chevron-left" class="size-4"></i>
     </button>
 </template>
 <template id="cg-pagination-next-template">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
-        data-page="" aria-label="Next">
+        data-page="" aria-label="{{ __('cardgrid.Next') }}">
         <i data-lucide="chevron-right" class="size-4"></i>
     </button>
 </template>
+
+<script>
+    window.cardgridLang = window.cardgridLang || {};
+    window.cardgridLang['{{ $id }}'] = {
+        noResults: @json(__('cardgrid.No results')),
+        showing: @json(__('cardgrid.Showing :from - :to of :total')),
+    };
+</script>

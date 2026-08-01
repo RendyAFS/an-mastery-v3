@@ -5,7 +5,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="mb-2 space-y-2">
             <x-select id="supplier_id" name="supplier_id" label="Supplier" :options="$suppliers" :value="$sablon?->supplier_id ?? null"
-                placeholder="Choose Supplier" search-placeholder="Search supplier..." clearable="true"/>
+                placeholder="Choose Supplier" search-placeholder="Search supplier..." clearable="true" />
         </div>
 
         <div class="mb-2 space-y-2">
@@ -24,7 +24,7 @@
 
         <div class="mb-2 space-y-2">
             <x-select id="type_color_id" name="type_color_id" label="Type Color" :options="$typeColors" :value="$sablon?->type_color_id ?? null"
-                placeholder="Choose Type Color" search-placeholder="Search type color..." clearable="true"/>
+                placeholder="Choose Type Color" search-placeholder="Search type color..." clearable="true" />
         </div>
 
         <div class="mb-2 space-y-2">
@@ -34,7 +34,8 @@
 
         <div class="mb-2 space-y-2">
             <x-select id="price_employee_id" name="price_employee_id" label="Price Employee" :options="$priceEmployees"
-                :value="$sablon?->price_employee_id ?? null" placeholder="Choose Price Employee" search-placeholder="Search..." clearable="true"/>
+                :value="$sablon?->price_employee_id ?? null" placeholder="Choose Price Employee" search-placeholder="Search..."
+                clearable="true" />
         </div>
 
         <div class="mb-2 space-y-2">
@@ -80,6 +81,14 @@
                 'RETURNED' => 'Returned',
             ]" :value="$sablon?->status->value ?? 'ON_PROGRESS'"
                 placeholder="Choose Status" />
+        </div>
+
+        <div class="flex items-center gap-2 mb-2">
+            <input type="checkbox" id="is_billed_in_advance" name="is_billed_in_advance" class="checkbox-custom"
+                {{ $sablon?->is_billed_in_advance ? 'checked' : '' }}>
+            <label for="is_billed_in_advance" class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                Ditagih Dulu
+            </label>
         </div>
 
         <div class="md:col-span-3 mb-2 space-y-2">

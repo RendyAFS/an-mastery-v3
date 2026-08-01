@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'Dashboard'         => 'Dashboard',
+    'Access Management' => 'Access Management',
+    'Users'             => 'Users',
+    'Roles'             => 'Roles',
+    'People'            => 'People',
+    'Suppliers'         => 'Suppliers',
+    'Employees'         => 'Employees',
+    'Fabric Attribute'  => 'Fabric Attribute',
+    'Image Fabrics'     => 'Image Fabrics',
+    'Color Fabrics'     => 'Color Fabrics',
+    'Type Fabrics'      => 'Type Fabrics',
+    'Type Colors'       => 'Type Colors',
+    'Pricing'           => 'Pricing',
+    'Price Supplier'    => 'Price Supplier',
+    'Price Employee'    => 'Price Employee',
+    'Employee Presence' => 'Employee Presence',
+    'Inventory Fabric'  => 'Inventory Fabric',
+    'Sablon'            => 'Sablon',
+    'Bill Supplier'     => 'Bill Supplier',
+    'Salary Employee'   => 'Salary Employee',
+];

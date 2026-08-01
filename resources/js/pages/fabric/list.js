@@ -37,7 +37,7 @@ const PageScript = (function () {
                     className: "text-center dt-body-center",
                 },
                 {
-                    data: "stock_summary",
+                    data: "total_inventory_fabric",
                     width: "35%",
                     className: "dt-body-center",
                     render(data) {
@@ -45,19 +45,41 @@ const PageScript = (function () {
                             return `<span class="text-gray-400 text-sm">-</span>`;
                         }
 
+                        const statusBadgeMap = {
+                            ON_PROGRESS: "badge-warning",
+                            DONE: "badge-info",
+                            DELIVERED: "badge-success",
+                            RETURNED: "badge-danger",
+                        };
+
                         let rows = data.colors.map((color) => {
                             const dotColor = color.color || "#9ca3af";
 
-                            return `
-                                <div class="flex items-center justify-between px-3 py-1.5">
-                                    <div class="flex items-center gap-2">
-                                        <span class="size-2.5 rounded-full" style="background-color: ${dotColor}"></span>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">${color.name ?? "-"}</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm font-medium">
-                                            ${color.stock} pcs
+                            let badges = (color.statuses || [])
+                                .filter((s) => s.count > 0)
+                                .map((s) => {
+                                    const cls = statusBadgeMap[s.status] || "badge-primary";
+                                    return `
+                                        <span class="badge ${cls}">
+                                            ${s.label}: ${s.count}
                                         </span>
+                                    `;
+                                })
+                                .join("");
+
+                            if (!badges) {
+                                badges = `<span class="text-[11px] text-gray-400">Belum ada sablon</span>`;
+                            }
+
+                            return `
+                                <div class="flex items-center justify-between px-3 py-1.5 gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full shrink-0" style="background-color: ${dotColor}"></span>
+                                        <span class="text-sm text-gray-700 dark:text-gray-300">${color.name ?? "-"}</span>
+                                        <span class="text-xs text-gray-400">(${color.stock} pcs)</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-1 justify-end">
+                                        ${badges}
                                     </div>
                                 </div>
                             `;
@@ -80,7 +102,7 @@ const PageScript = (function () {
 
                                         <div>
                                             <div class="font-semibold text-sm">
-                                                ${data.total_pcs} pcs / ${data.seri} seri
+                                                ${data.total_pcs} pcs total
                                             </div>
 
                                             <div class="text-xs text-(--color-dark-gray)">

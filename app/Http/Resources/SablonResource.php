@@ -28,6 +28,7 @@ class SablonResource extends JsonResource
             'total_sablon_formated' => RupiahHelper::format($this->total_sablon),
             'date_sablon'           => $this->date_sablon?->format('Y-m-d'),
             'status'                => $this->status,
+            'is_billed_in_advance'  => $this->is_billed_in_advance,
             'notes'                 => $this->notes,
             'created_at'            => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'            => $this->updated_at?->format('Y-m-d H:i:s'),

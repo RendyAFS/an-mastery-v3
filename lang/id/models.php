@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'BillSupplier'         => 'Tagihan Konveki',
+    'ColorFabric'          => 'Warna Kain',
+    'Employee'             => 'Karyawan',
+    'Fabric'               => 'Kain',
+    'FabricDetail'         => 'Detail Kain',
+    'HistoryStock'         => 'Riwayat Stok',
+    'ImageFabric'          => 'Gambar Kain',
+    'Menu'                 => 'Menu',
+    'MenuPermission'       => 'Izin Menu',
+    'Presence'             => 'Presensi',
+    'PriceEmployee'        => 'Harga Karyawan',
+    'PriceSupplier'        => 'Harga Konveksi',
+    'Role'                 => 'Peran',
+    'Sablon'               => 'Sablon',
+    'SablonDetail'         => 'Detail Sablon',
+    'SablonEmployeeDetail' => 'Detail Karyawan Sablon',
+    'SalaryEmployee'       => 'Gaji Karyawan',
+    'Supplier'             => 'Konveksi',
+    'SupplierCoverStyle'   => 'Gaya Sampul Konveksi',
+    'TypeColor'            => 'Jenis Warna',
+    'TypeFabric'           => 'Jenis Kain',
+    'User'                 => 'Pengguna',
+];
