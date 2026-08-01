@@ -167,11 +167,21 @@ const PageScript = (function () {
             `
             : "";
 
+        const presenceHtml = item.presence_total
+            ? `
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-medium text-(--color-info)">Presence</span>
+                    <span class="font-medium text-(--color-info)">${item.presence_total_formated ? "+" + item.presence_total_formated : item.presence_total_formated}</span>
+                </div>
+            `
+            : "";
+
         return `
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
             ${headerHtml}
             ${groupsHtml}
             ${additionalFeeHtml}
+            ${presenceHtml}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 <span class="text-sm font-semibold">Total</span>

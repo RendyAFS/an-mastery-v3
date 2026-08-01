@@ -3,6 +3,7 @@
 namespace App\Actions\SalaryEmployee;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
 use App\Models\SalaryEmployee;
 use Carbon\Carbon;
@@ -46,10 +47,12 @@ class UpsertSalaryEmployeeAction
                 ->get();
 
             $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
-
             $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+            $presenceTotal = (float) (Presence::where('employee_id', $employeeId)
+                ->where('week_of', $start)
+                ->value('total') ?? 0);
 
-            $salary->fee = $totalFee;
+            $salary->fee = $totalFee + $presenceTotal;
 
             if ($status !== null) {
                 $salary->status = StatusSalaryEmployeeEnum::from($status);
