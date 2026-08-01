@@ -13,7 +13,7 @@
                 aria-haspopup="dialog" data-hs-overlay="#hs-sidebar-content-push">
 
                 <i data-lucide="panels-top-left" class="size-5"></i>
-                <span class="sr-only">Toggle Navigation</span>
+                <span class="sr-only">{{ __('navbar.Toggle Navigation') }}</span>
             </button>
         </div>
 
@@ -87,7 +87,7 @@
                             class="text-xs
                             text-(--color-dark-gray)
                             dark:text-(--color-gray)">
-                            {{ $user->getRoleNames()->implode(', ') ?? 'Unknown' }}
+                            {{ $user->getRoleNames()->implode(', ') ?? __('navbar.Unknown') }}
                         </p>
                     </div>
 
@@ -124,7 +124,7 @@
                         dark:text-(--color-gray)
                         hover:bg-(--color-gray)/20">
                         <i data-lucide="user" class="size-4"></i>
-                        Profile
+                        {{ __('navbar.Profile') }}
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -134,7 +134,7 @@
                             text-(--color-red) cursor-pointer
                             hover:bg-(--color-red)/10">
                             <i data-lucide="log-out" class="size-4"></i>
-                            Logout
+                            {{ __('navbar.Logout') }}
                         </button>
                     </form>
                 </div>
