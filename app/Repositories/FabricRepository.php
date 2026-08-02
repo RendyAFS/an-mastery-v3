@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Fabric;
-use Illuminate\Support\Collection;
 
 class FabricRepository
 {

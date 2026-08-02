@@ -52,6 +52,15 @@ const PageScript = (function () {
                             RETURNED: "badge-danger",
                         };
 
+                        const excessParts = data.colors
+                            .filter((c) => c.excess > 0)
+                            .map((c) => `+ ${c.excess} ${c.name}`)
+                            .join(" ");
+
+                        const seriText = excessParts
+                            ? `${data.total_pcs} pcs / ${data.seri} seri (${excessParts})`
+                            : `${data.total_pcs} pcs total / ${data.seri} seri`;
+
                         let rows = data.colors.map((color) => {
                             const dotColor = color.color || "#9ca3af";
 
@@ -102,7 +111,7 @@ const PageScript = (function () {
 
                                         <div>
                                             <div class="font-semibold text-sm">
-                                                ${data.total_pcs} pcs total
+                                                ${seriText}
                                             </div>
 
                                             <div class="text-xs text-(--color-dark-gray)">
