@@ -32,7 +32,7 @@ class SalaryEmployeeResource extends JsonResource
 
         $presenceTotal = (float) ($this->presence?->total ?? 0);
         $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-        $total = (float) $this->fee + $additionalFeeTotal + (float) ($this->presence?->total ?? 0);
+        $total = (float) $this->fee;
 
         return [
             'id'                            => $this->id,
