@@ -16,7 +16,7 @@
 
 -- Dumping data for table an_mastery.bill_suppliers: ~0 rows (approximately)
 
--- Dumping data for table an_mastery.cache: ~4 rows (approximately)
+-- Dumping data for table an_mastery.cache: ~25 rows (approximately)
 REPLACE INTO `cache` (`key`, `value`, `expiration`) VALUES
 	('laravel-cache-219b33873d8025413b45edaf1f8adfb3', 'i:1;', 1785627018),
 	('laravel-cache-219b33873d8025413b45edaf1f8adfb3:timer', 'i:1785627018;', 1785627018),
@@ -46,7 +46,7 @@ REPLACE INTO `cache` (`key`, `value`, `expiration`) VALUES
 
 -- Dumping data for table an_mastery.cache_locks: ~0 rows (approximately)
 
--- Dumping data for table an_mastery.color_fabrics: ~7 rows (approximately)
+-- Dumping data for table an_mastery.color_fabrics: ~9 rows (approximately)
 REPLACE INTO `color_fabrics` (`id`, `name`, `code_color`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 'Jambon', '#fbcbf5', 'tes', '2026-04-26 06:25:26', '2026-05-13 08:08:33', 51, 51, NULL, NULL),
 	(2, 'Krem', '#dbcfb8', NULL, '2026-06-28 11:13:46', '2026-06-23 03:00:05', 51, 51, NULL, NULL),
@@ -79,14 +79,14 @@ REPLACE INTO `employees` (`id`, `name`, `address`, `contact`, `is_active`, `note
 	(17, 'Dadang', 'tulungagung', '081234567816', 1, NULL, '2026-04-26 06:02:00', '2026-04-26 06:02:00', NULL, NULL, NULL, NULL),
 	(18, 'RikoB', 'tulungagung', '081234567817', 1, 'tes', '2026-04-26 06:02:00', '2026-06-28 11:07:43', NULL, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.fabrics: ~2 rows (approximately)
+-- Dumping data for table an_mastery.fabrics: ~4 rows (approximately)
 REPLACE INTO `fabrics` (`id`, `supplier_id`, `type_fabric_id`, `date_coming`, `code`, `seri`, `stock_total`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 1, 1, '2026-06-27', 'SUNAR-20260628181445', 4, 40, 'aman\ntes\n12', '2026-06-28 11:14:45', '2026-08-02 06:11:50', 51, 51, NULL, NULL),
 	(2, 1, 2, '2026-07-26', 'SUNAR-20260726094455', 4, 40, NULL, '2026-07-26 02:44:55', '2026-07-26 02:44:55', 51, 51, NULL, NULL),
 	(3, 7, 1, '2026-08-01', 'RUSDA-20260801191844', 4, 12, NULL, '2026-08-01 12:18:44', '2026-08-01 12:18:44', 51, 51, NULL, NULL),
 	(4, 4, 3, '2026-08-02', 'SANTOSO-20260802131330', 4, 45, NULL, '2026-08-02 06:13:30', '2026-08-02 06:13:30', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.fabric_details: ~8 rows (approximately)
+-- Dumping data for table an_mastery.fabric_details: ~16 rows (approximately)
 REPLACE INTO `fabric_details` (`id`, `fabric_id`, `color_fabric_id`, `stock`, `notes`, `created_at`, `updated_at`) VALUES
 	(1, 1, 1, 10, NULL, '2026-06-28 11:14:45', '2026-06-28 11:14:45'),
 	(2, 1, 2, 10, NULL, '2026-06-28 11:14:45', '2026-06-28 11:14:45'),
@@ -107,7 +107,7 @@ REPLACE INTO `fabric_details` (`id`, `fabric_id`, `color_fabric_id`, `stock`, `n
 
 -- Dumping data for table an_mastery.failed_jobs: ~0 rows (approximately)
 
--- Dumping data for table an_mastery.history_stocks: ~8 rows (approximately)
+-- Dumping data for table an_mastery.history_stocks: ~16 rows (approximately)
 REPLACE INTO `history_stocks` (`id`, `fabric_detail_id`, `status`, `total`, `notes`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'IN', 10, NULL, '2026-06-28 11:14:45', '2026-06-28 11:14:45'),
 	(2, 2, 'IN', 10, NULL, '2026-06-28 11:14:45', '2026-06-28 11:14:45'),
@@ -167,7 +167,7 @@ REPLACE INTO `image_fabrics` (`id`, `name`, `notes`, `created_at`, `updated_at`,
 
 -- Dumping data for table an_mastery.job_batches: ~0 rows (approximately)
 
--- Dumping data for table an_mastery.media: ~0 rows (approximately)
+-- Dumping data for table an_mastery.media: ~1 rows (approximately)
 REPLACE INTO `media` (`id`, `model_type`, `model_id`, `uuid`, `collection_name`, `name`, `file_name`, `mime_type`, `disk`, `conversions_disk`, `size`, `manipulations`, `custom_properties`, `generated_conversions`, `responsive_images`, `order_column`, `created_at`, `updated_at`) VALUES
 	(1, 'App\\Models\\ImageFabric', 14, 'fdad2d07-c51d-4ac9-8d26-c34831adcac6', 'image-fabrics', 'hkjoYbekvSF3sAKf8qXjBrUUerHHTONc5dvpu9Ax', '8a11b03b-d5a6-464c-bb39-0fa16d9dd9c0.png', 'image/png', 'public', 'public', 65832, '[]', '[]', '[]', '[]', 1, '2026-08-01 12:11:05', '2026-08-01 12:11:05');
 
@@ -196,7 +196,7 @@ REPLACE INTO `menus` (`id`, `parent_id`, `name`, `icon`, `url`, `sort_order`, `i
 
 -- Dumping data for table an_mastery.menu_permissions: ~0 rows (approximately)
 
--- Dumping data for table an_mastery.migrations: ~46 rows (approximately)
+-- Dumping data for table an_mastery.migrations: ~47 rows (approximately)
 REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '0001_01_01_000000_create_users_table', 1),
 	(2, '0001_01_01_000001_create_cache_table', 1),
@@ -380,30 +380,30 @@ REPLACE INTO `permissions` (`id`, `name`, `guard_name`, `menu_id`, `created_at`,
 	(120, 'salary-employees.restore', 'web', 21, '2026-07-27 08:57:21', '2026-07-27 08:57:21'),
 	(121, 'salary-employees.forceDelete', 'web', 21, '2026-07-27 08:57:21', '2026-07-27 08:57:21');
 
--- Dumping data for table an_mastery.presences: ~0 rows (approximately)
+-- Dumping data for table an_mastery.presences: ~20 rows (approximately)
 REPLACE INTO `presences` (`id`, `employee_id`, `week_of`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `total`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 12, '2026-06-22', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-06-28 08:24:07', '2026-06-28 08:24:07', 51, 51, NULL, NULL),
-	(2, 12, '2026-07-27', 12000, 12000, 12000, 12000, 12000, 12000, 0, 72000, 'tes\n123', '2026-08-01 12:13:14', '2026-08-02 06:02:54', 51, 51, NULL, NULL),
-	(3, 1, '2026-07-27', 12000, 12000, 12000, 12000, 12000, 12000, 0, 72000, NULL, '2026-08-01 12:33:54', '2026-08-02 06:02:40', 51, 51, NULL, NULL),
-	(4, 6, '2026-07-27', 12000, 12000, 12000, 12000, 12000, 12000, 0, 72000, NULL, '2026-08-01 12:34:26', '2026-08-02 06:02:54', 51, 51, NULL, NULL),
-	(5, 14, '2026-07-27', 12000, 12000, 12000, 12000, 12000, 12000, 0, 72000, NULL, '2026-08-01 22:35:53', '2026-08-02 06:02:54', 51, 51, NULL, NULL),
+	(2, 12, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, 'tes\n123', '2026-08-01 12:13:14', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(3, 1, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-01 12:33:54', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(4, 6, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-01 12:34:26', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(5, 14, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-01 22:35:53', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
 	(6, 14, '2026-07-20', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-01 22:38:47', '2026-08-01 22:38:47', 51, 51, NULL, NULL),
-	(7, 15, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:28', '2026-08-02 00:24:28', 51, 51, NULL, NULL),
-	(8, 17, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(9, 4, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(10, 7, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(11, 16, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(12, 3, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(13, 10, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(14, 2, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(15, 9, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(16, 8, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(17, 18, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(18, 5, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(19, 13, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL),
-	(20, 11, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 00:24:48', 51, 51, NULL, NULL);
+	(7, 15, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:28', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(8, 17, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(9, 4, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(10, 7, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(11, 16, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(12, 3, '2026-07-27', 10000, 10000, 10000, 10000, 10000, 10000, 0, 60000, NULL, '2026-08-02 00:24:48', '2026-08-02 06:48:03', 51, 51, NULL, NULL),
+	(13, 10, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(14, 2, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(15, 9, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(16, 8, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(17, 18, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(18, 5, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(19, 13, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL),
+	(20, 11, '2026-07-27', 0, 0, 0, 0, 0, 0, 0, 0, NULL, '2026-08-02 00:24:48', '2026-08-02 06:35:39', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.price_employees: ~3 rows (approximately)
+-- Dumping data for table an_mastery.price_employees: ~5 rows (approximately)
 REPLACE INTO `price_employees` (`id`, `type_fabric_id`, `type_color_id`, `price`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 2, 1, 450, NULL, '2026-06-21 04:11:59', '2026-06-28 10:53:13', 51, 51, NULL, NULL),
 	(2, 1, 2, 500, NULL, '2026-06-21 04:12:15', '2026-06-28 10:53:06', 51, 51, NULL, NULL),
@@ -411,7 +411,7 @@ REPLACE INTO `price_employees` (`id`, `type_fabric_id`, `type_color_id`, `price`
 	(5, 2, 1, 600, NULL, '2026-08-02 00:29:28', '2026-08-02 00:29:37', 51, 51, NULL, NULL),
 	(6, 1, 3, 600, NULL, '2026-08-02 00:46:12', '2026-08-02 00:46:12', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.price_suppliers: ~3 rows (approximately)
+-- Dumping data for table an_mastery.price_suppliers: ~6 rows (approximately)
 REPLACE INTO `price_suppliers` (`id`, `supplier_id`, `type_fabric_id`, `type_color_id`, `price`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 1, 2, 3, 1500, NULL, '2026-05-24 04:12:04', '2026-07-26 02:47:41', 51, 51, NULL, NULL),
 	(2, 1, 1, 3, 1525, NULL, '2026-07-26 02:38:03', '2026-07-26 02:41:55', 51, 51, NULL, NULL),
@@ -443,7 +443,7 @@ REPLACE INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 	(50, 3),
 	(58, 3);
 
--- Dumping data for table an_mastery.sablons: ~5 rows (approximately)
+-- Dumping data for table an_mastery.sablons: ~8 rows (approximately)
 REPLACE INTO `sablons` (`id`, `supplier_id`, `fabric_id`, `image_fabric_id`, `type_color_id`, `type_fabric_id`, `price_employee_id`, `total_long_fabric`, `total_sablon`, `date_sablon`, `status`, `is_billed_in_advance`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 1, 1, 34, 3, 1, 3, 376, 197400, '2026-07-27', 'DONE', 0, NULL, '2026-07-27 02:43:19', '2026-07-27 02:43:19', 51, 51, NULL, NULL),
 	(2, 1, 1, 25, 3, 1, 3, 358, 187950, '2026-07-27', 'DONE', 0, NULL, '2026-07-27 02:43:19', '2026-07-27 02:43:19', 51, 51, NULL, NULL),
@@ -454,7 +454,7 @@ REPLACE INTO `sablons` (`id`, `supplier_id`, `fabric_id`, `image_fabric_id`, `ty
 	(7, 1, 1, 14, 3, 1, 3, 329, 172725, '2026-08-01', 'DONE', 1, NULL, '2026-08-01 12:28:44', '2026-08-02 06:28:15', 51, 51, NULL, NULL),
 	(8, 1, 1, 19, 3, 1, 6, 393, 235800, '2026-08-02', 'DONE', 0, NULL, '2026-08-02 00:53:25', '2026-08-02 00:54:37', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.sablon_details: ~20 rows (approximately)
+-- Dumping data for table an_mastery.sablon_details: ~32 rows (approximately)
 REPLACE INTO `sablon_details` (`id`, `sablon_id`, `fabric_detail_id`, `color_fabric_id`, `long_fabric`) VALUES
 	(61, 5, 1, 1, 91),
 	(62, 5, 2, 2, 87),
@@ -489,50 +489,50 @@ REPLACE INTO `sablon_details` (`id`, `sablon_id`, `fabric_detail_id`, `color_fab
 	(119, 8, 3, 3, 99),
 	(120, 8, 4, 4, 98);
 
--- Dumping data for table an_mastery.sablon_employee_details: ~14 rows (approximately)
+-- Dumping data for table an_mastery.sablon_employee_details: ~22 rows (approximately)
 REPLACE INTO `sablon_employee_details` (`id`, `sablon_id`, `fabric_detail_id`, `employee_id`, `salary_employee_id`, `layers`, `fee`, `is_change`, `employee_change_id`, `is_bon`, `is_paid`, `notes`, `created_at`, `updated_at`) VALUES
-	(38, 5, NULL, 1, 21, 1, 61100, 0, NULL, 0, 1, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
+	(38, 5, NULL, 1, 21, 1, 61100, 0, NULL, 0, 1, NULL, '2026-07-27 02:43:19', '2026-08-02 06:36:56'),
 	(39, 5, NULL, 2, 30, 1, 61100, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
-	(40, 5, NULL, 3, 22, 1, 61100, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:25:40'),
+	(40, 5, NULL, 3, 22, 1, 61100, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:48:14'),
 	(44, 1, NULL, 14, 23, 1, 65800, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
 	(45, 1, NULL, 15, 24, 1, 65800, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
 	(46, 1, NULL, 17, 25, 1, 65800, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
 	(47, 2, NULL, 4, 26, 2, 125300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
 	(48, 2, NULL, 6, 27, 1, 62700, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
-	(49, 3, NULL, 5, 28, 1, 62300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
-	(50, 3, NULL, 3, 22, 1, 62300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:25:40'),
+	(49, 3, NULL, 5, 28, 1, 62300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:36:56'),
+	(50, 3, NULL, 3, 22, 1, 62300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:48:14'),
 	(51, 3, NULL, 9, 29, 1, 62300, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
-	(52, 4, NULL, 1, 21, 1, 56500, 0, NULL, 0, 1, NULL, '2026-07-27 08:26:08', '2026-08-02 06:26:29'),
+	(52, 4, NULL, 1, 21, 1, 56500, 0, NULL, 0, 1, NULL, '2026-07-27 08:26:08', '2026-08-02 06:36:56'),
 	(53, 4, NULL, 2, 30, 1, 56500, 0, NULL, 0, 0, NULL, '2026-07-27 02:43:19', '2026-08-02 06:26:29'),
-	(54, 4, NULL, 5, 28, 1, 56500, 0, NULL, 0, 0, NULL, '2026-07-27 08:26:08', '2026-08-02 06:26:29'),
-	(55, 6, NULL, 1, 21, 1, 50400, 0, NULL, 0, 1, NULL, '2026-08-01 12:22:05', '2026-08-02 06:26:29'),
-	(56, 6, NULL, 3, 22, 2, 100800, 0, NULL, 0, 0, NULL, '2026-08-01 12:22:05', '2026-08-02 06:25:40'),
-	(64, 7, NULL, 1, NULL, 2, 115200, 0, NULL, 0, 0, NULL, '2026-08-01 12:31:01', '2026-08-01 12:31:01'),
-	(65, 7, NULL, 5, NULL, 1, 57600, 0, NULL, 0, 0, NULL, '2026-08-01 12:31:01', '2026-08-01 12:31:01'),
-	(66, 8, NULL, 1, 21, 1, 78600, 0, NULL, 0, 1, NULL, '2026-08-02 00:53:25', '2026-08-02 06:26:29'),
+	(54, 4, NULL, 5, 28, 1, 56500, 0, NULL, 0, 0, NULL, '2026-07-27 08:26:08', '2026-08-02 06:36:56'),
+	(55, 6, NULL, 1, 21, 1, 50400, 0, NULL, 0, 1, NULL, '2026-08-01 12:22:05', '2026-08-02 06:36:56'),
+	(56, 6, NULL, 3, 22, 2, 100800, 0, NULL, 0, 0, NULL, '2026-08-01 12:22:05', '2026-08-02 06:48:14'),
+	(64, 7, NULL, 1, 21, 2, 115200, 0, NULL, 0, 1, NULL, '2026-08-01 12:31:01', '2026-08-02 06:36:56'),
+	(65, 7, NULL, 5, 28, 1, 57600, 0, NULL, 0, 0, NULL, '2026-08-01 12:31:01', '2026-08-02 06:36:56'),
+	(66, 8, NULL, 1, 21, 1, 78600, 0, NULL, 0, 1, NULL, '2026-08-02 00:53:25', '2026-08-02 06:36:56'),
 	(67, 8, NULL, 8, 31, 1, 78600, 0, NULL, 0, 0, NULL, '2026-08-02 00:53:25', '2026-08-02 06:26:29'),
-	(68, 8, NULL, 3, 22, 1, 78600, 1, 2, 0, 0, NULL, '2026-08-02 00:53:25', '2026-08-02 06:25:40'),
+	(68, 8, NULL, 3, 22, 1, 78600, 1, 2, 0, 0, NULL, '2026-08-02 00:53:25', '2026-08-02 06:48:14'),
 	(69, 8, NULL, 2, 30, 1, 78600, 0, NULL, 0, 0, NULL, '2026-08-02 00:53:25', '2026-08-02 06:26:29');
 
 -- Dumping data for table an_mastery.salary_employees: ~11 rows (approximately)
 REPLACE INTO `salary_employees` (`id`, `employee_id`, `fee`, `additional_fee`, `status`, `date`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
-	(21, 1, 308600, '[{"nominal":-20000,"notes":"bon paketan"},{"nominal":10000,"notes":"bonus"}]', 'PAID', '2026-07-27', NULL, '2026-08-01 12:25:16', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
-	(22, 3, 324000, '[{"nominal":-38800,"notes":"ganti ke mambar"}]', 'PENDING', '2026-07-27', NULL, '2026-08-02 00:56:54', '2026-08-02 06:25:40', 51, 51, NULL, NULL),
+	(21, 1, 351800, '[{"nominal":-20000,"notes":"bon paketan"},{"nominal":10000,"notes":"bonus"}]', 'PAID', '2026-07-27', NULL, '2026-08-01 12:25:16', '2026-08-02 06:36:56', 51, 51, NULL, NULL),
+	(22, 3, 302800, '[{"nominal":-38800,"notes":"ganti ke mambar"},{"nominal":-4000,"notes":"pulsa"},{"nominal":30000,"notes":"bonus"}]', 'PENDING', '2026-07-27', NULL, '2026-08-02 00:56:54', '2026-08-02 06:46:44', 51, 51, NULL, NULL),
 	(23, 14, 137800, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(24, 15, 125800, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(25, 17, 125800, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(26, 4, 185300, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(27, 6, 134700, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
-	(28, 5, 178800, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
+	(28, 5, 176400, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:36:56', 51, 51, NULL, NULL),
 	(29, 9, 122300, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(30, 2, 256200, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL),
 	(31, 8, 138600, '[]', 'PENDING', '2026-07-27', NULL, '2026-08-02 06:26:29', '2026-08-02 06:26:29', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.sessions: ~0 rows (approximately)
+-- Dumping data for table an_mastery.sessions: ~1 rows (approximately)
 REPLACE INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('yfkdJwjXHt6GEf2ymNOYGUeYziGE1aCzWRaSlkMF', 51, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoibG93dkxYTDljYXJqUjlURTJyRzNsNHVXcFBsMjR0azJQeUVmaFVpeSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjkzOiJodHRwczovL2FuLW1hc3RlcnktdjMudGVzdC9iaWxsLXN1cHBsaWVycy9ieS1zdXBwbGllci84P3dlZWtfZW5kPTIwMjYtVzMxJndlZWtfc3RhcnQ9MjAyNi1XMzEiO3M6NToicm91dGUiO3M6MjY6ImJpbGxfc3VwcGxpZXJzLmJ5LXN1cHBsaWVyIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NTE7czoyMjoiUEhQREVCVUdCQVJfU1RBQ0tfREFUQSI7YTowOnt9fQ==', 1785652226);
+	('yfkdJwjXHt6GEf2ymNOYGUeYziGE1aCzWRaSlkMF', 51, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoibG93dkxYTDljYXJqUjlURTJyRzNsNHVXcFBsMjR0azJQeUVmaFVpeSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjgxOiJodHRwczovL2FuLW1hc3RlcnktdjMudGVzdC9zYWxhcnktZW1wbG95ZWVzP3dlZWtfZW5kPTIwMjYtVzMxJndlZWtfc3RhcnQ9MjAyNi1XMzEiO3M6NToicm91dGUiO3M6MjI6InNhbGFyeV9lbXBsb3llZXMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo1MTtzOjIyOiJQSFBERUJVR0JBUl9TVEFDS19EQVRBIjthOjA6e319', 1785653411);
 
--- Dumping data for table an_mastery.suppliers: ~0 rows (approximately)
+-- Dumping data for table an_mastery.suppliers: ~10 rows (approximately)
 REPLACE INTO `suppliers` (`id`, `name`, `address`, `contact`, `is_active`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 'Sunar', 'tulungagung', '08123456780', 1, NULL, '2026-04-26 06:02:00', '2026-04-26 06:02:00', NULL, NULL, NULL, NULL),
 	(2, 'Yadi', 'tulungagung', '08123456781', 1, NULL, '2026-04-26 06:02:00', '2026-04-26 06:02:00', NULL, NULL, NULL, NULL),
@@ -545,23 +545,23 @@ REPLACE INTO `suppliers` (`id`, `name`, `address`, `contact`, `is_active`, `note
 	(9, 'Sirajudin', 'tulungagung', '08123456788', 1, NULL, '2026-04-26 06:02:00', '2026-04-26 06:02:00', NULL, NULL, NULL, NULL),
 	(10, 'Udin', 'tulungagung', '08123456789', 1, NULL, '2026-04-26 06:02:00', '2026-08-01 23:31:43', NULL, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.supplier_cover_styles: ~0 rows (approximately)
+-- Dumping data for table an_mastery.supplier_cover_styles: ~1 rows (approximately)
 REPLACE INTO `supplier_cover_styles` (`id`, `supplier_id`, `color_from`, `color_to`, `icon`, `pattern`, `created_at`, `updated_at`) VALUES
 	(1, 1, '#cee70d', '#03a03f', 'book-marked', 'stripes', '2026-07-26 07:15:38', '2026-07-26 07:15:38');
 
--- Dumping data for table an_mastery.type_colors: ~0 rows (approximately)
+-- Dumping data for table an_mastery.type_colors: ~3 rows (approximately)
 REPLACE INTO `type_colors` (`id`, `name`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 1, 'Tes notes 3', '2026-05-24 04:09:41', '2026-06-21 03:17:26', 51, 51, NULL, NULL),
 	(2, 2, 'Tes notes 2', '2026-05-24 04:09:51', '2026-06-21 03:17:20', 51, 51, NULL, NULL),
 	(3, 3, 'Tes notes 1', '2026-05-24 04:09:58', '2026-06-21 03:17:14', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.type_fabrics: ~0 rows (approximately)
+-- Dumping data for table an_mastery.type_fabrics: ~3 rows (approximately)
 REPLACE INTO `type_fabrics` (`id`, `name`, `notes`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 'INT', NULL, '2026-05-24 04:09:18', '2026-05-24 04:09:18', 51, 51, NULL, NULL),
 	(2, 'HGT', NULL, '2026-05-24 04:09:27', '2026-05-24 04:09:27', 51, 51, NULL, NULL),
 	(3, 'Febri', NULL, '2026-08-02 00:46:37', '2026-08-02 00:46:37', 51, 51, NULL, NULL);
 
--- Dumping data for table an_mastery.users: ~0 rows (approximately)
+-- Dumping data for table an_mastery.users: ~52 rows (approximately)
 REPLACE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `is_active`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
 	(1, 'User 1', 'user1@gmail.com', '2026-04-26 06:01:48', '$2y$12$oC1E9wpsusR2D3Lkh1Lj9.CsoikbkFLCrdaA7Jw83vyHn7iPSvq7C', NULL, NULL, NULL, NULL, 0, '2026-04-26 06:01:48', '2026-04-26 06:01:48', NULL, NULL, NULL, NULL),
 	(2, 'User 2', 'user2@gmail.com', '2026-04-26 06:01:48', '$2y$12$mZJqWZumQn2rqBUQzsRMJuI5E5WU1MMCCiyUnFy4tF7b3EBc7H.3W', NULL, NULL, NULL, NULL, 0, '2026-04-26 06:01:48', '2026-04-26 06:01:48', NULL, NULL, NULL, NULL),

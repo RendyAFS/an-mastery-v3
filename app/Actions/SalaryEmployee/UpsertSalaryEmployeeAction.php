@@ -72,7 +72,7 @@ class UpsertSalaryEmployeeAction
             $additionalFeeTotal = collect($salary->additional_fee ?? [])
                 ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
 
-            $salary->fee = $totalFee + $presenceTotal + $additionalFeeTotal;
+            $salary->fee = $totalFee;
 
             $salary->save();
 

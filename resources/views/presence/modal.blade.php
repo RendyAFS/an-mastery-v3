@@ -35,35 +35,45 @@
                     <input type="hidden" id="week_of" name="week_of" />
 
                     {{-- Generate section --}}
-                    <div class="flex items-end gap-2">
-                        <div class="flex-1">
-                            <label for="generate_value"
-                                class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                                Nominal per day
-                            </label>
+                    <div>
+                        <label for="generate_value"
+                            class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                            Nominal per day
+                        </label>
+
+                        <div class="flex gap-2 mt-1">
                             <input type="text" inputmode="numeric" id="generate_value" data-rupiah value="0"
-                                class="mt-1 px-4 py-2 block w-full rounded-lg
-                        bg-(--color-light-gray) border border-(--color-gray)
-                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
-                            <div class="flex flex-wrap gap-2 mt-2">
-                                @foreach ([5000, 8000, 10000, 12000] as $quick)
-                                    <button type="button" data-quick-amount="{{ $quick }}"
-                                        data-target="#generate_value"
-                                        class="btn-quick-amount px-3 py-1 text-xs rounded-lg
-                                            bg-(--color-light-gray) border border-(--color-gray)
-                                            text-(--color-dark) hover:bg-(--color-gray)/40
-                                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
-                                            cursor-pointer">
-                                        {{ number_format($quick, 0, ',', '.') }}
-                                    </button>
-                                @endforeach
-                            </div>
+                                class="flex-1 px-4 py-2 rounded-lg
+                                    bg-(--color-light-gray) border border-(--color-gray)
+                                    text-(--color-dark)
+                                    focus:border-(--color-primary)
+                                    focus:ring focus:ring-(--color-primary)/30
+                                    dark:bg-(--color-dark-slate)
+                                    dark:border-(--color-slate)
+                                    dark:text-(--color-light)" />
+
+                            <button type="button" id="btn-generate"
+                                class="px-4 py-2 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
+                                Generate
+                            </button>
                         </div>
-                        <button type="button" id="btn-generate"
-                            class="py-2 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
-                            Generate
-                        </button>
+
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            @foreach ([5000, 8000, 10000, 12000] as $quick)
+                                <button type="button" data-quick-amount="{{ $quick }}"
+                                    data-target="#generate_value"
+                                    class="btn-quick-amount px-3 py-1 text-xs rounded-lg
+                                        bg-(--color-light-gray) border border-(--color-gray)
+                                        text-(--color-dark)
+                                        hover:bg-(--color-gray)/40
+                                        dark:bg-(--color-dark-slate)
+                                        dark:border-(--color-slate)
+                                        dark:text-(--color-light)
+                                        cursor-pointer">
+                                    {{ number_format($quick, 0, ',', '.') }}
+                                </button>
+                            @endforeach
+                        </div>
                     </div>
 
                     @php
