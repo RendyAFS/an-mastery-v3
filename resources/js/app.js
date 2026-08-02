@@ -1,6 +1,7 @@
 import "./bootstrap";
 import "preline";
 import * as FloatingUIDOM from "@floating-ui/dom";
+import fixTextareaEnter from "./utils/fix-textarea-enter";
 window.FloatingUIDOM = FloatingUIDOM;
 
 // utils
@@ -16,4 +17,5 @@ import initUi from "./utils/ui-init";
 document.addEventListener("DOMContentLoaded", () => {
     initUi();
     disableNumberScroll();
+    fixTextareaEnter();
 });
