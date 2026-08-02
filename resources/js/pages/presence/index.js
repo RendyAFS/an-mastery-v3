@@ -192,7 +192,7 @@ const PageScript = (function () {
         });
 
         $("#notes").val(data.notes ?? "");
-        $("#generate_value").val(10000);
+        $("#generate_value").val(0);
         RupiahInput.refresh(document.getElementById("generate_value"));
 
         updateModalDates(
@@ -218,6 +218,14 @@ const PageScript = (function () {
         } catch (error) {
             console.error("Fetch presence error:", error);
         }
+    };
+
+    const handleQuickAmount = (btn) => {
+        const target = document.querySelector(btn.dataset.target);
+        if (!target) return;
+
+        target.value = btn.dataset.quickAmount;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
     };
 
     const submitForm = async (submitter) => {
@@ -268,6 +276,10 @@ const PageScript = (function () {
             const monday = isoWeekToMonday(value);
             setCurrentWeek(monday);
             reloadDatatable();
+        });
+
+        $(document).on("click", "[data-quick-amount]", function () {
+            handleQuickAmount(this);
         });
 
         $(document).on("click", "#presences-datatable tbody tr", function () {

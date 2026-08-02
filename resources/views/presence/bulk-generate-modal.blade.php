@@ -49,11 +49,24 @@
                             Nominal per day
                         </label>
                         <input type="text" inputmode="numeric" id="bulk_amount" name="amount" data-rupiah
-                            value="10000"
+                            value="0"
                             class="mt-1 px-4 py-2 block w-full rounded-lg
                                 bg-(--color-light-gray) border border-(--color-gray)
                                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            @foreach ([5000, 8000, 10000, 12000] as $quick)
+                                <button type="button" data-quick-amount="{{ $quick }}"
+                                    data-target="#bulk_amount"
+                                    class="btn-quick-amount px-3 py-1 text-xs rounded-lg
+                                        bg-(--color-light-gray) border border-(--color-gray)
+                                        text-(--color-dark) hover:bg-(--color-gray)/40
+                                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
+                                        cursor-pointer">
+                                    {{ number_format($quick, 0, ',', '.') }}
+                                </button>
+                            @endforeach
+                        </div>
                     </div>
 
                     <div>

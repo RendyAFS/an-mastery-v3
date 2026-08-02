@@ -47,7 +47,7 @@ const BulkGenerateModal = (function () {
 
     const resetForm = async () => {
         $("#bulk_week_of").val(dateToIsoWeek(getCurrentWeekOf()));
-        $("#bulk_amount").val("10000");
+        $("#bulk_amount").val("0");
         RupiahInput.refresh(document.getElementById("bulk_amount"));
         $("#bulk_check_all").prop("checked", false);
 
@@ -62,6 +62,14 @@ const BulkGenerateModal = (function () {
     };
 
     const close = () => HSOverlay.close("#hs-bulk-generate-modal");
+
+    const handleQuickAmount = (btn) => {
+        const target = document.querySelector(btn.dataset.target);
+        if (!target) return;
+
+        target.value = btn.dataset.quickAmount;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+    };
 
     const submit = async (submitter) => {
         const weekValue = $("#bulk_week_of").val();
@@ -110,6 +118,10 @@ const BulkGenerateModal = (function () {
 
     const bindEvents = () => {
         $("#btn-bulk-generate").on("click", open);
+
+        $(document).on("click", "[data-quick-amount]", function () {
+            handleQuickAmount(this);
+        });
 
         $(document).on("change", "#bulk_check_all", function () {
             $(".bulk-employee-checkbox").prop(
