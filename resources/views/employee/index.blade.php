@@ -43,7 +43,7 @@
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Is Active
+                            {{ __('ui.Is Active') }}
                         </div>
                     </th>
                     <th

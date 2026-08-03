@@ -29,6 +29,8 @@
     // CRUD
     $langUser = collect(trans('user'))->toArray();
     $langEmployee = collect(trans('employee'))->toArray();
+    $langRole = collect(trans('role'))->toArray();
+    $langSupplier = collect(trans('supplier'))->toArray();
     // END CRUD
 @endphp
 
@@ -41,5 +43,7 @@
     // CRUD
     window.langUser = @json($langUser);
     window.langEmployee = @json($langEmployee);
+    window.langRole = @json($langRole);
+    window.langSupplier = @json($langSupplier);
     // END CRUD
 </script>

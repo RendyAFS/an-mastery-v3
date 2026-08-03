@@ -13,7 +13,7 @@ return [
     'Presence'             => 'Presensi',
     'PriceEmployee'        => 'Harga Karyawan',
     'PriceSupplier'        => 'Harga Konveksi',
-    'Role'                 => 'Peran',
+    'Role'                 => 'Role',
     'Sablon'               => 'Sablon',
     'SablonDetail'         => 'Detail Sablon',
     'SablonEmployeeDetail' => 'Detail Karyawan Sablon',

@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main', ['title' => __('models.Role')])
 
 @push('scripts')
     @vite('resources/js/pages/role/list.js')
@@ -8,15 +8,15 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Roles</h1>
-                <p class="text-sm">Manage role data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.Role') }}</h1>
+                <p class="text-sm">{{ __('role.description') }}</p>
             </div>
 
             <a href="{{ route('roles.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Role
+                {{ __('crud.add_title', ['model' => __('models.Role')]) }}
             </a>
         </div>
 
@@ -25,10 +25,10 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Name</th>
+                        {{ __('role.fields.name') }}</th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        <div class="flex justify-center items-center w-full">Total Users</div>
+                        <div class="flex justify-center items-center w-full">{{ __('role.total_users_column') }}</div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

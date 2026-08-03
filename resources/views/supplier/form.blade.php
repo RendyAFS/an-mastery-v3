@@ -2,7 +2,7 @@
     <div class="col-span-1">
         <div class="mb-2 space-y-2">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Name
+                {{ __('supplier.fields.name') }}
             </label>
 
             <input type="text" id="name" name="name" value="{{ $supplier->name ?? '' }}" required
@@ -12,7 +12,7 @@
         </div>
         <div class="mb-2 space-y-2">
             <label for="contact" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Contact
+                {{ __('supplier.fields.contact') }}
             </label>
 
             <input type="text" id="contact" name="contact" value="{{ $supplier->contact ?? '' }}" required
@@ -23,7 +23,7 @@
 
         <div class="mb-2 space-y-2">
             <label for="address" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Address
+                {{ __('supplier.fields.address') }}
             </label>
 
             <textarea id="address" name="address" rows="3"
@@ -34,7 +34,7 @@
 
         <div class="mb-2 space-y-2">
             <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Notes
+                {{ __('supplier.fields.notes') }}
             </label>
 
             <textarea id="notes" name="notes" rows="3"

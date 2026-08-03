@@ -1,8 +1,10 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let datatable;
+    const modelName = window.langModels?.Role ?? "Role";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -31,7 +33,7 @@ const PageScript = (function () {
                     render(data) {
                         return `
                             <div class="badge badge-primary">
-                                ${data} User
+                                ${trans("langRole", "total_users_badge", { count: data })}
                             </div>
                         `;
                     },
@@ -71,7 +73,7 @@ const PageScript = (function () {
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
+                                            ${window.langUi?.Edit ?? "Edit"}
                                         </a>
 
                                         <button type="button" data-role-id="${id}"
@@ -79,7 +81,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
+                                            ${window.langUi?.Delete ?? "Delete"}
                                         </button>
                                         `
                                         : `
@@ -88,7 +90,7 @@ const PageScript = (function () {
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
+                                            ${window.langUi?.Restore ?? "Restore"}
                                         </button>
 
                                         <button type="button" data-role-id="${id}"
@@ -96,7 +98,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
+                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
                                         </button>
                                         `
                                 }
@@ -119,8 +121,11 @@ const PageScript = (function () {
     };
 
     const handleDelete = async (roleId) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this role? This action cannot be undone.",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "delete_confirm_message", { model: modelName }),
+            trans("langCrud", "delete_confirm_title"),
+            window.langCustomAlert.delete,
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) {
@@ -129,7 +134,10 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.delete(route("roles.destroy", roleId));
-            Toast.success("Success", "Role deleted successfully");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "deleted", { model: modelName }),
+            );
 
             reloadDatatable();
         } catch (error) {
@@ -144,15 +152,20 @@ const PageScript = (function () {
 
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this role?",
-            "Confirmation",
+            trans("langCrud", "restore_confirm_message_short", {
+                model: modelName,
+            }),
+            trans("langCrud", "restore_confirm_title"),
         );
 
         if (!confirmed) return;
 
         await ApiProvider.put(route("roles.restore", id));
 
-        Toast.success("Success", "Role restored");
+        Toast.success(
+            window.langCustomAlert.success,
+            trans("langCrud", "restored", { model: modelName }),
+        );
         reloadDatatable();
     };
 
@@ -162,15 +175,23 @@ const PageScript = (function () {
     });
 
     const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the role. Continue?",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "force_delete_confirm_message", {
+                model: modelName,
+            }),
+            trans("langCrud", "force_delete_confirm_title"),
+            window.langUi?.["Force Delete"],
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         await ApiProvider.delete(route("roles.force-delete", id));
 
-        Toast.success("Success", "Role permanently deleted");
+        Toast.success(
+            window.langCustomAlert.success,
+            trans("langCrud", "force_deleted", { model: modelName }),
+        );
         reloadDatatable();
     };
 
