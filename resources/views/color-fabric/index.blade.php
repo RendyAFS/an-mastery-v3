@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Color Fabric'])
+@extends('layouts.main', ['title' => __('models.ColorFabric')])
 
 @push('scripts')
     @vite('resources/js/pages/color-fabric/list.js')
@@ -8,8 +8,8 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Color Fabric</h1>
-                <p class="text-sm">Manage color fabric data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.ColorFabric') }}</h1>
+                <p class="text-sm">{{ __('color-fabric.description') }}</p>
             </div>
 
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-color-fabric-modal"
@@ -17,7 +17,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Color Fabric
+                {{ __('crud.add_title', ['model' => __('models.ColorFabric')]) }}
             </button>
         </div>
 
@@ -26,17 +26,17 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Name
+                        {{ __('color-fabric.fields.name') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Code Color
+                            {{ __('color-fabric.fields.code_color') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('color-fabric.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

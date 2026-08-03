@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Type Color'])
+@extends('layouts.main', ['title' => __('models.TypeColor')])
 
 @push('scripts')
     @vite('resources/js/pages/type-color/list.js')
@@ -8,8 +8,8 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Type Color</h1>
-                <p class="text-sm">Manage type color data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.TypeColor') }}</h1>
+                <p class="text-sm">{{ __('type-color.description') }}</p>
             </div>
 
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-type-color-modal"
@@ -17,7 +17,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Type Color
+                {{ __('crud.add_title', ['model' => __('models.TypeColor')]) }}
             </button>
         </div>
 
@@ -27,12 +27,12 @@
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-left items-left w-full">
-                            Name
+                            {{ __('type-color.fields.name') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('type-color.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

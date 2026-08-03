@@ -33,6 +33,9 @@
     $langRole = collect(trans('role'))->toArray();
     $langSupplier = collect(trans('supplier'))->toArray();
     $langImageFabric = collect(trans('image-fabric'))->toArray();
+    $langColorFabric = collect(trans('color-fabric'))->toArray();
+    $langTypeFabric = collect(trans('type-fabric'))->toArray();
+    $langTypeColor = collect(trans('type-color'))->toArray();
     // END CRUD
 @endphp
 
@@ -49,5 +52,8 @@
     window.langRole = @json($langRole);
     window.langSupplier = @json($langSupplier);
     window.langImageFabric = @json($langImageFabric);
+    window.langColorFabric = @json($langColorFabric);
+    window.langTypeFabric = @json($langTypeFabric);
+    window.langTypeColor = @json($langTypeColor);
     // END CRUD
 </script>
