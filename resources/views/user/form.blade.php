@@ -2,7 +2,7 @@
     <div class="col-span-1">
         <div class="mb-2 space-y-2">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Name
+                {{ __('user.fields.name') }}
             </label>
 
             <input type="text" id="name" name="name" value="{{ $user->name ?? '' }}" required
@@ -13,7 +13,7 @@
 
         <div class="mb-2 space-y-2">
             <label for="email" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Email
+                {{ __('user.fields.email') }}
             </label>
 
             <input type="email" id="email" name="email" value="{{ $user->email ?? '' }}" required
@@ -24,7 +24,7 @@
 
         <div class="mb-2 space-y-2" x-data="{ show: false }">
             <label for="password" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Password
+                {{ __('user.fields.password') }}
             </label>
 
             <div class="relative mt-1">
@@ -35,7 +35,7 @@
                    text-(--color-dark) dark:text-(--color-light)
                    focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    disabled:opacity-50 disabled:pointer-events-none"
-                    placeholder="Enter password">
+                    placeholder="{{ __('user.password_placeholder') }}">
 
                 <button type="button" @click="show = !show" tabindex="-1"
                     class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
@@ -46,7 +46,7 @@
 
             @isset($user)
                 <small class="text-xs text-(--color-dark-gray)">
-                    Kosongkan jika tidak ingin mengubah password
+                    {{ __('user.password_hint') }}
                 </small>
             @endisset
         </div>
@@ -54,7 +54,7 @@
         <div class="mb-2 space-y-2" x-data="{ showConfirm: false }">
             <label for="password_confirmation"
                 class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Confirm Password
+                {{ __('user.fields.password_confirmation') }}
             </label>
 
             <div class="relative mt-1">
@@ -66,7 +66,7 @@
                    text-(--color-dark) dark:text-(--color-light)
                    focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    disabled:opacity-50 disabled:pointer-events-none"
-                    placeholder="Confirm password">
+                    placeholder="{{ __('user.password_confirmation_placeholder') }}">
 
                 <button type="button" @click="showConfirm = !showConfirm" tabindex="-1"
                     class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/70 hover:text-(--color-primary) transition cursor-pointer">
@@ -77,15 +77,16 @@
 
             @isset($user)
                 <small class="text-xs text-(--color-dark-gray)">
-                    Kosongkan jika tidak ingin mengubah password
+                    {{ __('user.password_hint') }}
                 </small>
             @endisset
         </div>
     </div>
     <div class="col-span-1">
         <div class="mb-2 space-y-2">
-            <x-select id="roles" name="roles" label="Role" :options="$roles" :value="$user->role_id ?? null"
-                placeholder="Choose Role" search-placeholder="Search role..." clearable="true" />
+            <x-select id="roles" name="roles" label="{{ __('user.fields.role') }}" :options="$roles"
+                :value="$user->role_id ?? null" placeholder="{{ __('user.role_placeholder') }}"
+                search-placeholder="{{ __('user.role_search_placeholder') }}" clearable="true" />
         </div>
 
         <div class="mb-6 flex items-center">
@@ -94,7 +95,7 @@
 
             <label for="is_active"
                 class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
-                Is Active
+                {{ __('ui.Is Active') }}
             </label>
         </div>
     </div>

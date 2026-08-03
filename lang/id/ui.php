@@ -6,4 +6,5 @@ return [
     'Delete'       => 'Hapus',
     'Restore'      => 'Pulihkan',
     'Force Delete' => 'Hapus Permanen',
+    'Is Active'    => 'Aktif',
 ];

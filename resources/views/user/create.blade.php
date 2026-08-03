@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Create User'])
+@extends('layouts.main', ['title' => __('crud.add_title', ['model' => __('models.User')])])
 
 @push('scripts')
     @vite('resources/js/pages/user/form.js')
@@ -14,7 +14,7 @@
             {{-- Header --}}
             <div class="p-4 md:p-5">
                 <h3 class="text-2xl font-bold text-(--color-dark) dark:text-(--color-light)">
-                    Create User
+                    {{ __('crud.add_title', ['model' => __('models.User')]) }}
                 </h3>
 
                 <div class="mt-6">
@@ -28,25 +28,24 @@
                    rounded-b-xl py-3 px-4 md:px-5 flex gap-2
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
-                <x-button-loading type="submit" text="Save" loadingText="Saving..."
+                <x-button-loading type="submit" text="{{ __('button-loading.Save') }}"
+                    loadingText="{{ __('button-loading.Saving...') }}"
                     color="bg-(--color-success) hover:bg-(--color-success)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
-                <x-button-loading type="submit" text="Save & Create Another" loadingText="Saving..."
+                <x-button-loading type="submit" :text="__('button-loading.Save & Create Another')" loadingText="{{ __('button-loading.Saving...') }}"
                     color="bg-(--color-light) hover:bg-(--color-light-gray)"
                     textColor="text-(--color-primary) hover:text-(--color-primary) dark:text-(--color-light) dark:hover:text-(--color-light)"
                     size="py-2 px-4 text-sm" rounded="rounded-lg"
-                    class="flex items-center gap-x-2 cursor-pointer
-                    border border-(--color-gray) dark:bg-(--color-dark)
-                    dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"
+                    class="flex items-center gap-x-2 cursor-pointer border border-(--color-gray) dark:bg-(--color-dark) dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate)"
                     data-action="save-another" />
 
                 <a href="{{ route('users.index') }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
                        bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">
-                    Cancel
+                    {{ __('button-loading.Cancel') }}
                 </a>
             </div>
         </div>

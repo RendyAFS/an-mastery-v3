@@ -1,9 +1,11 @@
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let form, mode, id;
+    const modelName = window.langModels?.User ?? "User";
 
     function bindEvents() {
         if (!form) return;
@@ -40,19 +42,27 @@ const PageScript = (function () {
             if (mode === "create") {
                 await ApiProvider.post(route("users.store"), payload);
 
+                const message = trans("langCrud", "created", {
+                    model: modelName,
+                });
+
                 if (action === "save-another") {
-                    Toast.success("Success", "User Successfully Created");
+                    Toast.success(window.langCustomAlert.success, message);
                     resetForm();
                     return;
                 }
 
-                flashToast("success", "Success", "User Successfully Created");
+                flashToast("success", window.langCustomAlert.success, message);
                 window.location.href = route("users.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(route("users.update", id), payload);
-                flashToast("success", "Success", "User Successfully Updated");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
                 window.location.href = route("users.index");
             }
         } catch (error) {
