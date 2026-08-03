@@ -36,6 +36,8 @@
     $langColorFabric = collect(trans('color-fabric'))->toArray();
     $langTypeFabric = collect(trans('type-fabric'))->toArray();
     $langTypeColor = collect(trans('type-color'))->toArray();
+    $langPriceSupplier = collect(trans('price-supplier'))->toArray();
+    $langPriceEmployee = collect(trans('price-employee'))->toArray();
     // END CRUD
 @endphp
 
@@ -55,5 +57,7 @@
     window.langColorFabric = @json($langColorFabric);
     window.langTypeFabric = @json($langTypeFabric);
     window.langTypeColor = @json($langTypeColor);
+    window.langPriceSupplier = @json($langPriceSupplier);
+    window.langPriceEmployee = @json($langPriceEmployee);
     // END CRUD
 </script>

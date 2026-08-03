@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Price Supplier'])
+@extends('layouts.main', ['title' => __('models.PriceSupplier')])
 
 @push('scripts')
     @vite('resources/js/pages/price-supplier/list.js')
@@ -8,8 +8,8 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Price Supplier</h1>
-                <p class="text-sm">Manage price supplier data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.PriceSupplier') }}</h1>
+                <p class="text-sm">{{ __('price-supplier.description') }}</p>
             </div>
 
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-price-supplier-modal"
@@ -17,7 +17,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Price Supplier
+                {{ __('crud.add_title', ['model' => __('models.PriceSupplier')]) }}
             </button>
         </div>
 
@@ -26,29 +26,29 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Supplier
+                        {{ __('price-supplier.fields.supplier') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Type Fabric
+                            {{ __('price-supplier.fields.type_fabric') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Type Color
+                            {{ __('price-supplier.fields.type_color') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Price
+                            {{ __('price-supplier.fields.price') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('price-supplier.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

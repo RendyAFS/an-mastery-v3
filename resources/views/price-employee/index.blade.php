@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Price Employee'])
+@extends('layouts.main', ['title' => __('models.PriceEmployee')])
 
 @push('scripts')
     @vite('resources/js/pages/price-employee/list.js')
@@ -8,8 +8,8 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Price Employee</h1>
-                <p class="text-sm">Manage price employee data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.PriceEmployee') }}</h1>
+                <p class="text-sm">{{ __('price-employee.description') }}</p>
             </div>
 
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-price-employee-modal"
@@ -17,7 +17,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Price Employee
+                {{ __('crud.add_title', ['model' => __('models.PriceEmployee')]) }}
             </button>
         </div>
 
@@ -27,24 +27,24 @@
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Type Fabric
+                            {{ __('price-employee.fields.type_fabric') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Type Color
+                            {{ __('price-employee.fields.type_color') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Price
+                            {{ __('price-employee.fields.price') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('price-employee.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
