@@ -2,9 +2,11 @@ import ApiProvider from "@/utils/api-provider";
 import FilePondHelper from "@/utils/filepond";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let form, mode, id, pond;
+    const modelName = window.langModels?.ImageFabric ?? "Image Fabric";
 
     function bindEvents() {
         if (!form) return;
@@ -25,7 +27,6 @@ const PageScript = (function () {
 
     function resetForm() {
         form.reset();
-        // Reset hidden fields
         document.getElementById("image_tmp").value = "";
         document.getElementById("remove_image").value = "0";
         if (pond) {
@@ -43,20 +44,17 @@ const PageScript = (function () {
             if (mode === "create") {
                 await ApiProvider.post(route("image_fabrics.store"), payload);
 
+                const message = trans("langCrud", "created", {
+                    model: modelName,
+                });
+
                 if (action === "save-another") {
-                    Toast.success(
-                        "Success",
-                        "Image Fabric Successfully Created",
-                    );
+                    Toast.success(window.langCustomAlert.success, message);
                     resetForm();
                     return;
                 }
 
-                flashToast(
-                    "success",
-                    "Success",
-                    "Image Fabric Successfully Created",
-                );
+                flashToast("success", window.langCustomAlert.success, message);
                 window.location.href = route("image_fabrics.index");
             }
 
@@ -67,8 +65,8 @@ const PageScript = (function () {
                 );
                 flashToast(
                     "success",
-                    "Success",
-                    "Image Fabric Successfully Updated",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
                 );
                 window.location.href = route("image_fabrics.index");
             }

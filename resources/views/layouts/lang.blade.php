@@ -2,6 +2,7 @@
     $langCrud = collect(trans('crud'))->toArray();
     $langModels = collect(trans('models'))->toArray();
     $langUi = collect(trans('ui'))->toArray();
+    $langFilepond = collect(trans('filepond'))->toArray();
     $langCustomAlert = [
         'success' => __('custom-alert.Success'),
         'info' => __('custom-alert.Information'),
@@ -31,6 +32,7 @@
     $langEmployee = collect(trans('employee'))->toArray();
     $langRole = collect(trans('role'))->toArray();
     $langSupplier = collect(trans('supplier'))->toArray();
+    $langImageFabric = collect(trans('image-fabric'))->toArray();
     // END CRUD
 @endphp
 
@@ -40,10 +42,12 @@
     window.langCrud = @json($langCrud);
     window.langModels = @json($langModels);
     window.langUi = @json($langUi);
+    window.langFilepond = @json($langFilepond);
     // CRUD
     window.langUser = @json($langUser);
     window.langEmployee = @json($langEmployee);
     window.langRole = @json($langRole);
     window.langSupplier = @json($langSupplier);
+    window.langImageFabric = @json($langImageFabric);
     // END CRUD
 </script>

@@ -2,7 +2,7 @@
 
     {{-- Image Upload --}}
     <div class="space-y-2">
-        <label class="block text-sm font-medium">Image</label>
+        <label class="block text-sm font-medium">{{ __('image-fabric.fields.image') }}</label>
 
         {{-- URL publik untuk fallback --}}
         <input type="hidden" id="image-preview"
@@ -20,9 +20,9 @@
 
     {{-- Name --}}
     <div class="space-y-2">
-        <label class="block text-sm font-medium">Name</label>
+        <label class="block text-sm font-medium">{{ __('image-fabric.fields.name') }}</label>
         <input type="text" name="name" value="{{ isset($imageFabric) ? $imageFabric->name : '' }}"
-            placeholder="Enter name" required
+            placeholder="{{ __('image-fabric.name_placeholder') }}" required
             class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -30,8 +30,8 @@
 
     {{-- Notes --}}
     <div class="space-y-2">
-        <label class="block text-sm font-medium">Notes</label>
-        <textarea name="notes" rows="4" placeholder="Enter notes"
+        <label class="block text-sm font-medium">{{ __('image-fabric.fields.notes') }}</label>
+        <textarea name="notes" rows="4" placeholder="{{ __('image-fabric.notes_placeholder') }}"
             class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">{{ isset($imageFabric) ? $imageFabric->notes : '' }}</textarea>

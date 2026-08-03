@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Image Fabric'])
+@extends('layouts.main', ['title' => __('models.ImageFabric')])
 
 @push('scripts')
     @vite('resources/js/pages/image-fabric/list.js')
@@ -8,14 +8,14 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Image Fabric</h1>
-                <p class="text-sm">Manage image fabric data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.ImageFabric') }}</h1>
+                <p class="text-sm">{{ __('image-fabric.description') }}</p>
             </div>
             <a href="{{ route('image_fabrics.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Image Fabric
+                {{ __('crud.add_title', ['model' => __('models.ImageFabric')]) }}
             </a>
         </div>
 
