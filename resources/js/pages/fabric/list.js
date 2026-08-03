@@ -1,8 +1,10 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let datatable;
+    const modelName = window.langModels?.Fabric ?? "Fabric";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -61,26 +63,29 @@ const PageScript = (function () {
                             ? `${data.total_pcs} pcs / ${data.seri} seri (${excessParts})`
                             : `${data.total_pcs} pcs total / ${data.seri} seri`;
 
-                        let rows = data.colors.map((color) => {
-                            const dotColor = color.color || "#9ca3af";
+                        let rows = data.colors
+                            .map((color) => {
+                                const dotColor = color.color || "#9ca3af";
 
-                            let badges = (color.statuses || [])
-                                .filter((s) => s.count > 0)
-                                .map((s) => {
-                                    const cls = statusBadgeMap[s.status] || "badge-primary";
-                                    return `
+                                let badges = (color.statuses || [])
+                                    .filter((s) => s.count > 0)
+                                    .map((s) => {
+                                        const cls =
+                                            statusBadgeMap[s.status] ||
+                                            "badge-primary";
+                                        return `
                                         <span class="badge ${cls}">
                                             ${s.label}: ${s.count}
                                         </span>
                                     `;
-                                })
-                                .join("");
+                                    })
+                                    .join("");
 
-                            if (!badges) {
-                                badges = `<span class="text-[11px] text-gray-400">Belum ada sablon</span>`;
-                            }
+                                if (!badges) {
+                                    badges = `<span class="text-[11px] text-gray-400">${window.langFabric?.no_sablon_yet ?? ""}</span>`;
+                                }
 
-                            return `
+                                return `
                                 <div class="flex items-center justify-between px-3 py-1.5 gap-2">
                                     <div class="flex items-center gap-2">
                                         <span class="size-2.5 rounded-full shrink-0" style="background-color: ${dotColor}"></span>
@@ -92,7 +97,8 @@ const PageScript = (function () {
                                     </div>
                                 </div>
                             `;
-                        }).join("");
+                            })
+                            .join("");
 
                         return `
                             <div class="rounded-xl border border-(--color-gray)/20
@@ -121,7 +127,7 @@ const PageScript = (function () {
                                     </div>
 
                                     <div class="text-[11px] text-(--color-dark-gray)">
-                                        Incoming : ${data.date_coming ?? "-"}
+                                        ${window.langFabric?.incoming_label ?? "Incoming"} : ${data.date_coming ?? "-"}
                                     </div>
                                 </div>
 
@@ -131,7 +137,7 @@ const PageScript = (function () {
                                 </div>
                             </div>
                         `;
-                    }
+                    },
                 },
                 {
                     data: "notes",
@@ -142,7 +148,7 @@ const PageScript = (function () {
                                 ${data ?? "-"}
                             </div>
                         `;
-                    }
+                    },
                 },
                 {
                     data: "id",
@@ -179,7 +185,7 @@ const PageScript = (function () {
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
+                                            ${window.langUi?.Edit ?? "Edit"}
                                         </a>
 
                                         <button type="button" data-fabric-id="${id}"
@@ -187,7 +193,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
+                                            ${window.langUi?.Delete ?? "Delete"}
                                         </button>
                                         `
                                         : `
@@ -196,7 +202,7 @@ const PageScript = (function () {
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
+                                            ${window.langUi?.Restore ?? "Restore"}
                                         </button>
 
                                         <button type="button" data-fabric-id="${id}"
@@ -204,7 +210,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
+                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
                                         </button>
                                         `
                                 }
@@ -224,11 +230,24 @@ const PageScript = (function () {
             const fabricId = $(this).data("fabric-id");
             handleDelete(fabricId);
         });
+
+        $(document).on("click", ".btn-restore", function () {
+            const id = $(this).data("fabric-id");
+            handleRestore(id);
+        });
+
+        $(document).on("click", ".btn-force-delete", function () {
+            const id = $(this).data("fabric-id");
+            handleForceDelete(id);
+        });
     };
 
     const handleDelete = async (fabricId) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this fabric? This action cannot be undone.",
+        const confirmed = await Confirm.show(
+            window.langFabric.delete_confirm_message,
+            trans("langCrud", "delete_confirm_title"),
+            window.langCustomAlert.delete,
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) {
@@ -237,7 +256,10 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.delete(route("fabrics.destroy", fabricId));
-            Toast.success("Success", "User deleted successfully");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "deleted", { model: modelName }),
+            );
 
             reloadDatatable();
         } catch (error) {
@@ -245,41 +267,48 @@ const PageScript = (function () {
         }
     };
 
-    $(document).on("click", ".btn-restore", function () {
-        const id = $(this).data("fabric-id");
-        handleRestore(id);
-    });
-
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this fabric?",
-            "Confirmation",
+            window.langFabric.restore_confirm_message,
+            trans("langCrud", "restore_confirm_title"),
         );
 
         if (!confirmed) return;
 
-        await ApiProvider.put(route("fabrics.restore", id));
+        try {
+            await ApiProvider.put(route("fabrics.restore", id));
 
-        Toast.success("Success", "User restored");
-        reloadDatatable();
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "restored", { model: modelName }),
+            );
+            reloadDatatable();
+        } catch (error) {
+            console.error("Restore fabric error:", error);
+        }
     };
 
-    $(document).on("click", ".btn-force-delete", function () {
-        const id = $(this).data("fabric-id");
-        handleForceDelete(id);
-    });
-
     const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the fabric. Continue?",
+        const confirmed = await Confirm.show(
+            window.langFabric.force_delete_confirm_message,
+            trans("langCrud", "force_delete_confirm_title"),
+            window.langUi?.["Force Delete"],
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
-        await ApiProvider.delete(route("fabrics.force-delete", id));
+        try {
+            await ApiProvider.delete(route("fabrics.force-delete", id));
 
-        Toast.success("Success", "User permanently deleted");
-        reloadDatatable();
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "force_deleted", { model: modelName }),
+            );
+            reloadDatatable();
+        } catch (error) {
+            console.error("Force delete fabric error:", error);
+        }
     };
 
     return {

@@ -2,6 +2,7 @@ import Alpine from "alpinejs";
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 document.addEventListener("alpine:init", () => {
     Alpine.data("fabricForm", (initialRows = [], colorFabrics = {}) => ({
@@ -68,6 +69,7 @@ document.addEventListener("alpine:init", () => {
 
 const PageScript = (function () {
     let form, mode, id;
+    const modelName = window.langModels?.Fabric ?? "Fabric";
 
     function bindEvents() {
         if (!form) return;
@@ -120,18 +122,29 @@ const PageScript = (function () {
                 await ApiProvider.post(route("fabrics.store"), payload);
 
                 if (action === "save-another") {
-                    Toast.success("Success", "Fabric Successfully Created");
+                    Toast.success(
+                        window.langCustomAlert.success,
+                        trans("langCrud", "created", { model: modelName }),
+                    );
                     resetForm();
                     return;
                 }
 
-                flashToast("success", "Success", "Fabric Successfully Created");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "created", { model: modelName }),
+                );
                 window.location.href = route("fabrics.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(route("fabrics.update", id), payload);
-                flashToast("success", "Success", "Fabric Successfully Updated");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
                 window.location.href = route("fabrics.index");
             }
         } catch (error) {

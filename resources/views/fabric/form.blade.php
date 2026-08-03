@@ -10,23 +10,24 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="col-span-1">
             <div class="mb-2 space-y-2">
-                <x-select id="supplier_id" name="supplier_id" label="Supplier" :options="$suppliers" :value="$fabric->supplier_id ?? null"
-                    placeholder="Choose Supplier" search-placeholder="Search supplier..." clearable="true" />
+                <x-select id="supplier_id" name="supplier_id" label="{{ __('fabric.fields.supplier') }}" :options="$suppliers"
+                    :value="$fabric->supplier_id ?? null" placeholder="{{ __('fabric.placeholders.supplier') }}"
+                    search-placeholder="{{ __('fabric.search_placeholders.supplier') }}" clearable="true" />
             </div>
         </div>
 
         <div class="col-span-1">
             <div class="mb-2 space-y-2">
-                <x-select id="type_fabric_id" name="type_fabric_id" label="Type Fabric" :options="$typeFabrics"
-                    :value="$fabric->type_fabric_id ?? null" placeholder="Choose Type Fabric" search-placeholder="Search type fabric..."
-                    clearable="true" />
+                <x-select id="type_fabric_id" name="type_fabric_id" label="{{ __('fabric.fields.type_fabric') }}"
+                    :options="$typeFabrics" :value="$fabric->type_fabric_id ?? null" placeholder="{{ __('fabric.placeholders.type_fabric') }}"
+                    search-placeholder="{{ __('fabric.search_placeholders.type_fabric') }}" clearable="true" />
             </div>
         </div>
 
         <div class="col-span-1">
             <div class="mb-2 space-y-2">
                 <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    Total Stock
+                    {{ __('fabric.fields.total_stock') }}
                 </label>
 
                 <input type="text" :value="totalStock" disabled readonly
@@ -35,7 +36,7 @@
                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-dark-gray)">
 
                 <small class="text-xs text-(--color-dark-gray)">
-                    Otomatis terhitung dari total stock Fabric Detail
+                    {{ __('fabric.hints.total_stock') }}
                 </small>
             </div>
         </div>
@@ -43,7 +44,7 @@
         <div class="col-span-1">
             <div class="mb-2 space-y-2">
                 <label for="seri" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    Type Seri
+                    {{ __('fabric.fields.type_seri') }}
                 </label>
 
                 <input type="number" id="seri" name="seri" min="1" value="{{ $fabric->seri ?? 4 }}"
@@ -58,7 +59,7 @@
             <div class="col-span-1">
                 <div class="mb-2 space-y-2">
                     <label for="code" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        Code
+                        {{ __('fabric.fields.code') }}
                     </label>
 
                     <input type="text" id="code" value="{{ $fabric->code }}" disabled readonly
@@ -67,7 +68,7 @@
                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-dark-gray)">
 
                     <small class="text-xs text-(--color-dark-gray)">
-                        Code dibuat otomatis dari Supplier dan timestamp
+                        {{ __('fabric.hints.code') }}
                     </small>
                 </div>
             </div>
@@ -75,7 +76,7 @@
 
         <div class="mb-2 space-y-2">
             <label for="date_coming" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Date Coming
+                {{ __('fabric.fields.date_coming') }}
             </label>
             <input type="date" id="date_coming" name="date_coming"
                 value="{{ old('date_coming', $fabric?->date_coming?->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
@@ -87,7 +88,7 @@
         <div class="col-span-1 md:col-span-2">
             <div class="mb-2 space-y-2">
                 <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    Notes
+                    {{ __('fabric.fields.notes') }}
                 </label>
 
                 <textarea id="notes" name="notes" rows="3" maxlength="255"
@@ -102,13 +103,13 @@
     <div class="mt-2">
         <div class="flex items-center justify-between mb-3">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                Fabric Detail (Warna & Stock)
+                {{ __('fabric.detail.title') }}
             </label>
 
             <button type="button" @click="addRow()"
                 class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Detail
+                {{ __('fabric.detail.add') }}
             </button>
         </div>
 
@@ -117,11 +118,16 @@
                 <thead>
                     <tr
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) text-(--color-dark) dark:text-(--color-light)">
-                        <th class="px-4 py-3 text-left font-semibold" style="width: 5%">No</th>
-                        <th class="px-4 py-3 text-left font-semibold" style="width: 35%">Color Fabric</th>
-                        <th class="px-4 py-3 text-left font-semibold" style="width: 25%">Stock</th>
-                        <th class="px-4 py-3 text-left font-semibold" style="width: 25%">Notes</th>
-                        <th class="px-4 py-3 text-center font-semibold" style="width: 10%">Action</th>
+                        <th class="px-4 py-3 text-left font-semibold" style="width: 5%">{{ __('fabric.detail.no') }}
+                        </th>
+                        <th class="px-4 py-3 text-left font-semibold" style="width: 35%">
+                            {{ __('fabric.detail.color') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold" style="width: 25%">
+                            {{ __('fabric.detail.stock') }}</th>
+                        <th class="px-4 py-3 text-left font-semibold" style="width: 25%">
+                            {{ __('fabric.detail.notes') }}</th>
+                        <th class="px-4 py-3 text-center font-semibold" style="width: 10%">
+                            {{ __('fabric.detail.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -138,7 +144,8 @@
                                            bg-(--color-light-gray) border border-(--color-gray)
                                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer">
-                                        <span x-text="colorName(row.color_fabric_id) || 'Choose Color'"
+                                        <span
+                                            x-text="colorName(row.color_fabric_id) || '{{ __('fabric.placeholders.color') }}'"
                                             :class="!row.color_fabric_id && 'text-(--color-dark-gray)'"></span>
                                         <i data-lucide="chevron-down" class="size-4 text-(--color-dark-gray)"></i>
                                     </button>
@@ -147,7 +154,8 @@
                                         class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
                                            shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
                                         <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
-                                            <input type="text" x-model="row.search" placeholder="Search color..."
+                                            <input type="text" x-model="row.search"
+                                                placeholder="{{ __('fabric.search_placeholders.color') }}"
                                                 class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
                                                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -158,7 +166,7 @@
                                                 <li @click="row.color_fabric_id = ''; row.open = false"
                                                     class="px-4 py-2 text-sm text-(--color-danger) hover:bg-(--color-light-gray)
                                                        dark:hover:bg-(--color-dark-slate) cursor-pointer">
-                                                    Clear selection
+                                                    {{ __('fabric.clear_selection') }}
                                                 </li>
                                             </template>
 
@@ -171,7 +179,8 @@
                                             </template>
 
                                             <template x-if="filteredColors(row.search).length === 0">
-                                                <li class="px-4 py-2 text-sm text-(--color-dark-gray)">No color found
+                                                <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
+                                                    {{ __('fabric.no_color_found') }}
                                                 </li>
                                             </template>
                                         </ul>
