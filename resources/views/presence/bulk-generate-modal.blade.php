@@ -14,7 +14,7 @@
             <div
                 class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
                 <h3 id="hs-bulk-generate-modal-label" class="font-semibold text-(--color-dark) dark:text-(--color-light)">
-                    Generate Presence
+                    {{ __('presence.bulk.title') }}
                 </h3>
                 <button type="button"
                     class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full
@@ -34,7 +34,7 @@
                     <div>
                         <label for="bulk_week_of"
                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                            Week Of
+                            {{ __('presence.bulk.week_of') }}
                         </label>
                         <input type="week" id="bulk_week_of" name="week_of"
                             class="mt-1 px-4 py-2 block w-full rounded-lg
@@ -46,7 +46,7 @@
                     <div>
                         <label for="bulk_amount"
                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                            Nominal per day
+                            {{ __('presence.bulk.nominal_per_day') }}
                         </label>
                         <input type="text" inputmode="numeric" id="bulk_amount" name="amount" data-rupiah
                             value="0"
@@ -72,11 +72,11 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                                Employees
+                                {{ __('presence.bulk.employees') }}
                             </label>
                             <label class="flex items-center gap-2 text-sm cursor-pointer">
                                 <input type="checkbox" id="bulk_check_all" class="checkbox-custom" />
-                                Select all
+                                {{ __('presence.bulk.select_all') }}
                             </label>
                         </div>
                         <div id="bulk_employee_list"
@@ -86,7 +86,8 @@
                     </div>
 
                     <div class="flex gap-2 pt-2">
-                        <x-button-loading type="submit" text="Generate" loadingText="Generating..."
+                        <x-button-loading type="submit" text="{{ __('presence.generate') }}"
+                            loadingText="{{ __('button-loading.Saving...') }}"
                             color="bg-(--color-success) hover:bg-(--color-success)/70"
                             textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                             rounded="rounded-lg" class="cursor-pointer" />
@@ -95,7 +96,7 @@
                             class="px-4 py-2 text-sm font-semibold rounded-lg
                                 bg-(--color-danger) hover:bg-(--color-danger)/70
                                 text-(--color-light) cursor-pointer hover:opacity-90 transition">
-                            Cancel
+                            {{ __('button-loading.Cancel') }}
                         </button>
                     </div>
                 </form>

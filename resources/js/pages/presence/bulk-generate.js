@@ -30,7 +30,7 @@ const BulkGenerateModal = (function () {
 
         if (employees.length === 0) {
             $list.append(
-                `<p class="px-3 py-2 text-sm text-(--color-gray)">No employees found</p>`,
+                `<p class="px-3 py-2 text-sm text-(--color-gray)">${window.langPresence.bulk.no_employees_found}</p>`,
             );
             return;
         }
@@ -81,13 +81,19 @@ const BulkGenerateModal = (function () {
             .get();
 
         if (!weekValue) {
-            Toast.error("Error", "Please select a week");
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.bulk.select_week_error,
+            );
             stopLoading(submitter);
             return;
         }
 
         if (employeeIds.length === 0) {
-            Toast.error("Error", "Please select at least one employee");
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.bulk.select_employee_error,
+            );
             stopLoading(submitter);
             return;
         }
@@ -104,8 +110,8 @@ const BulkGenerateModal = (function () {
                 payload,
             );
             Toast.success(
-                "Success",
-                response.message ?? "Presence generated successfully",
+                window.langCustomAlert.success,
+                response.message ?? window.langPresence.bulk.generated_success,
             );
             close();
             onGenerated();

@@ -14,7 +14,7 @@
             <div
                 class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
                 <h3 id="hs-presence-modal-label" class="font-semibold text-(--color-dark) dark:text-(--color-light)">
-                    Presence
+                    {{ __('presence.modal_title_prefix') }}
                 </h3>
                 <button type="button"
                     class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full
@@ -38,7 +38,7 @@
                     <div>
                         <label for="generate_value"
                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                            Nominal per day
+                            {{ __('presence.nominal_per_day') }}
                         </label>
 
                         <div class="flex gap-2 mt-1">
@@ -54,7 +54,7 @@
 
                             <button type="button" id="btn-generate"
                                 class="px-4 py-2 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
-                                Generate
+                                {{ __('presence.generate') }}
                             </button>
                         </div>
 
@@ -76,24 +76,12 @@
                         </div>
                     </div>
 
-                    @php
-                        $dayLabels = [
-                            'monday' => 'Senin',
-                            'tuesday' => 'Selasa',
-                            'wednesday' => 'Rabu',
-                            'thursday' => 'Kamis',
-                            'friday' => 'Jumat',
-                            'saturday' => 'Sabtu',
-                            'sunday' => 'Minggu',
-                        ];
-                    @endphp
-
                     <div class="grid grid-cols-2 gap-3">
-                        @foreach ($dayLabels as $day => $label)
+                        @foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
                             <div>
                                 <label for="{{ $day }}"
                                     class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                                    {{ $label }}
+                                    {{ __("presence.days.$day") }}
                                     <span id="{{ $day }}-date" class="text-xs font-normal text-(--color-gray)">
                                     </span>
                                 </label>
@@ -110,7 +98,7 @@
                     <div class="col-span-full">
                         <label for="notes"
                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                            Notes
+                            {{ __('presence.notes') }}
                         </label>
                         <textarea id="notes" name="notes" rows="3"
                             class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
@@ -119,11 +107,12 @@
                     </div>
 
                     <div class="flex justify-between items-center pt-2 border-t dark:border-(--color-gray)/30">
-                        <span class="font-bold">Total: <span id="modal-total">Rp0</span></span>
+                        <span class="font-bold">{{ __('presence.total') }}: <span id="modal-total">Rp0</span></span>
                     </div>
 
                     <div class="flex gap-2 pt-2">
-                        <x-button-loading type="submit" text="Save" loadingText="Saving..."
+                        <x-button-loading type="submit" text="{{ __('button-loading.Save') }}"
+                            loadingText="{{ __('button-loading.Saving...') }}"
                             color="bg-(--color-success) hover:bg-(--color-success)/70"
                             textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                             rounded="rounded-lg" class="cursor-pointer" />
@@ -132,7 +121,7 @@
                             class="px-4 py-2 text-sm font-semibold rounded-lg
                                 bg-(--color-danger) hover:bg-(--color-danger)/70
                                 text-(--color-light) cursor-pointer hover:opacity-90 transition">
-                            Cancel
+                            {{ __('button-loading.Cancel') }}
                         </button>
                     </div>
                 </form>

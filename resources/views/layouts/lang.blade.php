@@ -38,6 +38,7 @@
     $langTypeColor = collect(trans('type-color'))->toArray();
     $langPriceSupplier = collect(trans('price-supplier'))->toArray();
     $langPriceEmployee = collect(trans('price-employee'))->toArray();
+    $langPresence = collect(trans('presence'))->toArray();
     // END CRUD
 @endphp
 
@@ -59,5 +60,6 @@
     window.langTypeColor = @json($langTypeColor);
     window.langPriceSupplier = @json($langPriceSupplier);
     window.langPriceEmployee = @json($langPriceEmployee);
+    window.langPresence = @json($langPresence);
     // END CRUD
 </script>

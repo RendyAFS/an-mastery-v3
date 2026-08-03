@@ -10,7 +10,7 @@ return [
     'ImageFabric'          => 'Gambar Kain',
     'Menu'                 => 'Menu',
     'MenuPermission'       => 'Izin Menu',
-    'Presence'             => 'Presensi',
+    'Presence'             => 'Absensi',
     'PriceEmployee'        => 'Harga Karyawan',
     'PriceSupplier'        => 'Harga Konveksi',
     'Role'                 => 'Role',
