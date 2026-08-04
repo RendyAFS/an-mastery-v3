@@ -8,6 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'AN Mastery' }}</title>
 
+    {{-- Icon Library (defer agar tidak blokir render, tapi tetap diparse lebih awal) --}}
+    <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
+
     {{-- Init Theme --}}
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
 
@@ -52,7 +55,7 @@
     <script>
         window.DataTable = window.jQuery.fn.dataTable;
     </script>
-    <script src="{{ asset('js/luicide-latest.js') }}"></script>
+
 
     {{-- LANG --}}
     @include('layouts.lang')
