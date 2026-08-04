@@ -76,6 +76,16 @@ return [
         'languages' => 'Bahasa',
     ],
 
+    // Location
+    'location' => [
+        'badge'        => 'Lokasi Kami',
+        'title'        => 'Lokasi Workshop',
+        'subtitle'     => 'Kunjungi workshop kami di Gedangsewu dan lihat langsung proses produksi sablon berkualitas tinggi.',
+        'iframe_title' => 'Lokasi Andri Sablon Gedangsewu',
+        'address'      => 'Andri Sablon Gedangsewu, Kediri, Jawa Timur',
+        'open_maps'    => 'Buka di Google Maps',
+    ],
+
     // Footer
     'footer' => [
         'tagline'   => 'Dibuat untuk Andri Sablon, Gedangsewu — Tulungagung.',

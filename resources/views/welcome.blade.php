@@ -270,13 +270,9 @@
 
             {{-- Logo --}}
             <a href="{{ route('landing_page') }}" class="flex items-center gap-2.5 no-underline">
-                <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="28" height="28" rx="8" fill="var(--color-primary)" opacity="0.15"/>
-                    <path d="M9 19 L19 9" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="19.5" cy="8.5" r="2" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/>
-                    <path d="M9 19 C7 21, 5 21, 6 23 C7 25, 10 24, 9 26" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2" fill="none"/>
-                </svg>
-                <span class="font-display font-semibold text-lg tracking-tight text-(--color-dark) dark:text-(--color-light)">AN Mastery</span>
+                <img src="{{ asset('assets/Logo-AnMastery.webp') }}"
+                     alt="AN Mastery Logo"
+                     class="h-9 w-auto object-contain">
             </a>
 
             {{-- Controls --}}
@@ -583,6 +579,54 @@
                         <p class="text-sm leading-relaxed" style="color: var(--color-dark-gray);">
                             {{ __('welcome.features.billing.desc') }}
                         </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{-- LOCATION SECTION --}}
+        <section class="py-16 px-4 sm:px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-10 reveal" data-reveal>
+                    <div class="badge-pill inline-flex mb-3">
+                        <i data-lucide="map-pin" class="size-3.5"></i>
+                        {{ __('welcome.location.badge') }}
+                    </div>
+                    <h2 class="font-display font-semibold text-(--color-dark) dark:text-(--color-light)"
+                        style="font-size: clamp(1.75rem, 4vw, 2.5rem);">
+                        {{ __('welcome.location.title') }}
+                    </h2>
+                    <p class="mt-3 text-sm sm:text-base max-w-xl mx-auto" style="color: var(--color-dark-gray);">
+                        {{ __('welcome.location.subtitle') }}
+                    </p>
+                </div>
+
+                <div class="reveal" data-reveal>
+                    <div class="rounded-2xl overflow-hidden shadow-xl border border-(--color-gray)/20 dark:border-(--color-dark-gray)/20"
+                         style="aspect-ratio: 16/7; min-height: 300px;">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.2586949066567!2d111.8852425793457!3d-8.075076600000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78e300192e2263%3A0xa9e9e49da6e81501!2sAndri%20Sablon%20Gedangsewu!5e0!3m2!1sen!2sid!4v1785880257392!5m2!1sen!2sid"
+                            class="w-full h-full"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            title="{{ __('welcome.location.iframe_title') }}">
+                        </iframe>
+                    </div>
+
+                    {{-- Info strip --}}
+                    <div class="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 px-1"
+                         style="color: var(--color-dark-gray);">
+                        <span class="flex items-center gap-2 text-sm">
+                            <i data-lucide="map-pin" class="size-4 text-(--color-primary) flex-shrink-0"></i>
+                            {{ __('welcome.location.address') }}
+                        </span>
+                        <a href="https://maps.app.goo.gl/andri-sablon" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center gap-1.5 text-sm font-medium text-(--color-primary) hover:underline">
+                            <i data-lucide="external-link" class="size-3.5"></i>
+                            {{ __('welcome.location.open_maps') }}
+                        </a>
                     </div>
                 </div>
             </div>

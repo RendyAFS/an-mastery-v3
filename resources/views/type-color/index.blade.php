@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="space-y-6">
-        <div class="flex justify-between items-center">
-            <div>
+        <div class="flex flex-wrap justify-between items-center">
+            <div class="mb-3 md:mb-0">
                 <h1 class="text-3xl font-bold">{{ __('models.TypeColor') }}</h1>
                 <p class="text-sm">{{ __('type-color.description') }}</p>
             </div>

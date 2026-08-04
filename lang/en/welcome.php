@@ -76,6 +76,16 @@ return [
         'languages' => 'Languages',
     ],
 
+    // Location
+    'location' => [
+        'badge'        => 'Our Location',
+        'title'        => 'Workshop Location',
+        'subtitle'     => 'Visit our workshop in Gedangsewu and see our high-quality screen printing production process in person.',
+        'iframe_title' => 'Andri Sablon Gedangsewu Location',
+        'address'      => 'Andri Sablon Gedangsewu, Kediri, East Java',
+        'open_maps'    => 'Open in Google Maps',
+    ],
+
     // Footer
     'footer' => [
         'tagline'   => 'Built for Andri Sablon, Gedangsewu — Tulungagung.',

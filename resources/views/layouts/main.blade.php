@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'AN Mastery' }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
+
+    {{-- Icon Library (defer agar tidak blokir render, tapi tetap diparse lebih awal) --}}
+    <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
 
     {{-- Init Theme --}}
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
@@ -52,15 +56,15 @@
     <script>
         window.DataTable = window.jQuery.fn.dataTable;
     </script>
-    <script src="{{ asset('js/luicide-latest.js') }}"></script>
+
 
     {{-- LANG --}}
     @include('layouts.lang')
 
-    @stack('scripts')
-
     {{-- Js Vite --}}
     @vite(['resources/js/app.js'])
+
+    @stack('scripts')
 </body>
 
 </html>
