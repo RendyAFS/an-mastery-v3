@@ -29,9 +29,14 @@
                     @csrf
                     <div class="mb-8">
                         <div class="flex justify-between items-center">
-                            <h1 class="text-3xl font-bold text-(--color-dark) dark:text-(--color-light)">
-                                {{ __('auth.create_account') }}
-                            </h1>
+                        <div class="mb-6 flex items-center gap-4">
+                                <a href="{{ route('landing_page') }}"
+                                    class="inline-flex items-center gap-2 text-sm font-medium text-(--color-dark) dark:text-(--color-light) hover:text-(--color-primary) transition">
+                                    <i data-lucide="arrow-left" class="size-6"></i>
+                                </a>
+                                <h1 class="text-3xl font-bold text-(--color-dark) dark:text-(--color-light)">
+                                    {{ __('auth.create_account') }}</h1>
+                            </div>
                             <div class="flex items-center gap-4">
                                 @include('components.toggle-language')
                                 @include('components.toggle-theme')
