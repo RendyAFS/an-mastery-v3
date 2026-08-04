@@ -29,7 +29,7 @@ return [
         'sablon_label_create'    => 'Sablon (Belum Ditagih)',
         'selected_summary'       => ':count sablon dipilih',
         'no_selected'            => 'Belum ada sablon dipilih',
-        'search_placeholder'     => 'Cari fabric...',
+        'search_placeholder'     => 'Cari kain...',
         'select_all'             => 'Pilih Semua',
         'loading'                => 'Memuat data...',
         'empty'                  => 'Tidak ada sablon yang tersedia',
@@ -47,7 +47,7 @@ return [
         'billed_in_advance'      => 'Ditagih Awal',
         'only_done_disabled'     => 'Hanya sablon berstatus Done yang bisa ditagih',
         'select_min_error'       => 'Pilih minimal 1 sablon terlebih dahulu',
-        'some_sablons_no_price'  => 'Beberapa sablon belum memiliki harga supplier untuk kombinasi fabric & warna'
+        'some_sablons_no_price'  => 'Beberapa sablon belum memiliki harga supplier untuk kombinasi kain & warna'
     ],
 
     'show'          => [

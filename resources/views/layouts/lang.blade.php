@@ -3,6 +3,7 @@
     $langModels = collect(trans('models'))->toArray();
     $langUi = collect(trans('ui'))->toArray();
     $langFilepond = collect(trans('filepond'))->toArray();
+    $langEnums = collect(trans('enums'))->toArray();
     $langCustomAlert = [
         'success' => __('custom-alert.Success'),
         'info' => __('custom-alert.Information'),
@@ -42,6 +43,7 @@
     $langFabric = collect(trans('fabric'))->toArray();
     $langSablon = collect(trans('sablon'))->toArray();
     $langBillSupplier = collect(trans('bill-supplier'))->toArray();
+    $langSalaryEmployee = collect(trans('salary-employee'))->toArray();
     // END CRUD
 @endphp
 
@@ -52,6 +54,7 @@
     window.langModels = @json($langModels);
     window.langUi = @json($langUi);
     window.langFilepond = @json($langFilepond);
+    window.langEnums = @json($langEnums);
     // CRUD
     window.langUser = @json($langUser);
     window.langEmployee = @json($langEmployee);
@@ -67,5 +70,6 @@
     window.langFabric = @json($langFabric);
     window.langSablon = @json($langSablon);
     window.langBillSupplier = @json($langBillSupplier);
+    window.langSalaryEmployee = @json($langSalaryEmployee);
     // END CRUD
 </script>

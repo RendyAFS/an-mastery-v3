@@ -10,7 +10,7 @@ enum StatusHistoryStockEnum: string
 
     public function labels(): string
     {
-        return __('enum.status_history_stock.' . $this->value);
+        return __('enums.status_history_stock.' . $this->value);
     }
 
     public static function options(): array

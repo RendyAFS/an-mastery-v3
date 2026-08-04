@@ -13,6 +13,6 @@ return [
     ],
     'status_salary_employee' => [
         'PENDING' => 'Belum Dibayar',
-        'PAID'    => 'Dibayar',
+        'PAID'    => 'Sudah Dibayar',
     ],
 ];

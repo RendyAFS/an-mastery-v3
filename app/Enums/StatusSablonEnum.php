@@ -11,7 +11,7 @@ enum StatusSablonEnum: string
 
     public function labels(): string
     {
-        return __('enum.status_sablon.' . $this->value);
+        return __('enums.status_sablon.' . $this->value);
     }
 
     public static function options(): array

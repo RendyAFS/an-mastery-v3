@@ -2,11 +2,7 @@ import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import { initLucide } from "@/utils/lucide";
-
-const statusColor = {
-    PENDING: "bg-yellow-500/10 text-yellow-600",
-    PAID: "bg-blue-500/10 text-blue-600",
-};
+import trans from "@/utils/trans";
 
 const formatSignedRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
@@ -50,6 +46,7 @@ const bindSignedRupiahInput = (el) => {
 
 const PageScript = (function () {
     let cardgrid;
+    const modelName = window.langModels?.SalaryEmployee ?? "Salary Employee";
 
     const getISOWeekString = (date) => {
         const target = new Date(date.valueOf());
@@ -101,6 +98,10 @@ const PageScript = (function () {
 
     const renderCard = (item) => {
         const badge = statusBadgeMap[item.status] ?? "badge-primary";
+        const statusLabel =
+            window.langEnums?.status_salary_employee?.[item.status] ??
+            item.status ??
+            "-";
 
         const headerHtml = `
             <div class="flex items-start justify-between">
@@ -109,7 +110,7 @@ const PageScript = (function () {
                     <p class="text-sm text-(--color-dark-gray)">${item.date ?? "-"}</p>
                 </div>
                 <span class="badge ${badge}">
-                    ${item.status ?? "-"}
+                    ${statusLabel}
                 </span>
             </div>`;
 
@@ -139,7 +140,7 @@ const PageScript = (function () {
                         .join("")}
                 </div>
             `
-            : `<p class="text-xs text-(--color-dark-gray)">Belum ada data sablon</p>`;
+            : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`;
 
         const additionalFees = Array.isArray(item.additional_fee)
             ? item.additional_fee
@@ -148,13 +149,13 @@ const PageScript = (function () {
         const additionalFeeHtml = additionalFees.length
             ? `
                 <div class="space-y-1">
-                    <p class="text-xs font-semibold">Additional Fee</p>
+                    <p class="text-xs font-semibold">${window.langSalaryEmployee.card.additional_fee}</p>
                     <ul class="space-y-1 text-xs">
                         ${additionalFees
                             .map(
                                 (af) => `
                             <li class="flex justify-between text-(--color-dark-gray)">
-                                <span>↳ ${af.notes || "Additional Fee"}</span>
+                                <span>↳ ${af.notes || window.langSalaryEmployee.card.additional_fee}</span>
                                 <span class="${Number(af.nominal) < 0 ? "text-(--color-red)" : "text-(--color-success)"}">
                                     ${Number(af.nominal) < 0 ? "-" : "+"} Rp ${Math.abs(af.nominal || 0).toLocaleString("id-ID")}
                                 </span>
@@ -170,7 +171,7 @@ const PageScript = (function () {
         const presenceHtml = item.presence_total
             ? `
                 <div class="flex items-center justify-between text-xs">
-                    <span class="font-medium text-(--color-info)">Presence</span>
+                    <span class="font-medium text-(--color-info)">${window.langSalaryEmployee.card.presence}</span>
                     <span class="font-medium text-(--color-info)">${item.presence_total_formated ? "+" + item.presence_total_formated : item.presence_total_formated}</span>
                 </div>
             `
@@ -184,7 +185,7 @@ const PageScript = (function () {
             ${presenceHtml}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
-                <span class="text-sm font-semibold">Total</span>
+                <span class="text-sm font-semibold">${window.langSalaryEmployee.card.total}</span>
                 <span class="text-sm font-bold">${item.total_formated ?? "Rp 0"}</span>
             </div>
 
@@ -193,7 +194,7 @@ const PageScript = (function () {
                     data-date="${item.date ?? ""}"
                     data-additional-fee='${JSON.stringify(additionalFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
-                    <i data-lucide="wallet" class="size-3.5"></i> Kelola
+                    <i data-lucide="wallet" class="size-3.5"></i> ${window.langSalaryEmployee.card.manage}
                 </button>
             </div>
         </div>`;
@@ -240,7 +241,7 @@ const PageScript = (function () {
 
             window.HSStaticMethods.autoInit();
 
-            HSOverlay.open("#modal-salary-employee");
+            HSOverlay.open("#hs-salary-employee-modal");
         });
 
         $(document).on("click", "#btn-add-additional-fee-row", function () {
@@ -279,9 +280,12 @@ const PageScript = (function () {
                     },
                 );
 
-                Toast.success("Success", "Salary updated successfully");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
 
-                HSOverlay.close("#modal-salary-employee");
+                HSOverlay.close("#hs-salary-employee-modal");
 
                 cardgrid.reload();
             } catch (err) {
@@ -329,8 +333,8 @@ const PageScript = (function () {
 
             if (!weekStart || !weekEnd) {
                 Toast.error(
-                    "Perhatian",
-                    "Pilih rentang minggu terlebih dahulu",
+                    window.langCustomAlert.warning,
+                    window.langSalaryEmployee.sync.select_week_warning,
                 );
                 return;
             }
@@ -342,7 +346,7 @@ const PageScript = (function () {
                     route("salary_employees.sync"),
                     { week_start: weekStart, week_end: weekEnd },
                 );
-                Toast.success("Success", response.message);
+                Toast.success(window.langCustomAlert.success, response.message);
                 cardgrid.reload();
             } catch (err) {
                 console.error(err);

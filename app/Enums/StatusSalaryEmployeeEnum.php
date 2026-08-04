@@ -9,7 +9,7 @@ enum StatusSalaryEmployeeEnum: string
 
     public function labels(): string
     {
-        return __('enum.status_salary_employee.' . $this->value);
+        return __('enums.status_salary_employee.' . $this->value);
     }
 
     public static function options(): array
