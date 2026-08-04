@@ -85,4 +85,18 @@ return [
         'total_fee'        => 'Total Fee',
         'fabric_details'   => 'Detail Kain',
     ],
+
+    'validation' => [
+        'date_bill' => [
+            'required' => 'Tanggal bill wajib diisi.',
+            'date'     => 'Format tanggal tidak valid.',
+        ],
+
+        'sablon_ids' => [
+            'required' => 'Pilih minimal satu sablon.',
+            'array'    => 'Format sablon tidak valid.',
+            'min'      => 'Pilih minimal satu sablon.',
+            'exists'   => 'Salah satu sablon tidak ditemukan.',
+        ],
+    ],
 ];

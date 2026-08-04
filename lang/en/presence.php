@@ -31,4 +31,38 @@ return [
     ],
     'updated_success'          => 'Presence updated successfully',
     'fetch_error'              => 'Failed to fetch presence data',
+    'validation' => [
+        'employee_id' => [
+            'required' => 'Employee is required.',
+            'integer'  => 'Employee is invalid.',
+            'exists'   => 'Employee not found.',
+        ],
+
+        'week_of' => [
+            'required' => 'Week is required.',
+            'date'     => 'Week must be a valid date.',
+        ],
+
+        'days' => [
+            'integer' => 'Attendance value must be an integer.',
+            'min'     => 'Attendance value must be at least 0.',
+        ],
+
+        'amount' => [
+            'required' => 'Daily amount is required.',
+            'integer'  => 'Daily amount must be an integer.',
+            'min'      => 'Daily amount must be at least 0.',
+        ],
+
+        'employee_ids' => [
+            'required' => 'Please select at least one employee.',
+            'min'      => 'Please select at least one employee.',
+            'exists'   => 'One or more selected employees are invalid.',
+        ],
+
+        'notes' => [
+            'string' => 'Notes must be a string.',
+            'max'    => 'Notes may not be greater than 255 characters.',
+        ],
+    ],
 ];

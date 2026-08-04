@@ -12,4 +12,21 @@ return [
     'toggle_active_success'         => 'Employee status updated successfully',
     'toggle_active_error'           => 'Failed to update employee status',
     'fetch_error'                   => 'Failed to fetch employee data',
+    'validation' => [
+        'name' => [
+            'required' => 'Name is required.',
+        ],
+
+        'address' => [
+            'required' => 'Address is required.',
+        ],
+
+        'contact' => [
+            'string' => 'Contact must be a string.',
+        ],
+
+        'notes' => [
+            'string' => 'Notes must be a string.',
+        ],
+    ],
 ];

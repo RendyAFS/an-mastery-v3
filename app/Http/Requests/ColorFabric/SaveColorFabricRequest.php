@@ -6,34 +6,35 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveColorFabricRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'name'       => 'required|string|max:255',
-            'code_color' => 'nullable|string|max:255',
-            'notes'      => 'nullable|string',
+            'name'       => ['required', 'string', 'max:255'],
+            'code_color' => ['nullable', 'string', 'max:255'],
+            'notes'      => ['nullable', 'string'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'       => 'Name is required.',
-            'code_color.required' => 'Code Color is required.',
-            'notes.string'        => 'Notes must be a string.',
+            'name.required'       => __('color-fabric.validation.name.required'),
+            'code_color.required' => __('color-fabric.validation.code_color.required'),
+            'notes.string'        => __('color-fabric.validation.notes.string'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'       => __('color-fabric.form.name'),
+            'code_color' => __('color-fabric.form.code_color'),
+            'notes'      => __('color-fabric.form.notes'),
         ];
     }
 }

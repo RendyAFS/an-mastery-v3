@@ -17,4 +17,24 @@ return [
     ],
     'type_color_suffix'    => 'Warna',
     'fetch_error'          => 'Gagal mengambil data harga karyawan',
+    'validation' => [
+        'type_fabric_id' => [
+            'required' => 'Jenis kain wajib dipilih.',
+            'exists'   => 'Jenis kain yang dipilih tidak valid.',
+        ],
+
+        'type_color_id' => [
+            'required' => 'Jenis warna wajib dipilih.',
+            'exists'   => 'Jenis warna yang dipilih tidak valid.',
+        ],
+
+        'price' => [
+            'required' => 'Harga wajib diisi.',
+            'numeric'  => 'Harga harus berupa angka.',
+        ],
+
+        'notes' => [
+            'string' => 'Catatan harus berupa teks.',
+        ],
+    ],
 ];

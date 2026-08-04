@@ -18,4 +18,30 @@ return [
     'toggle_active_confirm_message'     => 'Apakah kamu yakin ingin mengubah status pengguna ini?',
     'toggle_active_success'             => 'Status pengguna berhasil diperbarui',
     'toggle_active_error'               => 'Gagal memperbarui status pengguna',
+    'validation' => [
+        'name' => [
+            'required' => 'Nama wajib diisi.',
+            'string'   => 'Nama harus berupa teks.',
+            'unique'   => 'Nama sudah digunakan.',
+        ],
+
+        'email' => [
+            'required' => 'Email wajib diisi.',
+            'email'    => 'Format email tidak valid.',
+            'unique'   => 'Email sudah digunakan.',
+        ],
+
+        'password' => [
+            'required'  => 'Password wajib diisi.',
+            'confirmed' => 'Konfirmasi password tidak sesuai.',
+        ],
+
+        'is_active' => [
+            'boolean' => 'Status tidak valid.',
+        ],
+
+        'roles' => [
+            'exists' => 'Role yang dipilih tidak valid.',
+        ],
+    ],
 ];

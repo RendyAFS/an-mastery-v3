@@ -111,4 +111,110 @@ return [
     'restore_confirm_message'      => 'Restore this Sablon?',
     'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
     'status_updated_success'       => 'Status updated successfully',
+    'validation' => [
+        'supplier_id' => [
+            'required' => 'Supplier is required.',
+            'exists'   => 'The selected supplier is invalid.',
+        ],
+
+        'fabric_id' => [
+            'required' => 'Fabric is required.',
+            'exists'   => 'The selected fabric is invalid.',
+        ],
+
+        'image_fabric_id' => [
+            'required' => 'Fabric image is required.',
+            'exists'   => 'The selected fabric image is invalid.',
+        ],
+
+        'type_color_id' => [
+            'required' => 'Color type is required.',
+            'exists'   => 'The selected color type is invalid.',
+        ],
+
+        'type_fabric_id' => [
+            'required' => 'Fabric type is required.',
+            'exists'   => 'The selected fabric type is invalid.',
+        ],
+
+        'price_employee_id' => [
+            'required' => 'Employee price is required.',
+            'exists'   => 'The selected employee price is invalid.',
+        ],
+
+        'total_long_fabric' => [
+            'numeric' => 'Total fabric length must be a number.',
+            'min'     => 'Total fabric length must be at least 0.',
+        ],
+
+        'total_sablon' => [
+            'numeric' => 'Total printing quantity must be a number.',
+            'min'     => 'Total printing quantity must be at least 0.',
+        ],
+
+        'date_sablon' => [
+            'required' => 'Printing date is required.',
+            'date'     => 'Printing date must be a valid date.',
+        ],
+
+        'status' => [
+            'required' => 'Status is required.',
+            'in'       => 'The selected status is invalid.',
+        ],
+
+        'notes' => [
+            'string' => 'Notes must be a string.',
+            'max'    => 'Notes may not be greater than 255 characters.',
+        ],
+
+        'fabric_details' => [
+            'required' => 'At least one fabric detail is required.',
+            'array'    => 'Invalid fabric details format.',
+            'min'      => 'At least one fabric detail is required.',
+
+            'fabric_detail_id' => [
+                'required' => 'Fabric detail is required.',
+                'exists'   => 'The selected fabric detail is invalid.',
+            ],
+
+            'color_fabric_id' => [
+                'required' => 'Fabric color is required.',
+                'exists'   => 'The selected fabric color is invalid.',
+            ],
+
+            'long_fabric' => [
+                'numeric' => 'Fabric length must be a number.',
+                'min'     => 'Fabric length must be at least 0.',
+            ],
+        ],
+
+        'employee_details' => [
+            'array' => 'Invalid employee details format.',
+
+            'employee_id' => [
+                'required_with' => 'Employee is required.',
+                'exists'        => 'The selected employee is invalid.',
+            ],
+
+            'layers' => [
+                'integer' => 'Layers must be an integer.',
+                'min'     => 'Layers must be at least 0.',
+            ],
+
+            'fee' => [
+                'numeric' => 'Fee must be a number.',
+                'min'     => 'Fee must be at least 0.',
+            ],
+
+            'employee_change_id' => [
+                'exists'    => 'The selected replacement employee is invalid.',
+                'different' => 'The replacement employee must be different from the primary employee.',
+            ],
+
+            'notes' => [
+                'string' => 'Notes must be a string.',
+                'max'    => 'Notes may not be greater than 255 characters.',
+            ],
+        ],
+    ],
 ];

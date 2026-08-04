@@ -23,7 +23,7 @@ class SaveBillSupplierRequest extends FormRequest
         ];
 
         if ($this->isMethod('post')) {
-            $rules['sablon_ids']   = ['required', 'array', 'min:1'];
+            $rules['sablon_ids'] = ['required', 'array', 'min:1'];
             $rules['sablon_ids.*'] = [
                 'integer',
                 Rule::exists('sablons', 'id')->whereNull('deleted_at'),
@@ -36,12 +36,22 @@ class SaveBillSupplierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'sablon_ids.required' => 'Pilih minimal satu sablon.',
-            'sablon_ids.array'    => 'Format sablon tidak valid.',
-            'sablon_ids.min'      => 'Pilih minimal satu sablon.',
-            'sablon_ids.*.exists' => 'Salah satu sablon tidak ditemukan.',
-            'date_bill.required'  => 'Tanggal bill wajib diisi.',
-            'date_bill.date'      => 'Format tanggal tidak valid.',
+            'sablon_ids.required' => __('bill_supplier.validation.sablon_ids.required'),
+            'sablon_ids.array'    => __('bill_supplier.validation.sablon_ids.array'),
+            'sablon_ids.min'      => __('bill_supplier.validation.sablon_ids.min'),
+            'sablon_ids.*.exists' => __('bill_supplier.validation.sablon_ids.exists'),
+            'date_bill.required'  => __('bill_supplier.validation.date_bill.required'),
+            'date_bill.date'      => __('bill_supplier.validation.date_bill.date'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'date_bill'  => __('bill_supplier.form.date_bill'),
+            'sablon_ids' => __('bill_supplier.form.sablon_label_create'),
+            'notes'      => __('bill_supplier.form.notes'),
+            'is_paid'    => __('bill_supplier.form.is_paid'),
         ];
     }
 }

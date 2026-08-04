@@ -6,37 +6,40 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveEmployeeRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:255',
-            'address'   => 'required|string',
-            'contact'   => 'nullable|string',
-            'is_active' => 'nullable|boolean',
-            'notes'     => 'nullable|string',
+            'name'      => ['required', 'string', 'max:255'],
+            'address'   => ['required', 'string'],
+            'contact'   => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
+            'notes'     => ['nullable', 'string'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'      => 'Name is required.',
-            'address.required'   => 'Address is required.',
-            'contact.string'     => 'Contact must be a string.',
-            'notes.string'       => 'Notes must be a string.',
+            'name.required'    => __('employee.validation.name.required'),
+            'address.required' => __('employee.validation.address.required'),
+            'contact.string'   => __('employee.validation.contact.string'),
+            'notes.string'     => __('employee.validation.notes.string'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'      => __('employee.form.name'),
+            'address'   => __('employee.form.address'),
+            'contact'   => __('employee.form.contact'),
+            'is_active' => __('employee.form.is_active'),
+            'notes'     => __('employee.form.notes'),
         ];
     }
 }

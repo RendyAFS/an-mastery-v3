@@ -44,4 +44,45 @@ return [
     'restore_confirm_message'      => 'Pulihkan kain ini?',
     'force_delete_confirm_message' => 'Ini akan menghapus kain secara permanen. Lanjutkan?',
     'fetch_error'                  => 'Gagal mengambil data kain',
+    'validation' => [
+        'supplier_id' => [
+            'required' => 'Supplier wajib dipilih.',
+            'exists'   => 'Supplier tidak ditemukan.',
+        ],
+
+        'type_fabric_id' => [
+            'required' => 'Jenis kain wajib dipilih.',
+            'exists'   => 'Jenis kain tidak ditemukan.',
+        ],
+
+        'date_coming' => [
+            'required' => 'Tanggal datang wajib diisi.',
+            'date'     => 'Format tanggal datang tidak valid.',
+        ],
+
+        'seri' => [
+            'required' => 'Nomor seri wajib diisi.',
+            'integer'  => 'Nomor seri harus berupa angka.',
+            'min'      => 'Nomor seri minimal 1.',
+        ],
+
+        'notes' => [
+            'max' => 'Catatan maksimal 255 karakter.',
+        ],
+
+        'fabric_details' => [
+            'required' => 'Minimal satu detail kain harus ditambahkan.',
+
+            'color_fabric_id' => [
+                'required' => 'Warna kain wajib dipilih.',
+                'exists'   => 'Warna kain tidak ditemukan.',
+            ],
+
+            'stock' => [
+                'required' => 'Stok wajib diisi.',
+                'numeric'  => 'Stok harus berupa angka.',
+                'min'      => 'Stok minimal 0.',
+            ],
+        ],
+    ],
 ];

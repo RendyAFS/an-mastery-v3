@@ -17,4 +17,24 @@ return [
     ],
     'type_color_suffix'    => 'Color',
     'fetch_error'          => 'Failed to fetch price employee data',
+    'validation' => [
+        'type_fabric_id' => [
+            'required' => 'Fabric type is required.',
+            'exists'   => 'Please select a valid fabric type.',
+        ],
+
+        'type_color_id' => [
+            'required' => 'Color type is required.',
+            'exists'   => 'Please select a valid color type.',
+        ],
+
+        'price' => [
+            'required' => 'Price is required.',
+            'numeric'  => 'Price must be a number.',
+        ],
+
+        'notes' => [
+            'string' => 'Notes must be a string.',
+        ],
+    ],
 ];

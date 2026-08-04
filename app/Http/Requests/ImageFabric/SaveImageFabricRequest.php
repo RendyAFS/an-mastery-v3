@@ -6,24 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveImageFabricRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'name'         => 'required|string|max:255',
-            'notes'        => 'nullable|string',
+            'name'         => ['required', 'string', 'max:255'],
+            'notes'        => ['nullable', 'string'],
             'image_tmp'    => ['nullable', 'string'],
             'remove_image' => ['nullable', 'boolean'],
         ];
@@ -32,10 +24,20 @@ class SaveImageFabricRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required'  => 'Name is required.',
-            'name.string'    => 'Name must be a string.',
-            'name.max'       => 'Name must be less than 255 characters.',
-            'notes.string'   => 'Notes must be a string.',
+            'name.required' => __('image-fabric.validation.name.required'),
+            'name.string'   => __('image-fabric.validation.name.string'),
+            'name.max'      => __('image-fabric.validation.name.max'),
+            'notes.string'  => __('image-fabric.validation.notes.string'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'         => __('image-fabric.form.name'),
+            'notes'        => __('image-fabric.form.notes'),
+            'image_tmp'    => __('image-fabric.form.image'),
+            'remove_image' => __('image-fabric.form.remove_image'),
         ];
     }
 }

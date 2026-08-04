@@ -24,14 +24,23 @@ class BulkGeneratePresenceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'week_of.required'      => 'Week is required',
-            'week_of.date'          => 'Week must be a valid date',
-            'amount.required'       => 'Nominal per day is required',
-            'amount.integer'        => 'Nominal per day must be an integer',
-            'amount.min'            => 'Nominal per day must be at least 0',
-            'employee_ids.required' => 'Select at least one employee',
-            'employee_ids.min'      => 'Select at least one employee',
-            'employee_ids.*.exists' => 'One or more selected employees are invalid',
+            'week_of.required'      => __('presence.validation.week_of.required'),
+            'week_of.date'          => __('presence.validation.week_of.date'),
+            'amount.required'       => __('presence.validation.amount.required'),
+            'amount.integer'        => __('presence.validation.amount.integer'),
+            'amount.min'            => __('presence.validation.amount.min'),
+            'employee_ids.required' => __('presence.validation.employee_ids.required'),
+            'employee_ids.min'      => __('presence.validation.employee_ids.min'),
+            'employee_ids.*.exists' => __('presence.validation.employee_ids.exists'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'week_of'      => __('presence.form.week_of'),
+            'amount'       => __('presence.form.amount'),
+            'employee_ids' => __('presence.form.employees'),
         ];
     }
 }

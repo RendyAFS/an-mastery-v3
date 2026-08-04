@@ -111,4 +111,110 @@ return [
     'restore_confirm_message'      => 'Pulihkan Sablon ini?',
     'force_delete_confirm_message' => 'Ini akan menghapus Sablon secara permanen. Lanjutkan?',
     'status_updated_success'       => 'Status berhasil diperbarui',
+    'validation' => [
+        'supplier_id' => [
+            'required' => 'Supplier wajib dipilih.',
+            'exists'   => 'Supplier yang dipilih tidak valid.',
+        ],
+
+        'fabric_id' => [
+            'required' => 'Kain wajib dipilih.',
+            'exists'   => 'Kain yang dipilih tidak valid.',
+        ],
+
+        'image_fabric_id' => [
+            'required' => 'Gambar kain wajib dipilih.',
+            'exists'   => 'Gambar kain yang dipilih tidak valid.',
+        ],
+
+        'type_color_id' => [
+            'required' => 'Jenis warna wajib dipilih.',
+            'exists'   => 'Jenis warna yang dipilih tidak valid.',
+        ],
+
+        'type_fabric_id' => [
+            'required' => 'Jenis kain wajib dipilih.',
+            'exists'   => 'Jenis kain yang dipilih tidak valid.',
+        ],
+
+        'price_employee_id' => [
+            'required' => 'Harga karyawan wajib dipilih.',
+            'exists'   => 'Harga karyawan yang dipilih tidak valid.',
+        ],
+
+        'total_long_fabric' => [
+            'numeric' => 'Total panjang kain harus berupa angka.',
+            'min'     => 'Total panjang kain minimal 0.',
+        ],
+
+        'total_sablon' => [
+            'numeric' => 'Total sablon harus berupa angka.',
+            'min'     => 'Total sablon minimal 0.',
+        ],
+
+        'date_sablon' => [
+            'required' => 'Tanggal sablon wajib diisi.',
+            'date'     => 'Format tanggal sablon tidak valid.',
+        ],
+
+        'status' => [
+            'required' => 'Status wajib dipilih.',
+            'in'       => 'Status yang dipilih tidak valid.',
+        ],
+
+        'notes' => [
+            'string' => 'Catatan harus berupa teks.',
+            'max'    => 'Catatan maksimal 255 karakter.',
+        ],
+
+        'fabric_details' => [
+            'required' => 'Minimal satu detail kain harus ditambahkan.',
+            'array'    => 'Format detail kain tidak valid.',
+            'min'      => 'Minimal satu detail kain harus ditambahkan.',
+
+            'fabric_detail_id' => [
+                'required' => 'Detail kain wajib dipilih.',
+                'exists'   => 'Detail kain yang dipilih tidak valid.',
+            ],
+
+            'color_fabric_id' => [
+                'required' => 'Warna kain wajib dipilih.',
+                'exists'   => 'Warna kain yang dipilih tidak valid.',
+            ],
+
+            'long_fabric' => [
+                'numeric' => 'Panjang kain harus berupa angka.',
+                'min'     => 'Panjang kain minimal 0.',
+            ],
+        ],
+
+        'employee_details' => [
+            'array' => 'Format detail karyawan tidak valid.',
+
+            'employee_id' => [
+                'required_with' => 'Karyawan wajib dipilih.',
+                'exists'        => 'Karyawan yang dipilih tidak valid.',
+            ],
+
+            'layers' => [
+                'integer' => 'Jumlah layer harus berupa angka.',
+                'min'     => 'Jumlah layer minimal 0.',
+            ],
+
+            'fee' => [
+                'numeric' => 'Fee harus berupa angka.',
+                'min'     => 'Fee minimal 0.',
+            ],
+
+            'employee_change_id' => [
+                'exists'    => 'Karyawan pengganti yang dipilih tidak valid.',
+                'different' => 'Karyawan pengganti harus berbeda dengan karyawan utama.',
+            ],
+
+            'notes' => [
+                'string' => 'Catatan harus berupa teks.',
+                'max'    => 'Catatan maksimal 255 karakter.',
+            ],
+        ],
+    ],
 ];

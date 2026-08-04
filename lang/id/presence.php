@@ -31,4 +31,38 @@ return [
     ],
     'updated_success'          => 'Kehadiran berhasil diperbarui',
     'fetch_error'              => 'Gagal mengambil data kehadiran',
+    'validation' => [
+        'employee_id' => [
+            'required' => 'Karyawan wajib dipilih.',
+            'integer'  => 'Karyawan tidak valid.',
+            'exists'   => 'Karyawan tidak ditemukan.',
+        ],
+
+        'week_of' => [
+            'required' => 'Minggu wajib dipilih.',
+            'date'     => 'Format minggu tidak valid.',
+        ],
+
+        'days' => [
+            'integer' => 'Jumlah kehadiran harus berupa angka.',
+            'min'     => 'Jumlah kehadiran minimal 0.',
+        ],
+
+        'amount' => [
+            'required' => 'Nominal per hari wajib diisi.',
+            'integer'  => 'Nominal per hari harus berupa angka.',
+            'min'      => 'Nominal per hari minimal 0.',
+        ],
+
+        'employee_ids' => [
+            'required' => 'Pilih minimal satu karyawan.',
+            'min'      => 'Pilih minimal satu karyawan.',
+            'exists'   => 'Salah satu karyawan yang dipilih tidak ditemukan.',
+        ],
+
+        'notes' => [
+            'string' => 'Catatan harus berupa teks.',
+            'max'    => 'Catatan maksimal 255 karakter.',
+        ],
+    ],
 ];

@@ -51,33 +51,63 @@ class SaveSablonRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'supplier_id.required'                           => 'Supplier must be selected.',
-            'fabric_id.required'                             => 'Fabric type must be selected.',
-            'image_fabric_id.required'                       => 'Fabric image must be selected.',
-            'type_color_id.required'                         => 'Color type must be selected.',
-            'type_fabric_id.required'                        => 'Fabric type must be selected.',
-            'price_employee_id.required'                     => 'Employee price must be selected.',
-            'total_long_fabric.required'                     => 'Total long fabric must be selected.',
-            'total_sablon.required'                          => 'Total sablon must be selected.',
-            'date_sablon.required'                           => 'Sablon date must be selected.',
-            'status.required'                                => 'Status must be selected.',
-            'status.in'                                      => 'Status is invalid.',
-            'notes.max'                                      => 'Notes must be less than 255 characters.',
-            // Fabric Details
-            'fabric_details.required'                        => 'At least 1 fabric detail (color & length) must be filled.',
-            'fabric_details.*.fabric_detail_id.required'     => 'Fabric detail must be selected.',
-            'fabric_details.*.color_fabric_id.required'      => 'Fabric color must be selected.',
-            'fabric_details.*.long_fabric.required'          => 'Fabric length must be selected.',
-            // Employee Details
-            'employee_details.required'                      => 'Employee detail must be filled.',
-            'employee_details.*.fabric_detail_id.required'   => 'Fabric detail must be selected.',
-            'employee_details.*.employee_id.required'        => 'Employee must be selected.',
-            'employee_details.*.layers.required'             => 'Layer must be selected.',
-            'employee_details.*.fee.required'                => 'Fee must be selected.',
-            'employee_details.*.is_change.required'          => 'Is change must be selected.',
-            'employee_details.*.employee_change_id.required' => 'Changed employee must be selected.',
-            'employee_details.*.is_paid.required'           => 'Is payed must be selected.',
-            'employee_details.*.notes.max'                   => 'Notes must be less than 255 characters.',
+            'supplier_id.required'                            => __('sablon.validation.supplier_id.required'),
+            'supplier_id.exists'                              => __('sablon.validation.supplier_id.exists'),
+            'fabric_id.required'                              => __('sablon.validation.fabric_id.required'),
+            'fabric_id.exists'                                => __('sablon.validation.fabric_id.exists'),
+            'image_fabric_id.required'                        => __('sablon.validation.image_fabric_id.required'),
+            'image_fabric_id.exists'                          => __('sablon.validation.image_fabric_id.exists'),
+            'type_color_id.required'                          => __('sablon.validation.type_color_id.required'),
+            'type_color_id.exists'                            => __('sablon.validation.type_color_id.exists'),
+            'type_fabric_id.required'                         => __('sablon.validation.type_fabric_id.required'),
+            'type_fabric_id.exists'                           => __('sablon.validation.type_fabric_id.exists'),
+            'price_employee_id.required'                      => __('sablon.validation.price_employee_id.required'),
+            'price_employee_id.exists'                        => __('sablon.validation.price_employee_id.exists'),
+            'date_sablon.required'                            => __('sablon.validation.date_sablon.required'),
+            'date_sablon.date'                                => __('sablon.validation.date_sablon.date'),
+            'status.required'                                 => __('sablon.validation.status.required'),
+            'status.in'                                       => __('sablon.validation.status.in'),
+            // Fabric Detail
+            'fabric_details.required'                         => __('sablon.validation.fabric_details.required'),
+            'fabric_details.*.fabric_detail_id.required'      => __('sablon.validation.fabric_details.fabric_detail_id.required'),
+            'fabric_details.*.fabric_detail_id.exists'        => __('sablon.validation.fabric_details.fabric_detail_id.exists'),
+            'fabric_details.*.color_fabric_id.required'       => __('sablon.validation.fabric_details.color_fabric_id.required'),
+            'fabric_details.*.color_fabric_id.exists'         => __('sablon.validation.fabric_details.color_fabric_id.exists'),
+            // Employee Detail
+            'employee_details.*.employee_id.required_with'    => __('sablon.validation.employee_details.employee_id.required_with'),
+            'employee_details.*.employee_id.exists'           => __('sablon.validation.employee_details.employee_id.exists'),
+            'employee_details.*.employee_change_id.exists'    => __('sablon.validation.employee_details.employee_change_id.exists'),
+            'employee_details.*.employee_change_id.different' => __('sablon.validation.employee_details.employee_change_id.different'),
+            'employee_details.*.notes.max'                    => __('sablon.validation.employee_details.notes.max'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'supplier_id'                           => __('sablon.form.supplier'),
+            'fabric_id'                             => __('sablon.form.fabric'),
+            'image_fabric_id'                       => __('sablon.form.image_fabric'),
+            'type_color_id'                         => __('sablon.form.type_color'),
+            'type_fabric_id'                        => __('sablon.form.type_fabric'),
+            'price_employee_id'                     => __('sablon.form.price_employee'),
+            'total_long_fabric'                     => __('sablon.form.total_long_fabric'),
+            'total_sablon'                          => __('sablon.form.total_sablon'),
+            'date_sablon'                           => __('sablon.form.date_sablon'),
+            'status'                                => __('sablon.form.status'),
+            'notes'                                 => __('sablon.form.notes'),
+            // Fabric Detail
+            'fabric_details'                        => __('sablon.form.fabric_details'),
+            'fabric_details.*.fabric_detail_id'     => __('sablon.form.fabric_detail'),
+            'fabric_details.*.color_fabric_id'      => __('sablon.form.color_fabric'),
+            'fabric_details.*.long_fabric'          => __('sablon.form.long_fabric'),
+            // Employee Detail
+            'employee_details'                      => __('sablon.form.employee_details'),
+            'employee_details.*.employee_id'        => __('sablon.form.employee'),
+            'employee_details.*.layers'             => __('sablon.form.layers'),
+            'employee_details.*.fee'                => __('sablon.form.fee'),
+            'employee_details.*.employee_change_id' => __('sablon.form.employee_change'),
+            'employee_details.*.notes'              => __('sablon.form.notes'),
         ];
     }
 }

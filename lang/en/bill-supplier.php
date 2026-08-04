@@ -85,4 +85,18 @@ return [
         'total_fee'        => 'Total Fee',
         'fabric_details'   => 'Fabric Details',
     ],
+
+    'validation' => [
+        'date_bill' => [
+            'required' => 'Bill date is required.',
+            'date'     => 'The bill date is not a valid date.',
+        ],
+
+        'sablon_ids' => [
+            'required' => 'Please select at least one printing job.',
+            'array'    => 'Invalid printing job format.',
+            'min'      => 'Please select at least one printing job.',
+            'exists'   => 'One of the selected printing jobs could not be found.',
+        ],
+    ],
 ];

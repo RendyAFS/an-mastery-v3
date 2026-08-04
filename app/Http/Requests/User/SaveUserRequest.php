@@ -7,43 +7,61 @@ use Illuminate\Validation\Rules\Password;
 
 class SaveUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $userId = $this->route('user')?->id;
+
         return [
-            'name'      => 'required|string|unique:users,name,' . $userId . ',id,deleted_at,NULL',
-            'email'     => 'required|email|unique:users,email,' . $userId . ',id,deleted_at,NULL',
-            'password'  => [$userId ? 'nullable' : 'required', 'string', Password::min(8)->letters()->numbers(), 'confirmed'],
-            'is_active' => 'nullable|boolean',
-            'roles'     => 'nullable|exists:roles,id',
+            'name' => [
+                'required',
+                'string',
+                'unique:users,name,' . $userId . ',id,deleted_at,NULL',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email,' . $userId . ',id,deleted_at,NULL',
+            ],
+            'password' => [
+                $userId ? 'nullable' : 'required',
+                'string',
+                Password::min(8)->letters()->numbers(),
+                'confirmed',
+            ],
+            'is_active' => ['nullable', 'boolean'],
+            'roles' => ['nullable', 'exists:roles,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'      => 'Name is required.',
-            'email.required'     => 'Email is required.',
-            'email.email'        => 'Email is invalid.',
-            'email.unique'       => 'Email already exists.',
-            'password.required'  => 'Password is required.',
-            'password.min'       => 'Password must be at least 8 characters and has numeric.',
-            'is_active.boolean'  => 'Status is required.',
-            'roles.array'        => 'Roles must be an array.',
-            'roles.*.exists'     => 'Role is invalid.',
+            'name.required'      => __('user.validation.name.required'),
+            'name.string'        => __('user.validation.name.string'),
+            'name.unique'        => __('user.validation.name.unique'),
+            'email.required'     => __('user.validation.email.required'),
+            'email.email'        => __('user.validation.email.email'),
+            'email.unique'       => __('user.validation.email.unique'),
+            'password.required'  => __('user.validation.password.required'),
+            'password.confirmed' => __('user.validation.password.confirmed'),
+            'is_active.boolean'  => __('user.validation.is_active.boolean'),
+            'roles.exists'       => __('user.validation.roles.exists'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'      => __('user.form.name'),
+            'email'     => __('user.form.email'),
+            'password'  => __('user.form.password'),
+            'is_active' => __('user.form.is_active'),
+            'roles'     => __('user.form.roles'),
         ];
     }
 }
