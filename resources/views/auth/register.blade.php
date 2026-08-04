@@ -160,11 +160,7 @@
                 </form>
             </div>
 
-            <div class="hidden lg:block max-lg:order-1 md:col-span-3 lg:h-screen w-full relative overflow-hidden"
-                style="background-color: var(--color-dark);">
-                <img src="{{ asset('assets/background-auth.webp') }}" class="absolute inset-0 w-full h-full object-cover"
-                    alt="login-image" />
-            </div>
+            @include('components.auth-slideshow')
         </div>
     </div>
 @endsection
