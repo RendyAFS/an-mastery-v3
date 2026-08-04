@@ -155,3 +155,27 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     });
     Route::resource('salary-employees', App\Http\Controllers\SalaryEmployeeController::class)->only(['index'])->names('salary_employees');
 });
+
+
+if (app()->environment('local')) {
+    Route::prefix('test-errors')->as('test-errors.')->group(function () {
+        Route::get('401', fn() => abort(401))->name('401');
+        Route::get('403', fn() => abort(403))->name('403');
+        Route::get('404', fn() => abort(404))->name('404');
+        Route::get('419', fn() => abort(419))->name('419');
+        Route::get('429', fn() => abort(429))->name('429');
+        Route::get('500', fn() => abort(500))->name('500');
+        Route::get('503', fn() => abort(503))->name('503');
+
+        // index kecil biar gampang klik satu-satu
+        Route::get('/', function () {
+            $codes = ['401', '403', '404', '419', '429', '500', '503'];
+
+            $links = collect($codes)
+                ->map(fn($code) => '<li><a href="' . route('test-errors.' . $code) . '" style="color:#6d9886">' . $code . '</a></li>')
+                ->implode('');
+
+            return '<div style="font-family:sans-serif;padding:2rem"><h1>Test Error Pages</h1><ul>' . $links . '</ul></div>';
+        })->name('index');
+    });
+}

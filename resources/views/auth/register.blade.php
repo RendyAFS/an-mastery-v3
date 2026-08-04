@@ -32,7 +32,10 @@
                             <h1 class="text-3xl font-bold text-(--color-dark) dark:text-(--color-light)">
                                 {{ __('auth.create_account') }}
                             </h1>
-                            @include('components.toggle-theme')
+                            <div class="flex items-center gap-4">
+                                @include('components.toggle-language')
+                                @include('components.toggle-theme')
+                            </div>
                         </div>
                         <p class="text-[15px] mt-6 text-(--color-dark) dark:text-(--color-light)">
                             {{ __('auth.have_account') }}
