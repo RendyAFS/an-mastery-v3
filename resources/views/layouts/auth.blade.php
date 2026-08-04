@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -28,9 +28,6 @@
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
 
     @stack('scripts')
-
-    {{-- Js classVite --}}
-    @vite(['resources/js/app.js'])
 </body>
 
 </html>

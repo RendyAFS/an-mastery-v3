@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -52,7 +52,7 @@
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
 
     {{-- LANG --}}
-   @include('layouts.lang')
+    @include('layouts.lang')
 
     @stack('scripts')
 
