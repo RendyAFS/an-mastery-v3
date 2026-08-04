@@ -28,7 +28,7 @@ export default defineConfig({
                 name: "AN Mastery",
                 short_name: "AN Mastery",
                 description: "Aplikasi Management Sistem AN Mastery",
-                theme_color: "#4f46e5",
+                theme_color: "#6d9886",
                 background_color: "#ffffff",
                 display: "standalone",
                 orientation: "portrait",
