@@ -3,6 +3,7 @@ import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import trans from "@/utils/trans";
+import Loading from "@/utils/loading";
 
 const PageScript = (function () {
     let datatable;
@@ -229,6 +230,8 @@ const PageScript = (function () {
         setModalTitle(trans("langCrud", "edit_title", { model: modelName }));
         setFormMode("edit", id);
 
+        Loading.start();
+
         try {
             const response = await ApiProvider.get(
                 route("color_fabrics.show", id),
@@ -242,6 +245,8 @@ const PageScript = (function () {
                 window.langColorFabric.fetch_error,
             );
             closeModal();
+        } finally {
+            Loading.stop();
         }
     };
 

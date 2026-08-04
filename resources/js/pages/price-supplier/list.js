@@ -4,6 +4,7 @@ import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
 import trans from "@/utils/trans";
+import Loading from "@/utils/loading";
 
 const PageScript = (function () {
     let datatable;
@@ -263,6 +264,11 @@ const PageScript = (function () {
         const mode = form.dataset.mode;
         const id = form.dataset.id;
 
+        const priceInput = document.getElementById("price");
+        if (priceInput) {
+            priceInput.value = RupiahInput.unformat(priceInput.value);
+        }
+
         const formData = new FormData(form);
         let payload = Object.fromEntries(formData.entries());
         payload = normalizeFormInputs(form, payload);
@@ -290,8 +296,8 @@ const PageScript = (function () {
             closeModal();
             reloadDatatable();
         } catch (error) {
-            // error sudah ditangani ApiProvider
         } finally {
+            if (priceInput) RupiahInput.refresh(priceInput);
             stopLoading(submitter);
         }
     };
@@ -304,6 +310,8 @@ const PageScript = (function () {
     const handleEdit = async (id) => {
         setModalTitle(trans("langCrud", "edit_title", { model: modelName }));
         setFormMode("edit", id);
+
+        Loading.start();
 
         try {
             const response = await ApiProvider.get(
@@ -318,6 +326,8 @@ const PageScript = (function () {
                 window.langPriceSupplier.fetch_error,
             );
             closeModal();
+        } finally {
+            Loading.stop();
         }
     };
 
