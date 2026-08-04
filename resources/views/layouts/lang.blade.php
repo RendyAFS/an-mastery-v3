@@ -33,6 +33,7 @@
     $langEmployee = collect(trans('employee'))->toArray();
     $langRole = collect(trans('role'))->toArray();
     $langSupplier = collect(trans('supplier'))->toArray();
+    $langGallery = collect(trans('gallery'))->toArray();
     $langImageFabric = collect(trans('image-fabric'))->toArray();
     $langColorFabric = collect(trans('color-fabric'))->toArray();
     $langTypeFabric = collect(trans('type-fabric'))->toArray();
@@ -60,6 +61,7 @@
     window.langEmployee = @json($langEmployee);
     window.langRole = @json($langRole);
     window.langSupplier = @json($langSupplier);
+    window.langGallery = @json($langGallery);
     window.langImageFabric = @json($langImageFabric);
     window.langColorFabric = @json($langColorFabric);
     window.langTypeFabric = @json($langTypeFabric);

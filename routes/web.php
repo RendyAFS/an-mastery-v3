@@ -154,6 +154,14 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::put('{employee}', [App\Http\Controllers\SalaryEmployeeController::class, 'update'])->name('update');
     });
     Route::resource('salary-employees', App\Http\Controllers\SalaryEmployeeController::class)->only(['index'])->names('salary_employees');
+
+
+    // Gallery
+    Route::prefix('galleries')->as('galleries.')->group(function () {
+        Route::put('{gallery}/restore', [App\Http\Controllers\GalleryController::class, 'restore'])->name('restore');
+        Route::delete('{gallery}/force-delete', [App\Http\Controllers\GalleryController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('galleries', App\Http\Controllers\GalleryController::class)->names('galleries');
 });
 
 

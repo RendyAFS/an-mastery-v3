@@ -8,7 +8,7 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ImageFabric extends Model implements HasMedia
+class Gallery extends Model implements HasMedia
 {
     use Userstamps, SoftDeletes, InteractsWithMedia;
 

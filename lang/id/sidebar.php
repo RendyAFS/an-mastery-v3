@@ -9,6 +9,7 @@ return [
     'Suppliers'         => 'Konveksi',
     'Employees'         => 'Karyawan',
     'Fabric Attribute'  => 'Atribut Kain',
+    'Gallery'           => 'Galeri',
     'Image Fabrics'     => 'Gambar Kain',
     'Color Fabrics'     => 'Warna Kain',
     'Type Fabrics'      => 'Jenis Kain',

@@ -118,4 +118,11 @@ return [
         'icon' => 'banknote',
         'url'  => '/salary-employees',
     ],
+
+    // Gallery
+    [
+        'name' => 'Gallery',
+        'icon' => 'image',
+        'url'  => '/galleries',
+    ],
 ];

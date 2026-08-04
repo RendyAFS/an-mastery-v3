@@ -6,6 +6,7 @@ return [
     'Employee'             => 'Employee',
     'Fabric'               => 'Fabric',
     'FabricDetail'         => 'Fabric Detail',
+    'Gallery'              => 'Gallery',
     'ImageFabric'          => 'Image Fabric',
     'Menu'                 => 'Menu',
     'MenuPermission'       => 'Menu Permission',

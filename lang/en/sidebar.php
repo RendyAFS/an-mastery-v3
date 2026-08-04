@@ -9,6 +9,7 @@ return [
     'Suppliers'         => 'Suppliers',
     'Employees'         => 'Employees',
     'Fabric Attribute'  => 'Fabric Attribute',
+    'Gallery'           => 'Gallery',
     'Image Fabrics'     => 'Image Fabrics',
     'Color Fabrics'     => 'Color Fabrics',
     'Type Fabrics'      => 'Type Fabrics',

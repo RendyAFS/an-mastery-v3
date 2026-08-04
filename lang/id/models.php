@@ -6,6 +6,7 @@ return [
     'Employee'             => 'Karyawan',
     'Fabric'               => 'Kain',
     'FabricDetail'         => 'Detail Kain',
+    'Gallery'              => 'Galeri',
     'ImageFabric'          => 'Gambar Kain',
     'Menu'                 => 'Menu',
     'MenuPermission'       => 'Izin Menu',
