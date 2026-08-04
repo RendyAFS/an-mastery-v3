@@ -1,59 +1,175 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/assets/Logo-AnMastery.webp" width="180" alt="AN Mastery Logo">
 </p>
 
-## About Laravel
+<h1 align="center">AN Mastery V3</h1>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <b>Sistem Manajemen Konveksi Sablon — Andri Sablon Gedangsewu</b><br>
+  <i>Integrated Convection Management System (Fabric Inventory, Screen Printing Orders, Supplier Billing, Employee Salaries & Attendance)</i>
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS v4">
+  <img src="https://img.shields.io/badge/Preline_UI-v3.0-0066FF?style=for-the-badge&logo=preline&logoColor=white" alt="Preline UI v3">
+  <img src="https://img.shields.io/badge/Alpine.js-v3.x-8BC0D0?style=for-the-badge&logo=alpine.js&logoColor=white" alt="AlpineJS v3">
+  <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.2+">
+</p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📌 Tentang Proyek
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+**AN Mastery V3** adalah aplikasi sistem manajemen konveksi terpadu yang dirancang khusus untuk operasional **Andri Sablon** yang berlokasi di Gedangsewu, Tulungagung / Kediri, Jawa Timur. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Aplikasi ini mengintegrasikan seluruh alur kerja bisnis konveksi dan sablon dari hulu ke hilir: pengelolaan inventaris kain, pencatatan order pekerjaan sablon, manajemen tagihan supplier, rekap kehadiran karyawan, hingga kalkulasi gaji otomatis. Selain fitur internal manajemen, aplikasi ini dilengkapi halaman publik (**Welcome Page**) yang menyajikan profil bisnis, galeri hasil produksi, katalog bahan kain, serta peta lokasi workshop.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🌐 Preview Halaman Depan (Welcome Page)
 
-### Premium Partners
+Halaman depan (`welcome.blade.php`) didesain modern, dinamis, dan responsif dengan fitur-fitur utama sebagai berikut:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+* **Hero Section & Brand Identity**: Menyajikan tagline utama *"Dikelola dengan Presisi / Woven with Precision"*, penunjuk lokasi, serta akses cepat ke halaman Login/Register dan Dasbor.
+* **Galeri Produksi (Production Gallery)**: Showcase foto hasil produksi sablon dan konveksi nyata yang diunggah dari sistem, dilengkapi fitur **Lightbox Modal** untuk melihat gambar ukuran penuh.
+* **Katalog Kain (Fabric Showcase)**: Katalog interaktif yang menampilkan contoh bahan kain, warna, dan tekstur yang tersedia di konveksi.
+* **Statistik & Ringkasan Fitur**: Card statistik (Jumlah Supplier, Karyawan, Modul, Bahasa) dan ringkasan fitur utama sistem.
+* **Lokasi Workshop (Google Maps Embed)**: Section peta interaktif lokasi workshop *Andri Sablon Gedangsewu* yang responsif (aspek rasio 16:9), dilengkapi info alamat lengkap dan link langsung ke Google Maps.
+* **Fitur Tambahan**: Dukungan **Multi-Bahasa (Bahasa Indonesia & English)** serta **Tema Dark / Light Mode** yang dapat diganti secara langsung dari navbar.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ✨ Fitur Utama Sistem
 
-## Code of Conduct
+### 📦 Management & Back-Office
+1. **Inventaris & Katalog Kain**: Kelola jenis kain, varian warna, dan sampel gambar kain.
+2. **Order & Produksi Sablon**: Pencatatan pekerjaan sablon, pelacakan status pengerjaan, dan riwayat pesanan.
+3. **Tagihan Supplier (Supplier Billing)**: Pengelolaan invoice dan status pembayaran ke supplier secara teratur.
+4. **Manajemen Karyawan & Gaji**: Manajamen data karyawan, absensi harian, dan perhitungan gaji mingguan/bulanan.
+5. **Manajemen Absensi (Attendance)**: Pencatatan kehadiran harian karyawan yang tersinkronisasi otomatis dengan modul penggajian.
+6. **Galeri Produksi**: Manajemen unggahan foto produk dan hasil karya konveksi.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### ⚙️ Fitur Sistem & UX
+* **Client-side DataTables & CardGrid**: Rendering tabel dan grid kartu dinamis berbasis JSON API Resource yang cepat tanpa perlu reload halaman.
+* **Multi-Language Support**: Dukungan penuh Bahasa Indonesia (`id`) dan English (`en`).
+* **Dark / Light Mode**: Peralihan mode tampilan yang tersimpan di localStorage browser.
+* **Multi-Role & Access Control**: Pengaturan hak akses granular menggunakan Spatie Laravel Permission.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🛠️ Teknologi & Arsitektur
 
-## License
+Aplikasi ini menggunakan pendekatan **Hybrid Monolith** dengan pemisahan tanggung jawab (*Separation of Concerns*) yang ketat:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```mermaid
+graph TD
+    A[Browser / Client] -->|Request HTML Page| B[Laravel Controller]
+    A -->|AJAX JSON Request| B
+    B -->|Query Data| C[Repository Class]
+    B -->|Business / Write Logic| D[Action Class]
+    B -->|Format Output| E[API Resource]
+    E -->|JSON Response| A
+```
+
+### Stack Teknologi:
+* **Backend**: Laravel 12.x, Laravel Fortify (Autentikasi), Spatie Laravel Permission (Otorisasi), Spatie Laravel MediaLibrary (Manajemen Media/Gambar), Tightenco Ziggy (Route Helper untuk Javascript).
+* **Frontend**: Blade Templating, Tailwind CSS v4, Preline UI v3 (Komponen UI/Overlay/Dropdown), AlpineJS v3 (Reaktivitas Form Dinamis), jQuery v3.6.0 & DataTables.net (Tabel Data Client-Side), Lucide Icons.
+
+---
+
+## 📁 Struktur Direktori Utama
+
+```text
+an-mastery-v3/
+├── .ai/                       # Knowledge Base & Panduan AI Agent
+├── AGENTS.md                  # AI Agent Entry Point Guide
+├── app/
+│   ├── Actions/               # Logika Bisnis Penulisan / Transaksi (Store/Update)
+│   ├── Console/Commands/      # Artisan Command (MakeModuleCommand)
+│   ├── Helpers/               # Helper Kustom (RupiahHelper)
+│   ├── Http/
+│   │   ├── Controllers/       # Controller HTTP & API
+│   │   ├── Requests/          # Form Request Validation
+│   │   └── Resources/         # API Resources untuk Standarisasi JSON Response
+│   ├── Models/                # Eloquent Models
+│   └── Repositories/          # Logika Kueri Pembacaan Data
+├── database/
+│   ├── migrations/            # Migrasi Skema Database
+│   └── seeders/               # Data Awal / Seeder
+├── lang/
+│   ├── en/                    # Kamus Bahasa Inggris (welcome.php, auth.php, dll)
+│   └── id/                    # Kamus Bahasa Indonesia (welcome.php, auth.php, dll)
+├── public/
+│   ├── assets/                # Logo (.webp, .ico) & Gambar Statis
+│   └── js/ & css/             # Library Javascript & CSS Publik (jquery, datatables, lucide)
+├── resources/
+│   ├── css/                   # Stylesheet Tailwind CSS v4 & Custom Component CSS
+│   ├── js/                    # Javascript Spesifik Modul & Utilities (ApiProvider)
+│   └── views/                 # Blade Layouts, Components, & View per Modul
+└── routes/
+    └── web.php                # Perutean Web & API
+```
+
+---
+
+## 🚀 Cara Menjalankan Proyek Secara Lokal
+
+### Prasyarat
+* **PHP** `>= 8.2`
+* **Composer** `>= 2.x`
+* **Node.js** `>= 18.x` & **NPM**
+* **MySQL / MariaDB**
+
+### Langkah-langkah Instalasi
+
+1. **Clone repository & masuk ke direktori proyek**:
+   ```bash
+   cd d:/laragon/www/an-mastery-v3
+   ```
+
+2. **Install dependensi PHP & Node.js**:
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **Konfigurasi Environment**:
+   Salin `.env.example` menjadi `.env` dan sesuaikan pengaturan database:
+   ```bash
+   cp .env.example .env
+   ```
+   Atur variabel database pada `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=an_mastery_v3
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Generate Application Key & Jalankan Migrasi**:
+   ```bash
+   php artisan key:generate
+   php artisan migrate --seed
+   ```
+
+5. **Jalankan Development Server**:
+   Jalankan server Laravel dan bundler Vite secara bersamaan:
+   ```bash
+   # Terminal 1: Laravel Development Server
+   php artisan serve
+
+   # Terminal 2: Vite Assets Bundler
+   npm run dev
+   ```
+
+6. **Akses Aplikasi**:
+   Buka browser dan navigasi ke `http://127.0.0.1:8000` atau domain lokal Laragon Anda (misal `http://an-mastery-v3.test`).
+
+---
+
+## 📄 Lisensi & Kredit
+
+Hak Cipta © 2026 **AN Mastery** — Dibuat untuk **Andri Sablon, Gedangsewu — Tulungagung / Kediri**. Seluruh hak cipta dilindungi.
