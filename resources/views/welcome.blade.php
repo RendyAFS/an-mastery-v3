@@ -270,13 +270,9 @@
 
             {{-- Logo --}}
             <a href="{{ route('landing_page') }}" class="flex items-center gap-2.5 no-underline">
-                <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="28" height="28" rx="8" fill="var(--color-primary)" opacity="0.15"/>
-                    <path d="M9 19 L19 9" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="19.5" cy="8.5" r="2" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/>
-                    <path d="M9 19 C7 21, 5 21, 6 23 C7 25, 10 24, 9 26" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2" fill="none"/>
-                </svg>
-                <span class="font-display font-semibold text-lg tracking-tight text-(--color-dark) dark:text-(--color-light)">AN Mastery</span>
+                <img src="{{ asset('assets/Logo-AnMastery.webp') }}"
+                     alt="AN Mastery Logo"
+                     class="h-9 w-auto object-contain">
             </a>
 
             {{-- Controls --}}

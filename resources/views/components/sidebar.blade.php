@@ -14,9 +14,14 @@
         <!-- Header -->
         <header class="p-4 flex items-center justify-between gap-x-2">
             <!-- Brand -->
-            <a class="font-semibold text-xl text-(--color-primary) dark:text-(--color-secondary) hs-overlay-minified:group-hover/sidebar:block hs-overlay-minified:hidden"
+            <a class="flex items-center gap-2 overflow-hidden hs-overlay-minified:group-hover/sidebar:flex hs-overlay-minified:hidden"
                 href="{{ route('dashboard') }}">
-                AN Mastery
+                <img src="{{ asset('assets/Logo-AnMastery.webp') }}"
+                     alt="AN Mastery Logo"
+                     class="h-9 w-auto object-contain flex-shrink-0">
+                <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
+                    AN Mastery
+                </span>
             </a>
 
             <!-- Mobile Close -->

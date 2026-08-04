@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'AN Mastery' }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
     {{-- Icon Library (defer agar tidak blokir render, tapi tetap diparse lebih awal) --}}
     <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
