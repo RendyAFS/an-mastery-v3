@@ -49,6 +49,9 @@
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('js/blockUi.js') }}"></script>
     <script src="{{ asset('js/dataTables.min.js') }}"></script>
+    <script>
+        window.DataTable = window.jQuery.fn.dataTable;
+    </script>
     <script src="{{ asset('js/luicide-latest.js') }}"></script>
 
     {{-- LANG --}}
