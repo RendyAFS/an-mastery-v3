@@ -1,4 +1,4 @@
-@props(['id', 'title' => null, 'size' => 'md'])
+@props(['id', 'title' => null, 'size' => 'md', 'scrollable' => true])
 
 @php
     $sizeMap = [
@@ -9,6 +9,7 @@
         '2xl' => 'sm:max-w-2xl',
     ];
     $maxWidth = $sizeMap[$size] ?? $sizeMap['md'];
+    $bodyOverflowClass = $scrollable ? 'overflow-y-auto' : 'overflow-visible';
 @endphp
 
 <div id="{{ $id }}"
@@ -43,7 +44,7 @@
                 </div>
             @endif
 
-            <div class="p-4 overflow-y-auto space-y-4">
+            <div class="p-4 {{ $bodyOverflowClass }} space-y-4">
                 {{ $slot }}
             </div>
 

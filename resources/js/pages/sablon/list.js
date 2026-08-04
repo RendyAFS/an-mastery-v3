@@ -1,15 +1,17 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
+import trans from "@/utils/trans";
 
-const statusColor = {
-    ON_PROGRESS: "bg-yellow-500/10 text-yellow-600",
-    DONE: "bg-blue-500/10 text-blue-600",
-    DELIVERED: "bg-green-500/10 text-green-600",
-    RETURNED: "bg-red-500/10 text-red-600",
+const statusBadgeMap = {
+    ON_PROGRESS: "badge-warning",
+    DONE: "badge-info",
+    DELIVERED: "badge-success",
+    RETURNED: "badge-danger",
 };
 
 const PageScript = (function () {
     let cardgrid;
+    const modelName = window.langModels?.Sablon ?? "Sablon";
 
     const getISOWeekString = (date) => {
         const target = new Date(date.valueOf());
@@ -54,12 +56,8 @@ const PageScript = (function () {
         syncUrl();
     };
 
-    const statusBadgeMap = {
-        ON_PROGRESS: "badge-warning",
-        DONE: "badge-info",
-        DELIVERED: "badge-success",
-        RETURNED: "badge-danger",
-    };
+    const statusLabel = (status) =>
+        window.langSablon?.statuses?.[status] ?? status;
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
@@ -77,26 +75,26 @@ const PageScript = (function () {
                 </div>
 
                 <span class="badge ${badge}">
-                    ${item.status?.replaceAll("_", " ") ?? "-"}
+                    ${statusLabel(item.status) ?? "-"}
                 </span>
             </div>`;
         const sablonSumaryHtml = `
             <div class="grid grid-cols-2 gap-2">
                 <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Date</p>
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.date}</p>
                     <p class="text-sm font-medium">${item.date_sablon ?? "-"}</p>
                 </div>
                 <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Sablon</p>
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.total_sablon}</p>
                     <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
                 </div>
                 <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.long_fabric}</p>
                     <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
                 </div>
                 <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
-                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} Warna</p>
+                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.type_color}</p>
+                    <p class="text-sm font-medium">${item.typeColor?.name ?? "-"} ${window.langSablon.card.type_color_suffix}</p>
                 </div>
             </div>`;
 
@@ -104,7 +102,7 @@ const PageScript = (function () {
             ? `
                     <div class="space-y-1">
                         <p class="text-xs font-semibold">
-                            Fabric Details
+                            ${window.langSablon.card.fabric_details}
                         </p>
 
                         <ul class="space-y-1 text-xs">
@@ -126,7 +124,7 @@ const PageScript = (function () {
         const employeeDetailsHtml = item.sablonEmployeeDetails?.length
             ? `
                 <div class="space-y-2">
-                    <p class="text-xs font-semibold">Employee Details</p>
+                    <p class="text-xs font-semibold">${window.langSablon.card.employee_details}</p>
 
                     <div class="space-y-2">
                         ${item.sablonEmployeeDetails
@@ -140,20 +138,20 @@ const PageScript = (function () {
                                                 </p>
 
                                                 <p class="text-[11px] text-(--color-dark-gray)">
-                                                    ${detail.layers ?? 0} Layer
+                                                    ${detail.layers ?? 0} ${window.langSablon.card.layer_suffix}
                                                     ${
                                                         detail.is_bon
-                                                            ? `• Bon`
+                                                            ? `• ${window.langSablon.card.bon}`
                                                             : ""
                                                     }
                                                     ${
                                                         detail.is_paid
-                                                            ? `• Paid`
+                                                            ? `• ${window.langSablon.card.paid}`
                                                             : ""
                                                     }
                                                     ${
                                                         detail.is_change
-                                                            ? `• Ganti ke ${detail.employeeChange?.name ?? "-"}`
+                                                            ? `• ${window.langSablon.card.change_to.replace(":name", detail.employeeChange?.name ?? "-")}`
                                                             : ""
                                                     }
                                                 </p>
@@ -184,15 +182,15 @@ const PageScript = (function () {
                     isDeleted
                         ? `
                         <span class="text-xs text-(--color-dark-gray) font-medium flex items-center gap-1">
-                            <i data-lucide="trash-2" class="size-3"></i> Deleted
+                            <i data-lucide="trash-2" class="size-3"></i> ${window.langSablon.card.deleted}
                         </span>
 
                         <div class="flex items-center gap-1">
                             <button data-id="${item.id}" class="btn-restore p-1.5 rounded-lg text-xs text-(--color-success) hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
-                                <i data-lucide="rotate-ccw" class="size-3.5"></i> Restore
+                                <i data-lucide="rotate-ccw" class="size-3.5"></i> ${window.langSablon.card.restore}
                             </button>
                             <button data-id="${item.id}" class="btn-force-delete p-1.5 rounded-lg text-xs text-(--color-red) hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
-                                <i data-lucide="trash" class="size-3.5"></i> Delete
+                                <i data-lucide="trash" class="size-3.5"></i> ${window.langSablon.card.delete}
                             </button>
                         </div>
                     `
@@ -207,11 +205,10 @@ const PageScript = (function () {
                             data-status="${item.status}">
                             <i data-lucide="badge-check" class="size-4"></i>
                         </button>
-                            <a
-                                href="${route("sablons.edit", item.id)}"
-                                class="p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) cursor-pointer">
-                                <i data-lucide="square-pen" class="size-4"></i>
-                            </a>
+                        <a href="${route("sablons.edit", item.id)}"
+                            class="p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) cursor-pointer">
+                            <i data-lucide="square-pen" class="size-4"></i>
+                        </a>
 
                             <button data-id="${item.id}" class="btn-delete p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
                                 <i data-lucide="trash-2" class="size-4"></i>
@@ -249,7 +246,10 @@ const PageScript = (function () {
                     status,
                 });
 
-                Toast.success("Success", "Status updated successfully");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    window.langSablon.status_updated_success,
+                );
 
                 HSOverlay.close("#modal-update-status");
 
@@ -283,15 +283,21 @@ const PageScript = (function () {
         $(document).on("click", ".btn-delete", async function () {
             const id = $(this).data("id");
 
-            const confirmed = await Confirm.delete(
-                "Are you sure you want to delete this Sablon?",
+            const confirmed = await Confirm.show(
+                window.langSablon.delete_confirm_message,
+                trans("langCrud", "delete_confirm_title"),
+                window.langCustomAlert.delete,
+                window.langCustomAlert.cancel,
             );
 
             if (!confirmed) return;
 
             try {
                 await ApiProvider.delete(route("sablons.destroy", id));
-                Toast.success("Success", "Sablon deleted successfully");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "deleted", { model: modelName }),
+                );
                 cardgrid.reload();
             } catch (e) {
                 console.error(e);
@@ -302,27 +308,44 @@ const PageScript = (function () {
             const id = $(this).data("id");
 
             const confirmed = await Confirm.show(
-                "Restore this Sablon?",
-                "Confirmation",
+                window.langSablon.restore_confirm_message,
+                trans("langCrud", "restore_confirm_title"),
             );
             if (!confirmed) return;
 
-            await ApiProvider.put(route("sablons.restore", id));
-            Toast.success("Success", "Sablon restored");
-            cardgrid.reload();
+            try {
+                await ApiProvider.put(route("sablons.restore", id));
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "restored", { model: modelName }),
+                );
+                cardgrid.reload();
+            } catch (e) {
+                console.error(e);
+            }
         });
 
         $(document).on("click", ".btn-force-delete", async function () {
             const id = $(this).data("id");
 
-            const confirmed = await Confirm.delete(
-                "This will permanently delete the Sablon. Continue?",
+            const confirmed = await Confirm.show(
+                window.langSablon.force_delete_confirm_message,
+                trans("langCrud", "force_delete_confirm_title"),
+                window.langUi?.["Force Delete"],
+                window.langCustomAlert.cancel,
             );
             if (!confirmed) return;
 
-            await ApiProvider.delete(route("sablons.force-delete", id));
-            Toast.success("Success", "Sablon permanently deleted");
-            cardgrid.reload();
+            try {
+                await ApiProvider.delete(route("sablons.force-delete", id));
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "force_deleted", { model: modelName }),
+                );
+                cardgrid.reload();
+            } catch (e) {
+                console.error(e);
+            }
         });
 
         $(document).on(

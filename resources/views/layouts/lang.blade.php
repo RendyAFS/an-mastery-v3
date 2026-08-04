@@ -40,6 +40,7 @@
     $langPriceEmployee = collect(trans('price-employee'))->toArray();
     $langPresence = collect(trans('presence'))->toArray();
     $langFabric = collect(trans('fabric'))->toArray();
+    $langSablon = collect(trans('sablon'))->toArray();
     // END CRUD
 @endphp
 
@@ -63,5 +64,6 @@
     window.langPriceEmployee = @json($langPriceEmployee);
     window.langPresence = @json($langPresence);
     window.langFabric = @json($langFabric);
+    window.langSablon = @json($langSablon);
     // END CRUD
 </script>

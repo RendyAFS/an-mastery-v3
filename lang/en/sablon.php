@@ -1,0 +1,113 @@
+<?php
+return [
+    'description'   => 'Manage sablon data',
+    'create_title'  => 'Create Sablon',
+    'edit_title'    => 'Edit Sablon',
+
+    'filter'        => [
+        'week_start' => 'From Week',
+        'week_end'   => 'To Week',
+        'reset'      => 'Reset to Current Week',
+    ],
+
+    'statuses'      => [
+        'ON_PROGRESS' => 'On Progress',
+        'DONE'        => 'Done',
+        'DELIVERED'   => 'Delivered',
+        'RETURNED'    => 'Returned',
+    ],
+
+    'main_info'     => [
+        'title'  => 'Main Info',
+        'fields' => [
+            'supplier'             => 'Supplier',
+            'fabric'               => 'Fabric',
+            'image_fabric'         => 'Image Fabric',
+            'type_color'           => 'Type Color',
+            'type_fabric'          => 'Type Fabric',
+            'price_employee'       => 'Price Employee',
+            'total_long_fabric'    => 'Total Long Fabric',
+            'total_sablon'         => 'Total Sablon',
+            'date_sablon'          => 'Date Sablon',
+            'status'               => 'Status',
+            'is_billed_in_advance' => 'Billed in Advance',
+            'notes'                => 'Notes',
+        ],
+        'placeholders' => [
+            'supplier'       => 'Choose Supplier',
+            'fabric'         => 'Choose Fabric',
+            'image_fabric'   => 'Choose Image Fabric',
+            'type_color'     => 'Choose Type Color',
+            'type_fabric'    => 'Choose Type Fabric',
+            'price_employee' => 'Choose Price Employee',
+            'status'         => 'Choose Status',
+        ],
+        'search_placeholders' => [
+            'supplier'       => 'Search supplier...',
+            'fabric'         => 'Search fabric...',
+            'image_fabric'   => 'Search image fabric...',
+            'type_color'     => 'Search type color...',
+            'type_fabric'    => 'Search type fabric...',
+            'price_employee' => 'Search...',
+        ],
+        'hint_choose_supplier_first' => 'Choose Supplier first to show Fabric',
+        'hint_total_long_fabric'     => 'Automatically from total Fabric Detail',
+    ],
+
+    'fabric_detail' => [
+        'title'                     => 'Fabric Detail (Color - Stock)',
+        'no'                        => 'No',
+        'fabric_detail_label'       => 'Fabric Detail (Color - Stock)',
+        'long_fabric'               => 'Long Fabric',
+        'action'                    => 'Action',
+        'choose_fabric_detail'      => 'Choose Fabric Detail',
+        'search_color_placeholder'  => 'Search color...',
+        'no_fabric_detail_found'    => 'No fabric detail found for selected Fabric',
+        'add_detail'                => 'Add Detail',
+    ],
+
+    'employee_detail' => [
+        'title'                    => 'Employee Detail (Employee & Fee)',
+        'employee_number'          => 'Employee #:number',
+        'employee'                 => 'Employee',
+        'layers'                   => 'Layers',
+        'fee_auto'                 => 'Fee (auto)',
+        'change_employee'          => 'Change Employee?',
+        'employee_change'          => 'Employee Change',
+        'is_bon'                   => 'Is Bon',
+        'is_paid'                  => 'Is Paid',
+        'choose_employee'          => 'Choose Employee',
+        'search_employee_placeholder' => 'Search employee...',
+        'no_employee_found'        => 'No employee found',
+        'no_employee_detail_yet'   => 'No employee detail yet',
+        'add_employee'             => 'Add Employee',
+    ],
+
+    'status_modal'  => [
+        'title'  => 'Update Status',
+        'cancel' => 'Cancel',
+        'save'   => 'Save',
+    ],
+
+    'card'          => [
+        'date'                => 'Date',
+        'total_sablon'        => 'Total Sablon',
+        'long_fabric'         => 'Long Fabric',
+        'type_color'          => 'Type Color',
+        'type_color_suffix'   => 'Color',
+        'fabric_details'      => 'Fabric Details',
+        'employee_details'    => 'Employee Details',
+        'layer_suffix'        => 'Layer',
+        'bon'                 => 'Bon',
+        'paid'                => 'Paid',
+        'change_to'           => 'Change to :name',
+        'deleted'             => 'Deleted',
+        'restore'             => 'Restore',
+        'delete'              => 'Delete',
+    ],
+
+    'delete_confirm_message'       => 'Are you sure you want to delete this Sablon?',
+    'restore_confirm_message'      => 'Restore this Sablon?',
+    'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
+    'status_updated_success'       => 'Status updated successfully',
+];

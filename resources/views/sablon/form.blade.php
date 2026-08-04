@@ -24,6 +24,8 @@
             ],
         )
         ->values();
+
+    $statusOptions = __('sablon.statuses');
 @endphp
 
 <div x-data="sablonForm(
@@ -38,7 +40,7 @@
     {{ Js::from($fabrics) }}
 )" x-init="init()">
 
-    @include('sablon.partials._main_info')
+    @include('sablon.partials._main_info', ['statusOptions' => $statusOptions])
     @include('sablon.partials._fabric-detail')
     @include('sablon.partials._employee-detail')
 </div>

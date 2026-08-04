@@ -2,9 +2,11 @@ import Alpine from "alpinejs";
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let form, mode, id;
+    const modelName = window.langModels?.Sablon ?? "Sablon";
 
     function bindEvents() {
         if (!form) return;
@@ -75,17 +77,28 @@ const PageScript = (function () {
             if (mode === "create") {
                 await ApiProvider.post(route("sablons.store"), payload);
                 if (action === "save-another") {
-                    Toast.success("Success", "Sablon Successfully Created");
+                    Toast.success(
+                        window.langCustomAlert.success,
+                        trans("langCrud", "created", { model: modelName }),
+                    );
                     resetForm();
                     return;
                 }
-                flashToast("success", "Success", "Sablon Successfully Created");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "created", { model: modelName }),
+                );
                 window.location.href = route("sablons.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(route("sablons.update", id), payload);
-                flashToast("success", "Success", "Sablon Successfully Updated");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
                 window.location.href = route("sablons.index");
             }
         } catch (error) {
