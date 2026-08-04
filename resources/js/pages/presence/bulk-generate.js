@@ -30,7 +30,7 @@ const BulkGenerateModal = (function () {
 
         if (employees.length === 0) {
             $list.append(
-                `<p class="px-3 py-2 text-sm text-(--color-gray)">No employees found</p>`,
+                `<p class="px-3 py-2 text-sm text-(--color-gray)">${window.langPresence.bulk.no_employees_found}</p>`,
             );
             return;
         }
@@ -47,7 +47,7 @@ const BulkGenerateModal = (function () {
 
     const resetForm = async () => {
         $("#bulk_week_of").val(dateToIsoWeek(getCurrentWeekOf()));
-        $("#bulk_amount").val("10000");
+        $("#bulk_amount").val("0");
         RupiahInput.refresh(document.getElementById("bulk_amount"));
         $("#bulk_check_all").prop("checked", false);
 
@@ -63,6 +63,14 @@ const BulkGenerateModal = (function () {
 
     const close = () => HSOverlay.close("#hs-bulk-generate-modal");
 
+    const handleQuickAmount = (btn) => {
+        const target = document.querySelector(btn.dataset.target);
+        if (!target) return;
+
+        target.value = btn.dataset.quickAmount;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+
     const submit = async (submitter) => {
         const weekValue = $("#bulk_week_of").val();
         const amount = rawNumber($("#bulk_amount").val());
@@ -73,13 +81,19 @@ const BulkGenerateModal = (function () {
             .get();
 
         if (!weekValue) {
-            Toast.error("Error", "Please select a week");
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.bulk.select_week_error,
+            );
             stopLoading(submitter);
             return;
         }
 
         if (employeeIds.length === 0) {
-            Toast.error("Error", "Please select at least one employee");
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.bulk.select_employee_error,
+            );
             stopLoading(submitter);
             return;
         }
@@ -96,8 +110,8 @@ const BulkGenerateModal = (function () {
                 payload,
             );
             Toast.success(
-                "Success",
-                response.message ?? "Presence generated successfully",
+                window.langCustomAlert.success,
+                response.message ?? window.langPresence.bulk.generated_success,
             );
             close();
             onGenerated();
@@ -110,6 +124,10 @@ const BulkGenerateModal = (function () {
 
     const bindEvents = () => {
         $("#btn-bulk-generate").on("click", open);
+
+        $(document).on("click", "[data-quick-amount]", function () {
+            handleQuickAmount(this);
+        });
 
         $(document).on("change", "#bulk_check_all", function () {
             $(".bulk-employee-checkbox").prop(

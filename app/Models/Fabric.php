@@ -56,7 +56,7 @@ class Fabric extends Model
         $seri = $stocks->min();
         $totalPcs = $stocks->sum();
 
-        $colors = $details->map(function ($detail) {
+        $colors = $details->map(function ($detail) use ($seri) {
 
             $used = $detail->sablonDetails()
                 ->whereHas('sablon', function ($q) {
@@ -67,9 +67,10 @@ class Fabric extends Model
             $available = max($detail->stock - $used, 0);
 
             return [
-                'name'  => $detail->colorFabric?->name,
-                'color' => $detail->colorFabric?->code_color,
-                'stock' => $available,
+                'name'   => $detail->colorFabric?->name,
+                'color'  => $detail->colorFabric?->code_color,
+                'stock'  => $available,
+                'excess' => max($available - $seri, 0),
             ];
         });
 
@@ -89,13 +90,16 @@ class Fabric extends Model
         if ($details->isEmpty()) {
             return [
                 'total_pcs'   => 0,
+                'seri'        => 0,
                 'type_fabric' => $this->typeFabric?->name,
                 'date_coming' => $this->date_coming?->format('Y-m-d'),
                 'colors'      => [],
             ];
         }
 
-        $colors = $details->map(function ($detail) {
+        $seri = $details->min('stock');
+
+        $colors = $details->map(function ($detail) use ($seri) {
 
             $statuses = collect(StatusSablonEnum::cases())->map(function (StatusSablonEnum $status) use ($detail) {
 
@@ -116,6 +120,7 @@ class Fabric extends Model
                 'name'     => $detail->colorFabric?->name,
                 'color'    => $detail->colorFabric?->code_color,
                 'stock'    => $detail->stock,
+                'excess'   => max($detail->stock - $seri, 0),
                 'statuses' => $statuses,
             ];
         });
@@ -124,6 +129,7 @@ class Fabric extends Model
 
         return [
             'total_pcs'   => $totalPcs,
+            'seri'        => $seri,
             'type_fabric' => $this->typeFabric?->name,
             'date_coming' => $this->date_coming?->format('Y-m-d'),
             'colors'      => $colors,

@@ -6,33 +6,34 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveTypeColorRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'name'  => 'required|integer|min:1',
-            'notes' => 'nullable|string',
+            'name'  => ['required', 'integer', 'min:1'],
+            'notes' => ['nullable', 'string'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Name is required.',
-            'name.min'      => 'Name must be at least 1.',
-            'notes.string'  => 'Notes must be a string.',
+            'name.required' => __('type-color.validation.name.required'),
+            'name.integer'  => __('type-color.validation.name.integer'),
+            'name.min'      => __('type-color.validation.name.min'),
+            'notes.string'  => __('type-color.validation.notes.string'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'  => __('type-color.form.name'),
+            'notes' => __('type-color.form.notes'),
         ];
     }
 }

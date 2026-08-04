@@ -16,22 +16,22 @@ export const sablonHeaderHtml = (item) => `
             <p class="text-xs text-(--color-dark-gray)">${item.date_sablon ?? "-"}</p>
         </div>
         <span class="badge ${statusBadgeMap[item.status] ?? "badge-primary"} shrink-0">
-            ${item.status_label ?? (item.status ? item.status.replaceAll("_", " ") : "-")}
+            ${item.status_label ?? window.langSablon?.statuses?.[item.status] ?? item.status ?? "-"}
         </span>
     </div>`;
 
 export const sablonSummaryHtml = (item) => `
     <div class="grid grid-cols-2 gap-2">
         <div class="bg-(--color-gray)/10 rounded-lg p-2">
-            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Long Fabric</p>
+            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langBillSupplier.sablon_card.long_fabric}</p>
             <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
         </div>
         <div class="bg-(--color-gray)/10 rounded-lg p-2">
-            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Type Color</p>
-            <p class="text-sm font-medium">${item.type_color ?? "-"} Warna</p>
+            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langBillSupplier.sablon_card.type_color}</p>
+            <p class="text-sm font-medium">${item.type_color ?? "-"} ${window.langBillSupplier.sablon_card.type_color_suffix}</p>
         </div>
         <div class="bg-(--color-gray)/10 rounded-lg p-2 col-span-2">
-            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">Total Fee</p>
+            <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langBillSupplier.sablon_card.total_fee}</p>
             <p class="text-sm font-semibold text-(--color-primary)">Rp${RupiahInput.format(item.total_fee ?? 0)}</p>
         </div>
     </div>`;
@@ -42,7 +42,7 @@ export const fabricDetailsHtml = (item) => {
 
     return `
     <div class="space-y-1">
-        <p class="text-xs font-semibold">Fabric Details</p>
+        <p class="text-xs font-semibold">${window.langBillSupplier.sablon_card.fabric_details}</p>
         <ul class="space-y-1 text-xs">
             ${details
                 .map(

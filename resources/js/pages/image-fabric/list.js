@@ -1,8 +1,10 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let cardgrid;
+    const modelName = window.langModels?.ImageFabric ?? "Image Fabric";
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
@@ -30,18 +32,18 @@ const PageScript = (function () {
                     isDeleted
                         ? `
                     <span class="text-xs text-(--color-gray) font-medium flex items-center gap-1">
-                        <i data-lucide="trash-2" class="size-3"></i> Deleted
+                        <i data-lucide="trash-2" class="size-3"></i> ${window.langUi?.Deleted ?? "Deleted"}
                     </span>
                     <div class="flex items-center gap-1">
                         <button data-id="${item.id}"
                             class="btn-restore p-1.5 rounded-lg text-xs text-(--color-success)
                             hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
-                            <i data-lucide="rotate-ccw" class="size-3.5"></i> Restore
+                            <i data-lucide="rotate-ccw" class="size-3.5"></i> ${window.langUi?.Restore ?? "Restore"}
                         </button>
                         <button data-id="${item.id}"
                             class="btn-force-delete p-1.5 rounded-lg text-xs text-(--color-red)
                             hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
-                            <i data-lucide="trash" class="size-3.5"></i> Delete
+                            <i data-lucide="trash" class="size-3.5"></i> ${window.langUi?.Delete ?? "Delete"}
                         </button>
                     </div>
                 `
@@ -80,13 +82,21 @@ const PageScript = (function () {
     const bindEvents = () => {
         $(document).on("click", ".btn-delete", async function () {
             const id = $(this).data("id");
-            const confirmed = await Confirm.delete(
-                "Are you sure you want to delete this Image Fabric?",
+            const confirmed = await Confirm.show(
+                trans("langCrud", "delete_confirm_message", {
+                    model: modelName,
+                }),
+                trans("langCrud", "delete_confirm_title"),
+                window.langCustomAlert.delete,
+                window.langCustomAlert.cancel,
             );
             if (!confirmed) return;
             try {
                 await ApiProvider.delete(route("image_fabrics.destroy", id));
-                Toast.success("Success", "Image Fabric deleted successfully");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "deleted", { model: modelName }),
+                );
                 cardgrid.reload();
             } catch (e) {
                 console.error(e);
@@ -96,23 +106,36 @@ const PageScript = (function () {
         $(document).on("click", ".btn-restore", async function () {
             const id = $(this).data("id");
             const confirmed = await Confirm.show(
-                "Restore this Image Fabric?",
-                "Confirmation",
+                trans("langCrud", "restore_confirm_message_short", {
+                    model: modelName,
+                }),
+                trans("langCrud", "restore_confirm_title"),
             );
             if (!confirmed) return;
             await ApiProvider.put(route("image_fabrics.restore", id));
-            Toast.success("Success", "Image Fabric restored");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "restored", { model: modelName }),
+            );
             cardgrid.reload();
         });
 
         $(document).on("click", ".btn-force-delete", async function () {
             const id = $(this).data("id");
-            const confirmed = await Confirm.delete(
-                "This will permanently delete the Image Fabric. Continue?",
+            const confirmed = await Confirm.show(
+                trans("langCrud", "force_delete_confirm_message", {
+                    model: modelName,
+                }),
+                trans("langCrud", "force_delete_confirm_title"),
+                window.langUi?.["Force Delete"],
+                window.langCustomAlert.cancel,
             );
             if (!confirmed) return;
             await ApiProvider.delete(route("image_fabrics.force-delete", id));
-            Toast.success("Success", "Image Fabric permanently deleted");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "force_deleted", { model: modelName }),
+            );
             cardgrid.reload();
         });
     };

@@ -83,7 +83,10 @@ const FilePondHelper = (function () {
                         try {
                             response = JSON.parse(request.responseText);
                         } catch (e) {
-                            Toast.error("Server error");
+                            Toast.error(
+                                window.langFilepond?.server_error ??
+                                    "Server error",
+                            );
                             return;
                         }
 
@@ -93,8 +96,13 @@ const FilePondHelper = (function () {
                             const message =
                                 response?.errors?.file?.[0] ||
                                 response?.message ||
-                                "Upload failed";
-                            Toast.error("Upload failed", message);
+                                (window.langFilepond?.upload_failed ??
+                                    "Upload failed");
+                            Toast.error(
+                                window.langFilepond?.upload_failed ??
+                                    "Upload failed",
+                                message,
+                            );
                             error(message);
                         }
                     };
@@ -124,11 +132,18 @@ const FilePondHelper = (function () {
                               ) {
                                   load(request.response);
                               } else {
-                                  error("Error loading file");
+                                  error(
+                                      window.langFilepond?.load_error ??
+                                          "Error loading file",
+                                  );
                               }
                           };
 
-                          request.onerror = () => error("Network error");
+                          request.onerror = () =>
+                              error(
+                                  window.langFilepond?.network_error ??
+                                      "Network error",
+                              );
                           request.send();
 
                           return {

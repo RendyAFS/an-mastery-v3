@@ -2,10 +2,12 @@ import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let datatable;
     let form;
+    const modelName = window.langModels?.TypeFabric ?? "Type Fabric";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -75,7 +77,7 @@ const PageScript = (function () {
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
+                                            ${window.langUi?.Edit ?? "Edit"}
                                         </button>
 
                                         <button type="button" data-id="${id}"
@@ -83,7 +85,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
+                                            ${window.langUi?.Delete ?? "Delete"}
                                         </button>
                                         `
                                         : `
@@ -92,7 +94,7 @@ const PageScript = (function () {
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
+                                            ${window.langUi?.Restore ?? "Restore"}
                                         </button>
 
                                         <button type="button" data-id="${id}"
@@ -100,7 +102,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
+                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
                                         </button>
                                         `
                                 }
@@ -139,12 +141,11 @@ const PageScript = (function () {
     const resetModal = () => {
         form.reset();
         setFormMode("create");
-        setModalTitle("Add Type Fabric");
+        setModalTitle(trans("langCrud", "add_title", { model: modelName }));
     };
 
     const fillForm = (data) => {
         $("#name").val(data.name ?? "");
-        $("#code_color").val(data.code_color ?? "");
         $("#notes").val(data.notes ?? "");
     };
 
@@ -159,7 +160,10 @@ const PageScript = (function () {
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("type_fabrics.store"), payload);
-                Toast.success("Success", "Type Fabric Successfully Created");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "created", { model: modelName }),
+                );
             }
 
             if (mode === "edit") {
@@ -167,7 +171,10 @@ const PageScript = (function () {
                     route("type_fabrics.update", id),
                     payload,
                 );
-                Toast.success("Success", "Type Fabric Successfully Updated");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
             }
 
             closeModal();
@@ -185,7 +192,7 @@ const PageScript = (function () {
     };
 
     const handleEdit = async (id) => {
-        setModalTitle("Edit Type Fabric");
+        setModalTitle(trans("langCrud", "edit_title", { model: modelName }));
         setFormMode("edit", id);
 
         try {
@@ -196,20 +203,30 @@ const PageScript = (function () {
             openModal();
         } catch (error) {
             console.error("Fetch type fabric error:", error);
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langTypeFabric.fetch_error,
+            );
             closeModal();
         }
     };
 
     const handleDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this type fabric? This action cannot be undone.",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "delete_confirm_message", { model: modelName }),
+            trans("langCrud", "delete_confirm_title"),
+            window.langCustomAlert.delete,
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.delete(route("type_fabrics.destroy", id));
-            Toast.success("Success", "Type fabric deleted successfully");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "deleted", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Delete type fabric error:", error);
@@ -218,15 +235,20 @@ const PageScript = (function () {
 
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this type fabric?",
-            "Confirmation",
+            trans("langCrud", "restore_confirm_message_short", {
+                model: modelName,
+            }),
+            trans("langCrud", "restore_confirm_title"),
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.put(route("type_fabrics.restore", id));
-            Toast.success("Success", "Type fabric restored");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "restored", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Restore type fabric error:", error);
@@ -234,15 +256,23 @@ const PageScript = (function () {
     };
 
     const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the type fabric. Continue?",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "force_delete_confirm_message", {
+                model: modelName,
+            }),
+            trans("langCrud", "force_delete_confirm_title"),
+            window.langUi?.["Force Delete"],
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.delete(route("type_fabrics.force-delete", id));
-            Toast.success("Success", "Type fabric permanently deleted");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "force_deleted", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Force delete type fabric error:", error);

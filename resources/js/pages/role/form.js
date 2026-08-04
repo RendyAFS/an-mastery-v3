@@ -1,9 +1,11 @@
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let form, mode, id;
+    const modelName = window.langModels?.Role ?? "Role";
 
     function bindEvents() {
         if (!form) return;
@@ -35,27 +37,31 @@ const PageScript = (function () {
 
         payload = normalizeFormInputs(form, payload);
 
-        if (mode === "edit" && !payload.password) {
-            delete payload.password;
-        }
-
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("roles.store"), payload);
 
+                const message = trans("langCrud", "created", {
+                    model: modelName,
+                });
+
                 if (action === "save-another") {
-                    Toast.success("Success", "User Successfully Created");
+                    Toast.success(window.langCustomAlert.success, message);
                     resetForm();
                     return;
                 }
 
-                flashToast("success", "Success", "User Successfully Created");
+                flashToast("success", window.langCustomAlert.success, message);
                 window.location.href = route("roles.index");
             }
 
             if (mode === "edit") {
                 await ApiProvider.put(route("roles.update", id), payload);
-                flashToast("success", "Success", "User Successfully Updated");
+                flashToast(
+                    "success",
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
                 window.location.href = route("roles.index");
             }
         } catch (error) {
@@ -82,7 +88,6 @@ window.permissionManager = function (initial = []) {
     return {
         selected: initial,
 
-        // ===== HELPERS =====
         getAllPermissions() {
             return Array.from(
                 document.querySelectorAll('input[name="permissions[]"]'),
@@ -105,7 +110,6 @@ window.permissionManager = function (initial = []) {
             ).map((cb) => cb.value);
         },
 
-        // ===== GLOBAL =====
         toggleAll() {
             const all = this.getAllPermissions();
 
@@ -123,7 +127,6 @@ window.permissionManager = function (initial = []) {
             );
         },
 
-        // ===== GROUP =====
         toggleGroup(groupId) {
             const groupPermissions = this.getPermissionsByGroup(groupId);
 
@@ -151,7 +154,6 @@ window.permissionManager = function (initial = []) {
             );
         },
 
-        // ===== SUBMENU =====
         toggleSubmenu(menuId) {
             const submenuPermissions = this.getPermissionsBySubmenu(menuId);
 

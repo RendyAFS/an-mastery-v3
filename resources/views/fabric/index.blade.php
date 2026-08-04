@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Fabric'])
+@extends('layouts.main', ['title' => __('models.Fabric')])
 
 @push('scripts')
     @vite('resources/js/pages/fabric/list.js')
@@ -8,15 +8,15 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Fabric</h1>
-                <p class="text-sm">Manage fabric data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.Fabric') }}</h1>
+                <p class="text-sm">{{ __('fabric.description') }}</p>
             </div>
 
             <a href="{{ route('fabrics.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Fabric
+                {{ __('crud.add_title', ['model' => __('models.Fabric')]) }}
             </a>
         </div>
 
@@ -25,29 +25,29 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Supplier
+                        {{ __('fabric.fields.supplier') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Code
+                            {{ __('fabric.fields.code') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Type Seri
+                            {{ __('fabric.fields.type_seri') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Stock Total
+                            {{ __('fabric.fields.stock_total') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('fabric.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

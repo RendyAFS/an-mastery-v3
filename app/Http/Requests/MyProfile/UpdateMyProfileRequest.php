@@ -35,12 +35,20 @@ class UpdateMyProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required'  => 'Name is required.',
-            'name.string'    => 'Name must be a string.',
-            'name.max'       => 'Name must be less than 255 characters.',
-            'email.required' => 'Email is required.',
-            'email.email'    => 'Email must be a valid email address.',
-            'email.unique'   => 'Email has already been taken.',
+            'name.required'  => __('my-profile.validation.name.required'),
+            'name.string'    => __('my-profile.validation.name.string'),
+            'name.max'       => __('my-profile.validation.name.max'),
+            'email.required' => __('my-profile.validation.email.required'),
+            'email.email'    => __('my-profile.validation.email.email'),
+            'email.unique'   => __('my-profile.validation.email.unique'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name'  => __('my-profile.form.name'),
+            'email' => __('my-profile.form.email'),
         ];
     }
 }

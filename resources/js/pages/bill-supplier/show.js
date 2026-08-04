@@ -1,5 +1,6 @@
 import ApiProvider from "@/utils/api-provider";
 import RupiahInput from "@/utils/rupiah-input";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let supplierId;
@@ -32,19 +33,19 @@ const PageScript = (function () {
             .html(
                 [
                     summaryCard(
-                        "Belum Lunas",
+                        window.langBillSupplier.show.summary_unpaid,
                         formatCurrency(totalUnpaid),
                         "text-(--color-red)",
                         "alert-circle",
                     ),
                     summaryCard(
-                        "Lunas",
+                        window.langBillSupplier.show.summary_paid,
                         formatCurrency(totalPaid),
                         "text-(--color-success)",
                         "check-circle-2",
                     ),
                     summaryCard(
-                        "Total Batch",
+                        window.langBillSupplier.show.summary_batches,
                         totalBatches,
                         "text-(--color-primary)",
                         "layers",
@@ -57,7 +58,7 @@ const PageScript = (function () {
         <div class="flex items-center justify-between gap-3 text-sm py-1.5">
             <span class="truncate text-(--color-dark) dark:text-(--color-light)/90">
                 <span class="font-medium">${item.type_fabric ?? "-"} ${item.image_fabric ?? "-"}</span>
-                <span class="text-(--color-dark) dark:text-(--color-light)/90">· ${item.type_color ?? "-"} Warna · ${item.total_long_fabric ?? "-"} Meter</span>
+                <span class="text-(--color-dark) dark:text-(--color-light)/90">· ${item.type_color ?? "-"} ${window.langBillSupplier.sablon_card.type_color_suffix} · ${item.total_long_fabric ?? "-"} Meter</span>
             </span>
             <span class="font-semibold shrink-0">${formatCurrency(item.total_fee)}</span>
         </div>`;
@@ -65,8 +66,8 @@ const PageScript = (function () {
     const batchCard = (batch) => {
         const items = batch.items ?? [];
         const statusBadge = batch.is_paid
-            ? `<span class="badge badge-success">Lunas</span>`
-            : `<span class="badge badge-danger">Belum Lunas</span>`;
+            ? `<span class="badge badge-success">${window.langBillSupplier.show.paid_badge}</span>`
+            : `<span class="badge badge-danger">${window.langBillSupplier.show.unpaid_badge}</span>`;
 
         return `
         <div class="p-4 rounded-xl border border-(--color-gray)/10 bg-(--color-light) dark:bg-(--color-dark) shadow-sm space-y-3">
@@ -75,7 +76,7 @@ const PageScript = (function () {
                 <div class="min-w-0 space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                         ${statusBadge}
-                        <span class="text-sm font-semibold">${batch.count} Sablon</span>
+                        <span class="text-sm font-semibold">${trans("langBillSupplier", "show.sablon_count", { count: batch.count })}</span>
                     </div>
                     ${batch.notes ? `<p class="text-sm text-(--color-gray) truncate">${batch.notes}</p>` : ""}
                     <p class="text-xs text-(--color-gray) flex items-center gap-1">
@@ -84,25 +85,25 @@ const PageScript = (function () {
                 </div>
 
                 <div class="flex items-center gap-1 shrink-0">
-                    <button data-batch="${batch.batch}" title="${batch.is_paid ? "Tandai Belum Lunas" : "Tandai Lunas"}"
+                    <button data-batch="${batch.batch}" title="${batch.is_paid ? window.langBillSupplier.show.mark_unpaid : window.langBillSupplier.show.mark_paid}"
                         class="btn-toggle-paid p-2 rounded-lg ${batch.is_paid ? "text-(--color-red)" : "text-(--color-success)"} hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="${batch.is_paid ? "x-circle" : "check-circle-2"}" class="size-4"></i>
                     </button>
-                    <a href="${route("bill_suppliers.batch.edit", batch.batch)}" title="Edit" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
+                    <a href="${route("bill_suppliers.batch.edit", batch.batch)}" title="${window.langBillSupplier.show.edit}" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="square-pen" class="size-4"></i>
                     </a>
-                    <button data-batch="${batch.batch}" title="Hapus" class="btn-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
+                    <button data-batch="${batch.batch}" title="${window.langBillSupplier.show.delete}" class="btn-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="trash-2" class="size-4"></i>
                     </button>
                 </div>
             </div>
 
             <div class="border-t border-(--color-gray)/15 pt-2.5 divide-y divide-(--color-gray)/10">
-                ${items.length ? items.map(batchItemRow).join("") : `<p class="text-sm text-(--color-gray) py-1.5">Tidak ada rincian</p>`}
+                ${items.length ? items.map(batchItemRow).join("") : `<p class="text-sm text-(--color-gray) py-1.5">${window.langBillSupplier.show.no_detail}</p>`}
             </div>
 
             <div class="flex items-center justify-between pt-2.5 border-t border-(--color-gray)/15">
-                <span class="text-sm font-semibold">Total</span>
+                <span class="text-sm font-semibold">${window.langBillSupplier.show.total}</span>
                 <span class="font-bold text-base text-(--color-primary)">${formatCurrency(batch.total_fee)}</span>
             </div>
         </div>`;
@@ -128,18 +129,18 @@ const PageScript = (function () {
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div class="space-y-3">
                     <p class="text-sm font-bold text-(--color-red) uppercase tracking-wide flex items-center gap-1">
-                        <i data-lucide="clock" class="size-4"></i> Belum Lunas (${week.unpaid.length})
+                        <i data-lucide="clock" class="size-4"></i> ${trans("langBillSupplier", "show.unpaid_header", { count: week.unpaid.length })}
                     </p>
                     <div class="space-y-3">
-                        ${week.unpaid.length ? week.unpaid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">Tidak ada data</p>`}
+                        ${week.unpaid.length ? week.unpaid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">${window.langBillSupplier.show.no_data}</p>`}
                     </div>
                 </div>
                 <div class="space-y-3">
                     <p class="text-sm font-bold text-(--color-success) uppercase tracking-wide flex items-center gap-1">
-                        <i data-lucide="check" class="size-4"></i> Lunas (${week.paid.length})
+                        <i data-lucide="check" class="size-4"></i> ${trans("langBillSupplier", "show.paid_header", { count: week.paid.length })}
                     </p>
                     <div class="space-y-3">
-                        ${week.paid.length ? week.paid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">Tidak ada data</p>`}
+                        ${week.paid.length ? week.paid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">${window.langBillSupplier.show.no_data}</p>`}
                     </div>
                 </div>
             </div>
@@ -203,8 +204,8 @@ const PageScript = (function () {
             const batch = $(this).data("batch");
 
             const confirmed = await Confirm.show(
-                "Ubah status pembayaran batch ini?",
-                "Konfirmasi",
+                window.langBillSupplier.show.toggle_confirm_message,
+                window.langBillSupplier.show.toggle_confirm_title,
             );
             if (!confirmed) return;
 
@@ -212,7 +213,10 @@ const PageScript = (function () {
                 await ApiProvider.put(
                     route("bill_suppliers.batch.toggle-paid", batch),
                 );
-                Toast.success("Success", "Status pembayaran berhasil diubah");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    window.langBillSupplier.show.toggle_success,
+                );
                 load();
             } catch (err) {
                 console.error(err);
@@ -221,15 +225,27 @@ const PageScript = (function () {
 
         $(document).on("click", ".btn-delete", async function () {
             const batch = $(this).data("batch");
-            const confirmed = await Confirm.delete(
-                "Yakin ingin menghapus batch tagihan ini?",
+
+            const confirmed = await Confirm.show(
+                window.langBillSupplier.show.delete_confirm_message,
+                trans("langCrud", "delete_confirm_title"),
+                window.langCustomAlert.delete,
+                window.langCustomAlert.cancel,
             );
             if (!confirmed) return;
-            await ApiProvider.delete(
-                route("bill_suppliers.batch.destroy", batch),
-            );
-            Toast.success("Success", "Batch tagihan deleted successfully");
-            load();
+
+            try {
+                await ApiProvider.delete(
+                    route("bill_suppliers.batch.destroy", batch),
+                );
+                Toast.success(
+                    window.langCustomAlert.success,
+                    window.langBillSupplier.show.batch_deleted_success,
+                );
+                load();
+            } catch (err) {
+                console.error(err);
+            }
         });
     };
 

@@ -11,7 +11,6 @@ class SablonEmployeeDetail extends Model
 {
     protected $fillable = [
         'sablon_id',
-        'fabric_detail_id',
         'employee_id',
         'salary_employee_id',
         'layers',

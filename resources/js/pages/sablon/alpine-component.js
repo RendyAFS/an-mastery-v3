@@ -38,7 +38,7 @@ export default function sablonForm(
         init() {
             this.fabricRows = initialFabricRows.length
                 ? initialFabricRows.map((row) => this.buildFabricRow(row))
-                : [this.buildFabricRow()];
+                : [];
 
             this.employeeRows = initialEmployeeRows.map((row) =>
                 this.buildEmployeeRow(row),
@@ -101,7 +101,7 @@ export default function sablonForm(
             this.selectedSupplierId = supplierId || null;
             this.fabricOptions = [];
             this.selectedFabricId = null;
-            this.fabricRows = [this.buildFabricRow()];
+            this.fabricRows = [];
 
             const fabricEl = document.getElementById("fabric_id");
             if (fabricEl) {
@@ -199,7 +199,7 @@ export default function sablonForm(
 
         _autoPopulateFabricRows() {
             if (!this.selectedFabricId) {
-                this.fabricRows = [this.buildFabricRow()];
+                this.fabricRows = [];
                 return;
             }
 
@@ -216,7 +216,7 @@ export default function sablonForm(
                     }),
                 );
             } else {
-                this.fabricRows = [this.buildFabricRow()];
+                this.fabricRows = [];
             }
 
             this.$nextTick(() => reInitUi());
@@ -266,7 +266,6 @@ export default function sablonForm(
         },
 
         removeFabricRow(index) {
-            if (this.fabricRows.length <= 1) return;
             this.fabricRows.splice(index, 1);
         },
 

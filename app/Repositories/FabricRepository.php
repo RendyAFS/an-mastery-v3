@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Fabric;
-use Illuminate\Support\Collection;
 
 class FabricRepository
 {
@@ -45,32 +44,5 @@ class FabricRepository
             })
             ->orderBy('code')
             ->paginate($limit, ['*'], 'page', $page);
-    }
-
-    public function getBySupplierAsOptions(int $supplierId): array
-    {
-        return Fabric::with([
-            'fabricDetails.colorFabric',
-            'fabricDetails.sablonDetails.sablon',
-            'typeFabric',
-        ])
-            ->where('supplier_id', $supplierId)
-            ->orderBy('code')
-            ->get()
-            ->mapWithKeys(function ($fabric) {
-
-                $summary = $fabric->available_stock_summary;
-
-                return [
-                    $fabric->id => sprintf(
-                        '(%d Seri / %d Pcs) - %s (%s)',
-                        $summary['seri'],
-                        $summary['total_pcs'],
-                        $fabric->typeFabric?->name ?? '-',
-                        $fabric->date_coming?->translatedFormat('d F Y') ?? '-'
-                    ),
-                ];
-            })
-            ->toArray();
     }
 }

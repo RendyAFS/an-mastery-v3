@@ -4,7 +4,7 @@
 
 {{-- Role Name --}}
 <div class="mb-5">
-    <label class="block text-sm font-medium mb-1">Role Name</label>
+    <label class="block text-sm font-medium mb-1">{{ __('role.fields.name') }}</label>
     <input type="text" name="name" value="{{ $role->name ?? '' }}"
         class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
@@ -16,13 +16,12 @@
 
     {{-- HEADER: GLOBAL SELECT ALL --}}
     <div class="flex items-center justify-between mb-6 px-1">
-        <h4 class="text-lg font-semibold text-(--color-dark) dark:text-(--color-light)">Permissions</h4>
+        <h4 class="text-lg font-semibold text-(--color-dark) dark:text-(--color-light)">
+            {{ __('role.fields.permissions') }}</h4>
         <label
             class="inline-flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-(--color-dark) dark:text-(--color-light)">
-            <input type="checkbox"
-                class="checkbox-custom"
-                :checked="isAllChecked()" @change="toggleAll()">
-            Select All
+            <input type="checkbox" class="checkbox-custom" :checked="isAllChecked()" @change="toggleAll()">
+            {{ __('role.select_all') }}
         </label>
     </div>
 
@@ -42,7 +41,7 @@
                         class="inline-flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-(--color-dark) dark:text-(--color-gray)">
                         <input type="checkbox" class="checkbox-custom" :checked="isGroupChecked({{ $menu->id }})"
                             @change="toggleGroup({{ $menu->id }})">
-                        Select All
+                        {{ __('role.select_all') }}
                     </label>
                 </div>
 
@@ -66,7 +65,7 @@
                                             <input type="checkbox" class="checkbox-custom"
                                                 :checked="isSubmenuChecked({{ $child->id }})"
                                                 @change="toggleSubmenu({{ $child->id }})">
-                                            Select All
+                                            {{ __('role.select_all') }}
                                         </label>
                                     </div>
 
@@ -110,3 +109,4 @@
         @endforeach
     </div>
 </div>
+    

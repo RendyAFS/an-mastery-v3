@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Type Fabric'])
+@extends('layouts.main', ['title' => __('models.TypeFabric')])
 
 @push('scripts')
     @vite('resources/js/pages/type-fabric/list.js')
@@ -8,8 +8,8 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Type Fabric</h1>
-                <p class="text-sm">Manage type fabric data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.TypeFabric') }}</h1>
+                <p class="text-sm">{{ __('type-fabric.description') }}</p>
             </div>
 
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-type-fabric-modal"
@@ -17,7 +17,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Type Fabric
+                {{ __('crud.add_title', ['model' => __('models.TypeFabric')]) }}
             </button>
         </div>
 
@@ -26,11 +26,11 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Name
+                        {{ __('type-fabric.fields.name') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Notes
+                        {{ __('type-fabric.fields.notes') }}
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">

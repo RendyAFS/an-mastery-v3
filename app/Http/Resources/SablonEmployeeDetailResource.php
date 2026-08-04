@@ -18,7 +18,6 @@ class SablonEmployeeDetailResource extends JsonResource
         return [
             'id'                 => $this->id,
             'sablon_id'          => $this->sablon_id,
-            'fabric_detail_id'   => $this->fabric_detail_id,
             'employee_id'        => $this->employee_id,
             'layers'             => $this->layers,
             'fee'                => $this->fee,

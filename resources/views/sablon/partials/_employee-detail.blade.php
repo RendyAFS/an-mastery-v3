@@ -2,7 +2,7 @@
     class="bg-(--color-light) dark:bg-(--color-dark-slate)/40 border border-(--color-gray) dark:border-(--color-slate) rounded-xl p-5">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-(--color-dark-gray)">
-            Employee Detail (Employee & Fee)
+            {{ __('sablon.employee_detail.title') }}
         </h3>
     </div>
 
@@ -11,7 +11,7 @@
             <div class="rounded-lg border border-(--color-gray) dark:border-(--color-slate) p-4">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light)"
-                        x-text="'Employee #' + (index + 1)"></span>
+                        x-text="'{{ __('sablon.employee_detail.employee') }} #' + (index + 1)"></span>
                     <button type="button" @click="removeEmployeeRow(index)"
                         class="text-(--color-danger) hover:opacity-80 cursor-pointer">
                         <i data-lucide="trash-2" class="size-4"></i>
@@ -20,14 +20,16 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-(--color-dark-gray)">Employee</label>
+                        <label
+                            class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.employee') }}</label>
                         <div class="relative" @click.outside="row.openEmp = false">
                             <button type="button" @click="row.openEmp = !row.openEmp"
                                 class="flex items-center justify-between w-full px-4 py-2 rounded-lg
                                 bg-(--color-light-gray) border border-(--color-gray)
                                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer">
-                                <span x-text="employeeLabel(row.employee_id) || 'Choose Employee'"
+                                <span
+                                    x-text="employeeLabel(row.employee_id) || '{{ __('sablon.employee_detail.choose_employee') }}'"
                                     :class="!row.employee_id && 'text-(--color-dark-gray)'"></span>
 
                                 <div class="flex items-center gap-2">
@@ -42,7 +44,8 @@
                                 class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
                                 shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
                                 <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
-                                    <input type="text" x-model="row.searchEmp" placeholder="Search employee..."
+                                    <input type="text" x-model="row.searchEmp"
+                                        placeholder="{{ __('sablon.employee_detail.search_employee_placeholder') }}"
                                         class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
                                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                         dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -55,7 +58,8 @@
                                             x-text="emp.name"></li>
                                     </template>
                                     <template x-if="filteredEmployees(row.searchEmp).length === 0">
-                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">No employee found</li>
+                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
+                                            {{ __('sablon.employee_detail.no_employee_found') }}</li>
                                     </template>
                                 </ul>
                             </div>
@@ -64,14 +68,15 @@
 
                     <div class="space-y-1">
                         <label class="text-xs font-medium text-(--color-dark-gray)">
-                            Layers
+                            {{ __('sablon.employee_detail.layers') }}
                         </label>
 
                         <x-input-number model="row.layers" :min="1" />
                     </div>
 
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-(--color-dark-gray)">Fee (otomatis)</label>
+                        <label
+                            class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.fee_auto') }}</label>
                         <input type="text" :value="formatNumber(computeFee(row))" readonly
                             class="px-3 py-2 w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                                 focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
@@ -82,18 +87,20 @@
                         <input type="checkbox" x-model="row.is_change" class="checkbox-custom"
                             :id="'change_' + row.uid">
                         <label :for="'change_' + row.uid"
-                            class="text-sm text-(--color-dark) dark:text-(--color-light)">Change Employee?</label>
+                            class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.change_employee') }}</label>
                     </div>
 
                     <div class="space-y-1 md:col-span-1" x-show="row.is_change">
-                        <label class="text-xs font-medium text-(--color-dark-gray)">Employee Change</label>
+                        <label
+                            class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.employee_change') }}</label>
                         <div class="relative" @click.outside="row.openEmpChange = false">
                             <button type="button" @click="row.openEmpChange = !row.openEmpChange"
                                 class="flex items-center justify-between w-full px-4 py-2 rounded-lg
                                 bg-(--color-light-gray) border border-(--color-gray)
                                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer">
-                                <span x-text="employeeLabel(row.employee_change_id) || 'Choose Employee'"
+                                <span
+                                    x-text="employeeLabel(row.employee_change_id) || '{{ __('sablon.employee_detail.choose_employee') }}'"
                                     :class="!row.employee_change_id && 'text-(--color-dark-gray)'"></span>
 
                                 <div class="flex items-center gap-2">
@@ -108,7 +115,8 @@
                                 class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
                                 shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
                                 <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
-                                    <input type="text" x-model="row.searchEmpChange" placeholder="Search employee..."
+                                    <input type="text" x-model="row.searchEmpChange"
+                                        placeholder="{{ __('sablon.employee_detail.search_employee_placeholder') }}"
                                         class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
                                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                         dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -122,7 +130,8 @@
                                             x-text="emp.name"></li>
                                     </template>
                                     <template x-if="filteredEmployees(row.searchEmpChange).length === 0">
-                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">No employee found</li>
+                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
+                                            {{ __('sablon.employee_detail.no_employee_found') }}</li>
                                     </template>
                                 </ul>
                             </div>
@@ -131,27 +140,28 @@
 
                     <div class="flex items-center gap-2 pt-5">
                         <input type="checkbox" x-model="row.is_bon" class="checkbox-custom" :id="'bon_' + row.uid">
-                        <label :for="'bon_' + row.uid" class="text-sm text-(--color-dark) dark:text-(--color-light)">Is
-                            Bon</label>
+                        <label :for="'bon_' + row.uid"
+                            class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.is_bon') }}</label>
                     </div>
 
                     <div class="flex items-center gap-2 pt-5">
                         <input type="checkbox" x-model="row.is_paid" class="checkbox-custom" :id="'payed_' + row.uid">
                         <label :for="'payed_' + row.uid"
-                            class="text-sm text-(--color-dark) dark:text-(--color-light)">Is Paid</label>
+                            class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.is_paid') }}</label>
                     </div>
                 </div>
             </div>
         </template>
 
         <template x-if="employeeRows.length === 0">
-            <div class="text-center text-(--color-dark-gray) py-6">Belum ada employee detail</div>
+            <div class="text-center text-(--color-dark-gray) py-6">
+                {{ __('sablon.employee_detail.no_employee_detail_yet') }}</div>
         </template>
     </div>
     <div class="p-4 flex justify-end">
         <button type="button" @click="addEmployeeRow()"
             class="flex items-center gap-1 text-sm font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
-            <i data-lucide="plus" class="size-4"></i> Add Employee
+            <i data-lucide="plus" class="size-4"></i> {{ __('sablon.employee_detail.add_employee') }}
         </button>
     </div>
 </div>

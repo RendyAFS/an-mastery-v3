@@ -7,11 +7,15 @@ enum StatusSalaryEmployeeEnum: string
     case PENDING = 'PENDING';
     case PAID    = 'PAID';
 
-    public function label(): string
+    public function labels(): string
     {
-        return match($this) {
-            self::PENDING => 'Pending',
-            self::PAID    => 'Paid',
-        };
+        return __('enums.status_salary_employee.' . $this->value);
+    }
+
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn(self $case) => [$case->value => $case->labels()])
+            ->toArray();
     }
 }

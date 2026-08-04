@@ -6,4 +6,5 @@ return [
     'Delete'       => 'Delete',
     'Restore'      => 'Restore',
     'Force Delete' => 'Force Delete',
+    'Is Active'    => 'Is Active',
 ];

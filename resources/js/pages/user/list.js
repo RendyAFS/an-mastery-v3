@@ -1,8 +1,10 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
+import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let datatable;
+    const modelName = window.langModels?.User ?? "User";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -101,7 +103,7 @@ const PageScript = (function () {
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
+                                            ${window.langUi?.Edit ?? "Edit"}
                                         </a>
 
                                         <button type="button" data-user-id="${id}"
@@ -109,7 +111,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
+                                            ${window.langUi?.Delete ?? "Delete"}
                                         </button>
                                         `
                                         : `
@@ -118,7 +120,7 @@ const PageScript = (function () {
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
+                                            ${window.langUi?.Restore ?? "Restore"}
                                         </button>
 
                                         <button type="button" data-user-id="${id}"
@@ -126,7 +128,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
+                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
                                         </button>
                                         `
                                 }
@@ -154,8 +156,11 @@ const PageScript = (function () {
     };
 
     const handleDelete = async (userId) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this user? This action cannot be undone.",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "delete_confirm_message", { model: modelName }),
+            trans("langCrud", "delete_confirm_title"),
+            window.langCustomAlert.delete,
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) {
@@ -164,7 +169,10 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.delete(route("users.destroy", userId));
-            Toast.success("Success", "User deleted successfully");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "deleted", { model: modelName }),
+            );
 
             reloadDatatable();
         } catch (error) {
@@ -179,15 +187,20 @@ const PageScript = (function () {
 
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this user?",
-            "Confirmation",
+            trans("langCrud", "restore_confirm_message_short", {
+                model: modelName,
+            }),
+            trans("langCrud", "restore_confirm_title"),
         );
 
         if (!confirmed) return;
 
         await ApiProvider.put(route("users.restore", id));
 
-        Toast.success("Success", "User restored");
+        Toast.success(
+            window.langCustomAlert.success,
+            trans("langCrud", "restored", { model: modelName }),
+        );
         reloadDatatable();
     };
 
@@ -197,15 +210,23 @@ const PageScript = (function () {
     });
 
     const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the user. Continue?",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "force_delete_confirm_message", {
+                model: modelName,
+            }),
+            trans("langCrud", "force_delete_confirm_title"),
+            window.langUi?.["Force Delete"],
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         await ApiProvider.delete(route("users.force-delete", id));
 
-        Toast.success("Success", "User permanently deleted");
+        Toast.success(
+            window.langCustomAlert.success,
+            trans("langCrud", "force_deleted", { model: modelName }),
+        );
         reloadDatatable();
     };
 
@@ -226,10 +247,8 @@ const PageScript = (function () {
 
     const handleToggleActive = async (userId, checkbox) => {
         const confirmed = await Confirm.show(
-            "Are you sure you want to change this user status?",
-            "Confirmation",
-            "Yes",
-            "Cancel",
+            window.langUser.toggle_active_confirm_message,
+            window.langUser.toggle_active_confirm_title,
         );
 
         if (!confirmed) {
@@ -240,11 +259,17 @@ const PageScript = (function () {
         try {
             await ApiProvider.put(route("users.toggle-active", userId));
 
-            Toast.success("Success", "User status updated");
+            Toast.success(
+                window.langCustomAlert.success,
+                window.langUser.toggle_active_success,
+            );
             reloadDatatable();
         } catch (error) {
             checkbox.checked = !checkbox.checked;
-            Toast.error("Error", "Failed to update user status");
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langUser.toggle_active_error,
+            );
             console.error(error);
         }
     };

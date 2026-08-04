@@ -3,10 +3,13 @@ import initDatatable from "@/utils/datatable";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
+import trans from "@/utils/trans";
+import Loading from "@/utils/loading";
 
 const PageScript = (function () {
     let datatable;
     let form;
+    const modelName = window.langModels?.PriceSupplier ?? "Price Supplier";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -39,8 +42,8 @@ const PageScript = (function () {
                     data: "type_color.name",
                     className: "text-center dt-body-center",
                     width: "20%",
-                    render: function (data, type, row) {
-                        return `${data} Warna`;
+                    render: function (data) {
+                        return `${data} ${window.langPriceSupplier?.type_color_suffix ?? ""}`;
                     },
                 },
                 {
@@ -94,7 +97,7 @@ const PageScript = (function () {
                                             text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="square-pen" class="size-4"></i>
-                                            Edit
+                                            ${window.langUi?.Edit ?? "Edit"}
                                         </button>
 
                                         <button type="button" data-id="${id}"
@@ -102,7 +105,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash-2" class="size-4"></i>
-                                            Delete
+                                            ${window.langUi?.Delete ?? "Delete"}
                                         </button>
                                         `
                                         : `
@@ -111,7 +114,7 @@ const PageScript = (function () {
                                             text-(--color-success) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            Restore
+                                            ${window.langUi?.Restore ?? "Restore"}
                                         </button>
 
                                         <button type="button" data-id="${id}"
@@ -119,7 +122,7 @@ const PageScript = (function () {
                                             text-(--color-red) hover:bg-(--color-gray)/20
                                             focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
                                             <i data-lucide="trash" class="size-4"></i>
-                                            Force Delete
+                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
                                         </button>
                                         `
                                 }
@@ -169,7 +172,7 @@ const PageScript = (function () {
         });
 
         setFormMode("create");
-        setModalTitle("Add Price Supplier");
+        setModalTitle(trans("langCrud", "add_title", { model: modelName }));
     };
 
     const setSelectValue = async (selector, value, apiUrl = null) => {
@@ -261,6 +264,11 @@ const PageScript = (function () {
         const mode = form.dataset.mode;
         const id = form.dataset.id;
 
+        const priceInput = document.getElementById("price");
+        if (priceInput) {
+            priceInput.value = RupiahInput.unformat(priceInput.value);
+        }
+
         const formData = new FormData(form);
         let payload = Object.fromEntries(formData.entries());
         payload = normalizeFormInputs(form, payload);
@@ -268,7 +276,10 @@ const PageScript = (function () {
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("price_suppliers.store"), payload);
-                Toast.success("Success", "Price Supplier Successfully Created");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "created", { model: modelName }),
+                );
             }
 
             if (mode === "edit") {
@@ -276,14 +287,17 @@ const PageScript = (function () {
                     route("price_suppliers.update", id),
                     payload,
                 );
-                Toast.success("Success", "Price Supplier Successfully Updated");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
             }
 
             closeModal();
             reloadDatatable();
         } catch (error) {
-            // error sudah ditangani ApiProvider
         } finally {
+            if (priceInput) RupiahInput.refresh(priceInput);
             stopLoading(submitter);
         }
     };
@@ -294,8 +308,10 @@ const PageScript = (function () {
     };
 
     const handleEdit = async (id) => {
-        setModalTitle("Edit Price Supplier");
+        setModalTitle(trans("langCrud", "edit_title", { model: modelName }));
         setFormMode("edit", id);
+
+        Loading.start();
 
         try {
             const response = await ApiProvider.get(
@@ -305,20 +321,32 @@ const PageScript = (function () {
             openModal();
         } catch (error) {
             console.error("Fetch price supplier error:", error);
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPriceSupplier.fetch_error,
+            );
             closeModal();
+        } finally {
+            Loading.stop();
         }
     };
 
     const handleDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "Are you sure you want to delete this price supplier? This action cannot be undone.",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "delete_confirm_message", { model: modelName }),
+            trans("langCrud", "delete_confirm_title"),
+            window.langCustomAlert.delete,
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.delete(route("price_suppliers.destroy", id));
-            Toast.success("Success", "Type fabric deleted successfully");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "deleted", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Delete price supplier error:", error);
@@ -327,15 +355,20 @@ const PageScript = (function () {
 
     const handleRestore = async (id) => {
         const confirmed = await Confirm.show(
-            "Restore this price supplier?",
-            "Confirmation",
+            trans("langCrud", "restore_confirm_message_short", {
+                model: modelName,
+            }),
+            trans("langCrud", "restore_confirm_title"),
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.put(route("price_suppliers.restore", id));
-            Toast.success("Success", "Type fabric restored");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "restored", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Restore price supplier error:", error);
@@ -343,15 +376,23 @@ const PageScript = (function () {
     };
 
     const handleForceDelete = async (id) => {
-        const confirmed = await Confirm.delete(
-            "This will permanently delete the price supplier. Continue?",
+        const confirmed = await Confirm.show(
+            trans("langCrud", "force_delete_confirm_message", {
+                model: modelName,
+            }),
+            trans("langCrud", "force_delete_confirm_title"),
+            window.langUi?.["Force Delete"],
+            window.langCustomAlert.cancel,
         );
 
         if (!confirmed) return;
 
         try {
             await ApiProvider.delete(route("price_suppliers.force-delete", id));
-            Toast.success("Success", "Type fabric permanently deleted");
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "force_deleted", { model: modelName }),
+            );
             reloadDatatable();
         } catch (error) {
             console.error("Force delete price supplier error:", error);

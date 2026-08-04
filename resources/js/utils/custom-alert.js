@@ -253,9 +253,9 @@ window.Alert = {
 window.Confirm = {
     show(
         message,
-        title = "Confirmation",
-        confirmText = "Confirm",
-        cancelText = "Cancel",
+        title = window.langCustomAlert?.confirmation ?? "Confirmation",
+        confirmText = window.langCustomAlert?.confirm ?? "Confirm",
+        cancelText = window.langCustomAlert?.cancel ?? "Cancel",
     ) {
         return new Promise((resolve) => {
             document.dispatchEvent(

@@ -34,27 +34,43 @@ class SavePresenceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employee_id.required' => 'Employee is required',
-            'employee_id.integer'  => 'Employee must be an integer',
-            'employee_id.exists'   => 'Employee not found',
-            'week_of.required'     => 'Week of is required',
-            'week_of.date'         => 'Week of must be a date',
-            'monday.integer'       => 'Monday must be an integer',
-            'monday.min'           => 'Monday must be at least 0',
-            'tuesday.integer'      => 'Tuesday must be an integer',
-            'tuesday.min'          => 'Tuesday must be at least 0',
-            'wednesday.integer'    => 'Wednesday must be an integer',
-            'wednesday.min'        => 'Wednesday must be at least 0',
-            'thursday.integer'     => 'Thursday must be an integer',
-            'thursday.min'         => 'Thursday must be at least 0',
-            'friday.integer'       => 'Friday must be an integer',
-            'friday.min'           => 'Friday must be at least 0',
-            'saturday.integer'     => 'Saturday must be an integer',
-            'saturday.min'         => 'Saturday must be at least 0',
-            'sunday.integer'       => 'Sunday must be an integer',
-            'sunday.min'           => 'Sunday must be at least 0',
-            'notes.string'         => 'Notes must be a string',
-            'notes.max'            => 'Notes must be less than 255 characters',
+            'employee_id.required' => __('presence.validation.employee_id.required'),
+            'employee_id.integer'  => __('presence.validation.employee_id.integer'),
+            'employee_id.exists'   => __('presence.validation.employee_id.exists'),
+            'week_of.required'     => __('presence.validation.week_of.required'),
+            'week_of.date'         => __('presence.validation.week_of.date'),
+            'monday.integer'       => __('presence.validation.days.integer'),
+            'monday.min'           => __('presence.validation.days.min'),
+            'tuesday.integer'      => __('presence.validation.days.integer'),
+            'tuesday.min'          => __('presence.validation.days.min'),
+            'wednesday.integer'    => __('presence.validation.days.integer'),
+            'wednesday.min'        => __('presence.validation.days.min'),
+            'thursday.integer'     => __('presence.validation.days.integer'),
+            'thursday.min'         => __('presence.validation.days.min'),
+            'friday.integer'       => __('presence.validation.days.integer'),
+            'friday.min'           => __('presence.validation.days.min'),
+            'saturday.integer'     => __('presence.validation.days.integer'),
+            'saturday.min'         => __('presence.validation.days.min'),
+            'sunday.integer'       => __('presence.validation.days.integer'),
+            'sunday.min'           => __('presence.validation.days.min'),
+            'notes.string'         => __('presence.validation.notes.string'),
+            'notes.max'            => __('presence.validation.notes.max'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'employee_id' => __('presence.form.employee'),
+            'week_of'     => __('presence.form.week_of'),
+            'monday'      => __('presence.form.monday'),
+            'tuesday'     => __('presence.form.tuesday'),
+            'wednesday'   => __('presence.form.wednesday'),
+            'thursday'    => __('presence.form.thursday'),
+            'friday'      => __('presence.form.friday'),
+            'saturday'    => __('presence.form.saturday'),
+            'sunday'      => __('presence.form.sunday'),
+            'notes'       => __('presence.form.notes'),
         ];
     }
 

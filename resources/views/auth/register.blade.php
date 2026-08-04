@@ -1,4 +1,4 @@
-@extends('layouts.auth', ['title' => 'Register'])
+@extends('layouts.auth', ['title' => __('auth.register_title')])
 
 @push('scripts')
     @vite('resources/js/pages/auth/auth-form.js')
@@ -11,7 +11,7 @@
                     "flash_toast_" + i,
                     JSON.stringify({
                         type: "error",
-                        title: "Register Failed",
+                        title: @json(__('auth.toast.register_failed_title')),
                         message: msg,
                         timeout: 5000
                     })
@@ -30,15 +30,18 @@
                     <div class="mb-8">
                         <div class="flex justify-between items-center">
                             <h1 class="text-3xl font-bold text-(--color-dark) dark:text-(--color-light)">
-                                Create Account
+                                {{ __('auth.create_account') }}
                             </h1>
-                            @include('components.toggle-theme')
+                            <div class="flex items-center gap-4">
+                                @include('components.toggle-language')
+                                @include('components.toggle-theme')
+                            </div>
                         </div>
                         <p class="text-[15px] mt-6 text-(--color-dark) dark:text-(--color-light)">
-                            Already have an account?
+                            {{ __('auth.have_account') }}
                             <a href="{{ route('login') }}" class="font-medium hover:underline ml-1 whitespace-nowrap"
                                 style="color: var(--color-primary);">
-                                Sign in
+                                {{ __('auth.sign_in') }}
                             </a>
                         </p>
                     </div>
@@ -46,7 +49,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
-                                for="name">Name</label>
+                                for="name">{{ __('auth.fields.name') }}</label>
                             <div class="relative">
                                 <input type="text" name="name" id="name" autocomplete="name"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
@@ -54,11 +57,10 @@
                                     border rounded-lg sm:text-sm
                                     {{ $errors->has('name')
                                         ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
-                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
-                                    }}
+                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)' }}
                                     disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)"
-                                    placeholder="Enter Name" value="{{ old('name') }}">
+                                    placeholder="{{ __('auth.placeholders.name') }}" value="{{ old('name') }}">
                                 <div
                                     class="absolute inset-y-0 inset-e-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -71,7 +73,7 @@
 
                         <div>
                             <label class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)"
-                                for="email">Email / Name</label>
+                                for="email">{{ __('auth.fields.email_or_name') }}</label>
                             <div class="relative">
                                 <input type="text" name="email" id="email" autocomplete="email"
                                     class="peer py-2.5 sm:py-3 px-4 ps-4 block w-full
@@ -79,11 +81,10 @@
                                     border rounded-lg sm:text-sm
                                     {{ $errors->has('email')
                                         ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
-                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
-                                    }}
+                                        : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)' }}
                                     disabled:opacity-50 disabled:pointer-events-none
                                     placeholder-(--color-gray)"
-                                    placeholder="Enter Email / Name" value="{{ old('email') }}">
+                                    placeholder="{{ __('auth.placeholders.email_or_name') }}" value="{{ old('email') }}">
                                 <div
                                     class="absolute inset-y-0 inset-e-4 flex items-center pointer-events-none peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                                     <i data-lucide="mail" class="text-(--color-primary)/80 size-5"></i>
@@ -97,7 +98,7 @@
                         <div x-data="{ show: false }">
                             <label for="password"
                                 class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)">
-                                Password
+                                {{ __('auth.fields.password') }}
                             </label>
                             <div class="relative">
                                 <input :type="show ? 'text' : 'password'" name="password" id="password"
@@ -107,9 +108,8 @@
                                            border rounded-lg sm:text-sm
                                            {{ $errors->has('password')
                                                ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
-                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
-                                           }}"
-                                    placeholder="Create password">
+                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)' }}"
+                                    placeholder="{{ __('auth.placeholders.create_password') }}">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/80 cursor-pointer">
@@ -125,7 +125,7 @@
                         <div x-data="{ show: false }">
                             <label for="password_confirmation"
                                 class="text-[15px] font-medium mb-2 block text-(--color-dark) dark:text-(--color-light)">
-                                Confirm Password
+                                {{ __('auth.fields.confirm_password') }}
                             </label>
                             <div class="relative">
                                 <input :type="show ? 'text' : 'password'" name="password_confirmation"
@@ -135,9 +135,8 @@
                                            border rounded-lg sm:text-sm
                                            {{ $errors->has('password_confirmation')
                                                ? 'border-(--color-red) focus:border-(--color-red) focus:ring-(--color-red)'
-                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)'
-                                           }}"
-                                    placeholder="Repeat password">
+                                               : 'border-(--color-primary) focus:border-(--color-primary) focus:ring-(--color-primary)' }}"
+                                    placeholder="{{ __('auth.placeholders.repeat_password') }}">
 
                                 <button type="button" @click="show = !show" tabindex="-1"
                                     class="absolute inset-y-0 inset-e-4 flex items-center text-(--color-primary)/80 cursor-pointer">
@@ -152,7 +151,8 @@
                     </div>
 
                     <div class="mt-12">
-                        <x-button-loading type="submit" text="Register" loadingText="Registering..."
+                        <x-button-loading type="submit" text="{{ __('auth.register') }}"
+                            loadingText="{{ __('auth.register_loading') }}"
                             color="bg-(--color-primary) hover:bg-(--color-gray)"
                             textColor="text-(--color-light) hover:text-(--color-dark)" size="w-full py-2.5 px-4 text-[15px]"
                             rounded="rounded-md" class="cursor-pointer" />

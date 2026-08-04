@@ -2,7 +2,6 @@
 
 namespace App\Actions\Fabric;
 
-use App\Enums\StatusHistoryStockEnum;
 use App\Models\Fabric;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +32,7 @@ class SaveFabricAction
         ]);
 
         foreach ($data['fabric_details'] as $detail) {
-            $this->createDetailWithHistory($fabric, $detail);
+            $this->createDetail($fabric, $detail);
         }
 
         return $fabric;
@@ -61,7 +60,7 @@ class SaveFabricAction
             $isNewColor = ! in_array($detail['color_fabric_id'], $existingColorIds);
 
             if ($isNewColor) {
-                $this->createDetailWithHistory($fabric, $detail);
+                $this->createDetail($fabric, $detail);
                 continue;
             }
 
@@ -71,25 +70,12 @@ class SaveFabricAction
                     ->first();
 
                 if (! $fabricDetail) {
-                    $this->createDetailWithHistory($fabric, $detail);
+                    $this->createDetail($fabric, $detail);
                     continue;
                 }
 
-                $oldStock = $fabricDetail->stock;
-                $newStock = (int) $detail['stock'];
-
-                if ($oldStock !== $newStock) {
-                    $diff = $newStock - $oldStock;
-
-                    $fabricDetail->historyStocks()->create([
-                        'status' => StatusHistoryStockEnum::ADJUSTMENT,
-                        'total'  => $diff,
-                        'notes'  => $detail['notes'] ?? null,
-                    ]);
-                }
-
                 $fabricDetail->update([
-                    'stock' => $newStock,
+                    'stock' => (int) $detail['stock'],
                     'notes' => $detail['notes'] ?? null,
                 ]);
             }
@@ -98,18 +84,12 @@ class SaveFabricAction
         return $fabric;
     }
 
-    private function createDetailWithHistory(Fabric $fabric, array $detail): void
+    private function createDetail(Fabric $fabric, array $detail): void
     {
-        $fabricDetail = $fabric->fabricDetails()->create([
+        $fabric->fabricDetails()->create([
             'color_fabric_id' => $detail['color_fabric_id'],
             'stock'           => $detail['stock'],
             'notes'           => $detail['notes'] ?? null,
-        ]);
-
-        $fabricDetail->historyStocks()->create([
-            'status' => StatusHistoryStockEnum::IN,
-            'total'  => $detail['stock'],
-            'notes'  => $detail['notes'] ?? null,
         ]);
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Users'])
+@extends('layouts.main', ['title' => __('models.User')])
 
 @push('scripts')
     @vite('resources/js/pages/user/list.js')
@@ -8,15 +8,15 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Users</h1>
-                <p class="text-sm">Manage user data</p>
+                <h1 class="text-3xl font-bold">{{ __('models.User') }}</h1>
+                <p class="text-sm">{{ __('user.description') }}</p>
             </div>
 
             <a href="{{ route('users.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add User
+                {{ __('crud.add_title', ['model' => __('models.User')]) }}
             </a>
         </div>
 
@@ -25,20 +25,20 @@
                 <tr>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Name</th>
+                        {{ __('user.fields.name') }}</th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        Email</th>
+                        {{ __('user.fields.email') }}</th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Roles
+                            {{ __('user.fields.roles') }}
                         </div>
                     </th>
                     <th
                         class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
                         <div class="flex justify-center items-center w-full">
-                            Is Active
+                            {{ __('ui.Is Active') }}
                         </div>
                     </th>
                     <th

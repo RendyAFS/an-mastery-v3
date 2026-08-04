@@ -10,6 +10,8 @@ class SalaryEmployeeResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $sablonFeeTotal = $this->sablonEmployeeDetails->sum(fn($detail) => (float) $detail->fee);
+
         $sablonGroups = $this->sablonEmployeeDetails
             ->groupBy(fn($detail) => $detail->sablon?->supplier?->name ?? '-')
             ->map(function ($details, $supplierName) {
@@ -32,14 +34,14 @@ class SalaryEmployeeResource extends JsonResource
 
         $presenceTotal = (float) ($this->presence?->total ?? 0);
         $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-        $total = (float) $this->fee + $additionalFeeTotal + (float) ($this->presence?->total ?? 0);
+        $total = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal;
 
         return [
             'id'                            => $this->id,
             'employee_id'                   => $this->employee_id,
             'employee'                      => new EmployeeResource($this->whenLoaded('employee')),
-            'fee'                           => $this->fee,
-            'fee_formated'                  => RupiahHelper::format($this->fee),
+            'fee'                           => $sablonFeeTotal,
+            'fee_formated'                  => RupiahHelper::format($sablonFeeTotal),
             'additional_fee'                => $this->additional_fee,
             'additional_fee_total'          => $additionalFeeTotal,
             'additional_fee_total_formated' => RupiahHelper::format($additionalFeeTotal),

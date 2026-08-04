@@ -52,8 +52,6 @@ class UpsertSalaryEmployeeAction
                 ->where('week_of', $start)
                 ->value('total') ?? 0);
 
-            $salary->fee = $totalFee + $presenceTotal;
-
             if ($status !== null) {
                 $salary->status = StatusSalaryEmployeeEnum::from($status);
             }
@@ -70,6 +68,11 @@ class UpsertSalaryEmployeeAction
             if ($notes !== null) {
                 $salary->notes = $notes;
             }
+
+            $additionalFeeTotal = collect($salary->additional_fee ?? [])
+                ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+
+            $salary->fee = $totalFee;
 
             $salary->save();
 

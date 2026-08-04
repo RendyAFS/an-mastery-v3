@@ -117,4 +117,42 @@ class SablonRepository
                 ->values(),
         ];
     }
+
+    public function getBySupplierAsOptions(int $supplierId): array
+    {
+        return Fabric::with([
+            'fabricDetails.colorFabric',
+            'fabricDetails.sablonDetails.sablon',
+            'typeFabric',
+        ])
+            ->where('supplier_id', $supplierId)
+            ->orderBy('code')
+            ->get()
+            ->mapWithKeys(function ($fabric) {
+
+                $summary = $fabric->available_stock_summary;
+
+                $excessParts = collect($summary['colors'])
+                    ->filter(fn($color) => $color['excess'] > 0)
+                    ->map(fn($color) => sprintf('+%d %s', $color['excess'], $color['name']))
+                    ->implode(' ');
+
+                $label = sprintf(
+                    '(%d Seri / %d Pcs) - %s (%s)',
+                    $summary['seri'],
+                    $summary['total_pcs'],
+                    $fabric->typeFabric?->name ?? '-',
+                    $fabric->date_coming?->translatedFormat('d F Y') ?? '-'
+                );
+
+                if ($excessParts) {
+                    $label .= ' ' . $excessParts;
+                }
+
+                return [
+                    $fabric->id => $label,
+                ];
+            })
+            ->toArray();
+    }
 }

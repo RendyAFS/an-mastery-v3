@@ -57,19 +57,19 @@ class FortifyServiceProvider extends ServiceProvider
 
             if (! $user) {
                 throw ValidationException::withMessages([
-                    'email' => 'Email or username not found.',
+                    'email' => __('auth.login_not_found'),
                 ]);
             }
 
             if (is_null($user->is_active) || $user->is_active == 0) {
                 throw ValidationException::withMessages([
-                    'email' => 'Your account is inactive. Please contact administrator.',
+                    'email' => __('auth.account_inactive'),
                 ]);
             }
 
             if (! Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
-                    'password' => 'The provided password was incorrect.',
+                    'password' => __('auth.password_incorrect'),
                 ]);
             }
 

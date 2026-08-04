@@ -2,6 +2,7 @@
 
 namespace App\Actions\BillSupplier;
 
+use App\Enums\StatusSablonEnum;
 use App\Http\Requests\BillSupplier\SaveBillSupplierRequest;
 use App\Models\BillSupplier;
 use App\Models\Sablon;
@@ -24,7 +25,7 @@ class SaveBillSupplierAction
         return $sablons->map(function ($sablon) use ($request, $batch) {
             $preview = $this->billSupplierRepository->calculatePreview($sablon);
 
-            return BillSupplier::create([
+            $billSupplier = BillSupplier::create([
                 'supplier_id'       => $sablon->supplier_id,
                 'sablon_id'         => $sablon->id,
                 'price_supplier_id' => $preview['price_supplier_id'],
@@ -34,6 +35,10 @@ class SaveBillSupplierAction
                 'is_paid'           => $request->boolean('is_paid'),
                 'notes'             => $request->input('notes'),
             ]);
+
+            $this->markSablonDelivered($billSupplier);
+
+            return $billSupplier;
         });
     }
 
@@ -60,7 +65,7 @@ class SaveBillSupplierAction
             Sablon::whereIn('id', $newSablonIds)->get()->each(function ($sablon) use ($request, $batch) {
                 $preview = $this->billSupplierRepository->calculatePreview($sablon);
 
-                BillSupplier::create([
+                $billSupplier = BillSupplier::create([
                     'supplier_id'       => $sablon->supplier_id,
                     'sablon_id'         => $sablon->id,
                     'price_supplier_id' => $preview['price_supplier_id'],
@@ -70,6 +75,8 @@ class SaveBillSupplierAction
                     'is_paid'           => $request->boolean('is_paid'),
                     'notes'             => $request->input('notes'),
                 ]);
+
+                $this->markSablonDelivered($billSupplier);
             });
         }
 
@@ -86,8 +93,25 @@ class SaveBillSupplierAction
                     'is_paid'           => $request->boolean('is_paid'),
                     'notes'             => $request->input('notes'),
                 ]);
+
+                $this->markSablonDelivered($billSupplier);
             });
 
         return BillSupplier::where('batch', $batch)->with('sablon')->get();
+    }
+
+    public function markSablonDelivered(BillSupplier $billSupplier): void
+    {
+        if (! $billSupplier->is_paid) {
+            return;
+        }
+
+        $sablon = $billSupplier->sablon;
+
+        if (! $sablon || $sablon->status === StatusSablonEnum::DELIVERED) {
+            return;
+        }
+
+        $sablon->update(['status' => StatusSablonEnum::DELIVERED]);
     }
 }

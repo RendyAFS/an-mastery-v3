@@ -31,16 +31,6 @@ const GENERATE_DAYS = [
     "saturday",
 ];
 
-const DAY_LABELS = {
-    monday: "Senin",
-    tuesday: "Selasa",
-    wednesday: "Rabu",
-    thursday: "Kamis",
-    friday: "Jumat",
-    saturday: "Sabtu",
-    sunday: "Minggu",
-};
-
 const PageScript = (function () {
     let datatable;
     let form;
@@ -54,8 +44,6 @@ const PageScript = (function () {
         const num = parseInt(String(value ?? "").replace(/\D/g, ""), 10) || 0;
         return Math.max(num, 0);
     };
-
-    // NOTE: isoWeekToMonday, dateToIsoWeek, toDateStr now imported from @/utils/week
 
     const updateTheadDates = (mondayDate) => {
         DAYS.forEach((day, index) => {
@@ -192,7 +180,7 @@ const PageScript = (function () {
         });
 
         $("#notes").val(data.notes ?? "");
-        $("#generate_value").val(10000);
+        $("#generate_value").val(0);
         RupiahInput.refresh(document.getElementById("generate_value"));
 
         updateModalDates(
@@ -212,12 +200,26 @@ const PageScript = (function () {
             );
 
             const presence = response.data;
-            setModalTitle(`Presence - ${presence.employee?.name ?? ""}`);
+            setModalTitle(
+                `${window.langPresence.modal_title_prefix} - ${presence.employee?.name ?? ""}`,
+            );
             fillForm(presence);
             openModal();
         } catch (error) {
             console.error("Fetch presence error:", error);
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.fetch_error,
+            );
         }
+    };
+
+    const handleQuickAmount = (btn) => {
+        const target = document.querySelector(btn.dataset.target);
+        if (!target) return;
+
+        target.value = btn.dataset.quickAmount;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
     };
 
     const submitForm = async (submitter) => {
@@ -236,8 +238,8 @@ const PageScript = (function () {
                 payload,
             );
             Toast.success(
-                "Success",
-                response.message ?? "Presence updated successfully",
+                window.langCustomAlert.success,
+                response.message ?? window.langPresence.updated_success,
             );
             closeModal();
             reloadDatatable();
@@ -268,6 +270,10 @@ const PageScript = (function () {
             const monday = isoWeekToMonday(value);
             setCurrentWeek(monday);
             reloadDatatable();
+        });
+
+        $(document).on("click", "[data-quick-amount]", function () {
+            handleQuickAmount(this);
         });
 
         $(document).on("click", "#presences-datatable tbody tr", function () {
