@@ -3,6 +3,7 @@
 namespace App\Http\Requests\PriceSupplier;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SavePriceSupplierRequest extends FormRequest
 {
@@ -21,27 +22,46 @@ class SavePriceSupplierRequest extends FormRequest
      */
     public function rules(): array
     {
+        $priceSupplier = $this->route('priceSupplier');
+
         return [
-            'supplier_id'    => 'required|exists:suppliers,id',
+            'supplier_id' => [
+                'required',
+                'exists:suppliers,id',
+                Rule::unique('price_suppliers')
+                    ->where(function ($query) {
+                        return $query
+                            ->where('type_fabric_id', $this->type_fabric_id)
+                            ->where('type_color_id', $this->type_color_id);
+                    })
+                    ->ignore($priceSupplier?->id),
+            ],
+
             'type_fabric_id' => 'required|exists:type_fabrics,id',
             'type_color_id'  => 'required|exists:type_colors,id',
-            'price'          => 'required|numeric',
-            'notes'          => 'nullable|string',
+
+            'price' => 'required|numeric',
+            'notes' => 'nullable|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'supplier_id.required'    => 'Supplier is required.',
-            'supplier_id.exists'      => 'Please choose valid Supplier.',
-            'type_fabric_id.required' => 'Type Fabric is required.',
-            'type_fabric_id.exists'   => 'Please choose valid Type Fabric.',
-            'type_color_id.required'  => 'Type Color is required.',
-            'type_color_id.exists'    => 'Please choose valid Type Color.',
-            'price.required'          => 'Price is required.',
-            'price.decimal'           => 'Price must be a decimal.',
-            'notes.string'            => 'Notes must be a string.',
+            'supplier_id.required'    => __('price-supplier.validation.supplier_required'),
+            'supplier_id.exists'      => __('price-supplier.validation.supplier_exists'),
+            'supplier_id.unique'      => __('price-supplier.validation.combination_unique'),
+
+            'type_fabric_id.required' => __('price-supplier.validation.type_fabric_required'),
+            'type_fabric_id.exists'   => __('price-supplier.validation.type_fabric_exists'),
+
+            'type_color_id.required'  => __('price-supplier.validation.type_color_required'),
+            'type_color_id.exists'    => __('price-supplier.validation.type_color_exists'),
+
+            'price.required'          => __('price-supplier.validation.price_required'),
+            'price.numeric'           => __('price-supplier.validation.price_numeric'),
+
+            'notes.string'            => __('price-supplier.validation.notes_string'),
         ];
     }
 }
