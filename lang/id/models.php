@@ -6,7 +6,6 @@ return [
     'Employee'             => 'Karyawan',
     'Fabric'               => 'Kain',
     'FabricDetail'         => 'Detail Kain',
-    'HistoryStock'         => 'Riwayat Stok',
     'ImageFabric'          => 'Gambar Kain',
     'Menu'                 => 'Menu',
     'MenuPermission'       => 'Izin Menu',

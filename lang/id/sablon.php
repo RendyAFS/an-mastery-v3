@@ -55,15 +55,16 @@ return [
     ],
 
     'fabric_detail' => [
-        'title'                     => 'Detail Kain (Warna - Stok)',
-        'no'                        => 'No',
-        'fabric_detail_label'       => 'Detail Kain (Warna - Stok)',
-        'long_fabric'               => 'Panjang Kain',
-        'action'                    => 'Aksi',
-        'choose_fabric_detail'      => 'Pilih Detail Kain',
-        'search_color_placeholder'  => 'Cari warna...',
-        'no_fabric_detail_found'    => 'Detail kain tidak ditemukan untuk Kain yang dipilih',
-        'add_detail'                => 'Tambah Detail',
+        'title'                    => 'Detail Kain (Warna - Stok)',
+        'no'                       => 'No',
+        'fabric_detail_label'      => 'Detail Kain (Warna - Stok)',
+        'long_fabric'              => 'Panjang Kain',
+        'action'                   => 'Aksi',
+        'choose_fabric_detail'     => 'Pilih Detail Kain',
+        'search_color_placeholder' => 'Cari warna...',
+        'no_fabric_detail_found'   => 'Detail kain tidak ditemukan untuk Kain yang dipilih',
+        'add_detail'               => 'Tambah Detail',
+        'no_fabric_detail_yet'     => 'Belum ada detail kain',
     ],
 
     'employee_detail' => [

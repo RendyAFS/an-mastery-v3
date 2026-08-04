@@ -72,10 +72,17 @@
                         </td>
 
                         <td class="px-4 py-3 text-center">
-                            <button type="button" x-show="fabricRows.length > 1" @click="removeFabricRow(index)"
+                            <button type="button" @click="removeFabricRow(index)"
                                 class="text-(--color-danger) hover:opacity-80 cursor-pointer">
                                 <i data-lucide="trash-2" class="size-4"></i>
                             </button>
+                        </td>
+                    </tr>
+                </template>
+                <template x-if="fabricRows.length === 0">
+                    <tr>
+                        <td colspan="4" class="px-4 py-6 text-center text-(--color-dark-gray)">
+                            {{ __('sablon.fabric_detail.no_fabric_detail_yet') }}
                         </td>
                     </tr>
                 </template>

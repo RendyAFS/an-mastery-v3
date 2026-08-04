@@ -30,7 +30,7 @@ const PageScript = (function () {
     function resetForm() {
         form.reset();
         const data = getAlpineData();
-        data.fabricRows = [data.buildFabricRow()];
+        data.fabricRows = [];
         data.employeeRows = [];
         data.selectedFabricId = null;
         data.selectedSupplierId = null;

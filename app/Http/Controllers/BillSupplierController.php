@@ -11,8 +11,6 @@ use App\Models\BillSupplier;
 use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Repositories\BillSupplierRepository;
-use App\Repositories\SupplierRepository;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BillSupplierController extends Controller
@@ -187,7 +185,7 @@ class BillSupplierController extends Controller
         ]);
     }
 
-    public function togglePaidBatch(string $batch)
+    public function togglePaidBatch(string $batch, SaveBillSupplierAction $action)
     {
         $this->authorize('bill-suppliers.update');
 
@@ -198,6 +196,13 @@ class BillSupplierController extends Controller
         $newState = ! (bool) $billSuppliers->first()->is_paid;
 
         BillSupplier::where('batch', $batch)->update(['is_paid' => $newState]);
+
+        if ($newState) {
+            $billSuppliers->each(function (BillSupplier $billSupplier) use ($action) {
+                $billSupplier->is_paid = true;
+                $action->markSablonDelivered($billSupplier);
+            });
+        }
 
         return response()->json([
             'message' => 'Payment status updated successfully.',

@@ -29,11 +29,6 @@ class FabricDetail extends Model
         return $this->belongsTo(ColorFabric::class, 'color_fabric_id');
     }
 
-    public function historyStocks(): HasMany
-    {
-        return $this->hasMany(HistoryStock::class, 'fabric_detail_id');
-    }
-
     public function sablonDetails(): HasMany
     {
         return $this->hasMany(SablonDetail::class, 'fabric_detail_id');

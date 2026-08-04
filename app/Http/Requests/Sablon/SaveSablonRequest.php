@@ -37,7 +37,6 @@ class SaveSablonRequest extends FormRequest
             'fabric_details.*.long_fabric'          => 'nullable|numeric|min:0',
             // Employee details (siapa yang mengerjakan & fee-nya)
             'employee_details'                      => 'nullable|array',
-            'employee_details.*.fabric_detail_id'   => 'nullable|exists:fabric_details,id',
             'employee_details.*.employee_id'        => 'required_with:employee_details|exists:employees,id',
             'employee_details.*.layers'             => 'nullable|integer|min:0',
             'employee_details.*.fee'                => 'nullable|numeric|min:0',

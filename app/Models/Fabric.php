@@ -56,7 +56,7 @@ class Fabric extends Model
         $seri = $stocks->min();
         $totalPcs = $stocks->sum();
 
-        $colors = $details->map(function ($detail) {
+        $colors = $details->map(function ($detail) use ($seri) {
 
             $used = $detail->sablonDetails()
                 ->whereHas('sablon', function ($q) {
@@ -67,9 +67,10 @@ class Fabric extends Model
             $available = max($detail->stock - $used, 0);
 
             return [
-                'name'  => $detail->colorFabric?->name,
-                'color' => $detail->colorFabric?->code_color,
-                'stock' => $available,
+                'name'   => $detail->colorFabric?->name,
+                'color'  => $detail->colorFabric?->code_color,
+                'stock'  => $available,
+                'excess' => max($available - $seri, 0),
             ];
         });
 

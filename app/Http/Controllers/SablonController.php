@@ -19,7 +19,6 @@ class SablonController extends Controller
 {
     public function __construct(
         private SablonRepository $sablonRepository,
-        private FabricRepository $fabricRepository
     ) {}
 
     public function index()
@@ -70,7 +69,7 @@ class SablonController extends Controller
         $formData = $this->sablonRepository->getFormData();
 
         if ($sablon->supplier_id) {
-            $formData['fabrics'] = $this->fabricRepository->getBySupplierAsOptions($sablon->supplier_id);
+            $formData['fabrics'] = $this->sablonRepository->getBySupplierAsOptions($sablon->supplier_id);
         }
 
         return view('sablon.edit', array_merge(['sablon' => $sablon], $formData));
@@ -124,7 +123,7 @@ class SablonController extends Controller
     {
         $this->authorize('sablons.create');
 
-        $options = $this->fabricRepository->getBySupplierAsOptions($supplier->id);
+        $options = $this->sablonRepository->getBySupplierAsOptions($supplier->id);
 
         return response()->json($options);
     }

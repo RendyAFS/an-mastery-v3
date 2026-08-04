@@ -64,6 +64,7 @@ return [
         'search_color_placeholder'  => 'Search color...',
         'no_fabric_detail_found'    => 'No fabric detail found for selected Fabric',
         'add_detail'                => 'Add Detail',
+        'no_fabric_detail_yet'      => 'No fabric detail yet',
     ],
 
     'employee_detail' => [
