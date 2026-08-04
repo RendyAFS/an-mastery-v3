@@ -1,0 +1,88 @@
+<?php
+return [
+    'description'   => 'Rekap tagihan supplier per minggu',
+    'create_title'  => 'Tambah Bill Supplier',
+    'edit_title'    => 'Ubah Bill Supplier',
+    'create_heading' => 'Buat Bill Supplier — :supplier',
+
+    'filter'        => [
+        'week_start' => 'Dari Minggu',
+        'week_end'   => 'Sampai Minggu',
+        'reset'      => 'Reset ke Minggu Ini',
+    ],
+
+    'card'          => [
+        'deleted'         => 'Terhapus',
+        'inactive'        => 'Nonaktif',
+        'active'          => 'Aktif',
+        'unbilled'        => 'Belum Ditagih',
+        'unpaid'          => 'Belum Lunas',
+        'total_bill'      => 'Total Tagihan',
+    ],
+
+    'cover_style'   => [
+        'saved_success' => 'Cover style berhasil disimpan',
+    ],
+
+    'form'          => [
+        'sablon_label_edit'      => 'Sablon dalam Batch Ini',
+        'sablon_label_create'    => 'Sablon (Belum Ditagih)',
+        'selected_summary'       => ':count sablon dipilih',
+        'no_selected'            => 'Belum ada sablon dipilih',
+        'search_placeholder'     => 'Cari fabric...',
+        'select_all'             => 'Pilih Semua',
+        'loading'                => 'Memuat data...',
+        'empty'                  => 'Tidak ada sablon yang tersedia',
+        'hint_edit'              => 'Centang untuk memasukkan sablon ke batch ini, hilangkan centang untuk mengeluarkannya.',
+        'hint_create'            => 'Centang sablon yang akan ditagih. Semua sablon terpilih akan dibuatkan bill sekaligus dalam satu batch.',
+        'hint_only_done'         => 'Hanya sablon berstatus :status yang bisa ditambahkan baru.',
+        'date_bill'              => 'Tanggal Bill',
+        'is_paid'                => 'Sudah Dibayar',
+        'notes'                  => 'Catatan',
+        'preview_title'          => 'Rincian Perhitungan (Total Batch)',
+        'calc_count'             => 'Jumlah Sablon',
+        'calc_count_suffix'      => 'sablon',
+        'calc_total_long_fabric' => 'Total Panjang Kain',
+        'calc_total_fee'         => 'Total Fee',
+        'billed_in_advance'      => 'Ditagih Awal',
+        'only_done_disabled'     => 'Hanya sablon berstatus Done yang bisa ditagih',
+        'select_min_error'       => 'Pilih minimal 1 sablon terlebih dahulu',
+        'some_sablons_no_price'  => 'Beberapa sablon belum memiliki harga supplier untuk kombinasi fabric & warna'
+    ],
+
+    'show'          => [
+        'subtitle'       => 'Daftar tagihan supplier, dikelompokkan per minggu',
+        'back'           => 'Kembali',
+        'create_bill'    => 'Buat Bill',
+        'loading'        => 'Memuat data...',
+        'empty'          => 'Belum ada data bill supplier',
+        'summary_unpaid' => 'Belum Lunas',
+        'summary_paid'   => 'Lunas',
+        'summary_batches' => 'Total Batch',
+        'no_detail'      => 'Tidak ada rincian',
+        'unpaid_header'  => 'Belum Lunas (:count)',
+        'paid_header'    => 'Lunas (:count)',
+        'no_data'        => 'Tidak ada data',
+        'total'          => 'Total',
+        'paid_badge'     => 'Lunas',
+        'unpaid_badge'   => 'Belum Lunas',
+        'sablon_count'   => ':count Sablon',
+        'mark_unpaid'    => 'Tandai Belum Lunas',
+        'mark_paid'      => 'Tandai Lunas',
+        'edit'           => 'Edit',
+        'delete'         => 'Hapus',
+        'toggle_confirm_message' => 'Ubah status pembayaran batch ini?',
+        'toggle_confirm_title'   => 'Konfirmasi',
+        'toggle_success'        => 'Status pembayaran berhasil diubah',
+        'delete_confirm_message' => 'Yakin ingin menghapus batch tagihan ini?',
+        'batch_deleted_success'  => 'Batch tagihan berhasil dihapus',
+    ],
+
+    'sablon_card'   => [
+        'long_fabric'      => 'Panjang Kain',
+        'type_color'       => 'Jenis Warna',
+        'type_color_suffix' => 'Warna',
+        'total_fee'        => 'Total Fee',
+        'fabric_details'   => 'Detail Kain',
+    ],
+];

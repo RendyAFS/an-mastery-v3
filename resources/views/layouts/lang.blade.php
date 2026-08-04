@@ -41,6 +41,7 @@
     $langPresence = collect(trans('presence'))->toArray();
     $langFabric = collect(trans('fabric'))->toArray();
     $langSablon = collect(trans('sablon'))->toArray();
+    $langBillSupplier = collect(trans('bill-supplier'))->toArray();
     // END CRUD
 @endphp
 
@@ -65,5 +66,6 @@
     window.langPresence = @json($langPresence);
     window.langFabric = @json($langFabric);
     window.langSablon = @json($langSablon);
+    window.langBillSupplier = @json($langBillSupplier);
     // END CRUD
 </script>

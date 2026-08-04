@@ -1,4 +1,4 @@
-@extends('layouts.main', ['title' => 'Bill Supplier'])
+@extends('layouts.main', ['title' => __('models.BillSupplier')])
 
 @push('scripts')
     @vite('resources/js/pages/bill-supplier/list.js')
@@ -8,15 +8,15 @@
     <div class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Bill Supplier</h1>
-                <p class="text-sm">Rekap fee karyawan per minggu</p>
+                <h1 class="text-3xl font-bold">{{ __('models.BillSupplier') }}</h1>
+                <p class="text-sm">{{ __('bill-supplier.description') }}</p>
             </div>
 
             <div class="flex flex-wrap items-end gap-3">
                 <div>
                     <label for="filter-week-start"
                         class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        Dari Minggu
+                        {{ __('bill-supplier.filter.week_start') }}
                     </label>
                     <input type="week" id="filter-week-start"
                         class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
@@ -28,7 +28,7 @@
                 <div>
                     <label for="filter-week-end"
                         class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        Sampai Minggu
+                        {{ __('bill-supplier.filter.week_end') }}
                     </label>
                     <input type="week" id="filter-week-end"
                         class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
@@ -37,8 +37,9 @@
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
 
-                <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw" text="Reset ke Minggu Ini"
-                    loadingText="Resetting..." color="bg-(--color-danger) hover:bg-(--color-danger)/70"
+                <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw"
+                    text="{{ __('bill-supplier.filter.reset') }}" loadingText="{{ __('button-loading.Saving...') }}"
+                    color="bg-(--color-danger) hover:bg-(--color-danger)/70"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer mt-6" />
             </div>

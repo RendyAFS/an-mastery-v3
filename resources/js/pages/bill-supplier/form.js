@@ -3,14 +3,16 @@ import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
 import reInitUi from "@/utils/reinit-ui";
+import trans from "@/utils/trans";
 import {
     sablonHeaderHtml,
     sablonSummaryHtml,
     fabricDetailsHtml,
-} from "@/utils/sablon-card";
+} from "@/pages/bill-supplier/sablon-card";
 
 const PageScript = (function () {
     let form, mode, batch, supplierId;
+    const modelName = window.langModels?.BillSupplier ?? "Bill Supplier";
 
     const renderSablonCards = (sablons) => {
         const listContainer = $("#sablon-modal-list");
@@ -46,13 +48,13 @@ const PageScript = (function () {
                         ${
                             isBilledInAdvance
                                 ? `<p class="text-[11px] text-(--color-warning) flex items-center gap-1">
-                                        <i data-lucide="info" class="size-3"></i> Ditagih Awal
+                                        <i data-lucide="info" class="size-3"></i> ${window.langBillSupplier.form.billed_in_advance}
                                     </p>`
                                 : ""
                         }
                         ${
                             disabled
-                                ? `<p class="text-[11px] text-(--color-red)">Hanya sablon berstatus Done yang bisa ditagih</p>`
+                                ? `<p class="text-[11px] text-(--color-red)">${window.langBillSupplier.form.only_done_disabled}</p>`
                                 : ""
                         }
                     </div>
@@ -126,8 +128,10 @@ const PageScript = (function () {
 
         $("#sablon-selected-summary").text(
             ids.length
-                ? `${ids.length} sablon dipilih`
-                : "Belum ada sablon dipilih",
+                ? trans("langBillSupplier", "form.selected_summary", {
+                      count: ids.length,
+                  })
+                : window.langBillSupplier.form.no_selected,
         );
 
         syncCheckAllState();
@@ -135,7 +139,9 @@ const PageScript = (function () {
     };
 
     const renderPreview = (calc) => {
-        $("#calc-count").text(`${calc.count ?? 0} sablon`);
+        $("#calc-count").text(
+            `${calc.count ?? 0} ${window.langBillSupplier.form.calc_count_suffix}`,
+        );
         $("#calc-total-long-fabric").text(`${calc.total_long_fabric ?? 0} m`);
         $("#calc-total-fee").text(
             `Rp${RupiahInput.format(calc.total_fee ?? 0)}`,
@@ -146,7 +152,7 @@ const PageScript = (function () {
                 .map(
                     (item) => `
                     <div class="flex items-center justify-between text-xs py-1">
-                        <span class="truncate">${item.image_fabric ?? "-"} · ${item.type_color ?? "-"} Warna · ${item.total_long_fabric ?? 0} Meter</span>
+                        <span class="truncate">${item.image_fabric ?? "-"} · ${item.type_color ?? "-"} ${window.langBillSupplier.sablon_card.type_color_suffix} · ${item.total_long_fabric ?? 0} Meter</span>
                         <span class="font-medium">Rp${RupiahInput.format(item.total_fee ?? 0)}</span>
                     </div>`,
                 )
@@ -154,9 +160,9 @@ const PageScript = (function () {
         );
 
         if (calc.has_missing_price) {
-            Toast.error(
-                "Perhatian",
-                "Beberapa sablon belum memiliki harga supplier untuk kombinasi fabric & warna",
+            Toast.warning(
+                window.langCustomAlert.warning,
+                window.langBillSupplier.form.some_sablons_no_price,
             );
         }
     };
@@ -191,7 +197,10 @@ const PageScript = (function () {
         const sablonIds = getCheckedIds();
 
         if (!sablonIds.length) {
-            Toast.error("Perhatian", "Pilih minimal 1 sablon terlebih dahulu");
+            Toast.error(
+                window.langCustomAlert.warning,
+                window.langBillSupplier.form.select_min_error,
+            );
             stopLoading(submitter);
             return;
         }
@@ -202,7 +211,10 @@ const PageScript = (function () {
         try {
             if (mode === "create") {
                 await ApiProvider.post(route("bill_suppliers.store"), payload);
-                Toast.success("Success", "Bill Supplier Successfully Created");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "created", { model: modelName }),
+                );
             }
 
             if (mode === "edit") {
@@ -210,7 +222,10 @@ const PageScript = (function () {
                     route("bill_suppliers.batch.update", batch),
                     payload,
                 );
-                Toast.success("Success", "Bill Supplier Successfully Updated");
+                Toast.success(
+                    window.langCustomAlert.success,
+                    trans("langCrud", "updated", { model: modelName }),
+                );
             }
 
             window.location.href = route(

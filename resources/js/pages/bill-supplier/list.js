@@ -104,12 +104,12 @@ const PageScript = (function () {
 
         const statusBadge = isDeleted
             ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 backdrop-blur text-white flex items-center gap-1 shrink-0 border border-white/30">
-                 <i data-lucide="trash-2" class="size-3.5"></i> Deleted
+                 <i data-lucide="trash-2" class="size-3.5"></i> ${window.langBillSupplier.card.deleted}
                </span>`
             : !item.is_active
-              ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 backdrop-blur text-white shrink-0 border border-white/30">Inactive</span>`
+              ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 backdrop-blur text-white shrink-0 border border-white/30">${window.langBillSupplier.card.inactive}</span>`
               : `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/20 backdrop-blur text-white flex items-center gap-1 shrink-0 border border-white/30">
-                   <i data-lucide="badge-check" class="size-3.5"></i> Aktif
+                   <i data-lucide="badge-check" class="size-3.5"></i> ${window.langBillSupplier.card.active}
                  </span>`;
 
         return `
@@ -158,13 +158,13 @@ const PageScript = (function () {
                 <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="rounded-lg bg-(--color-gray)/8 dark:bg-white/5 p-3 space-y-1">
                         <p class="text-xs text-(--color-gray) flex items-center gap-1">
-                            <i data-lucide="package" class="size-3.5"></i> Belum Ditagih
+                            <i data-lucide="package" class="size-3.5"></i> ${window.langBillSupplier.card.unbilled}
                         </p>
                         <p class="text-lg font-bold">${item.unbilled_sablons_count}</p>
                     </div>
                     <div class="rounded-lg bg-(--color-gray)/8 dark:bg-white/5 p-3 space-y-1">
                         <p class="text-xs text-(--color-gray) flex items-center gap-1">
-                            <i data-lucide="receipt" class="size-3.5"></i> Belum Lunas
+                            <i data-lucide="receipt" class="size-3.5"></i> ${window.langBillSupplier.card.unpaid}
                         </p>
                         <p class="text-lg font-bold ${hasUnpaid ? "text-(--color-red)" : "text-(--color-gray)"}">
                             ${item.unpaid_bills_count}
@@ -174,7 +174,7 @@ const PageScript = (function () {
 
                 <div class="mt-auto pt-3 border-t border-dashed border-(--color-gray)/25 flex items-center justify-between">
                     <span class="text-sm font-semibold flex items-center gap-1">
-                        <i data-lucide="wallet" class="size-4"></i> Total Tagihan
+                        <i data-lucide="wallet" class="size-4"></i> ${window.langBillSupplier.card.total_bill}
                     </span>
                     <span class="font-extrabold text-base ${hasUnpaid ? "text-(--color-primary)" : "text-(--color-gray)"}">
                         ${formatCurrency(item.total_unpaid)}
@@ -286,7 +286,10 @@ const PageScript = (function () {
                 },
             );
 
-            Toast.success("Success", "Cover style berhasil disimpan");
+            Toast.success(
+                window.langCustomAlert.success,
+                window.langBillSupplier.cover_style.saved_success,
+            );
             closeModal();
             cardgrid?.reload();
         });

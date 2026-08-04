@@ -1,0 +1,88 @@
+<?php
+return [
+    'description'   => 'Weekly supplier bill recap',
+    'create_title'  => 'Create Bill Supplier',
+    'edit_title'    => 'Edit Bill Supplier',
+    'create_heading' => 'Create Bill Supplier — :supplier',
+
+    'filter'        => [
+        'week_start' => 'From Week',
+        'week_end'   => 'To Week',
+        'reset'      => 'Reset to Current Week',
+    ],
+
+    'card'          => [
+        'deleted'         => 'Deleted',
+        'inactive'        => 'Inactive',
+        'active'          => 'Active',
+        'unbilled'        => 'Unbilled',
+        'unpaid'          => 'Unpaid',
+        'total_bill'      => 'Total Bill',
+    ],
+
+    'cover_style'   => [
+        'saved_success' => 'Cover style saved successfully',
+    ],
+
+    'form'          => [
+        'sablon_label_edit'      => 'Sablon in this Batch',
+        'sablon_label_create'    => 'Sablon (Not Billed Yet)',
+        'selected_summary'       => ':count sablon selected',
+        'no_selected'            => 'No sablon selected',
+        'search_placeholder'     => 'Search fabric...',
+        'select_all'             => 'Select All',
+        'loading'                => 'Loading data...',
+        'empty'                  => 'No sablon available',
+        'hint_edit'              => 'Check to include a sablon in this batch, uncheck to remove it.',
+        'hint_create'            => 'Check the sablons to be billed. All selected sablons will be billed together in one batch.',
+        'hint_only_done'         => 'Only sablons with status :status can be newly added.',
+        'date_bill'              => 'Bill Date',
+        'is_paid'                => 'Already Paid',
+        'notes'                  => 'Notes',
+        'preview_title'          => 'Calculation Details (Batch Total)',
+        'calc_count'             => 'Number of Sablon',
+        'calc_count_suffix'      => 'sablon',
+        'calc_total_long_fabric' => 'Total Long Fabric',
+        'calc_total_fee'         => 'Total Fee',
+        'billed_in_advance'      => 'Billed in Advance',
+        'only_done_disabled'     => 'Only sablons with status Done can be billed',
+        'select_min_error'       => 'Please select at least 1 sablon first',
+        'some_sablons_no_price'  => 'Some sablons do not have supplier prices for fabric & color combinations'
+    ],
+
+    'show'          => [
+        'subtitle'       => 'Supplier bill list, grouped by week',
+        'back'           => 'Back',
+        'create_bill'    => 'Create Bill',
+        'loading'        => 'Loading data...',
+        'empty'          => 'No bill supplier data yet',
+        'summary_unpaid' => 'Unpaid',
+        'summary_paid'   => 'Paid',
+        'summary_batches' => 'Total Batches',
+        'no_detail'      => 'No detail',
+        'unpaid_header'  => 'Unpaid (:count)',
+        'paid_header'    => 'Paid (:count)',
+        'no_data'        => 'No data',
+        'total'          => 'Total',
+        'paid_badge'     => 'Paid',
+        'unpaid_badge'   => 'Unpaid',
+        'sablon_count'   => ':count Sablon',
+        'mark_unpaid'    => 'Mark as Unpaid',
+        'mark_paid'      => 'Mark as Paid',
+        'edit'           => 'Edit',
+        'delete'         => 'Delete',
+        'toggle_confirm_message' => 'Change payment status for this batch?',
+        'toggle_confirm_title'   => 'Confirmation',
+        'toggle_success'        => 'Payment status updated successfully',
+        'delete_confirm_message' => 'Are you sure you want to delete this bill batch?',
+        'batch_deleted_success'  => 'Bill batch deleted successfully',
+    ],
+
+    'sablon_card'   => [
+        'long_fabric'      => 'Long Fabric',
+        'type_color'       => 'Type Color',
+        'type_color_suffix' => 'Color',
+        'total_fee'        => 'Total Fee',
+        'fabric_details'   => 'Fabric Details',
+    ],
+];
