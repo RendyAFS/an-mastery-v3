@@ -10,10 +10,13 @@ enum StatusHistoryStockEnum: string
 
     public function labels(): string
     {
-        return match ($this) {
-            self::IN         => 'In',
-            self::ADJUSTMENT => 'Adjustment',
-            self::OUT        => 'Out',
-        };
+        return __('enum.status_history_stock.' . $this->value);
+    }
+
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn(self $case) => [$case->value => $case->labels()])
+            ->toArray();
     }
 }

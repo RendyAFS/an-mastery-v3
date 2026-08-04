@@ -11,11 +11,13 @@ enum StatusSablonEnum: string
 
     public function labels(): string
     {
-        return match ($this) {
-            self::ON_PROGRESS => 'On Progress',
-            self::DONE        => 'Done',
-            self::DELIVERED   => 'Delivered',
-            self::RETURNED    => 'Returned',
-        };
+        return __('enum.status_sablon.' . $this->value);
+    }
+
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn(self $case) => [$case->value => $case->labels()])
+            ->toArray();
     }
 }
