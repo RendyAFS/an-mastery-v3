@@ -17,9 +17,27 @@ return [
         'badge'         => 'Andri Sablon · Gedangsewu, Tulungagung',
         'headline'      => 'Dikelola dengan',
         'headline_em'   => 'Presisi.',
-        'subheadline'   => 'Sistem manajemen lengkap untuk konveksi sablon — dari inventaris kain hingga tagihan, semua dalam satu tempat.',
+        'subheadline'   => 'Sistem manajemen lengkap untuk konveksi sablon — showcase galeri produksi nyata dan katalog kain.',
         'cta_login'     => 'Masuk',
         'cta_register'  => 'Buat Akun',
+        'explore'       => 'Jelajahi Karya',
+    ],
+
+    // Gallery Showcase
+    'gallery' => [
+        'title'         => 'Galeri Produksi',
+        'subtitle'      => 'Hasil produksi nyata, sampel sablon, dan showcase pakaian dari Andri Sablon.',
+        'empty'         => 'Belum ada foto galeri yang diunggah.',
+        'badge'         => 'Galeri Produksi',
+        'view_image'    => 'Lihat Foto',
+    ],
+
+    // Fabric Showcase
+    'fabrics' => [
+        'title'         => 'Katalog Kain',
+        'subtitle'      => 'Jelajahi pilihan bahan kain, warna, dan tekstur yang digunakan dalam produksi.',
+        'empty'         => 'Belum ada gambar kain yang diunggah.',
+        'badge'         => 'Katalog Kain',
     ],
 
     // Features

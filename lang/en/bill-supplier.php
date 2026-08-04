@@ -21,9 +21,19 @@ return [
     ],
 
     'cover_style'   => [
-        'saved_success' => 'Cover style saved successfully',
+        'title'          => 'Cover Style Settings',
+        'color_from'     => 'Start Color',
+        'color_to'       => 'End Color',
+        'icon_label'     => 'Icon',
+        'icon_placeholder' => 'Choose icon',
+        'icon_search_placeholder' => 'Search icon...',
+        'pattern_label'  => 'Pattern',
+        'pattern_placeholder' => 'Choose pattern',
+        'pattern_search_placeholder' => 'Search pattern...',
+        'cancel'         => 'Cancel',
+        'save'           => 'Save',
+        'saved_success'  => 'Cover style saved successfully',
     ],
-
     'form'          => [
         'sablon_label_edit'      => 'Sablon in this Batch',
         'sablon_label_create'    => 'Sablon (Not Billed Yet)',

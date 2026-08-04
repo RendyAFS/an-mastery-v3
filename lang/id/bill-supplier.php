@@ -21,7 +21,18 @@ return [
     ],
 
     'cover_style'   => [
-        'saved_success' => 'Cover style berhasil disimpan',
+        'title'          => 'Atur Tampilan Cover',
+        'color_from'     => 'Warna Awal',
+        'color_to'       => 'Warna Akhir',
+        'icon_label'     => 'Icon',
+        'icon_placeholder' => 'Pilih icon',
+        'icon_search_placeholder' => 'Cari icon...',
+        'pattern_label'  => 'Pattern',
+        'pattern_placeholder' => 'Pilih pattern',
+        'pattern_search_placeholder' => 'Cari pattern...',
+        'cancel'         => 'Batal',
+        'save'           => 'Simpan',
+        'saved_success'  => 'Cover style berhasil disimpan',
     ],
 
     'form'          => [

@@ -17,9 +17,27 @@ return [
         'badge'         => 'Andri Sablon · Gedangsewu, Tulungagung',
         'headline'      => 'Woven with',
         'headline_em'   => 'Precision.',
-        'subheadline'   => 'The complete management system for screen printing convection — from fabric inventory to billing, all in one place.',
+        'subheadline'   => 'The complete management system for screen printing convection — showcase of production galleries and fabric catalog.',
         'cta_login'     => 'Sign In',
         'cta_register'  => 'Create Account',
+        'explore'       => 'Explore Showcase',
+    ],
+
+    // Gallery Showcase
+    'gallery' => [
+        'title'         => 'Production Gallery',
+        'subtitle'      => 'Real production work, screen printing samples, and garment showcase from Andri Sablon.',
+        'empty'         => 'No gallery photos uploaded yet.',
+        'badge'         => 'Gallery Showcase',
+        'view_image'    => 'View Photo',
+    ],
+
+    // Fabric Showcase
+    'fabrics' => [
+        'title'         => 'Fabric Showcase',
+        'subtitle'      => 'Explore our collection of fabric materials, colors, and textures used in production.',
+        'empty'         => 'No fabric images uploaded yet.',
+        'badge'         => 'Fabric Catalog',
     ],
 
     // Features
