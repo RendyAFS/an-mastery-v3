@@ -3,6 +3,7 @@ import laravel from "laravel-vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { glob } from "glob";
 import { VitePWA } from "vite-plugin-pwa";
+import pkg from "./package.json";
 
 export default defineConfig({
     plugins: [
@@ -56,6 +57,7 @@ export default defineConfig({
                 enabled: true,
             },
             workbox: {
+                cacheId: `an-mastery-v${pkg.version}`,
                 globIgnores: ["vendor/**"],
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             },
