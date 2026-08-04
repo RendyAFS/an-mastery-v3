@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
     {{-- PWA Head Meta & Links --}}
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#6d9886">
     <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/pwa-192x192.png') }}">
 
