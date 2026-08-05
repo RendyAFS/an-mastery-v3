@@ -1,5 +1,6 @@
 import ApiProvider from "@/utils/api-provider";
 import FilePondHelper from "@/utils/filepond";
+import openCameraCapture from "@/utils/camera-capture";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 
@@ -93,6 +94,7 @@ const PageScript = (function () {
         if (!pond) return;
 
         bindTmpField(pond, "avatar_tmp");
+        bindCameraButton(pond);
     }
 
     function bindTmpField(pond, hiddenInputId) {
@@ -115,6 +117,19 @@ const PageScript = (function () {
             if (removeInput) {
                 removeInput.value = "1";
             }
+        });
+    }
+
+    function bindCameraButton(pond) {
+        const btn = document.getElementById("camera-btn");
+        if (!btn) return;
+
+        btn.addEventListener("click", () => {
+            openCameraCapture({
+                onCapture: (file) => {
+                    pond.addFile(file);
+                },
+            });
         });
     }
 

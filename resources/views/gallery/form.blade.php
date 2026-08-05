@@ -16,6 +16,10 @@
             value="{{ isset($gallery) ? $gallery->getFirstMediaUrl('galleries') : '' }}">
         <input type="hidden" name="remove_image" id="remove_image" value="0">
         <input type="file" name="image" class="filepond" accept="image/*" />
+        <button type="button" id="camera-btn"
+            class="px-4 py-2 rounded-lg border border-(--color-gray) text-sm text-(--color-dark) dark:text-(--color-light) dark:border-(--color-slate)">
+            {{ __('filepond.take_photo') }}
+        </button>
     </div>
 
     {{-- Name --}}

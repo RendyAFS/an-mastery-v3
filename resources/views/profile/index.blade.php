@@ -26,6 +26,10 @@
                         <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
 
                         <input type="file" name="avatar" class="filepond" accept="image/*" />
+                        <button type="button" id="camera-btn"
+                            class="px-4 py-2 rounded-lg border border-(--color-gray) text-sm text-(--color-dark) dark:text-(--color-light) dark:border-(--color-slate)">
+                            {{ __('filepond.take_photo') }}
+                        </button>
                     </div>
                 </div>
 
