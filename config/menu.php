@@ -5,7 +5,7 @@ return [
         'name'        => 'Dashboard',
         'icon'        => 'home',
         'url'         => '/dashboard',
-        'permissions' => ['view'],
+        'permissions' => ['view', 'log-viewer'],
     ],
 
     // Access Management

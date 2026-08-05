@@ -7,5 +7,6 @@ return [
     'Toggle Navigation' => 'Buka/Tutup Navigasi',
     'Unknown'           => 'Tidak Diketahui',
     'Profile'           => 'Profil',
+    'Log Viewer'        => 'Log Viewer',
     'Logout'            => 'Keluar',
 ];

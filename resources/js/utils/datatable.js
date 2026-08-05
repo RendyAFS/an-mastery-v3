@@ -74,7 +74,14 @@ export default function initDatatable({
             }
 
             if (window.HSStaticMethods) {
-                window.HSStaticMethods.autoInit();
+                window.HSStaticMethods.autoInit([
+                    "dropdown",
+                    "tooltip",
+                    "overlay",
+                    "select",
+                    "copy-markup",
+                    "remove-element",
+                ]);
             }
         },
     });
