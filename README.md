@@ -21,7 +21,7 @@
 
 ## 📌 Tentang Proyek
 
-**AN Mastery V3** adalah aplikasi sistem manajemen konveksi terpadu yang dirancang khusus untuk operasional **Andri Sablon** yang berlokasi di Gedangsewu, Tulungagung / Kediri, Jawa Timur. 
+**AN Mastery V3** adalah aplikasi sistem manajemen konveksi terpadu yang dirancang khusus untuk operasional **Andri Sablon** yang berlokasi di Gedangsewu, Tulungagung, Jawa Timur. 
 
 Aplikasi ini mengintegrasikan seluruh alur kerja bisnis konveksi dan sablon dari hulu ke hilir: pengelolaan inventaris kain, pencatatan order pekerjaan sablon, manajemen tagihan supplier, rekap kehadiran karyawan, hingga kalkulasi gaji otomatis. Selain fitur internal manajemen, aplikasi ini dilengkapi halaman publik (**Welcome Page**) yang menyajikan profil bisnis, galeri hasil produksi, katalog bahan kain, serta peta lokasi workshop.
 
@@ -111,65 +111,6 @@ an-mastery-v3/
     └── web.php                # Perutean Web & API
 ```
 
----
-
-## 🚀 Cara Menjalankan Proyek Secara Lokal
-
-### Prasyarat
-* **PHP** `>= 8.2`
-* **Composer** `>= 2.x`
-* **Node.js** `>= 18.x` & **NPM**
-* **MySQL / MariaDB**
-
-### Langkah-langkah Instalasi
-
-1. **Clone repository & masuk ke direktori proyek**:
-   ```bash
-   cd d:/laragon/www/an-mastery-v3
-   ```
-
-2. **Install dependensi PHP & Node.js**:
-   ```bash
-   composer install
-   npm install
-   ```
-
-3. **Konfigurasi Environment**:
-   Salin `.env.example` menjadi `.env` dan sesuaikan pengaturan database:
-   ```bash
-   cp .env.example .env
-   ```
-   Atur variabel database pada `.env`:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=an_mastery_v3
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
-
-4. **Generate Application Key & Jalankan Migrasi**:
-   ```bash
-   php artisan key:generate
-   php artisan migrate --seed
-   ```
-
-5. **Jalankan Development Server**:
-   Jalankan server Laravel dan bundler Vite secara bersamaan:
-   ```bash
-   # Terminal 1: Laravel Development Server
-   php artisan serve
-
-   # Terminal 2: Vite Assets Bundler
-   npm run dev
-   ```
-
-6. **Akses Aplikasi**:
-   Buka browser dan navigasi ke `http://127.0.0.1:8000` atau domain lokal Laragon Anda (misal `http://an-mastery-v3.test`).
-
----
-
 ## 📄 Lisensi & Kredit
 
-Hak Cipta © 2026 **AN Mastery** — Dibuat untuk **Andri Sablon, Gedangsewu — Tulungagung / Kediri**. Seluruh hak cipta dilindungi.
+Hak Cipta © 2026 **AN Mastery** — Dibuat untuk **Andri Sablon, Gedangsewu — Tulungagung**. Seluruh hak cipta dilindungi.
