@@ -368,7 +368,7 @@
                     </a>
                 @else
                     <a href="{{ route('login') }}"
-                        class="ms-2 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium
+                        class="ms-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium
                         text-(--color-dark) dark:text-(--color-light)
                         hover:bg-(--color-gray)/20 transition-colors">
                         {{ __('welcome.nav.login') }}
