@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Schema;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::before(function (User $user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
         });
+
+        if (! Schema::hasTable('permissions')) {
+            return;
+        }
 
         Permission::all()->each(function ($permission) {
             Gate::define($permission->name, function (User $user) use ($permission) {
