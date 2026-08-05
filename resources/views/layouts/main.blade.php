@@ -9,13 +9,6 @@
     <title>{{ $title ?? 'AN Mastery' }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
-    {{-- PWA Head Meta & Links --}}
-    <meta name="theme-color" content="#6d9886">
-    @if (app()->environment('production'))
-        <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
-    @endif
-    <link rel="apple-touch-icon" href="{{ asset('assets/pwa-192x192.png') }}">
-
     {{-- Icon Library (defer agar tidak blokir render, tapi tetap diparse lebih awal) --}}
     <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
 
