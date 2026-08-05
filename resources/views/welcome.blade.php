@@ -11,7 +11,9 @@
 
     {{-- PWA Head Meta & Links --}}
     <meta name="theme-color" content="#6d9886">
-    <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
+    @if (app()->environment('production'))
+        <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
+    @endif
     <link rel="apple-touch-icon" href="{{ asset('assets/pwa-192x192.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

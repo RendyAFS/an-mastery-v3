@@ -1,6 +1,7 @@
 import * as FilePond from "filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import processImageFile from "@/utils/image-processor";
 
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
@@ -61,56 +62,85 @@ const FilePondHelper = (function () {
                     progress,
                     abort,
                 ) => {
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    formData.append("max_size", maxSize);
-                    formData.append("folder", folder);
+                    let request;
+                    let aborted = false;
 
-                    if (allowedMimeTypes.length) {
-                        allowedMimeTypes.forEach((type) =>
-                            formData.append("allowed_types[]", type),
-                        );
-                    }
+                    processImageFile(file, {
+                        maxSizeBytes: maxSize * 1024,
+                        mimeType: "image/png",
+                    })
+                        .then((processedFile) => {
+                            if (aborted) return;
 
-                    const request = new XMLHttpRequest();
-                    request.open("POST", uploadUrl);
-                    request.setRequestHeader("X-CSRF-TOKEN", getCsrfToken());
-                    request.upload.onprogress = (e) =>
-                        progress(e.lengthComputable, e.loaded, e.total);
-
-                    request.onload = function () {
-                        let response = {};
-                        try {
-                            response = JSON.parse(request.responseText);
-                        } catch (e) {
-                            Toast.error(
-                                window.langFilepond?.server_error ??
-                                    "Server error",
+                            const formData = new FormData();
+                            formData.append(
+                                "file",
+                                processedFile,
+                                processedFile.name,
                             );
-                            return;
-                        }
+                            formData.append("max_size", maxSize);
+                            formData.append("folder", folder);
 
-                        if (request.status >= 200 && request.status < 300) {
-                            load(response.id);
-                        } else {
-                            const message =
-                                response?.errors?.file?.[0] ||
-                                response?.message ||
-                                (window.langFilepond?.upload_failed ??
-                                    "Upload failed");
-                            Toast.error(
-                                window.langFilepond?.upload_failed ??
-                                    "Upload failed",
-                                message,
+                            if (allowedMimeTypes.length) {
+                                allowedMimeTypes.forEach((type) =>
+                                    formData.append("allowed_types[]", type),
+                                );
+                            }
+
+                            request = new XMLHttpRequest();
+                            request.open("POST", uploadUrl);
+                            request.setRequestHeader(
+                                "X-CSRF-TOKEN",
+                                getCsrfToken(),
                             );
-                            error(message);
-                        }
-                    };
+                            request.upload.onprogress = (e) =>
+                                progress(e.lengthComputable, e.loaded, e.total);
 
-                    request.send(formData);
+                            request.onload = function () {
+                                let response = {};
+                                try {
+                                    response = JSON.parse(request.responseText);
+                                } catch (e) {
+                                    Toast.error(
+                                        window.langFilepond?.server_error ??
+                                            "Server error",
+                                    );
+                                    return;
+                                }
+
+                                if (
+                                    request.status >= 200 &&
+                                    request.status < 300
+                                ) {
+                                    load(response.id);
+                                } else {
+                                    const message =
+                                        response?.errors?.file?.[0] ||
+                                        response?.message ||
+                                        (window.langFilepond?.upload_failed ??
+                                            "Upload failed");
+                                    Toast.error(
+                                        window.langFilepond?.upload_failed ??
+                                            "Upload failed",
+                                        message,
+                                    );
+                                    error(message);
+                                }
+                            };
+
+                            request.send(formData);
+                        })
+                        .catch(() => {
+                            error(
+                                window.langFilepond?.process_error ??
+                                    "Gagal memproses gambar",
+                            );
+                        });
+
                     return {
                         abort: () => {
-                            request.abort();
+                            aborted = true;
+                            if (request) request.abort();
                             abort();
                         },
                     };
