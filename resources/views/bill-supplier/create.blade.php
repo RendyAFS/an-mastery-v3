@@ -21,7 +21,7 @@
             </div>
 
             <div
-                class="bg-(--color-light) shadow-md rounded-b-xl py-3 px-4 md:px-5 flex gap-2
+                class="bg-(--color-light) shadow-md rounded-b-xl py-3 px-4 md:px-5 flex flex-wrap gap-2
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
                 <x-button-loading type="submit" text="{{ __('button-loading.Save') }}"

@@ -16,6 +16,9 @@
             value="{{ isset($imageFabric) ? $imageFabric->getFirstMediaUrl('image-fabrics') : '' }}">
         <input type="hidden" name="remove_image" id="remove_image" value="0">
         <input type="file" name="image" class="filepond" accept="image/*" />
+        <button type="button" id="camera-btn"
+            class="py-2 px-4 text-sm rounded-lg cursor-pointer border border-(--color-gray) bg-(--color-light) hover:bg-(--color-light-gray) text-(--color-primary) hover:text-(--color-primary) dark:bg-(--color-dark) dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate) dark:text-(--color-light) dark:hover:text-(--color-light) transition-colors duration-200">
+            {{ __('filepond.take_photo') }} </button>
     </div>
 
     {{-- Name --}}

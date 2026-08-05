@@ -1,5 +1,6 @@
 import ApiProvider from "@/utils/api-provider";
 import FilePondHelper from "@/utils/filepond";
+import openCameraCapture from "@/utils/camera-capture";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import trans from "@/utils/trans";
@@ -59,10 +60,7 @@ const PageScript = (function () {
             }
 
             if (mode === "edit") {
-                await ApiProvider.put(
-                    route("galleries.update", id),
-                    payload,
-                );
+                await ApiProvider.put(route("galleries.update", id), payload);
                 flashToast(
                     "success",
                     window.langCustomAlert.success,
@@ -97,6 +95,7 @@ const PageScript = (function () {
 
         if (!pond) return;
         bindTmpField(pond);
+        bindCameraButton(pond);
     }
 
     function bindTmpField(pond) {
@@ -113,6 +112,19 @@ const PageScript = (function () {
         pond.on("removefile", () => {
             hiddenInput.value = "";
             if (removeInput) removeInput.value = "1";
+        });
+    }
+
+    function bindCameraButton(pond) {
+        const btn = document.getElementById("camera-btn");
+        if (!btn) return;
+
+        btn.addEventListener("click", () => {
+            openCameraCapture({
+                onCapture: (file) => {
+                    pond.addFile(file);
+                },
+            });
         });
     }
 
