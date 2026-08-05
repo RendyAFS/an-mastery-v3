@@ -106,7 +106,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('{employee}/show', [App\Http\Controllers\PresenceController::class, 'show'])->name('show');
         Route::put('{employee}/update', [App\Http\Controllers\PresenceController::class, 'update'])->name('update');
     });
-    Route::resource('presences', App\Http\Controllers\PresenceController::class)->names('presences');
+    Route::resource('presences', App\Http\Controllers\PresenceController::class)->except(['show'])->names('presences');
 
     // Fabric
     Route::prefix('fabrics')->as('fabrics.')->group(function () {
