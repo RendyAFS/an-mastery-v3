@@ -25,7 +25,7 @@
             {{-- Footer --}}
             <div
                 class="bg-(--color-light) shadow-md
-                   rounded-b-xl py-3 px-4 md:px-5 flex gap-2
+                   rounded-b-xl py-3 px-4 md:px-5 flex flex-wrap gap-2
                    dark:bg-(--color-dark) dark:border-(--color-slate)">
 
                 <x-button-loading type="submit" text="{{ __('button-loading.Save') }}"
@@ -34,8 +34,7 @@
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
-                <x-button-loading type="submit" :text="__('button-loading.Save & Create Another')"
-                    loadingText="{{ __('button-loading.Saving...') }}"
+                <x-button-loading type="submit" :text="__('button-loading.Save & Create Another')" loadingText="{{ __('button-loading.Saving...') }}"
                     color="bg-(--color-light) hover:bg-(--color-light-gray)"
                     textColor="text-(--color-primary) hover:text-(--color-primary) dark:text-(--color-light) dark:hover:text-(--color-light)"
                     size="py-2 px-4 text-sm" rounded="rounded-lg"
