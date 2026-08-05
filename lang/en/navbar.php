@@ -7,5 +7,6 @@ return [
     'Toggle Navigation' => 'Toggle Navigation',
     'Unknown'           => 'Unknown',
     'Profile'           => 'Profile',
+    'Log Viewer'        => 'Log Viewer',
     'Logout'            => 'Logout',
 ];
