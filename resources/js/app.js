@@ -18,4 +18,5 @@ document.addEventListener("DOMContentLoaded", () => {
     initUi();
     disableNumberScroll();
     fixTextareaEnter();
+    window.Alpine.start();
 });

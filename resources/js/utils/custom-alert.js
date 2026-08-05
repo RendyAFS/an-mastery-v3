@@ -313,5 +313,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 Alpine.data("customAlert", customAlert);
-Alpine.start();
+window.Alpine = Alpine;
 export default customAlert;
