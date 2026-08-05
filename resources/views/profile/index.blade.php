@@ -27,9 +27,8 @@
 
                         <input type="file" name="avatar" class="filepond" accept="image/*" />
                         <button type="button" id="camera-btn"
-                            class="px-4 py-2 rounded-lg border border-(--color-gray) text-sm text-(--color-dark) dark:text-(--color-light) dark:border-(--color-slate)">
-                            {{ __('filepond.take_photo') }}
-                        </button>
+                            class="py-2 px-4 text-sm rounded-lg cursor-pointer border border-(--color-gray) bg-(--color-light) hover:bg-(--color-light-gray) text-(--color-primary) hover:text-(--color-primary) dark:bg-(--color-dark) dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate) dark:text-(--color-light) dark:hover:text-(--color-light) transition-colors duration-200">
+                            {{ __('filepond.take_photo') }} </button>
                     </div>
                 </div>
 

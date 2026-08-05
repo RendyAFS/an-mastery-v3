@@ -7,12 +7,23 @@ function createModal() {
     const captureLabel = window.langFilepond?.take_photo ?? "Take Photo";
 
     overlay.innerHTML = `
-        <div class="bg-white dark:bg-(--color-dark-slate) rounded-lg p-4 w-full max-w-xl space-y-4">
-            <video autoplay playsinline class="w-full rounded-lg bg-black"></video>
+        <div class="bg-(--color-light) dark:bg-(--color-dark-slate) rounded-lg p-6 w-full max-w-3xl space-y-4 shadow-xl">
+            <video autoplay playsinline class="w-full aspect-video rounded-lg bg-black object-cover"></video>
             <canvas class="hidden"></canvas>
-            <div class="flex justify-end gap-2">
-                <button type="button" data-action="cancel" class="px-4 py-2 rounded-lg border border-(--color-gray)">${cancelLabel}</button>
-                <button type="button" data-action="capture" class="px-4 py-2 rounded-lg bg-(--color-primary) text-white">${captureLabel}</button>
+            <div class="flex justify-end gap-3">
+                <button
+                    type="button"
+                    data-action="cancel"
+                    class=" py-2 px-4 text-sm rounded-lg cursor-pointer border border-(--color-gray) bg-(--color-light) hover:bg-(--color-light-gray) text-(--color-primary) hover:text-(--color-primary) dark:bg-(--color-dark) dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate) dark:text-(--color-light) dark:hover:text-(--color-light) transition-colors duration-200">
+                    ${cancelLabel}
+                </button>
+
+                <button
+                    type="button"
+                    data-action="capture"
+                    class=" py-2 px-4 text-sm rounded-lg cursor-pointer bg-(--color-success) hover:bg-(--color-success)/70 text-(--color-light) hover:text-(--color-light) transition-colors duration-200">
+                    ${captureLabel}
+                </button>
             </div>
         </div>
     `;
