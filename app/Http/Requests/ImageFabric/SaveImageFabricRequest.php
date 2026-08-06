@@ -14,10 +14,12 @@ class SaveImageFabricRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'         => ['required', 'string', 'max:255'],
-            'notes'        => ['nullable', 'string'],
-            'image_tmp'    => ['nullable', 'string'],
-            'remove_image' => ['nullable', 'boolean'],
+            'name'             => ['required', 'string', 'max:255'],
+            'notes'            => ['nullable', 'string'],
+            'images_tmp'       => ['nullable', 'array'],
+            'images_tmp.*'     => ['string'],
+            'removed_images'   => ['nullable', 'array'],
+            'removed_images.*' => ['integer'],
         ];
     }
 
@@ -34,10 +36,10 @@ class SaveImageFabricRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name'         => __('image-fabric.form.name'),
-            'notes'        => __('image-fabric.form.notes'),
-            'image_tmp'    => __('image-fabric.form.image'),
-            'remove_image' => __('image-fabric.form.remove_image'),
+            'name'           => __('image-fabric.form.name'),
+            'notes'          => __('image-fabric.form.notes'),
+            'images_tmp'     => __('image-fabric.form.image'),
+            'removed_images' => __('image-fabric.form.remove_image'),
         ];
     }
 }

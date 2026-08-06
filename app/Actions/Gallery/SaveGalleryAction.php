@@ -15,30 +15,33 @@ class SaveGalleryAction
         return DB::transaction(function () use ($request, $gallery) {
 
             $data = collect($request->validated())
-                ->except(['image_tmp', 'remove_image'])
+                ->except(['images_tmp', 'removed_images'])
                 ->toArray();
 
             $gallery = $gallery
                 ? tap($gallery)->update($data)
                 : Gallery::create($data);
 
-            $tmpPath = $request->input('image_tmp');
+            $removedIds = $request->input('removed_images', []);
 
-            if ($tmpPath && Storage::disk('local')->exists($tmpPath)) {
-                $gallery->clearMediaCollection('galleries');
-
-                $gallery
-                    ->addMediaFromDisk($tmpPath, 'local')
-                    ->usingFileName(Str::uuid() . '.png')
-                    ->toMediaCollection('galleries');
-
-                Storage::disk('local')->delete($tmpPath);
-
-                return $gallery->load('media');
+            if (!empty($removedIds)) {
+                $gallery->media()
+                    ->whereIn('id', $removedIds)
+                    ->get()
+                    ->each(fn($media) => $media->delete());
             }
 
-            if ($request->boolean('remove_image')) {
-                $gallery->clearMediaCollection('galleries');
+            $tmpPaths = $request->input('images_tmp', []);
+
+            foreach ($tmpPaths as $tmpPath) {
+                if ($tmpPath && Storage::disk('local')->exists($tmpPath)) {
+                    $gallery
+                        ->addMediaFromDisk($tmpPath, 'local')
+                        ->usingFileName(Str::uuid() . '.png')
+                        ->toMediaCollection('galleries');
+
+                    Storage::disk('local')->delete($tmpPath);
+                }
             }
 
             return $gallery->load('media');

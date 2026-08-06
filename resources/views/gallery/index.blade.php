@@ -21,4 +21,6 @@
 
         <x-cardgrid id="gallery-cardgrid" filterId="filter-gallery" :defaultLength="12" :lengthOptions="[12, 24, 48]" />
     </div>
+
+    @include('gallery.partials._modal-preview-image')
 @endsection

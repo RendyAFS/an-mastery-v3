@@ -1,5 +1,4 @@
-@props(['id', 'title' => null, 'size' => 'md', 'scrollable' => true])
-
+@props(['id', 'title' => null, 'size' => 'md', 'scrollable' => true, 'centered' => false])
 @php
     $sizeMap = [
         'sm' => 'sm:max-w-sm',
@@ -11,19 +10,17 @@
     $maxWidth = $sizeMap[$size] ?? $sizeMap['md'];
     $bodyOverflowClass = $scrollable ? 'overflow-y-auto' : 'overflow-visible';
 @endphp
-
 <div id="{{ $id }}"
-    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-hidden pointer-events-none" role="dialog"
-    tabindex="-1" aria-labelledby="{{ $id }}-label">
-
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-hidden pointer-events-none
+        {{ $centered ? 'flex items-center justify-center' : '' }}"
+    role="dialog" tabindex="-1" aria-labelledby="{{ $id }}-label">
     <div
-        class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500
-        mt-0 opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto max-h-[calc(100vh-3.5rem)] flex flex-col">
-
+        class="hs-overlay-animation-target hs-overlay-open:opacity-100 hs-overlay-open:duration-500
+        opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto max-h-[calc(100vh-3.5rem)] flex flex-col
+        {{ $centered ? '' : 'hs-overlay-open:mt-7 mt-0' }}">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl pointer-events-auto
             dark:bg-(--color-dark) dark:border-(--color-slate) max-h-full overflow-hidden">
-
             @if ($title)
                 <div
                     class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate) shrink-0">
@@ -43,17 +40,14 @@
                     </button>
                 </div>
             @endif
-
             <div class="p-4 {{ $bodyOverflowClass }} space-y-4 custom-scrollbar">
                 {{ $slot }}
             </div>
-
             @isset($footer)
                 <div class="flex gap-2 p-4 border-t border-(--color-gray)/20 shrink-0">
                     {{ $footer }}
                 </div>
             @endisset
-
         </div>
     </div>
 </div>
