@@ -43,7 +43,7 @@
                     </div>
 
                     @unless ($supplier->trashed())
-                        <a href="{{ route('bill_suppliers.create', ['supplier_id' => $supplier->id]) }}"
+                        <a href="{{ route('bill_suppliers.create', ['supplier_id' => $supplier->id, 'week_start' => request('week_start'), 'week_end' => request('week_end')]) }}"
                             class="inline-flex items-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-xl
                     bg-white text-(--color-primary) hover:bg-white/90 shadow-sm cursor-pointer whitespace-nowrap">
                             <i data-lucide="plus" class="size-4"></i>

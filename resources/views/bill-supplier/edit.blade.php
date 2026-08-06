@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="bill-supplier-form" data-mode="edit" data-batch="{{ $batch }}" data-supplier-id="{{ $supplierId }}"
-        class="max-w-8xl mx-auto">
+        data-week-start="{{ request('week_start') }}" data-week-end="{{ request('week_end') }}" class="max-w-8xl mx-auto">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl
                dark:bg-(--color-dark) dark:border-(--color-slate)">
@@ -35,7 +35,7 @@
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
-                <a href="{{ route('bill_suppliers.by-supplier', $supplierId) }}"
+                <a href="{{ route('bill_suppliers.by-supplier', ['supplier' => $supplierId, 'week_start' => request('week_start'), 'week_end' => request('week_end')]) }}"
                     class="px-4 py-2 text-sm font-semibold rounded-lg
                        bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light) cursor-pointer
                        hover:opacity-90 transition">

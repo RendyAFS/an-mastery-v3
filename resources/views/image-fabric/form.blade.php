@@ -1,28 +1,31 @@
 <div class="grid grid-cols-1 gap-6">
 
-    {{-- Image Upload --}}
     <div class="space-y-2">
         <label class="block text-sm font-medium">{{ __('image-fabric.fields.image') }}</label>
 
-        {{-- URL publik untuk fallback --}}
-        <input type="hidden" id="image-preview"
-            value="{{ isset($imageFabric) ? $imageFabric->getFirstMediaUrl('image-fabrics') : '' }}" />
+        <div id="existing-images" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            @foreach ($imageFabric?->getMedia('image-fabrics') ?? [] as $media)
+                <div class="relative" data-media-id="{{ $media->id }}">
+                    <img src="{{ $media->getUrl() }}" alt="{{ $imageFabric->name }}"
+                        class="w-full aspect-square object-cover rounded-lg border border-(--color-gray)">
+                    <button type="button" data-remove-existing="{{ $media->id }}"
+                        class="absolute -top-2 -right-2 size-6 flex items-center justify-center rounded-full
+                            bg-(--color-danger) text-white shadow cursor-pointer">
+                        <i data-lucide="x" class="size-3.5"></i>
+                    </button>
+                </div>
+            @endforeach
+        </div>
 
-        {{-- Path storage untuk server.load (agar preview bisa di-fetch) --}}
-        <input type="hidden" id="image-path"
-            value="{{ isset($imageFabric) ? optional($imageFabric->getFirstMedia('image-fabrics'))->getPath() : '' }}" />
-
-        <input type="hidden" name="image_tmp" id="image_tmp"
-            value="{{ isset($imageFabric) ? $imageFabric->getFirstMediaUrl('image-fabrics') : '' }}">
-        <input type="hidden" name="remove_image" id="remove_image" value="0">
-        <input type="file" name="image" class="filepond" accept="image/*" />
+        <input type="hidden" name="images_tmp" id="images_tmp" value="[]">
+        <input type="hidden" name="removed_images" id="removed_images" value="[]">
+        <input type="file" name="images" class="filepond" accept="image/*" multiple />
         <button type="button" id="camera-btn"
             class="py-2 px-4 text-sm flex items-center rounded-lg cursor-pointer border border-(--color-gray) bg-(--color-light) hover:bg-(--color-light-gray) text-(--color-primary) hover:text-(--color-primary) dark:bg-(--color-dark) dark:border-(--color-dark-gray) dark:hover:bg-(--color-dark-slate) dark:text-(--color-light) dark:hover:text-(--color-light) transition-colors duration-200">
             <i data-lucide="camera" class="w-4 h-4 mr-2"></i>{{ __('filepond.take_photo') }}
         </button>
     </div>
 
-    {{-- Name --}}
     <div class="space-y-2">
         <label class="block text-sm font-medium">{{ __('image-fabric.fields.name') }}</label>
         <input type="text" name="name" value="{{ isset($imageFabric) ? $imageFabric->name : '' }}"
@@ -32,7 +35,6 @@
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
     </div>
 
-    {{-- Notes --}}
     <div class="space-y-2">
         <label class="block text-sm font-medium">{{ __('image-fabric.fields.notes') }}</label>
         <textarea name="notes" rows="4" placeholder="{{ __('image-fabric.notes_placeholder') }}"

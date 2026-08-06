@@ -22,15 +22,6 @@ const DAYS = [
     "sunday",
 ];
 
-const GENERATE_DAYS = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-];
-
 const PageScript = (function () {
     let datatable;
     let form;
@@ -155,7 +146,7 @@ const PageScript = (function () {
 
     const toggleFormDisabled = (disabled) => {
         $("#presence-form")
-            .find("input, textarea, button[type='submit'], #btn-generate")
+            .find("input, textarea, button[type='submit']")
             .prop("disabled", disabled);
     };
 
@@ -180,8 +171,6 @@ const PageScript = (function () {
         });
 
         $("#notes").val(data.notes ?? "");
-        $("#generate_value").val(0);
-        RupiahInput.refresh(document.getElementById("generate_value"));
 
         updateModalDates(
             isoWeekToMonday(dateToIsoWeek(new Date(currentWeekOf))),
@@ -250,18 +239,6 @@ const PageScript = (function () {
         }
     };
 
-    const generateValues = () => {
-        const value = rawNumber($("#generate_value").val());
-
-        GENERATE_DAYS.forEach((day) => {
-            const input = document.getElementById(day);
-            input.value = value;
-            RupiahInput.refresh(input);
-        });
-
-        updateModalTotal();
-    };
-
     const bindEvents = () => {
         $("#filter-week").on("change", function () {
             const value = $(this).val();
@@ -272,7 +249,8 @@ const PageScript = (function () {
             reloadDatatable();
         });
 
-        $(document).on("click", "[data-quick-amount]", function () {
+        $(document).on("mousedown", "[data-quick-amount]", function (e) {
+            e.preventDefault();
             handleQuickAmount(this);
         });
 
@@ -283,11 +261,6 @@ const PageScript = (function () {
         });
 
         $(document).on("input", ".day-input", updateModalTotal);
-
-        $(document).on("click", "#btn-generate", function (e) {
-            e.preventDefault();
-            generateValues();
-        });
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();

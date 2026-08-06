@@ -59,7 +59,10 @@ class SablonEmployeeDetail extends Model
             ->where(function (Builder $q) {
                 $q->where(function (Builder $q1) {
                     $q1->where('is_bon', false)
-                        ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::DONE));
+                        ->whereHas('sablon', fn($s) => $s->whereIn('status', [
+                            StatusSablonEnum::DONE,
+                            StatusSablonEnum::DELIVERED,
+                        ]));
                 })->orWhere(function (Builder $q2) {
                     $q2->where('is_bon', true)
                         ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::ON_PROGRESS));

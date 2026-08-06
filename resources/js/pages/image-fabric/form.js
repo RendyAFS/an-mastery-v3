@@ -7,6 +7,7 @@ import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let form, mode, id, pond;
+    let removedImageIds = [];
     const modelName = window.langModels?.ImageFabric ?? "Image Fabric";
 
     function bindEvents() {
@@ -24,12 +25,20 @@ const PageScript = (function () {
 
             await submitForm(action, submitter);
         });
+
+        $(document).on("click", "[data-remove-existing]", function () {
+            const mediaId = $(this).data("remove-existing");
+            removedImageIds.push(mediaId);
+            $(this).closest("[data-media-id]").remove();
+        });
     }
 
     function resetForm() {
         form.reset();
-        document.getElementById("image_tmp").value = "";
-        document.getElementById("remove_image").value = "0";
+        document.getElementById("images_tmp").value = "[]";
+        document.getElementById("removed_images").value = "[]";
+        removedImageIds = [];
+        $("#existing-images").empty();
         if (pond) {
             pond.removeFiles();
         }
@@ -40,6 +49,14 @@ const PageScript = (function () {
         let payload = Object.fromEntries(formData.entries());
 
         payload = normalizeFormInputs(form, payload);
+
+        try {
+            payload.images_tmp = JSON.parse(payload.images_tmp || "[]");
+        } catch (e) {
+            payload.images_tmp = [];
+        }
+
+        payload.removed_images = removedImageIds;
 
         try {
             if (mode === "create") {
@@ -79,21 +96,15 @@ const PageScript = (function () {
     }
 
     function initFilePond() {
-        const existingImage = document.getElementById("image-preview")?.value;
-        const existingPath = document.getElementById("image-path")?.value;
-
         pond = FilePondHelper.init({
-            selector: 'input[name="image"]',
+            selector: 'input[name="images"]',
             uploadUrl: route("filepond.process"),
             deleteUrl: route("filepond.revert"),
-            loadUrl: route("filepond.load"),
-            existingFileUrl: existingImage || null,
-            existingFilePath: existingPath || null,
             acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
             allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
             maxSize: 2048,
             folder: "tmp",
-            multiple: false,
+            multiple: true,
         });
 
         if (!pond) return;
@@ -102,20 +113,18 @@ const PageScript = (function () {
     }
 
     function bindTmpField(pond) {
-        const hiddenInput = document.getElementById("image_tmp");
-        const removeInput = document.getElementById("remove_image");
+        const hiddenInput = document.getElementById("images_tmp");
 
-        pond.on("processfile", (error, file) => {
-            if (!error) {
-                hiddenInput.value = file.serverId;
-                if (removeInput) removeInput.value = "0";
-            }
-        });
+        const syncTmp = () => {
+            const ids = pond
+                .getFiles()
+                .filter((f) => f.serverId)
+                .map((f) => f.serverId);
+            hiddenInput.value = JSON.stringify(ids);
+        };
 
-        pond.on("removefile", () => {
-            hiddenInput.value = "";
-            if (removeInput) removeInput.value = "1";
-        });
+        pond.on("processfile", syncTmp);
+        pond.on("removefile", syncTmp);
     }
 
     function bindCameraButton(pond) {

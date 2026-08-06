@@ -91,7 +91,7 @@ export default function initCardgrid({
                 cardEl.addEventListener("click", function (e) {
                     if (
                         e.target.closest(
-                            "button, a, .btn-delete, .btn-restore, .btn-force-delete",
+                            "button, a, .btn-delete, .btn-restore, .btn-force-delete, [data-no-card-click]",
                         )
                     ) {
                         return;

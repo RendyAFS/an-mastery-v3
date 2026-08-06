@@ -51,7 +51,7 @@ return [
             'price_employee' => 'Cari...',
         ],
         'hint_choose_supplier_first' => 'Pilih Supplier dulu untuk menampilkan Kain',
-        'hint_total_long_fabric'     => 'Otomatis dari total Fabric Detail',
+        'hint_total_long_fabric'     => 'Otomatis dari total Detail Kain',
     ],
 
     'fabric_detail' => [
@@ -68,20 +68,20 @@ return [
     ],
 
     'employee_detail' => [
-        'title'                    => 'Detail Karyawan (Karyawan & Fee)',
-        'employee_number'          => 'Karyawan #:number',
-        'employee'                 => 'Karyawan',
-        'layers'                   => 'Layer',
-        'fee_auto'                 => 'Fee (otomatis)',
-        'change_employee'          => 'Ganti Karyawan?',
-        'employee_change'          => 'Karyawan Pengganti',
-        'is_bon'                   => 'Bon',
-        'is_paid'                  => 'Sudah Dibayar',
-        'choose_employee'          => 'Pilih Karyawan',
+        'title'                       => 'Detail Karyawan (Karyawan & Gaji)',
+        'employee_number'             => 'Karyawan #:number',
+        'employee'                    => 'Karyawan',
+        'layers'                      => 'Warna',
+        'fee_auto'                    => 'Gaji (otomatis)',
+        'change_employee'             => 'Ganti Karyawan?',
+        'employee_change'             => 'Karyawan Pengganti',
+        'is_bon'                      => 'Bon',
+        'is_paid'                     => 'Sudah Dibayar',
+        'choose_employee'             => 'Pilih Karyawan',
         'search_employee_placeholder' => 'Cari karyawan...',
-        'no_employee_found'        => 'Karyawan tidak ditemukan',
-        'no_employee_detail_yet'   => 'Belum ada detail karyawan',
-        'add_employee'             => 'Tambah Karyawan',
+        'no_employee_found'           => 'Karyawan tidak ditemukan',
+        'no_employee_detail_yet'      => 'Belum ada detail karyawan',
+        'add_employee'                => 'Tambah Karyawan',
     ],
 
     'status_modal'  => [
@@ -98,7 +98,7 @@ return [
         'type_color_suffix'   => 'Warna',
         'fabric_details'      => 'Detail Kain',
         'employee_details'    => 'Detail Karyawan',
-        'layer_suffix'        => 'Layer',
+        'layer_suffix'        => 'Warna',
         'bon'                 => 'Bon',
         'paid'                => 'Lunas',
         'change_to'           => 'Ganti ke :name',
@@ -197,13 +197,13 @@ return [
             ],
 
             'layers' => [
-                'integer' => 'Jumlah layer harus berupa angka.',
-                'min'     => 'Jumlah layer minimal 0.',
+                'integer' => 'Jumlah warna harus berupa angka.',
+                'min'     => 'Jumlah warna minimal 0.',
             ],
 
             'fee' => [
-                'numeric' => 'Fee harus berupa angka.',
-                'min'     => 'Fee minimal 0.',
+                'numeric' => 'Gaji harus berupa angka.',
+                'min'     => 'Gaji minimal 0.',
             ],
 
             'employee_change_id' => [

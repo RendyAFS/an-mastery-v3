@@ -4,21 +4,38 @@ import trans from "@/utils/trans";
 
 const PageScript = (function () {
     let cardgrid;
+    let currentImages = [];
+    let currentIndex = 0;
     const modelName = window.langModels?.Gallery ?? "Gallery";
 
     const renderCard = (item) => {
         const isDeleted = item.deleted_at !== null;
+        const images = item.images?.length
+            ? item.images
+            : item.image_url
+              ? [{ url: item.image_url }]
+              : [];
+        const imageUrl = images[0]?.url;
+        const imageCount = images.length;
 
         return `
         <div class="h-80 bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer
             ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
 
-            <div class="aspect-square rounded-lg bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
-                flex items-center justify-center overflow-hidden">
+            <div class="relative aspect-square rounded-lg bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
+                flex items-center justify-center overflow-hidden cursor-pointer"
+                ${imageUrl ? `data-view-images='${JSON.stringify(images.map((i) => i.url))}' data-no-card-click` : ""}>
                 ${
-                    item.image_url
-                        ? `<img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover rounded-lg">`
+                    imageUrl
+                        ? `<img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover rounded-lg">`
                         : `<i data-lucide="image" class="size-10 text-(--color-gray)"></i>`
+                }
+                ${
+                    imageCount > 1
+                        ? `<span class="absolute bottom-1.5 right-1.5 text-[12px] font-semibold px-1.5 py-0.5 rounded-full bg-black/60 text-white flex items-center gap-1">
+                            <i data-lucide="images" class="size-5"></i> ${imageCount}
+                        </span>`
+                        : ""
                 }
             </div>
 
@@ -79,7 +96,47 @@ const PageScript = (function () {
         });
     };
 
+    const renderViewer = () => {
+        $("#viewer-image").attr("src", currentImages[currentIndex] ?? "");
+        $("#viewer-counter").text(
+            currentImages.length > 1
+                ? `${currentIndex + 1} / ${currentImages.length}`
+                : "",
+        );
+        $("#viewer-prev, #viewer-next").toggleClass(
+            "hidden",
+            currentImages.length <= 1,
+        );
+    };
+
+    const openViewer = (images, startIndex = 0) => {
+        currentImages = images;
+        currentIndex = startIndex;
+        renderViewer();
+        HSOverlay.open("#hs-gallery-viewer");
+        if (window.lucide) window.lucide.createIcons();
+    };
+
     const bindEvents = () => {
+        $(document).on("click", "[data-view-images]", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const images = JSON.parse($(this).attr("data-view-images"));
+            openViewer(images, 0);
+        });
+
+        $(document).on("click", "#viewer-prev", function () {
+            currentIndex =
+                (currentIndex - 1 + currentImages.length) %
+                currentImages.length;
+            renderViewer();
+        });
+
+        $(document).on("click", "#viewer-next", function () {
+            currentIndex = (currentIndex + 1) % currentImages.length;
+            renderViewer();
+        });
+
         $(document).on("click", ".btn-delete", async function () {
             const id = $(this).data("id");
             const confirmed = await Confirm.show(

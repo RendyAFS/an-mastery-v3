@@ -15,30 +15,33 @@ class SaveImageFabricAction
         return DB::transaction(function () use ($request, $imageFabric) {
 
             $data = collect($request->validated())
-                ->except(['image_tmp', 'remove_image'])
+                ->except(['images_tmp', 'removed_images'])
                 ->toArray();
 
             $imageFabric = $imageFabric
                 ? tap($imageFabric)->update($data)
                 : ImageFabric::create($data);
 
-            $tmpPath = $request->input('image_tmp');
+            $removedIds = $request->input('removed_images', []);
 
-            if ($tmpPath && Storage::disk('local')->exists($tmpPath)) {
-                $imageFabric->clearMediaCollection('image-fabrics');
-
-                $imageFabric
-                    ->addMediaFromDisk($tmpPath, 'local')
-                    ->usingFileName(Str::uuid() . '.png')
-                    ->toMediaCollection('image-fabrics');
-
-                Storage::disk('local')->delete($tmpPath);
-
-                return $imageFabric->load('media');
+            if (!empty($removedIds)) {
+                $imageFabric->media()
+                    ->whereIn('id', $removedIds)
+                    ->get()
+                    ->each(fn($media) => $media->delete());
             }
 
-            if ($request->boolean('remove_image')) {
-                $imageFabric->clearMediaCollection('image-fabrics');
+            $tmpPaths = $request->input('images_tmp', []);
+
+            foreach ($tmpPaths as $tmpPath) {
+                if ($tmpPath && Storage::disk('local')->exists($tmpPath)) {
+                    $imageFabric
+                        ->addMediaFromDisk($tmpPath, 'local')
+                        ->usingFileName(Str::uuid() . '.png')
+                        ->toMediaCollection('image-fabrics');
+
+                    Storage::disk('local')->delete($tmpPath);
+                }
             }
 
             return $imageFabric->load('media');

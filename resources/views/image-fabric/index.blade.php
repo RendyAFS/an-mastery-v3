@@ -21,4 +21,6 @@
 
         <x-cardgrid id="image-fabric-cardgrid" filterId="filter-image-fabric" :defaultLength="12" :lengthOptions="[12, 24, 48]" />
     </div>
+
+    @include('image-fabric.partials._modal-preview-image')
 @endsection

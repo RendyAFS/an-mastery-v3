@@ -7,7 +7,6 @@ use App\Http\Requests\Gallery\SaveGalleryRequest;
 use App\Http\Resources\GalleryResource;
 use App\Models\Gallery;
 use App\Repositories\GalleryRepository;
-use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
