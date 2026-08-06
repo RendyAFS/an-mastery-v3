@@ -15,6 +15,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use App\Models\Gallery;
+use App\Models\ImageFabric;
+use Illuminate\Support\Facades\View;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -87,5 +90,48 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::registerView(function () {
             return view('auth.register');
         });
+
+        View::composer('components.auth-slideshow', function ($view) {
+            $view->with('authImages', $this->buildAuthImages());
+        });
+    }
+
+    private function buildAuthImages(): \Illuminate\Support\Collection
+    {
+        $galleryImages = Gallery::with('media')
+            ->whereNull('deleted_at')
+            ->latest()
+            ->get()
+            ->flatMap(function (Gallery $gallery) {
+                $media = $gallery->getMedia('galleries')->isNotEmpty()
+                    ? $gallery->getMedia('galleries')
+                    : $gallery->getMedia();
+
+                return $media->map(fn($m) => [
+                    'url'      => $m->getUrl(),
+                    'title'    => $gallery->name,
+                    'subtitle' => $gallery->notes ?: '-',
+                    'badge'    => 'Galeri Produksi',
+                ]);
+            });
+
+        $fabricImages = ImageFabric::with('media')
+            ->whereNull('deleted_at')
+            ->latest()
+            ->get()
+            ->flatMap(function (ImageFabric $fabric) {
+                $media = $fabric->getMedia('image-fabrics')->isNotEmpty()
+                    ? $fabric->getMedia('image-fabrics')
+                    : $fabric->getMedia();
+
+                return $media->map(fn($m) => [
+                    'url'      => $m->getUrl(),
+                    'title'    => $fabric->name,
+                    'subtitle' => $fabric->notes ?: '-',
+                    'badge'    => 'Katalog Kain',
+                ]);
+            });
+
+        return $galleryImages->concat($fabricImages)->values();
     }
 }
