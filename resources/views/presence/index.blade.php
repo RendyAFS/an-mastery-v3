@@ -24,7 +24,7 @@
                         dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
                 <button type="button" id="btn-bulk-generate"
-                    class="flex items-center gap-2 py-2.5 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                    class="flex items-center gap-2 py-2 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
                     <i data-lucide="calendar-plus" class="size-4"></i>
                     {{ __('presence.generate_button') }}
                 </button>

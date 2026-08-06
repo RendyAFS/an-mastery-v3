@@ -14,7 +14,7 @@
             <a class="flex items-center gap-2 overflow-hidden hs-overlay-minified:group-hover/sidebar:flex hs-overlay-minified:hidden"
                 href="{{ route('dashboard') }}">
                 <img src="{{ asset('assets/Logo-AnMastery.webp') }}" alt="AN Mastery Logo"
-                    class="h-9 w-auto object-contain flex-shrink-0">
+                    class="h-9 w-auto object-contain shrink-0">
                 <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
                     AN Mastery
                 </span>
@@ -30,15 +30,33 @@
             </div>
         </header>
 
-        <div class="px-4 pb-3">
+        <div class="px-3 pb-3">
             <button type="button" id="sidebar-mode-switch"
-                class="w-full flex items-center justify-center gap-x-2 py-2 px-3.5 rounded-full text-sm font-semibold
-                text-(--color-danger) border border-(--color-danger)/30
-                hover:bg-(--color-danger)/10 transition-all duration-300 cursor-pointer">
-                <i data-lucide="circle-dot" class="size-4 shrink-0"></i>
-                <span class="hs-overlay-minified:group-hover/sidebar:inline hs-overlay-minified:hidden truncate">
-                    {{ __('sidebar.Floating Menu') }}
+                class="group/mode-btn relative w-full flex items-center gap-x-3 py-2.5 px-3 rounded-2xl
+                bg-(--color-primary)/10 hover:bg-(--color-primary)/15
+                border border-(--color-primary)/20
+                transition-all duration-300 cursor-pointer
+                hs-overlay-minified:justify-center hs-overlay-minified:px-0">
+                <span
+                    class="flex items-center justify-center size-8 rounded-full shrink-0
+                    bg-(--color-primary) text-(--color-light) shadow-sm shadow-(--color-primary)/40
+                    transition-transform duration-300 group-hover/mode-btn:scale-105">
+                    <i data-lucide="app-window" class="size-4"></i>
                 </span>
+                <span
+                    class="flex flex-col items-start text-start min-w-0
+                    hs-overlay-minified:group-hover/sidebar:flex hs-overlay-minified:hidden">
+                    <span class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) truncate">
+                        {{ __('sidebar.Floating Menu') }}
+                    </span>
+                    <span class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) truncate">
+                        {{ __('sidebar.Switch display mode') }}
+                    </span>
+                </span>
+                <i data-lucide="chevron-right"
+                    class="ms-auto size-4 shrink-0 text-(--color-primary)
+                    transition-transform duration-300 group-hover/mode-btn:translate-x-0.5
+                    hs-overlay-minified:group-hover/sidebar:block hs-overlay-minified:hidden"></i>
             </button>
         </div>
 
@@ -49,7 +67,7 @@
 </div>
 
 <button type="button" id="sidebar-floating-trigger"
-    class="hidden fixed bottom-6 end-6 z-70 size-14 rounded-full
+    class="hidden fixed bottom-6 inset-e-6 z-70 size-14 rounded-full
            bg-(--color-primary) text-(--color-light) shadow-lg
            items-center justify-center
            hover:brightness-110 active:scale-95 transition-all cursor-pointer"
@@ -59,11 +77,27 @@
 
 <x-modal id="sidebar-floating-modal" :title="__('sidebar.Menu')" size="sm">
     <button type="button" id="sidebar-back-to-mode"
-        class="hidden lg:flex w-full items-center justify-center gap-x-2 py-2 px-3.5 rounded-full text-sm font-semibold
-        text-(--color-danger) border border-(--color-danger)/30
-        hover:bg-(--color-danger)/10 transition-all duration-300 cursor-pointer">
-        <i data-lucide="panel-left-open" class="size-4"></i>
-        {{ __('sidebar.Back to Sidebar') }}
+        class="hidden lg:flex group/mode-btn relative w-full items-center gap-x-3 py-2.5 px-3 rounded-2xl
+        bg-(--color-primary)/10 hover:bg-(--color-primary)/15
+        border border-(--color-primary)/20
+        transition-all duration-300 cursor-pointer">
+        <span
+            class="flex items-center justify-center size-8 rounded-full shrink-0
+            bg-(--color-primary) text-(--color-light) shadow-sm shadow-(--color-primary)/40
+            transition-transform duration-300 group-hover/mode-btn:scale-105">
+            <i data-lucide="panel-left" class="size-4"></i>
+        </span>
+        <span class="flex flex-col items-start text-start min-w-0">
+            <span class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) truncate">
+                {{ __('sidebar.Back to Sidebar') }}
+            </span>
+            <span class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) truncate">
+                {{ __('sidebar.Switch display mode') }}
+            </span>
+        </span>
+        <i data-lucide="chevron-right"
+            class="ms-auto size-4 shrink-0 text-(--color-primary)
+            transition-transform duration-300 group-hover/mode-btn:translate-x-0.5"></i>
     </button>
 
     <x-sidebar-menu :menus="$menus" />
