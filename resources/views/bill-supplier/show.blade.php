@@ -17,13 +17,13 @@
             @unless ($supplier->trashed())
                 <div class="flex items-center gap-3">
                     <a href="{{ route('bill_suppliers.index') }}" id="bs-back-link"
-                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
+                        class="inline-flex items-center justify-center gap-2 py-2 px-4 text-[15px] rounded-lg
                     bg-(--color-danger) text-white font-medium hover:bg-(--color-danger)/80 cursor-pointer whitespace-nowrap">
                         <i data-lucide="arrow-left" class="size-4"></i> {{ __('bill-supplier.show.back') }}
                     </a>
 
                     <a href="{{ route('bill_suppliers.create', ['supplier_id' => $supplier->id]) }}"
-                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
+                        class="inline-flex items-center justify-center gap-2 py-2 px-4 text-[15px] rounded-lg
                     bg-(--color-primary) text-white font-medium hover:bg-(--color-primary)/80 cursor-pointer whitespace-nowrap">
                         <i data-lucide="plus" class="size-4"></i>
                         {{ __('bill-supplier.show.create_bill') }}

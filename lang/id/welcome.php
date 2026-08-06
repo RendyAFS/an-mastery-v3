@@ -9,7 +9,7 @@ return [
     'nav' => [
         'login'     => 'Masuk',
         'register'  => 'Daftar',
-        'dashboard' => 'Dasbor',
+        'dashboard' => 'Dashboard',
     ],
 
     // Hero
