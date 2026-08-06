@@ -6,6 +6,7 @@ import fixTextareaEnter from "./utils/fix-textarea-enter";
 window.FloatingUIDOM = FloatingUIDOM;
 
 // utils
+import "./utils/sidebar-mode";
 import "./utils/toggle-dark-mode";
 import "./utils/custom-alert";
 import "./utils/sidebar-state";

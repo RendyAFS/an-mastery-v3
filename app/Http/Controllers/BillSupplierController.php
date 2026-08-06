@@ -68,7 +68,9 @@ class BillSupplierController extends Controller
             ]);
         }
 
-        return view('bill-supplier.show', compact('supplier'));
+        $coverStyle = $supplier->resolvedCoverStyle();
+
+        return view('bill-supplier.show', compact('supplier', 'coverStyle'));
     }
 
     public function availableSablons(Supplier $supplier)

@@ -9,7 +9,7 @@
         <div class="flex flex-wrap justify-between items-center">
             <div class="mb-3 md:mb-0">
                 <h1 class="text-3xl font-bold">{{ __('models.User') }}</h1>
-                <p class="text-sm">{{ __('user.description') }}</p>
+                <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('user.description') }}</p>
             </div>
 
             <a href="{{ route('users.create') }}"

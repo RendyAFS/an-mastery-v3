@@ -1,8 +1,13 @@
 <?php
 return [
-    'description'        => 'Manage fabric data',
-    'create_title'        => 'Create Fabric',
-    'edit_title'          => 'Edit Fabric',
+    'description'  => 'Manage fabric data',
+    'create_title' => 'Create Fabric',
+    'edit_title'   => 'Edit Fabric',
+    'filter'       => [
+        'week_start' => 'From Week',
+        'week_end'   => 'To Week',
+        'reset'      => 'Reset Filter',
+    ],
     'fields'             => [
         'supplier'    => 'Supplier',
         'code'        => 'Code',

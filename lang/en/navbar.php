@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'Language'          => 'Language',
+    'Theme'             => 'Theme',
     'Light'             => 'Light',
     'Dark'              => 'Dark',
     'Auto (System)'     => 'Auto (System)',

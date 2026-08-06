@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'BillSupplier'         => 'Tagihan Konveki',
+    'BillSupplier'         => 'Tagihan Konveksi',
     'ColorFabric'          => 'Warna Kain',
     'Employee'             => 'Karyawan',
     'Fabric'               => 'Kain',

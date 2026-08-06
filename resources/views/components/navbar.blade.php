@@ -3,27 +3,26 @@
     <div class="flex items-center justify-between px-4 py-3">
         <!-- Left -->
         <div class="flex items-center gap-3">
-            <button type="button"
-                class="lg:hidden flex justify-center items-center size-8 text-sm
-                text-(--color-dark-gray)
-                hover:bg-(--color-gray)/20 hover:text-(--color-primary)
-                dark:text-(--color-gray)
-                dark:hover:bg-(--color-gray)/20 dark:hover:text-(--color-secondary)
-                rounded-lg focus:outline-none"
-                aria-haspopup="dialog" data-hs-overlay="#hs-sidebar-content-push">
-
-                <i data-lucide="panels-top-left" class="size-5"></i>
-                <span class="sr-only">{{ __('navbar.Toggle Navigation') }}</span>
-            </button>
+            <a href="{{ route('dashboard') }}" id="navbar-logo" class="hidden items-center gap-2 overflow-hidden">
+                <img src="{{ asset('assets/Logo-AnMastery.webp') }}" alt="AN Mastery Logo"
+                    class="h-8 w-auto object-contain shrink-0">
+                <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
+                    AN Mastery
+                </span>
+            </a>
         </div>
 
         <!-- Right -->
         <div class="flex items-center gap-5">
-            {{-- Toggle Theme --}}
-            @include('components.toggle-theme')
+            {{-- Toggle Theme (desktop only) --}}
+            <div class="hidden lg:block">
+                @include('components.toggle-theme')
+            </div>
 
-            <!-- Language Switch Dropdown -->
-            @include('components.toggle-language')
+            <!-- Language Switch Dropdown (desktop only) -->
+            <div class="hidden lg:block">
+                @include('components.toggle-language')
+            </div>
 
             <!-- Profile Dropdown -->
             <div class="hs-dropdown inline-flex">
@@ -61,7 +60,8 @@
                 <!-- Dropdown Menu -->
                 <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 mt-2 hidden z-10
                     transition-[margin,opacity] opacity-0 duration-300
-                    min-w-60 bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
+                    min-w-60 max-h-[80vh] overflow-y-auto custom-scrollbar
+                    bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
                     shadow-md rounded-lg p-2"
                     role="menu">
 
@@ -78,6 +78,61 @@
                             dark:text-(--color-gray)">
                             {{ $user->email }}
                         </p>
+                    </div>
+
+                    {{-- Theme & Language (mobile only) --}}
+                    <div class="lg:hidden border-t border-b border-(--color-gray)/20 my-1 py-1 space-y-2">
+                        <div class="px-3 py-1">
+                            <p
+                                class="text-[11px] font-semibold uppercase tracking-wide text-(--color-dark-gray) dark:text-(--color-gray)">
+                                {{ __('navbar.Theme') }}
+                            </p>
+                            <div class="grid grid-cols-3 gap-1 mt-1.5">
+                                <button type="button"
+                                    class="flex flex-col items-center gap-1 py-2 rounded-lg text-[11px] cursor-pointer
+                                    text-(--color-dark) hover:bg-(--color-gray)/20
+                                    dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
+                                    data-hs-theme-click-value="light">
+                                    <i data-lucide="sun" class="size-4"></i>
+                                    {{ __('navbar.Light') }}
+                                </button>
+                                <button type="button"
+                                    class="flex flex-col items-center gap-1 py-2 rounded-lg text-[11px] cursor-pointer
+                                    text-(--color-dark) hover:bg-(--color-gray)/20
+                                    dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
+                                    data-hs-theme-click-value="dark">
+                                    <i data-lucide="moon" class="size-4"></i>
+                                    {{ __('navbar.Dark') }}
+                                </button>
+                                <button type="button"
+                                    class="flex flex-col items-center gap-1 py-2 rounded-lg text-[11px] cursor-pointer
+                                    text-(--color-dark) hover:bg-(--color-gray)/20
+                                    dark:text-(--color-gray) dark:hover:bg-(--color-gray)/20"
+                                    data-hs-theme-click-value="auto">
+                                    <i data-lucide="monitor-cog" class="size-4"></i>
+                                    {{ __('navbar.Auto') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="px-3 py-1">
+                            <p
+                                class="text-[11px] font-semibold uppercase tracking-wide text-(--color-dark-gray) dark:text-(--color-gray)">
+                                {{ __('navbar.Language') }}
+                            </p>
+                            <div class="grid grid-cols-2 gap-1 mt-1.5">
+                                <a href="{{ route('locale.switch', 'id') }}"
+                                    class="flex items-center justify-center gap-x-2 py-2 rounded-lg text-xs
+                                    {{ app()->getLocale() === 'id' ? 'text-(--color-primary) font-semibold bg-(--color-primary)/10' : 'text-(--color-dark) dark:text-(--color-gray) hover:bg-(--color-gray)/20' }}">
+                                    Indonesia
+                                </a>
+                                <a href="{{ route('locale.switch', 'en') }}"
+                                    class="flex items-center justify-center gap-x-2 py-2 rounded-lg text-xs
+                                    {{ app()->getLocale() === 'en' ? 'text-(--color-primary) font-semibold bg-(--color-primary)/10' : 'text-(--color-dark) dark:text-(--color-gray) hover:bg-(--color-gray)/20' }}">
+                                    English
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <a href="{{ route('profile.index') }}"

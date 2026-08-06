@@ -702,7 +702,7 @@
                     <div class="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 px-1"
                         style="color: var(--color-dark-gray);">
                         <span class="flex items-center gap-2 text-sm">
-                            <i data-lucide="map-pin" class="size-4 text-(--color-primary) flex-shrink-0"></i>
+                            <i data-lucide="map-pin" class="size-4 text-(--color-primary) shrink-0"></i>
                             {{ __('welcome.location.address') }}
                         </span>
                         <a href="https://maps.app.goo.gl/andri-sablon" target="_blank" rel="noopener noreferrer"

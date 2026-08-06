@@ -6,7 +6,7 @@ use App\Models\Fabric;
 
 class FabricRepository
 {
-    public function getAll($filter = 'active')
+    public function getAll($filter = 'active', ?\Carbon\Carbon $dateFrom = null, ?\Carbon\Carbon $dateTo = null)
     {
         $query = Fabric::query()
             ->with([
@@ -21,6 +21,11 @@ class FabricRepository
         } elseif ($filter === 'all') {
             $query->withTrashed();
         }
+
+        if ($dateFrom && $dateTo) {
+            $query->whereBetween('date_coming', [$dateFrom, $dateTo]);
+        }
+
         return $query->get();
     }
 

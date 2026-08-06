@@ -13,20 +13,20 @@
 @endphp
 
 <div id="{{ $id }}"
-    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
-    role="dialog" tabindex="-1" aria-labelledby="{{ $id }}-label">
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-hidden pointer-events-none" role="dialog"
+    tabindex="-1" aria-labelledby="{{ $id }}-label">
 
     <div
         class="hs-overlay-animation-target hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500
-        mt-0 opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto">
+        mt-0 opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto max-h-[calc(100vh-3.5rem)] flex flex-col">
 
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl pointer-events-auto
-            dark:bg-(--color-dark) dark:border-(--color-slate)">
+            dark:bg-(--color-dark) dark:border-(--color-slate) max-h-full overflow-hidden">
 
             @if ($title)
                 <div
-                    class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate)">
+                    class="flex justify-between items-center py-3 px-4 border-b border-(--color-light-gray) dark:border-(--color-slate) shrink-0">
                     <h3 id="{{ $id }}-label"
                         class="font-semibold text-(--color-dark) dark:text-(--color-light)">
                         {{ $title }}
@@ -44,12 +44,12 @@
                 </div>
             @endif
 
-            <div class="p-4 {{ $bodyOverflowClass }} space-y-4">
+            <div class="p-4 {{ $bodyOverflowClass }} space-y-4 custom-scrollbar">
                 {{ $slot }}
             </div>
 
             @isset($footer)
-                <div class="flex gap-2 p-4 border-t border-(--color-gray)/20">
+                <div class="flex gap-2 p-4 border-t border-(--color-gray)/20 shrink-0">
                     {{ $footer }}
                 </div>
             @endisset

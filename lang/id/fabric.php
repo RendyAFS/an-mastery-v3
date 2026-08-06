@@ -1,8 +1,13 @@
 <?php
 return [
-    'description'        => 'Kelola data kain',
-    'create_title'        => 'Tambah Kain',
-    'edit_title'          => 'Ubah Kain',
+    'description'  => 'Kelola data kain',
+    'create_title' => 'Tambah Kain',
+    'edit_title'   => 'Ubah Kain',
+    'filter'       => [
+        'week_start' => 'Dari Minggu',
+        'week_end'   => 'Sampai Minggu',
+        'reset'      => 'Reset Filter',
+    ],
     'fields'             => [
         'supplier'    => 'Konveksi',
         'code'        => 'Kode',

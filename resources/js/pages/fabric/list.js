@@ -6,6 +6,62 @@ const PageScript = (function () {
     let datatable;
     const modelName = window.langModels?.Fabric ?? "Fabric";
 
+    const getISOWeekString = (date) => {
+        const target = new Date(date.valueOf());
+        const dayNr = (date.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+
+        if (target.getDay() !== 4) {
+            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+        }
+
+        const week = 1 + Math.round((firstThursday - target) / 604800000);
+
+        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    };
+
+    const getMonthWeekRange = () => {
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        return {
+            start: getISOWeekString(firstDay),
+            end: getISOWeekString(lastDay),
+        };
+    };
+
+    const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const applyFiltersFromUrl = () => {
+        const params = getUrlParams();
+        const monthRange = getMonthWeekRange();
+
+        $("#filter-week-start").val(
+            params.get("week_start") || monthRange.start,
+        );
+        $("#filter-week-end").val(params.get("week_end") || monthRange.end);
+    };
+
+    const syncUrl = () => {
+        const params = getUrlParams();
+        params.set("week_start", $("#filter-week-start").val());
+        params.set("week_end", $("#filter-week-end").val());
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+    };
+
+    const setDefaultWeekFilters = () => {
+        const monthRange = getMonthWeekRange();
+        $("#filter-week-start").val(monthRange.start);
+        $("#filter-week-end").val(monthRange.end);
+        syncUrl();
+    };
+
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
     };
@@ -21,26 +77,18 @@ const PageScript = (function () {
                 dataSrc: "data",
                 data: function (d) {
                     d.filter = $("#filter-fabrics").val();
+                    d.week_start = $("#filter-week-start").val();
+                    d.week_end = $("#filter-week-end").val();
                 },
             },
             columns: [
                 {
                     data: "supplier.name",
-                    width: "12%",
-                },
-                {
-                    data: "code",
                     width: "20%",
-                    className: "text-center",
-                },
-                {
-                    data: "seri",
-                    width: "8%",
-                    className: "text-center dt-body-center",
                 },
                 {
                     data: "total_inventory_fabric",
-                    width: "35%",
+                    width: "50%",
                     className: "dt-body-center",
                     render(data) {
                         if (!data || !data.colors || data.colors.length === 0) {
@@ -106,28 +154,29 @@ const PageScript = (function () {
 
                                 <div class="px-3 py-2.5 bg-(--color-gray)/10
                                     dark:bg-(--color-dark-gray)/20">
+                                    <div class="flex justify-between items-center gap-2 mb-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="flex items-center justify-center size-7 rounded-lg
+                                                bg-(--color-primary)/20
+                                                dark:bg-(--color-primary)/10
+                                                text-(--color-primary)">
+                                                <i data-lucide="layers" class="size-4"></i>
+                                            </span>
 
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="flex items-center justify-center size-7 rounded-lg
-                                            bg-(--color-primary)/20
-                                            dark:bg-(--color-primary)/10
-                                            text-(--color-primary)">
-                                            <i data-lucide="layers" class="size-4"></i>
-                                        </span>
+                                            <div>
+                                                <div class="font-semibold text-sm">
+                                                    ${seriText}
+                                                </div>
 
-                                        <div>
-                                            <div class="font-semibold text-sm">
-                                                ${seriText}
-                                            </div>
-
-                                            <div class="text-xs text-(--color-dark-gray)">
-                                                ${data.type_fabric ?? "-"}
+                                                <div class="text-xs text-(--color-dark-gray) dark:text-(--color-light-gray)">
+                                                    ${data.type_fabric ?? "-"}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="text-[11px] text-(--color-dark-gray)">
-                                        ${window.langFabric?.incoming_label ?? "Incoming"} : ${data.date_coming ?? "-"}
+                                        <div class="text-[11px] text-(--color-dark) dark:text-(--color-light) font-semibold">
+                                            ${window.langFabric?.incoming_label ?? "Incoming"} : ${data.date_coming ?? "-"}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -141,7 +190,7 @@ const PageScript = (function () {
                 },
                 {
                     data: "notes",
-                    width: "20%",
+                    width: "25%",
                     render(data) {
                         return `
                             <div class="whitespace-pre-line">
@@ -240,6 +289,20 @@ const PageScript = (function () {
             const id = $(this).data("fabric-id");
             handleForceDelete(id);
         });
+
+        $(document).on(
+            "change",
+            "#filter-week-start, #filter-week-end",
+            function () {
+                syncUrl();
+                reloadDatatable();
+            },
+        );
+
+        $(document).on("click", "#filter-week-reset", function () {
+            setDefaultWeekFilters();
+            reloadDatatable();
+        });
     };
 
     const handleDelete = async (fabricId) => {
@@ -313,6 +376,9 @@ const PageScript = (function () {
 
     return {
         init() {
+            applyFiltersFromUrl();
+            syncUrl();
+
             DataTable();
             bindEvents();
         },

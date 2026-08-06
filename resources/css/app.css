@@ -21,3 +21,13 @@
 @import "./components/scrollbar.css";
 @import "./components/datatable.css";
 @import "./components/form.css";
+
+html.sidebar-floating-init #hs-sidebar-content-push {
+    display: none !important;
+}
+html.sidebar-floating-init #app-content-area {
+    margin-inline-start: 0 !important;
+}
+html.sidebar-floating-init #sidebar-floating-trigger {
+    display: flex !important;
+}

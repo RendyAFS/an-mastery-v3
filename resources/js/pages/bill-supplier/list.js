@@ -148,7 +148,7 @@ const PageScript = (function () {
                 ${
                     item.address
                         ? `
-                <p class="text-sm text-(--color-dark) line-clamp-2 flex items-start gap-1.5">
+                <p class="text-sm text-(--color-dark-gray) dark:text-(--color-light-gray) line-clamp-2 flex items-start gap-1.5">
                     <i data-lucide="map-pin" class="size-3.5 mt-0.5 shrink-0"></i>
                     <span>${item.address}</span>
                 </p>`
@@ -157,13 +157,13 @@ const PageScript = (function () {
 
                 <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="rounded-lg bg-(--color-dark)/8 dark:bg-white/5 p-3 space-y-1">
-                        <p class="text-xs text-(--color-dark) flex items-center gap-1">
+                        <p class="text-xs text-(--color-dark) dark:text-(--color-light-gray) flex items-center gap-1">
                             <i data-lucide="package" class="size-3.5"></i> ${window.langBillSupplier.card.unbilled}
                         </p>
                         <p class="text-lg font-bold">${item.unbilled_sablons_count}</p>
                     </div>
                     <div class="rounded-lg bg-(--color-dark)/8 dark:bg-white/5 p-3 space-y-1">
-                        <p class="text-xs text-(--color-dark) flex items-center gap-1">
+                        <p class="text-xs text-(--color-dark) dark:text-(--color-light-gray) flex items-center gap-1">
                             <i data-lucide="receipt" class="size-3.5"></i> ${window.langBillSupplier.card.unpaid}
                         </p>
                         <p class="text-lg font-bold ${hasUnpaid ? "text-(--color-red)" : "text-(--color-gray)"}">

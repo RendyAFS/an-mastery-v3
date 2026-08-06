@@ -9,7 +9,7 @@
         <div class="flex flex-wrap justify-between items-center">
             <div class="mb-3 md:mb-0">
                 <h1 class="text-3xl font-bold">{{ __('models.Role') }}</h1>
-                <p class="text-sm">{{ __('role.description') }}</p>
+                <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('role.description') }}</p>
             </div>
 
             <a href="{{ route('roles.create') }}"
