@@ -38,7 +38,7 @@
                 </div>
 
                 <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw"
-                    text="{{ __('sablon.filter.reset') }}" loadingText="{{ __('button-loading.Saving...') }}"
+                    text="{{ __('fabric.filter.reset') }}" loadingText="{{ __('button-loading.Saving...') }}"
                     color="bg-(--color-danger) hover:bg-(--color-danger)/80"
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />

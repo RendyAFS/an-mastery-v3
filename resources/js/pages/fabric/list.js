@@ -168,13 +168,13 @@ const PageScript = (function () {
                                                     ${seriText}
                                                 </div>
 
-                                                <div class="text-xs text-(--color-dark-gray)">
+                                                <div class="text-xs text-(--color-dark-gray) dark:text-(--color-light-gray)">
                                                     ${data.type_fabric ?? "-"}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="text-[11px] text-(--color-dark) font-semibold">
+                                        <div class="text-[11px] text-(--color-dark) dark:text-(--color-light) font-semibold">
                                             ${window.langFabric?.incoming_label ?? "Incoming"} : ${data.date_coming ?? "-"}
                                         </div>
                                     </div>
