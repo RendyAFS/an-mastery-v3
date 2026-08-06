@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between px-4 py-3">
         <!-- Left -->
         <div class="flex items-center gap-3">
-            <a href="{{ route('dashboard') }}" class="lg:hidden flex items-center gap-2 overflow-hidden">
+            <a href="{{ route('dashboard') }}" id="navbar-logo" class="hidden items-center gap-2 overflow-hidden">
                 <img src="{{ asset('assets/Logo-AnMastery.webp') }}" alt="AN Mastery Logo"
                     class="h-8 w-auto object-contain shrink-0">
                 <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">

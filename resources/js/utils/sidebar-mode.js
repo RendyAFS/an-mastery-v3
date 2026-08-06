@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const floatingTrigger = document.querySelector("#sidebar-floating-trigger");
     const modeButton = document.querySelector("#sidebar-mode-switch");
     const backButton = document.querySelector("#sidebar-back-to-mode");
+    const navbarLogo = document.querySelector("#navbar-logo");
 
     if (!sidebarWrapper) return;
 
@@ -33,6 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (backButton) {
             backButton.style.display =
                 desktop && floatingActive ? "flex" : "none";
+        }
+
+        if (navbarLogo) {
+            navbarLogo.style.display = floatingActive ? "flex" : "none";
         }
     };
 
