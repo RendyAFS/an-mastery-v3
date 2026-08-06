@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'Floating Menu'     => 'Floating Menu',
+    'Back to Sidebar'   => 'Back to Sidebar',
+    'Menu'              => 'Menu',
     'Dashboard'         => 'Dashboard',
     'Access Management' => 'Access Management',
     'Users'             => 'Users',

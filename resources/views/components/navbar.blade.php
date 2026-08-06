@@ -2,20 +2,7 @@
     class="sticky top-0 z-50 bg-(--color-light) dark:bg-(--color-dark) dark:border-b dark:border-(--color-gray)/20 shadow-sm">
     <div class="flex items-center justify-between px-4 py-3">
         <!-- Left -->
-        <div class="flex items-center gap-3">
-            <button type="button"
-                class="lg:hidden flex justify-center items-center size-8 text-sm
-                text-(--color-dark-gray)
-                hover:bg-(--color-gray)/20 hover:text-(--color-primary)
-                dark:text-(--color-gray)
-                dark:hover:bg-(--color-gray)/20 dark:hover:text-(--color-secondary)
-                rounded-lg focus:outline-none"
-                aria-haspopup="dialog" data-hs-overlay="#hs-sidebar-content-push">
-
-                <i data-lucide="panels-top-left" class="size-5"></i>
-                <span class="sr-only">{{ __('navbar.Toggle Navigation') }}</span>
-            </button>
-        </div>
+        <div class="flex items-center gap-3"></div>
 
         <!-- Right -->
         <div class="flex items-center gap-5">

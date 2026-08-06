@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'Floating Menu'     => 'Menu Melayang',
+    'Back to Sidebar'   => 'Kembali Ke Sidebar',
+    'Menu'              => 'Menu',
     'Dashboard'         => 'Beranda',
     'Access Management' => 'Manajemen Akses',
     'Users'             => 'Pengguna',
