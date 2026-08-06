@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Fabric\SaveFabricAction;
+use App\Helpers\WeekHelper;
 use App\Http\Requests\Fabric\SaveFabricRequest;
 use App\Http\Resources\FabricResource;
 use App\Models\ColorFabric;
@@ -25,7 +26,10 @@ class FabricController extends Controller
 
         if (request()->expectsJson()) {
             $filter = request('filter', 'active');
-            $fabrics = $this->fabricRepository->getAll($filter);
+
+            [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
+
+            $fabrics = $this->fabricRepository->getAll($filter, $dateFrom, $dateTo);
 
             return FabricResource::collection($fabrics);
         }
