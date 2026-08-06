@@ -9,7 +9,7 @@
         <div class="flex flex-wrap justify-between items-center">
             <div class="mb-3 md:mb-0">
                 <h1 class="text-3xl font-bold">{{ __('models.Gallery') }}</h1>
-                <p class="text-sm">{{ __('gallery.description') }}</p>
+                <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('gallery.description') }}</p>
             </div>
             <a href="{{ route('galleries.create') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg

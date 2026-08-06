@@ -11,7 +11,7 @@
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold">{{ $supplier->name }}</h1>
-                <p class="text-sm text-(--color-gray) mt-1">{{ __('bill-supplier.show.subtitle') }}</p>
+                <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('bill-supplier.show.subtitle') }}</p>
             </div>
 
             @unless ($supplier->trashed())
@@ -40,7 +40,7 @@
         </div>
         <div id="bs-empty" class="py-24 text-center flex flex-col items-center gap-2 text-(--color-gray)">
             <i data-lucide="inbox" class="size-10"></i>
-            <p class="text-sm">{{ __('bill-supplier.show.empty') }}</p>
+            <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('bill-supplier.show.empty') }}</p>
         </div>
         <div id="bs-weeks" class="hidden space-y-6"></div>
     </div>

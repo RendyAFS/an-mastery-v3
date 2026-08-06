@@ -9,7 +9,7 @@
         <div class="flex flex-wrap justify-between items-center">
             <div class="mb-3 md:mb-0">
                 <h1 class="text-3xl font-bold">{{ __('models.SalaryEmployee') }}</h1>
-                <p class="text-sm">{{ __('salary-employee.description') }}</p>
+                <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('salary-employee.description') }}</p>
             </div>
 
             <div class="flex flex-wrap items-end gap-3">

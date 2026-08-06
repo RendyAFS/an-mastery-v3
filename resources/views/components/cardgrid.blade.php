@@ -124,7 +124,7 @@
 <div id="{{ $id }}-empty" class="hidden">
     <div class="flex flex-col items-center justify-center py-20 text-(--color-gray)">
         <i data-lucide="inbox" class="size-12 mb-3"></i>
-        <p class="text-sm">{{ __('cardgrid.No data found') }}</p>
+        <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('cardgrid.No data found') }}</p>
     </div>
 </div>
 
