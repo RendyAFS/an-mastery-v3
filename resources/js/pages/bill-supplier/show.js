@@ -9,14 +9,14 @@ const PageScript = (function () {
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
 
-    const summaryCard = (label, value, colorClass, icon) => `
-        <div class="p-4 rounded-xl bg-(--color-light) dark:bg-(--color-dark) shadow flex items-center gap-3">
-            <div class="p-2.5 rounded-lg ${colorClass}/10 shrink-0">
-                <i data-lucide="${icon}" class="size-5 ${colorClass}"></i>
+    const summaryCard = (label, value, icon) => `
+        <div class="rounded-xl bg-white/12 backdrop-blur border border-white/20 p-4 flex items-center gap-3">
+            <div class="p-2 rounded-lg bg-white/15 shrink-0">
+                <i data-lucide="${icon}" class="size-5"></i>
             </div>
             <div class="min-w-0">
-                <p class="text-xs text-(--color-gray) uppercase tracking-wide">${label}</p>
-                <p class="text-lg font-bold truncate">${value}</p>
+                <p class="text-[11px] uppercase tracking-wide text-white/70">${label}</p>
+                <p class="text-lg md:text-xl font-bold truncate">${value}</p>
             </div>
         </div>`;
 
@@ -35,24 +35,26 @@ const PageScript = (function () {
                     summaryCard(
                         window.langBillSupplier.show.summary_unpaid,
                         formatCurrency(totalUnpaid),
-                        "text-(--color-red)",
                         "alert-circle",
                     ),
                     summaryCard(
                         window.langBillSupplier.show.summary_paid,
                         formatCurrency(totalPaid),
-                        "text-(--color-success)",
                         "check-circle-2",
                     ),
                     summaryCard(
                         window.langBillSupplier.show.summary_batches,
                         totalBatches,
-                        "text-(--color-primary)",
                         "layers",
                     ),
                 ].join(""),
             );
     };
+
+    const emptyBatchState = () => `
+        <div class="py-6 text-center rounded-lg border border-dashed border-(--color-gray)/20">
+            <p class="text-xs text-(--color-gray)">${window.langBillSupplier.show.no_data}</p>
+        </div>`;
 
     const batchItemRow = (item) => `
         <div class="flex items-center justify-between gap-3 text-sm py-1.5">
@@ -65,12 +67,18 @@ const PageScript = (function () {
 
     const batchCard = (batch) => {
         const items = batch.items ?? [];
+        const accent = batch.is_paid
+            ? "border-l-(--color-success)"
+            : "border-l-(--color-red)";
         const statusBadge = batch.is_paid
             ? `<span class="badge badge-success">${window.langBillSupplier.show.paid_badge}</span>`
             : `<span class="badge badge-danger">${window.langBillSupplier.show.unpaid_badge}</span>`;
 
         return `
-        <div class="p-4 rounded-xl border border-(--color-gray)/10 bg-(--color-light) dark:bg-(--color-dark) shadow-sm space-y-3">
+        <div class="rounded-xl border border-(--color-gray)/10 border-l-4 ${accent}
+            bg-(--color-light-gray)/40 dark:bg-white/[0.03]
+            hover:bg-(--color-light-gray)/70 dark:hover:bg-white/[0.06]
+            transition-colors p-4 space-y-3">
 
             <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0 space-y-1">
@@ -109,38 +117,42 @@ const PageScript = (function () {
         </div>`;
     };
 
-    const weekSection = (week) => `
-        <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 md:p-6">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-(--color-gray)/15">
-                <h3 class="text-base md:text-lg font-bold flex items-center gap-2">
-                    <i data-lucide="calendar-days" class="size-5 text-(--color-primary)"></i>
-                    ${week.week_label}
-                </h3>
-                <div class="flex flex-wrap items-center gap-3 text-sm font-medium">
-                    <span class="flex items-center gap-1 text-(--color-red)">
-                        <i data-lucide="circle-dot" class="size-3.5"></i> ${formatCurrency(week.total_unpaid)}
-                    </span>
-                    <span class="flex items-center gap-1 text-(--color-success)">
-                        <i data-lucide="circle-check" class="size-3.5"></i> ${formatCurrency(week.total_paid)}
-                    </span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                <div class="space-y-3">
-                    <p class="text-sm font-bold text-(--color-red) uppercase tracking-wide flex items-center gap-1">
-                        <i data-lucide="clock" class="size-4"></i> ${trans("langBillSupplier", "show.unpaid_header", { count: week.unpaid.length })}
-                    </p>
-                    <div class="space-y-3">
-                        ${week.unpaid.length ? week.unpaid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">${window.langBillSupplier.show.no_data}</p>`}
+    const weekSection = (week, index, total) => `
+        <div class="${index === total - 1 ? "pb-0" : "pb-8"}">
+            <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-2xl shadow p-4 md:p-6 border border-(--color-gray)/10">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-(--color-gray)/15">
+                    <h3 class="text-base md:text-lg font-bold flex items-center gap-2">
+                        <span class="flex items-center justify-center size-8 rounded-full bg-(--color-primary)/10 border-2 border-(--color-primary) text-(--color-primary) shrink-0">
+                            <i data-lucide="calendar-days" class="size-4"></i>
+                        </span>
+                        ${week.week_label}
+                    </h3>
+                    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-(--color-red)/10 text-(--color-red)">
+                            <i data-lucide="circle-dot" class="size-3"></i> ${formatCurrency(week.total_unpaid)}
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-(--color-success)/10 text-(--color-success)">
+                            <i data-lucide="circle-check" class="size-3"></i> ${formatCurrency(week.total_paid)}
+                        </span>
                     </div>
                 </div>
-                <div class="space-y-3">
-                    <p class="text-sm font-bold text-(--color-success) uppercase tracking-wide flex items-center gap-1">
-                        <i data-lucide="check" class="size-4"></i> ${trans("langBillSupplier", "show.paid_header", { count: week.paid.length })}
-                    </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <div class="space-y-3">
-                        ${week.paid.length ? week.paid.map(batchCard).join("") : `<p class="text-sm text-(--color-gray) py-4 text-center">${window.langBillSupplier.show.no_data}</p>`}
+                        <p class="text-xs font-bold text-(--color-red) uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="clock" class="size-3.5"></i> ${trans("langBillSupplier", "show.unpaid_header", { count: week.unpaid.length })}
+                        </p>
+                        <div class="space-y-3">
+                            ${week.unpaid.length ? week.unpaid.map(batchCard).join("") : emptyBatchState()}
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold text-(--color-success) uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="check" class="size-3.5"></i> ${trans("langBillSupplier", "show.paid_header", { count: week.paid.length })}
+                        </p>
+                        <div class="space-y-3">
+                            ${week.paid.length ? week.paid.map(batchCard).join("") : emptyBatchState()}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -188,7 +200,13 @@ const PageScript = (function () {
 
             $("#bs-weeks")
                 .removeClass("hidden")
-                .html(weeks.map(weekSection).join(""));
+                .html(
+                    weeks
+                        .map((week, index) =>
+                            weekSection(week, index, weeks.length),
+                        )
+                        .join(""),
+                );
 
             if (window.HSStaticMethods) window.HSStaticMethods.autoInit();
             if (window.lucide) window.lucide.createIcons();
