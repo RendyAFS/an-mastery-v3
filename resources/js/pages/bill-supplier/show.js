@@ -9,6 +9,23 @@ const PageScript = (function () {
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
 
+    const getISOWeekString = (date) => {
+        const target = new Date(date.valueOf());
+        const dayNr = (date.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+
+        if (target.getDay() !== 4) {
+            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+        }
+
+        const week = 1 + Math.round((firstThursday - target) / 604800000);
+
+        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    };
+
     const summaryCard = (label, value, icon) => `
         <div class="rounded-xl bg-white/12 backdrop-blur border border-white/20 p-4 flex items-center gap-3">
             <div class="p-2 rounded-lg bg-white/15 shrink-0">
@@ -76,8 +93,8 @@ const PageScript = (function () {
 
         return `
         <div class="rounded-xl border border-(--color-gray)/10 border-l-4 ${accent}
-            bg-(--color-light-gray)/40 dark:bg-white/[0.03]
-            hover:bg-(--color-light-gray)/70 dark:hover:bg-white/[0.06]
+            bg-(--color-light-gray)/40 dark:bg-white/3
+            hover:bg-(--color-light-gray)/70 dark:hover:bg-white/6
             transition-colors p-4 space-y-3">
 
             <div class="flex items-start justify-between gap-3">
@@ -170,6 +187,28 @@ const PageScript = (function () {
             "href",
             query ? `${baseUrl}?${query}` : baseUrl,
         );
+    };
+
+    const syncUrl = () => {
+        const params = new URLSearchParams();
+        params.set("week_start", weekStart);
+        params.set("week_end", weekEnd);
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+
+        buildBackLink();
+    };
+
+    const initFilters = () => {
+        const currentWeek = getISOWeekString(new Date());
+        weekStart = weekStart || currentWeek;
+        weekEnd = weekEnd || currentWeek;
+
+        $("#filter-week-start").val(weekStart);
+        $("#filter-week-end").val(weekEnd);
+
+        syncUrl();
     };
 
     const load = async () => {
@@ -265,6 +304,27 @@ const PageScript = (function () {
                 console.error(err);
             }
         });
+
+        $(document).on(
+            "change",
+            "#filter-week-start, #filter-week-end",
+            function () {
+                weekStart = $("#filter-week-start").val();
+                weekEnd = $("#filter-week-end").val();
+                syncUrl();
+                load();
+            },
+        );
+
+        $(document).on("click", "#filter-week-reset", function () {
+            const currentWeek = getISOWeekString(new Date());
+            weekStart = currentWeek;
+            weekEnd = currentWeek;
+            $("#filter-week-start").val(weekStart);
+            $("#filter-week-end").val(weekEnd);
+            syncUrl();
+            load();
+        });
     };
 
     return {
@@ -274,7 +334,7 @@ const PageScript = (function () {
             weekStart = container.data("week-start") || null;
             weekEnd = container.data("week-end") || null;
 
-            buildBackLink();
+            initFilters();
             bindEvents();
             load();
         },
