@@ -40,7 +40,7 @@
 
         <small class="text-xs text-(--color-dark-gray) block">
             {{ $isEdit ? __('bill-supplier.form.hint_edit') : __('bill-supplier.form.hint_create') }}
-            {{ __('bill-supplier.form.hint_only_done', ['status' => '<b>' . __('sablon.statuses.DONE') . '</b>']) }}
+            {!! __('bill-supplier.form.hint_only_done', ['status' => '<b>' . __('sablon.statuses.DONE') . '</b>']) !!}
         </small>
     </div>
 

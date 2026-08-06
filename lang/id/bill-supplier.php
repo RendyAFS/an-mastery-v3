@@ -1,9 +1,9 @@
 <?php
 return [
-    'description'   => 'Rekap tagihan supplier per minggu',
-    'create_title'  => 'Tambah Bill Supplier',
-    'edit_title'    => 'Ubah Bill Supplier',
-    'create_heading' => 'Buat Bill Supplier — :supplier',
+    'description'    => 'Rekap tagihan konveksi per minggu',
+    'create_title'   => 'Tambah Tagihan Konveksi',
+    'edit_title'     => 'Ubah Tagihan Konveksi',
+    'create_heading' => 'Buat Tagihan Konveksi — :konveksi',
 
     'filter'        => [
         'week_start' => 'Dari Minggu',
@@ -45,9 +45,9 @@ return [
         'loading'                => 'Memuat data...',
         'empty'                  => 'Tidak ada sablon yang tersedia',
         'hint_edit'              => 'Centang untuk memasukkan sablon ke batch ini, hilangkan centang untuk mengeluarkannya.',
-        'hint_create'            => 'Centang sablon yang akan ditagih. Semua sablon terpilih akan dibuatkan bill sekaligus dalam satu batch.',
+        'hint_create'            => 'Centang sablon yang akan ditagih. Semua sablon terpilih akan dibuatkan tagihan sekaligus dalam satu batch.',
         'hint_only_done'         => 'Hanya sablon berstatus :status yang bisa ditambahkan baru.',
-        'date_bill'              => 'Tanggal Bill',
+        'date_bill'              => 'Tanggal Tagihan',
         'is_paid'                => 'Sudah Dibayar',
         'notes'                  => 'Catatan',
         'preview_title'          => 'Rincian Perhitungan (Total Batch)',
@@ -58,15 +58,15 @@ return [
         'billed_in_advance'      => 'Ditagih Awal',
         'only_done_disabled'     => 'Hanya sablon berstatus Done yang bisa ditagih',
         'select_min_error'       => 'Pilih minimal 1 sablon terlebih dahulu',
-        'some_sablons_no_price'  => 'Beberapa sablon belum memiliki harga supplier untuk kombinasi kain & warna'
+        'some_sablons_no_price'  => 'Beberapa sablon belum memiliki harga konveksi untuk kombinasi kain & warna'
     ],
 
     'show'          => [
-        'subtitle'       => 'Daftar tagihan supplier, dikelompokkan per minggu',
+        'subtitle'       => 'Daftar tagihan konveksi, dikelompokkan per minggu',
         'back'           => 'Kembali',
-        'create_bill'    => 'Buat Bill',
+        'create_bill'    => 'Buat Tagihan',
         'loading'        => 'Memuat data...',
-        'empty'          => 'Belum ada data bill supplier',
+        'empty'          => 'Belum ada data tagihan konveksi',
         'summary_unpaid' => 'Belum Lunas',
         'summary_paid'   => 'Lunas',
         'summary_batches' => 'Total Batch',
@@ -99,7 +99,7 @@ return [
 
     'validation' => [
         'date_bill' => [
-            'required' => 'Tanggal bill wajib diisi.',
+            'required' => 'Tanggal tagihan wajib diisi.',
             'date'     => 'Format tanggal tidak valid.',
         ],
 
