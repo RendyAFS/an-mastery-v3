@@ -41,7 +41,7 @@
                         </label>
 
                         <input type="text" name="name" value="{{ $user->name }}"
-                            placeholder="{{ __('my-profile.form.placeholder_name') }}" required
+                            placeholder="{{ __('my-profile.form.placeholder_name') }}"
                             class="mt-1 w-full rounded-lg px-4 py-2
                                 bg-(--color-light-gray)
                                 dark:bg-(--color-dark-slate)
@@ -56,7 +56,7 @@
                         </label>
 
                         <input type="email" name="email" value="{{ $user->email }}"
-                            placeholder="{{ __('my-profile.form.placeholder_email') }}" required
+                            placeholder="{{ __('my-profile.form.placeholder_email') }}"
                             class="mt-1 w-full rounded-lg px-4 py-2
                                 bg-(--color-light-gray)
                                 dark:bg-(--color-dark-slate)

@@ -52,7 +52,7 @@
                 </label>
 
                 <input type="date" id="date_bill" name="date_bill"
-                    value="{{ $isEdit ? $dateBill?->format('Y-m-d') : now()->format('Y-m-d') }}" required
+                    value="{{ $isEdit ? $dateBill?->format('Y-m-d') : now()->format('Y-m-d') }}"
                     class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -83,7 +83,8 @@
         <div id="bs-calc-preview"
             class="hidden p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5 space-y-3 sticky top-4">
             <div>
-                <p class="text-sm font-semibold text-(--color-dark) mb-2">{{ __('bill-supplier.form.preview_title') }}</p>
+                <p class="text-sm font-semibold text-(--color-dark) mb-2">{{ __('bill-supplier.form.preview_title') }}
+                </p>
                 <div class="grid grid-cols-3 gap-3 text-sm">
                     <div>
                         <p class="text-xs text-(--color-dark)">{{ __('bill-supplier.form.calc_count') }}</p>

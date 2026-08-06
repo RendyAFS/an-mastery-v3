@@ -5,7 +5,7 @@
                 {{ __('user.fields.name') }}
             </label>
 
-            <input type="text" id="name" name="name" value="{{ $user->name ?? '' }}" required
+            <input type="text" id="name" name="name" value="{{ $user->name ?? '' }}"
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -16,7 +16,7 @@
                 {{ __('user.fields.email') }}
             </label>
 
-            <input type="email" id="email" name="email" value="{{ $user->email ?? '' }}" required
+            <input type="email" id="email" name="email" value="{{ $user->email ?? '' }}"
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
