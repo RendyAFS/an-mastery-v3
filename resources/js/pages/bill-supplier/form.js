@@ -11,7 +11,7 @@ import {
 } from "@/pages/bill-supplier/sablon-card";
 
 const PageScript = (function () {
-    let form, mode, batch, supplierId;
+    let form, mode, batch, supplierId, weekStart, weekEnd;
     const modelName = window.langModels?.BillSupplier ?? "Bill Supplier";
 
     const renderSablonCards = (sablons) => {
@@ -190,6 +190,17 @@ const PageScript = (function () {
         }
     };
 
+    const buildSupplierUrl = () => {
+        const params = new URLSearchParams();
+        if (weekStart) params.set("week_start", weekStart);
+        if (weekEnd) params.set("week_end", weekEnd);
+
+        const query = params.toString();
+        const baseUrl = route("bill_suppliers.by-supplier", supplierId);
+
+        return query ? `${baseUrl}?${query}` : baseUrl;
+    };
+
     const submitForm = async (submitter) => {
         const formData = new FormData(form);
         let payload = Object.fromEntries(formData.entries());
@@ -228,10 +239,7 @@ const PageScript = (function () {
                 );
             }
 
-            window.location.href = route(
-                "bill_suppliers.by-supplier",
-                supplierId,
-            );
+            window.location.href = buildSupplierUrl();
         } catch (error) {
             // error sudah ditangani ApiProvider
         } finally {
@@ -273,6 +281,8 @@ const PageScript = (function () {
             mode = form.dataset.mode;
             batch = form.dataset.batch;
             supplierId = form.dataset.supplierId;
+            weekStart = form.dataset.weekStart;
+            weekEnd = form.dataset.weekEnd;
 
             bindEvents();
 

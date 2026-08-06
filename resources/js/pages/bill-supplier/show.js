@@ -83,6 +83,7 @@ const PageScript = (function () {
         </div>`;
 
     const batchCard = (batch) => {
+        const editUrl = `${route("bill_suppliers.batch.edit", batch.batch)}?${new URLSearchParams({ week_start: weekStart ?? "", week_end: weekEnd ?? "" })}`;
         const items = batch.items ?? [];
         const accent = batch.is_paid
             ? "border-l-(--color-success)"
@@ -114,7 +115,7 @@ const PageScript = (function () {
                         class="btn-toggle-paid p-2 rounded-lg ${batch.is_paid ? "text-(--color-red)" : "text-(--color-success)"} hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="${batch.is_paid ? "x-circle" : "check-circle-2"}" class="size-4"></i>
                     </button>
-                    <a href="${route("bill_suppliers.batch.edit", batch.batch)}" title="${window.langBillSupplier.show.edit}" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
+                    <a href="${editUrl}" title="${window.langBillSupplier.show.edit}" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="square-pen" class="size-4"></i>
                     </a>
                     <button data-batch="${batch.batch}" title="${window.langBillSupplier.show.delete}" class="btn-delete p-2 rounded-lg text-(--color-red) hover:bg-(--color-gray)/20 cursor-pointer">
