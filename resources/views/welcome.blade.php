@@ -323,16 +323,25 @@
 
 <body class="text-(--color-dark) dark:text-(--color-light) antialiased" x-data="{
     modalOpen: false,
-    activeImage: '',
+    activeImages: [],
+    activeIndex: 0,
     activeTitle: '',
     activeSubtitle: '',
     activeBadge: '',
-    openLightbox(url, title, subtitle, badge) {
-        this.activeImage = url;
+    openLightbox(images, title, subtitle, badge) {
+        this.activeImages = images;
+        this.activeIndex = 0;
         this.activeTitle = title;
         this.activeSubtitle = subtitle;
         this.activeBadge = badge;
         this.modalOpen = true;
+        this.$nextTick(() => { if (window.lucide) lucide.createIcons(); });
+    },
+    prevImage() {
+        this.activeIndex = (this.activeIndex - 1 + this.activeImages.length) % this.activeImages.length;
+    },
+    nextImage() {
+        this.activeIndex = (this.activeIndex + 1) % this.activeImages.length;
     }
 }">
 
@@ -449,23 +458,34 @@
                 </div>
 
                 @php
-                    $galleriesWithMedia = $galleries->filter(function ($g) {
-                        return (bool) ($g->getFirstMediaUrl('galleries') ?: $g->getFirstMediaUrl());
-                    });
+                    $galleriesWithMedia = $galleries->filter(
+                        fn($g) => $g->getMedia('galleries')->isNotEmpty() || $g->getMedia()->isNotEmpty(),
+                    );
                 @endphp
 
                 @if ($galleriesWithMedia->count() > 0)
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach ($galleriesWithMedia as $item)
                             @php
-                                $imgUrl = $item->getFirstMediaUrl('galleries') ?: $item->getFirstMediaUrl();
+                                $media = $item->getMedia('galleries')->isNotEmpty()
+                                    ? $item->getMedia('galleries')
+                                    : $item->getMedia();
+                                $images = $media->pluck('original_url')->values();
+                                $imgUrl = $images->first();
+                                $imageCount = $images->count();
                             @endphp
                             <div class="showcase-card group cursor-pointer reveal" data-reveal
-                                @click="openLightbox('{{ $imgUrl }}', '{{ e($item->name) }}', '{{ e($item->notes ?: '-') }}', 'Galeri Produksi')">
+                                @click="openLightbox({{ Js::from($images) }}, '{{ e($item->name) }}', '{{ e($item->notes ?: '-') }}', 'Galeri Produksi')">
                                 <div class="aspect-4/3 overflow-hidden bg-gray-100 dark:bg-slate-800 relative">
                                     <img src="{{ $imgUrl }}" alt="{{ $item->name }}"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         loading="lazy" />
+                                    @if ($imageCount > 1)
+                                        <span
+                                            class="absolute bottom-2.5 right-2.5 px-2 py-1 rounded-full bg-black/60 text-white text-[11px] font-semibold flex items-center gap-1">
+                                            <i data-lucide="images" class="size-3"></i> {{ $imageCount }}
+                                        </span>
+                                    @endif
                                     <div
                                         class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span
@@ -526,23 +546,34 @@
                 </div>
 
                 @php
-                    $fabricsWithMedia = $imageFabrics->filter(function ($f) {
-                        return (bool) ($f->getFirstMediaUrl('image-fabrics') ?: $f->getFirstMediaUrl());
-                    });
+                    $fabricsWithMedia = $imageFabrics->filter(
+                        fn($f) => $f->getMedia('image-fabrics')->isNotEmpty() || $f->getMedia()->isNotEmpty(),
+                    );
                 @endphp
 
                 @if ($fabricsWithMedia->count() > 0)
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach ($fabricsWithMedia as $fabric)
                             @php
-                                $imgUrl = $fabric->getFirstMediaUrl('image-fabrics') ?: $fabric->getFirstMediaUrl();
+                                $media = $fabric->getMedia('image-fabrics')->isNotEmpty()
+                                    ? $fabric->getMedia('image-fabrics')
+                                    : $fabric->getMedia();
+                                $images = $media->pluck('original_url')->values();
+                                $imgUrl = $images->first();
+                                $imageCount = $images->count();
                             @endphp
                             <div class="showcase-card group cursor-pointer reveal" data-reveal
-                                @click="openLightbox('{{ $imgUrl }}', '{{ e($fabric->name) }}', '{{ e($fabric->notes ?: '-') }}', 'Katalog Kain')">
+                                @click="openLightbox({{ Js::from($images) }}, '{{ e($fabric->name) }}', '{{ e($fabric->notes ?: '-') }}', 'Katalog Kain')">
                                 <div class="aspect-4/3 overflow-hidden bg-gray-100 dark:bg-slate-800 relative">
                                     <img src="{{ $imgUrl }}" alt="{{ $fabric->name }}"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         loading="lazy" />
+                                    @if ($imageCount > 1)
+                                        <span
+                                            class="absolute bottom-2.5 right-2.5 px-2 py-1 rounded-full bg-black/60 text-white text-[11px] font-semibold flex items-center gap-1">
+                                            <i data-lucide="images" class="size-3"></i> {{ $imageCount }}
+                                        </span>
+                                    @endif
                                     <div
                                         class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span
@@ -739,21 +770,40 @@
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm"
-        @keydown.escape.window="modalOpen = false" x-cloak>
+        @keydown.escape.window="modalOpen = false" @keydown.arrow-left.window="activeImages.length > 1 && prevImage()"
+        @keydown.arrow-right.window="activeImages.length > 1 && nextImage()" x-cloak>
 
         <div class="relative max-w-4xl w-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-slate-800"
             @click.away="modalOpen = false">
 
-            {{-- Close button --}}
             <button type="button" @click="modalOpen = false"
                 class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/50 hover:bg-black/75 text-white flex items-center justify-center transition-colors cursor-pointer">
                 <i data-lucide="x" class="size-5"></i>
             </button>
 
             <div class="grid md:grid-cols-5 items-center">
-                <div class="md:col-span-3 bg-black flex items-center justify-center max-h-[70vh] overflow-hidden">
-                    <img :src="activeImage" :alt="activeTitle"
-                        class="w-full h-full object-contain max-h-[70vh]" />
+                <div
+                    class="md:col-span-3 relative bg-black flex items-center justify-center h-[45vh] md:h-[70vh] overflow-hidden">
+                    <img :src="activeImages[activeIndex]" :alt="activeTitle"
+                        class="max-w-full max-h-full w-auto h-auto object-contain" />
+
+                    <template x-if="activeImages.length > 1">
+                        <div>
+                            <button type="button" @click="prevImage()"
+                                class="absolute left-2 top-1/2 -translate-y-1/2 size-9 flex items-center justify-center rounded-full
+                                bg-white/15 backdrop-blur border border-white/20 text-white hover:bg-white/25 cursor-pointer">
+                                <i data-lucide="chevron-left" class="size-5"></i>
+                            </button>
+                            <button type="button" @click="nextImage()"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 size-9 flex items-center justify-center rounded-full
+                                bg-white/15 backdrop-blur border border-white/20 text-white hover:bg-white/25 cursor-pointer">
+                                <i data-lucide="chevron-right" class="size-5"></i>
+                            </button>
+                            <span
+                                class="absolute bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-full bg-black/60 text-white text-[11px] font-semibold"
+                                x-text="`${activeIndex + 1} / ${activeImages.length}`"></span>
+                        </div>
+                    </template>
                 </div>
                 <div class="md:col-span-2 p-6 sm:p-8 flex flex-col justify-center">
                     <span
