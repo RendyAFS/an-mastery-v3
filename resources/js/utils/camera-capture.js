@@ -345,8 +345,28 @@ async function openCameraCapture({ onCapture }) {
         } catch (err) {}
     }
 
+    function waitForVideoFrame() {
+        return new Promise((resolve) => {
+            if (typeof video.requestVideoFrameCallback === "function") {
+                video.requestVideoFrameCallback(() => resolve());
+            } else {
+                requestAnimationFrame(() => requestAnimationFrame(resolve));
+            }
+        });
+    }
+
+    function setControlsDisabled(disabled) {
+        captureBtn.disabled = disabled;
+        switchBtn.disabled = disabled;
+        captureBtn.classList.toggle("opacity-50", disabled);
+        captureBtn.classList.toggle("pointer-events-none", disabled);
+        switchBtn.classList.toggle("opacity-50", disabled);
+        switchBtn.classList.toggle("pointer-events-none", disabled);
+    }
+
     async function startStream(facingMode) {
         setLoading(true);
+        setControlsDisabled(true);
 
         if (stream) {
             stream.getTracks().forEach((track) => track.stop());
@@ -367,6 +387,8 @@ async function openCameraCapture({ onCapture }) {
 
             currentTrack = stream.getVideoTracks()[0];
             setupCameraControls(currentTrack);
+
+            await waitForVideoFrame();
         } catch (err) {
             Toast.error(
                 window.langFilepond?.camera_error ?? "Failed to access camera",
@@ -375,6 +397,7 @@ async function openCameraCapture({ onCapture }) {
             return;
         }
 
+        setControlsDisabled(false);
         setLoading(false);
     }
 
@@ -406,8 +429,10 @@ async function openCameraCapture({ onCapture }) {
 
     resetFocusBtn.addEventListener("click", () => setContinuousFocus());
 
-    captureBtn.addEventListener("click", () => {
+    captureBtn.addEventListener("click", async () => {
         if (!video.videoWidth || !video.videoHeight) return;
+
+        await waitForVideoFrame();
 
         const targetRatio = aspectRatios[currentAspect];
         const { cropX, cropY, cropWidth, cropHeight } = getCropDimensions(
