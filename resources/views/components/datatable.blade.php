@@ -95,7 +95,7 @@
 </div>
 
 {{-- Table --}}
-<div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-10">
+<div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 md:p-10">
     <div
         class="border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
         <table id="{{ $id }}" class="min-w-full text-sm divide-y divide-table-line">
