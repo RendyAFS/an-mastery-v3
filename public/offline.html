@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tidak Ada Koneksi - AN Mastery</title>
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="/assets/Logo-AnMastery.ico"
+        />
+
+        <script>
+            (function () {
+                var theme = localStorage.getItem("theme");
+                if (!theme) {
+                    theme = window.matchMedia("(prefers-color-scheme: dark)")
+                        .matches
+                        ? "dark"
+                        : "light";
+                }
+                if (theme === "dark") {
+                    document.documentElement.classList.add("dark");
+                }
+            })();
+        </script>
+
+        <style>
+            @font-face {
+                font-family: "Fraunces";
+                font-style: normal;
+                font-weight: 400 700;
+                font-display: swap;
+                src: url("/fonts/fraunces/Fraunces-Variable.woff2")
+                    format("woff2");
+            }
+
+            @font-face {
+                font-family: "Fraunces";
+                font-style: italic;
+                font-weight: 400 700;
+                font-display: swap;
+                src: url("/fonts/fraunces/Fraunces-Italic-Variable.woff2")
+                    format("woff2");
+            }
+
+            @font-face {
+                font-family: "Inter";
+                font-style: normal;
+                font-weight: 300 600;
+                font-display: swap;
+                src: url("/fonts/inter/Inter-Variable.woff2") format("woff2");
+            }
+
+            :root {
+                --color-primary: #6d9886;
+                --color-secondary: #f2e7d5;
+                --color-dark: #282b31;
+                --color-light: #f7f7f7;
+                --color-gray: #c0c0c0;
+                --color-light-gray: #ececec;
+                --color-dark-gray: #949494;
+                --color-slate: #4b5563;
+                --color-dark-slate: #373e47;
+                --color-danger: #d44e4e;
+                --color-success: #66a76b;
+                --font-display: "Fraunces", ui-serif, Georgia, serif;
+                --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                font-family: var(--font-body);
+                color: var(--color-dark);
+                background-color: var(--color-light);
+                background-image:
+                    repeating-linear-gradient(
+                        45deg,
+                        var(--color-light-gray) 0,
+                        var(--color-light-gray) 1px,
+                        transparent 1px,
+                        transparent 14px
+                    ),
+                    repeating-linear-gradient(
+                        -45deg,
+                        var(--color-light-gray) 0,
+                        var(--color-light-gray) 1px,
+                        transparent 1px,
+                        transparent 14px
+                    );
+                background-size: 20px 20px;
+                animation: weave-drift 60s linear infinite;
+                display: flex;
+                flex-direction: column;
+                transition:
+                    background-color 0.3s ease,
+                    color 0.3s ease;
+            }
+
+            html.dark body {
+                color: var(--color-light);
+                background-color: var(--color-dark);
+                background-image:
+                    repeating-linear-gradient(
+                        45deg,
+                        var(--color-dark-slate) 0,
+                        var(--color-dark-slate) 1px,
+                        transparent 1px,
+                        transparent 14px
+                    ),
+                    repeating-linear-gradient(
+                        -45deg,
+                        var(--color-dark-slate) 0,
+                        var(--color-dark-slate) 1px,
+                        transparent 1px,
+                        transparent 14px
+                    );
+            }
+
+            @keyframes weave-drift {
+                from {
+                    background-position:
+                        0 0,
+                        0 0;
+                }
+                to {
+                    background-position:
+                        400px 400px,
+                        -400px 400px;
+                }
+            }
+
+            .topbar {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 1.25rem 1.5rem;
+            }
+
+            .icon-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 999px;
+                border: 1px solid
+                    color-mix(in srgb, var(--color-gray) 40%, transparent);
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-light) 70%,
+                    transparent
+                );
+                color: var(--color-dark);
+                font-size: 0.8rem;
+                font-weight: 600;
+                font-family: var(--font-body);
+                cursor: pointer;
+                transition:
+                    background-color 0.2s ease,
+                    transform 0.2s ease;
+            }
+
+            .icon-btn:hover {
+                transform: translateY(-1px);
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-primary) 12%,
+                    transparent
+                );
+            }
+
+            html.dark .icon-btn {
+                border-color: color-mix(
+                    in srgb,
+                    var(--color-gray) 20%,
+                    transparent
+                );
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-dark-slate) 70%,
+                    transparent
+                );
+                color: var(--color-light);
+            }
+
+            .icon-btn svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            .main {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem 1.5rem 2.5rem;
+            }
+
+            .card {
+                max-width: 480px;
+                width: 100%;
+                text-align: center;
+                background-color: var(--color-light);
+                border: 1px solid
+                    color-mix(in srgb, var(--color-gray) 35%, transparent);
+                border-radius: 1.5rem;
+                padding: 2.75rem 2.25rem;
+                box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.15);
+                animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+                transition:
+                    background-color 0.3s ease,
+                    border-color 0.3s ease;
+            }
+
+            html.dark .card {
+                background-color: var(--color-dark-slate);
+                border-color: color-mix(
+                    in srgb,
+                    var(--color-gray) 20%,
+                    transparent
+                );
+                box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5);
+            }
+
+            @keyframes rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(24px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .badge-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.3rem 0.85rem;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-danger) 12%,
+                    transparent
+                );
+                color: var(--color-danger);
+                border: 1px solid
+                    color-mix(in srgb, var(--color-danger) 30%, transparent);
+                margin-bottom: 1.5rem;
+            }
+
+            .badge-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: var(--color-danger);
+                animation: blink 1.4s ease-in-out infinite;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+            }
+
+            .icon-wrap {
+                width: 72px;
+                height: 72px;
+                border-radius: 1.25rem;
+                margin: 0 auto 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-primary) 14%,
+                    transparent
+                );
+                color: var(--color-primary);
+            }
+
+            .icon-wrap svg {
+                width: 34px;
+                height: 34px;
+            }
+
+            h1 {
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                line-height: 1.2;
+                margin-bottom: 0.75rem;
+            }
+
+            h1 em {
+                font-style: italic;
+                background: linear-gradient(
+                    135deg,
+                    var(--color-primary) 0%,
+                    color-mix(
+                            in srgb,
+                            var(--color-primary) 60%,
+                            var(--color-dark)
+                        )
+                        100%
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            p.desc {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                color: var(--color-dark-gray);
+                margin-bottom: 2rem;
+            }
+
+            .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                justify-content: center;
+            }
+
+            .btn-primary {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.75rem;
+                border-radius: 999px;
+                background-color: var(--color-primary);
+                color: var(--color-light);
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+                transition:
+                    opacity 0.2s ease,
+                    transform 0.2s ease,
+                    box-shadow 0.2s ease;
+                box-shadow: 0 4px 16px -4px
+                    color-mix(in srgb, var(--color-primary) 55%, transparent);
+            }
+
+            .btn-primary:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+            }
+
+            .btn-ghost {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.75rem;
+                border-radius: 999px;
+                border: 1.5px solid
+                    color-mix(in srgb, var(--color-primary) 45%, transparent);
+                color: var(--color-primary);
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-decoration: none;
+                background: transparent;
+                cursor: pointer;
+                transition:
+                    background-color 0.2s ease,
+                    transform 0.2s ease;
+            }
+
+            .btn-ghost:hover {
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-primary) 10%,
+                    transparent
+                );
+                transform: translateY(-2px);
+            }
+
+            .status-line {
+                margin-top: 1.75rem;
+                padding-top: 1.5rem;
+                border-top: 2px dashed
+                    color-mix(in srgb, var(--color-gray) 40%, transparent);
+                font-size: 0.8rem;
+                color: var(--color-dark-gray);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            html.dark .status-line {
+                border-top-color: color-mix(
+                    in srgb,
+                    var(--color-gray) 25%,
+                    transparent
+                );
+            }
+
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: var(--color-danger);
+            }
+
+            .status-dot.online {
+                background-color: var(--color-success);
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                body,
+                .card,
+                .badge-dot {
+                    animation: none !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="topbar">
+            <button type="button" class="icon-btn" id="langToggle">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                    ></path>
+                </svg>
+                <span id="langLabel">EN</span>
+            </button>
+            <button type="button" class="icon-btn" id="themeToggle">
+                <svg
+                    id="themeIconSun"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg
+                    id="themeIconMoon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="display: none"
+                >
+                    <path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                    ></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="main">
+            <div class="card">
+                <span class="badge-pill">
+                    <span class="badge-dot"></span>
+                    <span data-i18n="badge"></span>
+                </span>
+
+                <div class="icon-wrap">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                        <path
+                            d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"
+                        ></path>
+                        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                    </svg>
+                </div>
+
+                <h1 data-i18n-html="title"></h1>
+                <p class="desc" data-i18n="desc"></p>
+
+                <div class="actions">
+                    <button
+                        type="button"
+                        class="btn-primary"
+                        onclick="location.reload()"
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path
+                                d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+                            ></path>
+                        </svg>
+                        <span data-i18n="retry"></span>
+                    </button>
+                    <a href="/" class="btn-ghost">
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                            ></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span data-i18n="home"></span>
+                    </a>
+                </div>
+
+                <div class="status-line">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText" data-i18n="waiting"></span>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var translations = {
+                id: {
+                    badge: "Offline",
+                    title: "Koneksi Terputus, <em>Sabar Ya</em>",
+                    desc: "Sepertinya perangkatmu sedang tidak terhubung ke internet. Periksa jaringan Wi-Fi atau data seluler kamu, lalu coba muat ulang halaman.",
+                    retry: "Coba Lagi",
+                    home: "Ke Beranda",
+                    waiting: "Menunggu koneksi kembali...",
+                    reconnected: "Koneksi kembali tersambung, memuat ulang...",
+                },
+                en: {
+                    badge: "Offline",
+                    title: "Connection Lost, <em>Hang Tight</em>",
+                    desc: "It looks like your device is not connected to the internet. Check your Wi-Fi or mobile data, then try reloading the page.",
+                    retry: "Try Again",
+                    home: "Go Home",
+                    waiting: "Waiting for connection...",
+                    reconnected: "Connection restored, reloading...",
+                },
+            };
+
+            var langLabel = document.getElementById("langLabel");
+            var langToggle = document.getElementById("langToggle");
+            var themeToggle = document.getElementById("themeToggle");
+            var themeIconSun = document.getElementById("themeIconSun");
+            var themeIconMoon = document.getElementById("themeIconMoon");
+            var statusDot = document.getElementById("statusDot");
+            var statusText = document.getElementById("statusText");
+
+            var currentLocale = localStorage.getItem("locale") || "id";
+
+            function applyTranslations() {
+                var dict = translations[currentLocale];
+                document.documentElement.lang = currentLocale;
+                langLabel.textContent = currentLocale === "id" ? "EN" : "ID";
+
+                document.querySelectorAll("[data-i18n]").forEach(function (el) {
+                    var key = el.getAttribute("data-i18n");
+                    if (key !== "waiting") {
+                        el.textContent = dict[key];
+                    }
+                });
+
+                document
+                    .querySelectorAll("[data-i18n-html]")
+                    .forEach(function (el) {
+                        var key = el.getAttribute("data-i18n-html");
+                        el.innerHTML = dict[key];
+                    });
+
+                updateStatus();
+            }
+
+            langToggle.addEventListener("click", function () {
+                currentLocale = currentLocale === "id" ? "en" : "id";
+                localStorage.setItem("locale", currentLocale);
+                applyTranslations();
+            });
+
+            function setThemeIcons(isDark) {
+                themeIconSun.style.display = isDark ? "none" : "block";
+                themeIconMoon.style.display = isDark ? "block" : "none";
+            }
+
+            setThemeIcons(document.documentElement.classList.contains("dark"));
+
+            themeToggle.addEventListener("click", function () {
+                var isDark = document.documentElement.classList.toggle("dark");
+                localStorage.setItem("theme", isDark ? "dark" : "light");
+                setThemeIcons(isDark);
+            });
+
+            function updateStatus() {
+                var dict = translations[currentLocale];
+                if (navigator.onLine) {
+                    statusDot.classList.add("online");
+                    statusText.textContent = dict.reconnected;
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1200);
+                } else {
+                    statusDot.classList.remove("online");
+                    statusText.textContent = dict.waiting;
+                }
+            }
+
+            window.addEventListener("online", updateStatus);
+            window.addEventListener("offline", updateStatus);
+
+            applyTranslations();
+        </script>
+    </body>
+</html>
