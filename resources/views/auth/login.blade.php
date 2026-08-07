@@ -22,10 +22,11 @@
 @endpush
 
 @section('content')
-    <div class="h-screen">
+    <div class="h-screen overflow-hidden">
         <div class="grid lg:grid-cols-5 md:grid-cols-2 items-center gap-y-4 h-full">
-            <div class="md:col-span-2 w-full p-8 max-w-lg max-md:max-w-lg mx-auto max-h-screen overflow-auto">
-                <form action="{{ route('login') }}" method="POST" data-auth-form>
+            <div class="md:col-span-2 w-full h-full flex items-center justify-center p-8 overflow-hidden">
+                <form action="{{ route('login') }}" method="POST" data-auth-form
+                    class="w-full max-w-lg max-h-full overflow-y-auto">
                     @csrf
                     <div class="mb-8">
                         <div class="flex justify-between items-center">
