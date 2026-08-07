@@ -460,7 +460,7 @@ async function openCameraCapture({ onCapture }) {
                 cropHeight,
                 0,
                 0,
-                -canvas.width,
+                canvas.width,
                 canvas.height,
             );
         } else {
