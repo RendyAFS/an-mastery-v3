@@ -28,6 +28,21 @@
             --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
         }
 
+        html,
+        body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        * {
+            min-width: 0;
+        }
+
+        .badge-pill {
+            white-space: normal;
+            text-align: center;
+        }
+
         body {
             font-family: var(--font-body);
         }
@@ -343,7 +358,8 @@
     nextImage() {
         this.activeIndex = (this.activeIndex + 1) % this.activeImages.length;
     }
-}">
+}"
+    x-effect="document.body.style.overflow = modalOpen ? 'hidden' : ''">
 
     {{-- NAVBAR --}}
     <nav class="landing-nav sticky top-0 z-50">
@@ -783,7 +799,7 @@
 
             <div class="grid md:grid-cols-5 items-center">
                 <div
-                    class="md:col-span-3 relative bg-black flex items-center justify-center h-[45vh] md:h-[70vh] overflow-hidden">
+                    class="md:col-span-3 relative bg-black flex items-center justify-center h-[45dvh] md:h-[70dvh] overflow-hidden">
                     <img :src="activeImages[activeIndex]" :alt="activeTitle"
                         class="max-w-full max-h-full w-auto h-auto object-contain" />
 
