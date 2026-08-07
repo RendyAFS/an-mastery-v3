@@ -16,7 +16,7 @@
     role="dialog" tabindex="-1" aria-labelledby="{{ $id }}-label">
     <div
         class="hs-overlay-animation-target hs-overlay-open:opacity-100 hs-overlay-open:duration-500
-        opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto max-h-[calc(100vh-3.5rem)] flex flex-col
+        opacity-0 ease-out transition-all {{ $maxWidth }} sm:w-full m-3 sm:mx-auto max-h-[80vh] flex flex-col
         {{ $centered ? '' : 'hs-overlay-open:mt-7 mt-0' }}">
         <div
             class="flex flex-col bg-(--color-light) border border-(--color-light-gray) shadow-2xs rounded-xl pointer-events-auto
@@ -40,7 +40,7 @@
                     </button>
                 </div>
             @endif
-            <div class="p-4 {{ $bodyOverflowClass }} space-y-4 custom-scrollbar">
+            <div class="p-4 flex-1 min-h-0 {{ $bodyOverflowClass }} space-y-4 custom-scrollbar">
                 {{ $slot }}
             </div>
             @isset($footer)
