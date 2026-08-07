@@ -14,24 +14,34 @@ async function loadImage(file) {
     });
 }
 
-function canvasToBlob(canvas, mimeType) {
+function canvasToBlob(canvas, mimeType, quality = 0.88) {
     return new Promise((resolve) => {
-        canvas.toBlob((blob) => resolve(blob), mimeType);
+        canvas.toBlob((blob) => resolve(blob), mimeType, quality);
     });
 }
 
 async function processImageFile(
     file,
     {
-        maxSizeBytes = 2 * 1024 * 1024,
-        mimeType = "image/png",
-        minDimension = 320,
+        maxSizeBytes = 2 * 1024 * 1024, // 2 MB
+        maxDimension = 1920,
+        mimeType = "image/jpeg",
+        quality = 0.88,
     } = {},
 ) {
     const img = await loadImage(file);
 
-    let width = img.naturalWidth || img.width;
-    let height = img.naturalHeight || img.height;
+    const originalWidth = img.naturalWidth || img.width;
+    const originalHeight = img.naturalHeight || img.height;
+
+    const scale = Math.min(
+        1,
+        maxDimension / originalWidth,
+        maxDimension / originalHeight,
+    );
+
+    let width = Math.round(originalWidth * scale);
+    let height = Math.round(originalHeight * scale);
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -41,24 +51,39 @@ async function processImageFile(
     while (true) {
         canvas.width = width;
         canvas.height = height;
+
         ctx.clearRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
 
-        blob = await canvasToBlob(canvas, mimeType);
+        blob = await canvasToBlob(canvas, mimeType, quality);
 
-        if (!blob) break;
-        if (blob.size <= maxSizeBytes) break;
-        if (width <= minDimension || height <= minDimension) break;
+        if (!blob) {
+            throw new Error("Gagal memproses gambar.");
+        }
 
-        width = Math.round(width * 0.85);
-        height = Math.round(height * 0.85);
+        if (blob.size <= maxSizeBytes) {
+            break;
+        }
+
+        const nextWidth = Math.round(width * 0.9);
+        const nextHeight = Math.round(height * 0.9);
+
+        if (nextWidth < 320 || nextHeight < 320) {
+            break;
+        }
+
+        width = nextWidth;
+        height = nextHeight;
     }
 
     const fileName = file.name
-        ? file.name.replace(/\.[^/.]+$/, "") + ".png"
-        : `image-${Date.now()}.png`;
+        ? file.name.replace(/\.[^/.]+$/, "") + ".jpg"
+        : `image-${Date.now()}.jpg`;
 
-    return new File([blob], fileName, { type: mimeType });
+    return new File([blob], fileName, {
+        type: mimeType,
+        lastModified: Date.now(),
+    });
 }
 
 export default processImageFile;
