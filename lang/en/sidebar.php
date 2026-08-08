@@ -14,6 +14,7 @@ return [
     'Employees'           => 'Employees',
     'Fabric Attribute'    => 'Fabric Attribute',
     'Gallery'             => 'Gallery',
+    'Memo'                => 'Memo',
     'Image Fabrics'       => 'Image Fabrics',
     'Color Fabrics'       => 'Color Fabrics',
     'Type Fabrics'        => 'Type Fabrics',

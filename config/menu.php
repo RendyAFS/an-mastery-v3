@@ -125,4 +125,11 @@ return [
         'icon' => 'image',
         'url'  => '/galleries',
     ],
+
+    // Memo
+    [
+        'name' => 'Memo',
+        'icon' => 'file-text',
+        'url'  => '/memos',
+    ],
 ];

@@ -161,6 +161,13 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{gallery}/force-delete', [App\Http\Controllers\GalleryController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('galleries', App\Http\Controllers\GalleryController::class)->names('galleries');
+
+    // Memo
+    Route::prefix('memos')->as('memos.')->group(function () {
+        Route::put('{id}/restore', [App\Http\Controllers\MemoController::class, 'restore'])->name('restore');
+        Route::delete('{id}/force-delete', [App\Http\Controllers\MemoController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('memos', App\Http\Controllers\MemoController::class)->names('memos');
 });
 
 

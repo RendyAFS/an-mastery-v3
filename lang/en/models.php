@@ -10,6 +10,7 @@ return [
     'ImageFabric'          => 'Image Fabric',
     'Menu'                 => 'Menu',
     'MenuPermission'       => 'Menu Permission',
+    'Memo'                 => 'Memo',
     'Presence'             => 'Presence',
     'PriceEmployee'        => 'Price Employee',
     'PriceSupplier'        => 'Price Supplier',

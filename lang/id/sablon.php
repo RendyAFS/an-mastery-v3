@@ -7,7 +7,7 @@ return [
     'filter'        => [
         'week_start' => 'Dari Minggu',
         'week_end'   => 'Sampai Minggu',
-        'reset'      => 'Reset ke Minggu Ini',
+        'reset'      => 'Reset',
     ],
 
     'statuses'      => [
