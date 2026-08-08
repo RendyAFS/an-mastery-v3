@@ -23,7 +23,7 @@ return [
         'short_name' => 'ANMT',
         'background_color' => '#6d9886',
         'display' => 'fullscreen',
-        'description' => 'An Mastery System ',
+        'description' => null,
         'theme_color' => '#6d9886',
         'icons' => [
             [
