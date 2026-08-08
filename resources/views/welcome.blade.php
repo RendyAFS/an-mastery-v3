@@ -6,14 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="{{ __('welcome.meta_desc') }}">
+    @PwaHead
     <title>{{ __('welcome.title') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
 
     {{-- Init Theme (sebelum CSS) --}}
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
@@ -22,6 +17,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        @font-face {
+            font-family: 'Fraunces';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('{{ asset('fonts/fraunces/Fraunces-Variable.woff2') }}') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Fraunces';
+            font-style: italic;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('{{ asset('fonts/fraunces/Fraunces-Italic-Variable.woff2') }}') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 600;
+            font-display: swap;
+            src: url('{{ asset('fonts/inter/Inter-Variable.woff2') }}') format('woff2');
+        }
+
         /* ── Typography ──────────────────────────────────────────────── */
         :root {
             --font-display: 'Fraunces', ui-serif, Georgia, serif;
@@ -852,6 +871,7 @@
         });
         reveals.forEach(el => io.observe(el));
     </script>
+    @RegisterServiceWorkerScript
 </body>
 
 </html>

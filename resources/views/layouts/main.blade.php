@@ -17,6 +17,7 @@
             } catch (e) {}
         })();
     </script>
+    @PwaHead
     <title>{{ $title ?? 'AN Mastery' }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
@@ -62,6 +63,7 @@
     @vite(['resources/js/app.js'])
 
     @stack('scripts')
+    @RegisterServiceWorkerScript
 </body>
 
 </html>

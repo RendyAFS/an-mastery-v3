@@ -1,0 +1,16 @@
+{
+    "name": "An Mastery",
+    "short_name": "ANMT",
+    "background_color": "#6d9886",
+    "display": "fullscreen",
+    "description": "An Mastery System ",
+    "theme_color": "#6d9886",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
