@@ -177,11 +177,36 @@ const PageScript = (function () {
             `
             : "";
 
+        const memos = Array.isArray(item.memos) ? item.memos : [];
+
+        const memoHtml = memos.length
+            ? `
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold">${window.langSalaryEmployee.card.memo ?? "Memo"}</p>
+                    <ul class="space-y-1 text-xs">
+                        ${memos
+                            .map(
+                                (m) => `
+                            <li class="flex justify-between text-(--color-dark-gray)">
+                                <span>↳ ${m.name || "-"}</span>
+                                <span class="${Number(m.nominal) < 0 ? "text-(--color-red)" : "text-(--color-success)"}">
+                                    ${Number(m.nominal) < 0 ? "-" : "+"} Rp ${Math.abs(m.nominal || 0).toLocaleString("id-ID")}
+                                </span>
+                            </li>
+                        `,
+                            )
+                            .join("")}
+                    </ul>
+                </div>
+            `
+            : "";
+
         return `
         <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
             ${headerHtml}
             ${groupsHtml}
             ${additionalFeeHtml}
+            ${memoHtml}
             ${presenceHtml}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">

@@ -31,6 +31,7 @@ Berikut adalah daftar seluruh file Knowledge Base yang tersedia di dalam folder 
 - **`module-default.md`**: Panduan pembuatan modul tipe Full Page CRUD.
 - **`module-simple.md`**: Panduan pembuatan modul tipe Modal CRUD.
 - **`naming-convention.md`**: Kamus standar penamaan seluruh berkas dan variabel proyek.
+- **`lang.md`**: Standardisasi lokalisasi (i18n), berkas bahasa (lang/en & lang/id), serta pengoperasian variabel lang di Blade dan JavaScript.
 - **`best-practice.md`**: Checklist teknis, larangan keras, serta penyelesaian masalah (*troubleshooting*).
 
 ## Contoh implementasi

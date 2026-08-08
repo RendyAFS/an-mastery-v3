@@ -5,7 +5,7 @@ return [
     'filter' => [
         'week_start' => 'From Week',
         'week_end' => 'To Week',
-        'reset' => 'Reset to This Week',
+        'reset' => 'Reset',
         'all' => 'All',
     ],
     'sync' => [

@@ -45,6 +45,7 @@
     $langSablon = collect(trans('sablon'))->toArray();
     $langBillSupplier = collect(trans('bill-supplier'))->toArray();
     $langSalaryEmployee = collect(trans('salary-employee'))->toArray();
+    $langMemo = collect(trans('memo'))->toArray();
     // END CRUD
 @endphp
 
@@ -73,5 +74,6 @@
     window.langSablon = @json($langSablon);
     window.langBillSupplier = @json($langBillSupplier);
     window.langSalaryEmployee = @json($langSalaryEmployee);
+    window.langMemo = @json($langMemo);
     // END CRUD
 </script>

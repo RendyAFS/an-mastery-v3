@@ -8,7 +8,7 @@ return [
     'filter'        => [
         'week_start' => 'From Week',
         'week_end'   => 'To Week',
-        'reset'      => 'Reset to Current Week',
+        'reset'      => 'Reset',
     ],
 
     'card'          => [
