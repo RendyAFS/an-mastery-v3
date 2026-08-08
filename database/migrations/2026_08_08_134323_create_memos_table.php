@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('memos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees')->nullOnDelete();
+            $table->foreignId('salary_employee_id')->nullable()->constrained('salary_employees')->nullOnDelete();
             $table->string('name')->nullable();
             $table->integer('nominal')->nullable();
             $table->date('date')->nullable();
             $table->boolean('is_paid')->default(false);
+            $table->index(['employee_id', 'is_paid']);
             $table->timestamps();
             $table->userstamps();
             $table->softDeletes();

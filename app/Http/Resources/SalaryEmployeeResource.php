@@ -32,9 +32,10 @@ class SalaryEmployeeResource extends JsonResource
             })
             ->values();
 
-        $presenceTotal = (float) ($this->presence?->total ?? 0);
+        $presenceTotal      = (float) ($this->presence?->total ?? 0);
         $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-        $total = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal;
+        $memoTotal          = $this->memos->sum('nominal');
+        $total              = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal;
 
         return [
             'id'                            => $this->id,
@@ -55,6 +56,14 @@ class SalaryEmployeeResource extends JsonResource
             'created_at'                    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'                    => $this->updated_at?->format('Y-m-d H:i:s'),
             'sablon_groups'                 => $sablonGroups,
+            'memos' => $this->memos->map(fn($m) => [
+                'id'               => $m->id,
+                'name'             => $m->name,
+                'nominal'          => $m->nominal,
+                'nominal_formated' => ($m->nominal < 0 ? '-' : '+') . ' Rp ' . number_format(abs($m->nominal), 0, ',', '.'),
+                'date'             => $m->date?->toDateString(),
+            ])->values(),
+            'memo_total' => $memoTotal,
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Models\Memo;
 use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
 use App\Models\SalaryEmployee;
@@ -25,6 +26,7 @@ class SalaryEmployeeRepository
                 'employee',
                 'sablonEmployeeDetails.sablon.supplier',
                 'sablonEmployeeDetails.sablon.imageFabric',
+                'memos',
             ])
             ->whereBetween('date', [$start, $end])
             ->get();
@@ -47,6 +49,12 @@ class SalaryEmployeeRepository
                 return $detail->employee_id . '|' . $weekStart;
             });
 
+        $pendingMemosByEmployee = Memo::query()
+            ->eligibleForSalary()
+            ->whereNull('salary_employee_id')
+            ->get()
+            ->groupBy('employee_id');
+
         $presences = Presence::query()
             ->whereBetween('week_of', [$start, $end])
             ->get()
@@ -59,7 +67,7 @@ class SalaryEmployeeRepository
 
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
-            ->map(function ($details) use ($presences) {
+            ->map(function ($details) use ($presences, $pendingMemosByEmployee) {
                 $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
                 $first    = $details->first();
 
@@ -79,12 +87,44 @@ class SalaryEmployeeRepository
                 $salary->setRelation('employee', $first->employee);
                 $salary->setRelation('sablonEmployeeDetails', $details);
                 $salary->setRelation('presence', $presences->get($first->employee_id . '|' . $weekStart));
+                $salary->setRelation('memos', $pendingMemosByEmployee->get($first->employee_id, collect()));
 
                 return $salary;
             })
             ->values();
 
-        $collection = $existingSalaries->concat($virtualSalaries);
+        $existingEmployeeIds = $existingSalaries->pluck('employee_id')
+            ->merge($virtualSalaries->pluck('employee_id'))
+            ->unique();
+
+        $memoOnlyVirtualSalaries = $pendingMemosByEmployee
+            ->reject(fn($memos, $employeeId) => $existingEmployeeIds->contains($employeeId))
+            ->map(function ($memos, $employeeId) use ($presences) {
+                $first = $memos->first();
+
+                $salary = new SalaryEmployee([
+                    'employee_id'    => $employeeId,
+                    'fee'            => 0,
+                    'additional_fee' => [],
+                    'status'         => StatusSalaryEmployeeEnum::PENDING,
+                    'date'           => now()->startOfWeek(Carbon::MONDAY)->toDateString(),
+                    'notes'          => null,
+                ]);
+
+                $salary->setRelation('employee', $first->employee);
+                $salary->setRelation('sablonEmployeeDetails', collect());
+                $salary->setRelation('presence', $presences->get(
+                    $employeeId . '|' . now()->startOfWeek(Carbon::MONDAY)->toDateString()
+                ));
+                $salary->setRelation('memos', $memos);
+
+                return $salary;
+            })
+            ->values();
+
+        $collection = $existingSalaries
+            ->concat($virtualSalaries)
+            ->concat($memoOnlyVirtualSalaries);
 
         if ($filter !== 'all') {
             $collection = $collection->filter(fn($s) => $s->status?->value === $filter);

@@ -16,7 +16,7 @@ class MemoResource extends JsonResource
             'employee'      => new EmployeeResource($this->whenLoaded('employee')),
             'name'          => $this->name,
             'nominal'       => $this->nominal,
-            'date'          => $this->date?->format('Y-m-d'),
+            'date'          => $this->date?->translatedFormat('d F Y'),
             'is_paid'       => (bool) $this->is_paid,
             'created_at'    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'    => $this->updated_at?->format('Y-m-d H:i:s'),

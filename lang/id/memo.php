@@ -25,8 +25,8 @@ return [
         'item_name'       => 'Nama pengeluaran...',
     ],
     'status' => [
-        'paid'   => 'Lunas',
-        'unpaid' => 'Belum Terbayar',
+        'paid'   => 'Sudah Dibayar',
+        'unpaid' => 'Belum Dibayar',
     ],
     'validation' => [
         'employee_id' => [

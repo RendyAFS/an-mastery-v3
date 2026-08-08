@@ -44,4 +44,9 @@ class SalaryEmployee extends Model
         return $this->hasOne(Presence::class, 'employee_id', 'employee_id')
             ->where('week_of', $this->date);
     }
+
+    public function memos(): HasMany
+    {
+        return $this->hasMany(Memo::class, 'salary_employee_id');
+    }
 }

@@ -149,15 +149,6 @@ const PageScript = (function () {
                     data: "date",
                     width: "15%",
                     className: "text-center",
-                    render(data) {
-                        if (!data) return "-";
-                        const d = new Date(data);
-                        return d.toLocaleDateString("id-ID", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                        });
-                    },
                 },
                 {
                     data: "id",
@@ -250,6 +241,13 @@ const PageScript = (function () {
         }
     };
 
+    const getTodayDateString = () => {
+        const now = new Date();
+        const offset = now.getTimezoneOffset();
+        const local = new Date(now.getTime() - offset * 60000);
+        return local.toISOString().split("T")[0];
+    };
+
     const resetModal = () => {
         form.reset();
         setFormMode("create");
@@ -263,7 +261,7 @@ const PageScript = (function () {
 
         if (nominalEl) nominalEl.value = "";
         if (nameEl) nameEl.value = "";
-        if (dateEl) dateEl.value = "";
+        if (dateEl) dateEl.value = getTodayDateString();
         if (isPaidEl) isPaidEl.checked = false;
     };
 

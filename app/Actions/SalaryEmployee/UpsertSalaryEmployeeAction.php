@@ -3,6 +3,7 @@
 namespace App\Actions\SalaryEmployee;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Models\Memo;
 use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
 use App\Models\SalaryEmployee;
@@ -48,6 +49,20 @@ class UpsertSalaryEmployeeAction
 
             $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
             $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+
+            $alreadyLinkedMemos = $salary->exists
+                ? Memo::query()->where('salary_employee_id', $salary->id)->get()
+                : collect();
+
+            $newEligibleMemos = Memo::query()
+                ->where('employee_id', $employeeId)
+                ->whereNull('salary_employee_id')
+                ->eligibleForSalary()
+                ->get();
+
+            $eligibleMemos = $alreadyLinkedMemos->concat($newEligibleMemos);
+            $memoTotal = $eligibleMemos->sum(fn(Memo $m) => (int) $m->nominal);
+
             $presenceTotal = (float) (Presence::where('employee_id', $employeeId)
                 ->where('week_of', $start)
                 ->value('total') ?? 0);
@@ -69,9 +84,6 @@ class UpsertSalaryEmployeeAction
                 $salary->notes = $notes;
             }
 
-            $additionalFeeTotal = collect($salary->additional_fee ?? [])
-                ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-
             $salary->fee = $totalFee;
 
             $salary->save();
@@ -79,11 +91,20 @@ class UpsertSalaryEmployeeAction
             SablonEmployeeDetail::whereIn('id', $eligibleDetails->pluck('id'))
                 ->update(['salary_employee_id' => $salary->id]);
 
+            Memo::whereIn('id', $eligibleMemos->pluck('id'))
+                ->update(['salary_employee_id' => $salary->id]);
+
             if ($salary->status === StatusSalaryEmployeeEnum::PAID) {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => true]);
+
+                Memo::where('salary_employee_id', $salary->id)
+                    ->update(['is_paid' => true]);
             } else {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
+                    ->update(['is_paid' => false]);
+
+                Memo::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => false]);
             }
 
@@ -91,6 +112,7 @@ class UpsertSalaryEmployeeAction
                 'employee',
                 'sablonEmployeeDetails.sablon.supplier',
                 'sablonEmployeeDetails.sablon.imageFabric',
+                'memos',
             ]);
         });
     }

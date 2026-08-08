@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ class Memo extends Model
 
     protected $fillable = [
         'employee_id',
+        'salary_employee_id',
         'name',
         'nominal',
         'date',
@@ -28,5 +30,15 @@ class Memo extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function salaryEmployee(): BelongsTo
+    {
+        return $this->belongsTo(SalaryEmployee::class, 'salary_employee_id');
+    }
+
+    public function scopeEligibleForSalary(Builder $query): Builder
+    {
+        return $query->where('is_paid', false);
     }
 }
