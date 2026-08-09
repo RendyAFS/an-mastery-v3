@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'BillSupplier'         => 'Bill Supplier',
+    'BillSupplier'         => 'Bill Konveksi',
     'ColorFabric'          => 'Color Fabric',
     'Employee'             => 'Employee',
     'Fabric'               => 'Fabric',
@@ -13,14 +13,14 @@ return [
     'Memo'                 => 'Memo',
     'Presence'             => 'Presence',
     'PriceEmployee'        => 'Price Employee',
-    'PriceSupplier'        => 'Price Supplier',
+    'PriceSupplier'        => 'Price Konveksi',
     'Role'                 => 'Role',
     'Sablon'               => 'Sablon',
     'SablonDetail'         => 'Sablon Detail',
     'SablonEmployeeDetail' => 'Sablon Employee Detail',
     'SalaryEmployee'       => 'Salary Employee',
-    'Supplier'             => 'Supplier',
-    'SupplierCoverStyle'   => 'Supplier Cover Style',
+    'Supplier'             => 'Konveksi',
+    'SupplierCoverStyle'   => 'Konveksi Cover Style',
     'TypeColor'            => 'Type Color',
     'TypeFabric'           => 'Type Fabric',
     'User'                 => 'User',

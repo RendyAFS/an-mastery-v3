@@ -54,7 +54,7 @@ return [
             'desc'  => 'Kelola setiap pekerjaan sablon dari awal hingga akhir — dari input order hingga pemantauan status selesai.',
         ],
         'billing' => [
-            'title' => 'Tagihan Supplier',
+            'title' => 'Tagihan Konveksi',
             'desc'  => 'Buat dan lacak tagihan supplier secara batch. Tandai pembayaran dan jaga pembukuan tetap rapi.',
         ],
         'employee' => [
@@ -70,7 +70,7 @@ return [
     // Stats
     'stats' => [
         'title'     => 'Dirancang untuk Konveksi',
-        'suppliers' => 'Supplier',
+        'suppliers' => 'Konveksi',
         'employees' => 'Karyawan',
         'modules'   => 'Modul',
         'languages' => 'Bahasa',

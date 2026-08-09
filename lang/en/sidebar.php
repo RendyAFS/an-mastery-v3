@@ -20,11 +20,11 @@ return [
     'Type Fabrics'        => 'Type Fabrics',
     'Type Colors'         => 'Type Colors',
     'Pricing'             => 'Pricing',
-    'Price Supplier'      => 'Price Supplier',
+    'Price Supplier'      => 'Price Konveksi',
     'Price Employee'      => 'Price Employee',
     'Employee Presence'   => 'Employee Presence',
     'Inventory Fabric'    => 'Inventory Fabric',
     'Sablon'              => 'Sablon',
-    'Bill Supplier'       => 'Bill Supplier',
+    'Bill Supplier'       => 'Bill Konveksi',
     'Salary Employee'     => 'Salary Employee',
 ];

@@ -1,9 +1,9 @@
 <?php
 return [
     'description'   => 'Weekly supplier bill recap',
-    'create_title'  => 'Create Bill Supplier',
-    'edit_title'    => 'Edit Bill Supplier',
-    'create_heading' => 'Create Bill Supplier — :supplier',
+    'create_title'  => 'Create Bill Konveksi',
+    'edit_title'    => 'Edit Bill Konveksi',
+    'create_heading' => 'Create Bill Konveksi — :supplier',
 
     'filter'        => [
         'week_start' => 'From Week',
@@ -61,7 +61,7 @@ return [
     ],
 
     'show'          => [
-        'subtitle'       => 'Supplier bill list, grouped by week',
+        'subtitle'       => 'Konveksi bill list, grouped by week',
         'back'           => 'Back',
         'create_bill'    => 'Create Bill',
         'loading'        => 'Loading data...',

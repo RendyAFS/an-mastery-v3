@@ -20,7 +20,7 @@ return [
     'main_info'     => [
         'title'  => 'Main Info',
         'fields' => [
-            'supplier'             => 'Supplier',
+            'supplier'             => 'Konveksi',
             'fabric'               => 'Fabric',
             'image_fabric'         => 'Image Fabric',
             'type_color'           => 'Type Color',
@@ -34,7 +34,7 @@ return [
             'notes'                => 'Notes',
         ],
         'placeholders' => [
-            'supplier'       => 'Choose Supplier',
+            'supplier'       => 'Choose Konveksi',
             'fabric'         => 'Choose Fabric',
             'image_fabric'   => 'Choose Image Fabric',
             'type_color'     => 'Choose Type Color',
@@ -50,7 +50,7 @@ return [
             'type_fabric'    => 'Search type fabric...',
             'price_employee' => 'Search...',
         ],
-        'hint_choose_supplier_first' => 'Choose Supplier first to show Fabric',
+        'hint_choose_supplier_first' => 'Choose Konveksi first to show Fabric',
         'hint_total_long_fabric'     => 'Automatically from total Fabric Detail',
     ],
 
@@ -113,7 +113,7 @@ return [
     'status_updated_success'       => 'Status updated successfully',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier is required.',
+            'required' => 'Konveksi is required.',
             'exists'   => 'The selected supplier is invalid.',
         ],
 
