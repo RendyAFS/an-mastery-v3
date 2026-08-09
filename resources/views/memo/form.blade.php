@@ -45,19 +45,4 @@
                     dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
         </div>
     </div>
-
-    <div class="flex items-center gap-3 pt-1">
-        <label class="relative inline-block w-11 h-6 cursor-pointer">
-            <input type="checkbox" id="is_paid" name="is_paid" value="1" class="peer sr-only">
-            <span
-                class="absolute inset-0 bg-(--color-dark-gray) rounded-full transition-colors duration-200
-                ease-in-out peer-checked:bg-(--color-success) peer-disabled:opacity-50"></span>
-            <span
-                class="absolute top-1/2 inset-s-0.5 -translate-y-1/2 size-5 bg-(--color-light) rounded-full
-                shadow-sm transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
-        </label>
-        <label for="is_paid" class="text-sm font-medium text-(--color-dark) dark:text-(--color-light) cursor-pointer">
-            {{ __('memo.fields.is_paid') }}
-        </label>
-    </div>
 </div>

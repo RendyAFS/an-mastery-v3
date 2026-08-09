@@ -18,7 +18,6 @@ class SaveMemoRequest extends FormRequest
             'name'        => ['required', 'string', 'max:255'],
             'nominal'     => ['nullable', 'numeric'],
             'date'        => ['required', 'date'],
-            'is_paid'     => ['nullable', 'boolean'],
         ];
     }
 
@@ -31,8 +30,6 @@ class SaveMemoRequest extends FormRequest
             'date.required'        => __('memo.validation.date.required'),
             'nominal.nullable'     => __('memo.validation.nominal.nullable'),
             'nominal.numeric'      => __('memo.validation.nominal.numeric'),
-            'is_paid.nullable'     => __('memo.validation.is_paid.nullable'),
-            'is_paid.boolean'      => __('memo.validation.is_paid.boolean'),
         ];
     }
 
@@ -43,7 +40,6 @@ class SaveMemoRequest extends FormRequest
             'name'        => __('memo.fields.name'),
             'nominal'     => __('memo.fields.nominal'),
             'date'        => __('memo.fields.date'),
-            'is_paid'     => __('memo.fields.is_paid'),
         ];
     }
 }
