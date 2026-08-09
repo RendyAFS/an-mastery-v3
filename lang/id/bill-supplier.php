@@ -3,7 +3,7 @@ return [
     'description'    => 'Rekap tagihan konveksi per minggu',
     'create_title'   => 'Tambah Tagihan Konveksi',
     'edit_title'     => 'Ubah Tagihan Konveksi',
-    'create_heading' => 'Buat Tagihan Konveksi — :konveksi',
+    'create_heading' => 'Buat Tagihan Konveksi — :supplier',
 
     'filter'        => [
         'week_start' => 'Dari Minggu',
