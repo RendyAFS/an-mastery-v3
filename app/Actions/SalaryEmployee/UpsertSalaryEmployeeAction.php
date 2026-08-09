@@ -34,6 +34,8 @@ class UpsertSalaryEmployeeAction
                 $salary->additional_fee = [];
             }
 
+            $wasPaid = $salary->exists && $salary->status === StatusSalaryEmployeeEnum::PAID;
+
             $alreadyLinkedDetails = $salary->exists
                 ? SablonEmployeeDetail::query()
                 ->where('salary_employee_id', $salary->id)
@@ -47,9 +49,6 @@ class UpsertSalaryEmployeeAction
                 ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
                 ->get();
 
-            $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
-            $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
-
             $alreadyLinkedMemos = $salary->exists
                 ? Memo::query()->where('salary_employee_id', $salary->id)->get()
                 : collect();
@@ -60,6 +59,11 @@ class UpsertSalaryEmployeeAction
                 ->eligibleForSalary()
                 ->get();
 
+            $hasNewData = $newEligibleDetails->isNotEmpty() || $newEligibleMemos->isNotEmpty();
+
+            $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
+            $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+
             $eligibleMemos = $alreadyLinkedMemos->concat($newEligibleMemos);
             $memoTotal = $eligibleMemos->sum(fn(Memo $m) => (int) $m->nominal);
 
@@ -67,8 +71,12 @@ class UpsertSalaryEmployeeAction
                 ->where('week_of', $start)
                 ->value('total') ?? 0);
 
-            if ($status !== null) {
-                $salary->status = StatusSalaryEmployeeEnum::from($status);
+            $requestedStatus = $status !== null ? StatusSalaryEmployeeEnum::from($status) : null;
+
+            if ($wasPaid && $hasNewData && $requestedStatus !== StatusSalaryEmployeeEnum::PAID) {
+                $salary->status = StatusSalaryEmployeeEnum::PENDING;
+            } elseif ($requestedStatus !== null) {
+                $salary->status = $requestedStatus;
             }
 
             if ($additionalFee !== null) {

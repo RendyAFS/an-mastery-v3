@@ -244,6 +244,22 @@ const PageScript = (function () {
 
         initLucide();
         bindSignedRupiahInput(nominalInput);
+        applyModalLockState();
+    };
+
+    const applyModalLockState = () => {
+        const locked = $("#modal-salary-status").val() === "PAID";
+
+        $(
+            "#additional-fee-rows .af-nominal, #additional-fee-rows .af-notes, .btn-remove-af-row, #btn-add-additional-fee-row",
+        ).prop("disabled", locked);
+
+        $("#additional-fee-rows .additional-fee-row").toggleClass(
+            "opacity-50 pointer-events-none",
+            locked,
+        );
+
+        $("#salary-employee-locked-hint").toggleClass("hidden", !locked);
     };
 
     const initSalaryModal = () => {
@@ -271,8 +287,13 @@ const PageScript = (function () {
             }
 
             window.HSStaticMethods.autoInit();
+            applyModalLockState();
 
             HSOverlay.open("#hs-salary-employee-modal");
+        });
+
+        $(document).on("change", "#modal-salary-status", function () {
+            applyModalLockState();
         });
 
         $(document).on("click", "#btn-add-additional-fee-row", function () {
