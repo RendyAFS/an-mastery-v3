@@ -31,6 +31,7 @@ class BillSupplierResource extends JsonResource
             'total_fee_formatted' => RupiahHelper::format($this->total_fee),
             'date_bill'           => $this->date_bill?->format('Y-m-d'),
             'is_paid'             => $this->is_paid,
+            'is_delivered'        => $this->is_delivered,
             'notes'               => $this->notes,
             'created_at'          => $this->created_at?->format('Y-m-d H:i:s'),
             'deleted_at'          => $this->deleted_at?->format('Y-m-d H:i:s'),

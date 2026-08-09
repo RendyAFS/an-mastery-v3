@@ -48,6 +48,7 @@ return [
         'hint_only_done'         => 'Only sablons with status :status can be newly added.',
         'date_bill'              => 'Bill Date',
         'is_paid'                => 'Already Paid',
+        'is_delivered'           => 'Already Delivered',
         'notes'                  => 'Notes',
         'preview_title'          => 'Calculation Details (Batch Total)',
         'calc_count'             => 'Number of Sablon',

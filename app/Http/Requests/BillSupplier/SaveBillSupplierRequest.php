@@ -17,6 +17,7 @@ class SaveBillSupplierRequest extends FormRequest
         $rules = [
             'date_bill'    => ['required', 'date'],
             'is_paid'      => ['nullable', 'boolean'],
+            'is_delivered' => ['nullable', 'boolean'],
             'notes'        => ['nullable', 'string'],
             'sablon_ids'   => 'nullable|array',
             'sablon_ids.*' => 'exists:sablons,id',
@@ -48,10 +49,11 @@ class SaveBillSupplierRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'date_bill'  => __('bill_supplier.form.date_bill'),
-            'sablon_ids' => __('bill_supplier.form.sablon_label_create'),
-            'notes'      => __('bill_supplier.form.notes'),
-            'is_paid'    => __('bill_supplier.form.is_paid'),
+            'date_bill'    => __('bill_supplier.form.date_bill'),
+            'sablon_ids'   => __('bill_supplier.form.sablon_label_create'),
+            'notes'        => __('bill_supplier.form.notes'),
+            'is_paid'      => __('bill_supplier.form.is_paid'),
+            'is_delivered' => __('bill_supplier.form.is_delivered'),
         ];
     }
 }

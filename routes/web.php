@@ -133,7 +133,6 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
         Route::get('batch/{batch}/edit', [App\Http\Controllers\BillSupplierController::class, 'editBatch'])->name('batch.edit');
         Route::get('batch/{batch}/calculate', [App\Http\Controllers\BillSupplierController::class, 'calculateBatch'])->name('batch.calculate');
-        Route::put('batch/{batch}/toggle-paid', [App\Http\Controllers\BillSupplierController::class, 'togglePaidBatch'])->name('batch.toggle-paid');
         Route::put('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'updateBatch'])->name('batch.update');
         Route::delete('batch/{batch}', [App\Http\Controllers\BillSupplierController::class, 'destroyBatch'])->name('batch.destroy');
         Route::put('batch/{batch}/restore', [App\Http\Controllers\BillSupplierController::class, 'restoreBatch'])->name('batch.restore');
