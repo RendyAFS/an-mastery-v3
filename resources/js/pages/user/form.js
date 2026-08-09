@@ -26,8 +26,18 @@ const PageScript = (function () {
 
     function resetForm() {
         form.reset();
-    }
 
+        form.querySelectorAll("select[data-hs-select]").forEach((select) => {
+            const instance = HSSelect.getInstance(select);
+            instance?.setValue("");
+
+            const clearBtn = document.querySelector(
+                `[data-clear-select="${select.id}"]`,
+            );
+            if (clearBtn) clearBtn.style.display = "none";
+        });
+    }
+    
     async function submitForm(action, submitter) {
         const formData = new FormData(form);
         let payload = Object.fromEntries(formData.entries());
