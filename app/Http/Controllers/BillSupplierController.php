@@ -182,33 +182,9 @@ class BillSupplierController extends Controller
             'supplierId'    => $first->supplier_id,
             'dateBill'      => $first->date_bill,
             'isPaid'        => $first->is_paid,
+            'isDelivered'   => $first->is_delivered,
             'notes'         => $first->notes,
             'billSuppliers' => $billSuppliers,
-        ]);
-    }
-
-    public function togglePaidBatch(string $batch, SaveBillSupplierAction $action)
-    {
-        $this->authorize('bill-suppliers.update');
-
-        $billSuppliers = BillSupplier::where('batch', $batch)->get();
-
-        abort_if($billSuppliers->isEmpty(), 404);
-
-        $newState = ! (bool) $billSuppliers->first()->is_paid;
-
-        BillSupplier::where('batch', $batch)->update(['is_paid' => $newState]);
-
-        if ($newState) {
-            $billSuppliers->each(function (BillSupplier $billSupplier) use ($action) {
-                $billSupplier->is_paid = true;
-                $action->markSablonDelivered($billSupplier);
-            });
-        }
-
-        return response()->json([
-            'message' => 'Payment status updated successfully.',
-            'is_paid' => $newState,
         ]);
     }
 

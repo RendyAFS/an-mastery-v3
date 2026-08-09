@@ -49,6 +49,7 @@ return [
         'hint_only_done'         => 'Hanya sablon berstatus :status yang bisa ditambahkan baru.',
         'date_bill'              => 'Tanggal Tagihan',
         'is_paid'                => 'Sudah Dibayar',
+        'is_delivered'           => 'Sudah Dikirim',
         'notes'                  => 'Catatan',
         'preview_title'          => 'Rincian Perhitungan (Total Batch)',
         'calc_count'             => 'Jumlah Sablon',

@@ -33,6 +33,7 @@ class SaveBillSupplierAction
                 'total_fee'         => $preview['total_fee'],
                 'date_bill'         => $request->input('date_bill'),
                 'is_paid'           => $request->boolean('is_paid'),
+                'is_delivered'      => $request->boolean('is_delivered'),
                 'notes'             => $request->input('notes'),
             ]);
 
@@ -73,6 +74,7 @@ class SaveBillSupplierAction
                     'total_fee'         => $preview['total_fee'],
                     'date_bill'         => $request->input('date_bill'),
                     'is_paid'           => $request->boolean('is_paid'),
+                    'is_delivered'      => $request->boolean('is_delivered'),
                     'notes'             => $request->input('notes'),
                 ]);
 
@@ -91,6 +93,7 @@ class SaveBillSupplierAction
                     'price_supplier_id' => $preview['price_supplier_id'],
                     'date_bill'         => $request->input('date_bill'),
                     'is_paid'           => $request->boolean('is_paid'),
+                    'is_delivered'      => $request->boolean('is_delivered'),
                     'notes'             => $request->input('notes'),
                 ]);
 
@@ -102,7 +105,7 @@ class SaveBillSupplierAction
 
     public function markSablonDelivered(BillSupplier $billSupplier): void
     {
-        if (! $billSupplier->is_paid) {
+        if (! $billSupplier->is_delivered) {
             return;
         }
 

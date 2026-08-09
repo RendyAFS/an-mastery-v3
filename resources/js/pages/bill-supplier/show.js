@@ -111,10 +111,6 @@ const PageScript = (function () {
                 </div>
 
                 <div class="flex items-center gap-1 shrink-0">
-                    <button data-batch="${batch.batch}" title="${batch.is_paid ? window.langBillSupplier.show.mark_unpaid : window.langBillSupplier.show.mark_paid}"
-                        class="btn-toggle-paid p-2 rounded-lg ${batch.is_paid ? "text-(--color-red)" : "text-(--color-success)"} hover:bg-(--color-gray)/20 cursor-pointer">
-                        <i data-lucide="${batch.is_paid ? "x-circle" : "check-circle-2"}" class="size-4"></i>
-                    </button>
                     <a href="${editUrl}" title="${window.langBillSupplier.show.edit}" class="p-2 rounded-lg hover:bg-(--color-gray)/20 cursor-pointer">
                         <i data-lucide="square-pen" class="size-4"></i>
                     </a>
@@ -258,29 +254,6 @@ const PageScript = (function () {
     };
 
     const bindEvents = () => {
-        $(document).on("click", ".btn-toggle-paid", async function () {
-            const batch = $(this).data("batch");
-
-            const confirmed = await Confirm.show(
-                window.langBillSupplier.show.toggle_confirm_message,
-                window.langBillSupplier.show.toggle_confirm_title,
-            );
-            if (!confirmed) return;
-
-            try {
-                await ApiProvider.put(
-                    route("bill_suppliers.batch.toggle-paid", batch),
-                );
-                Toast.success(
-                    window.langCustomAlert.success,
-                    window.langBillSupplier.show.toggle_success,
-                );
-                load();
-            } catch (err) {
-                console.error(err);
-            }
-        });
-
         $(document).on("click", ".btn-delete", async function () {
             const batch = $(this).data("batch");
 

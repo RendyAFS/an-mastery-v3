@@ -18,13 +18,15 @@ class BillSupplier extends Model
         'total_fee',
         'date_bill',
         'is_paid',
+        'is_delivered',
         'notes',
     ];
 
     protected $casts = [
-        'total_fee' => 'integer',
-        'date_bill' => 'date',
-        'is_paid' => 'boolean',
+        'total_fee'    => 'integer',
+        'date_bill'    => 'date',
+        'is_paid'      => 'boolean',
+        'is_delivered' => 'boolean',
     ];
 
     public function supplier(): BelongsTo

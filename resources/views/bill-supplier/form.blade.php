@@ -68,6 +68,16 @@
                 </label>
             </div>
 
+            <div class="mb-4 flex items-center">
+                <input type="checkbox" id="is_delivered" name="is_delivered" value="1"
+                    {{ $isEdit && $isDelivered ? 'checked' : '' }} class="checkbox-custom">
+
+                <label for="is_delivered"
+                    class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">
+                    {{ __('bill-supplier.form.is_delivered') }}
+                </label>
+            </div>
+
             <div class="mb-2 space-y-2">
                 <label for="notes" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     {{ __('bill-supplier.form.notes') }}
