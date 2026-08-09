@@ -41,22 +41,21 @@
             </div>
         </div>
 
-        <div class="col-span-1">
+        <div class="col-span-1 hidden">
             <div class="mb-2 space-y-2">
                 <label for="seri" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                     {{ __('fabric.fields.type_seri') }}
                 </label>
 
-                <input type="number" id="seri" name="seri" min="1" value="{{ $fabric->seri ?? 4 }}"
-                    required
+                <input type="number" id="seri" name="seri" :value="rows.length" readonly
                     class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                       text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                       dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                    text-(--color-dark-gray) font-semibold cursor-not-allowed
+                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-dark-gray)">
             </div>
         </div>
 
         @isset($fabric)
-            <div class="col-span-1">
+            <div class="col-span-1 hidden">
                 <div class="mb-2 space-y-2">
                     <label for="code" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                         {{ __('fabric.fields.code') }}
