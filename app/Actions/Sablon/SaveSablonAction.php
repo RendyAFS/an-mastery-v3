@@ -2,12 +2,17 @@
 
 namespace App\Actions\Sablon;
 
+use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Models\Sablon;
 use Illuminate\Support\Facades\DB;
 
 class SaveSablonAction
 {
+    public function __construct(
+        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
+    ) {}
+
     public function handle(SaveSablonRequest $request, ?Sablon $sablon = null): Sablon
     {
         $data = $request->validated();
@@ -44,6 +49,13 @@ class SaveSablonAction
 
     private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): void
     {
+        $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
+            ->pluck('employee_id')
+            ->merge(collect($employeeDetails)->pluck('employee_id'))
+            ->filter()
+            ->unique()
+            ->values();
+
         $sablon->sablonEmployeeDetails()->delete();
 
         foreach ($employeeDetails as $detail) {
@@ -59,5 +71,15 @@ class SaveSablonAction
                 'notes'              => $detail['notes'] ?? null,
             ]);
         }
+
+        if (! $sablon->date_sablon || $affectedEmployeeIds->isEmpty()) {
+            return;
+        }
+
+        $weekOf = $sablon->date_sablon->toDateString();
+
+        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
+            $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+        });
     }
 }

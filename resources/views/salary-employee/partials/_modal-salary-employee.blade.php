@@ -8,6 +8,10 @@
             'PAID' => __('salary-employee.status.PAID'),
         ]" />
 
+    <p id="salary-employee-locked-hint" class="hidden mt-1 text-xs text-(--color-warning)">
+        {{ __('salary-employee.modal.locked_hint') }}
+    </p>
+
     <div class="mt-4">
         <div class="flex items-center justify-between">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
