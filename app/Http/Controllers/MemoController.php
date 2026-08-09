@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Http\Requests\Memo\SaveMemoRequest;
 use App\Http\Resources\MemoResource;
 use App\Models\Memo;
@@ -10,7 +11,8 @@ use App\Repositories\MemoRepository;
 class MemoController extends Controller
 {
     public function __construct(
-        private MemoRepository $memoRepository
+        private MemoRepository $memoRepository,
+        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
     ) {}
 
     public function index()
@@ -60,7 +62,13 @@ class MemoController extends Controller
     {
         $this->authorize('memos.update');
 
+        $salary = $memo->salaryEmployee;
+
         $memo->update($request->validated());
+
+        if ($salary) {
+            $this->upsertSalaryEmployeeAction->reopenIfPaid($salary);
+        }
 
         return new MemoResource($memo->load('employee'));
     }
@@ -69,7 +77,13 @@ class MemoController extends Controller
     {
         $this->authorize('memos.delete');
 
+        $salary = $memo->salaryEmployee;
+
         $memo->delete();
+
+        if ($salary) {
+            $this->upsertSalaryEmployeeAction->reopenIfPaid($salary);
+        }
 
         return response()->noContent();
     }
@@ -80,6 +94,10 @@ class MemoController extends Controller
 
         $memo = Memo::onlyTrashed()->findOrFail($id);
         $memo->restore();
+
+        if ($memo->salaryEmployee) {
+            $this->upsertSalaryEmployeeAction->reopenIfPaid($memo->salaryEmployee);
+        }
 
         return response()->json(['message' => 'Memo restored successfully']);
     }

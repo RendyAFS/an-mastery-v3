@@ -67,7 +67,7 @@ class SaveSablonAction
                 'is_change'          => $detail['is_change'] ?? false,
                 'employee_change_id' => $detail['employee_change_id'] ?? null,
                 'is_bon'             => $detail['is_bon'] ?? false,
-                'is_paid'           => $detail['is_paid'] ?? false,
+                'is_paid'            => false,
                 'notes'              => $detail['notes'] ?? null,
             ]);
         }

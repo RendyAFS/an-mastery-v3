@@ -125,6 +125,22 @@ class UpsertSalaryEmployeeAction
         });
     }
 
+    public function reopenIfPaid(SalaryEmployee $salary): void
+    {
+        if ($salary->status !== StatusSalaryEmployeeEnum::PAID) {
+            return;
+        }
+
+        $salary->status = StatusSalaryEmployeeEnum::PENDING;
+        $salary->save();
+
+        SablonEmployeeDetail::where('salary_employee_id', $salary->id)
+            ->update(['is_paid' => false]);
+
+        Memo::where('salary_employee_id', $salary->id)
+            ->update(['is_paid' => false]);
+    }
+
     public function handleBulk(Carbon $dateFrom, Carbon $dateTo): int
     {
         $start = $dateFrom->copy()->startOfWeek(Carbon::MONDAY);

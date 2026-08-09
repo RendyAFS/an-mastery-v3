@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Http\Requests\Presence\BulkGeneratePresenceRequest;
 use App\Http\Requests\Presence\SavePresenceRequest;
 use App\Http\Resources\PresenceResource;
 use App\Models\Employee;
+use App\Models\SalaryEmployee;
 use App\Repositories\PresenceRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PresenceController extends Controller
 {
-    public function __construct(protected PresenceRepository $presenceRepository) {}
+    public function __construct(
+        protected PresenceRepository $presenceRepository,
+        protected UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
+    ) {}
 
     public function index()
     {
@@ -67,12 +72,16 @@ class PresenceController extends Controller
             return response()->json(['message' => 'Cannot update presence for a deleted employee'], 422);
         }
 
+        $weekOf = Carbon::parse($request->validated('week_of'))->startOfWeek(Carbon::MONDAY);
+
         $presence = $this->presenceRepository->updateOrCreate(
             $employee->id,
-            Carbon::parse($request->validated('week_of'))->startOfWeek(Carbon::MONDAY),
+            $weekOf,
             $request->days(),
             $request->validated('notes')
         );
+
+        $this->reopenSalaryIfPaid($employee->id, $weekOf);
 
         return (new PresenceResource($presence->load('employee')))
             ->additional(['message' => 'Presence updated successfully']);
@@ -87,7 +96,7 @@ class PresenceController extends Controller
     public function employees()
     {
         return response()->json([
-        'data' => Employee::query()->where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'data' => Employee::query()->where('is_active', true)->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -95,14 +104,31 @@ class PresenceController extends Controller
     {
         $weekOf = Carbon::parse($request->validated('week_of'))->startOfWeek(Carbon::MONDAY);
 
+        $employeeIds = $request->validated('employee_ids');
+
         $count = $this->presenceRepository->bulkGenerate(
-            $request->validated('employee_ids'),
+            $employeeIds,
             $weekOf,
             $request->validated('amount')
         );
 
+        foreach ($employeeIds as $employeeId) {
+            $this->reopenSalaryIfPaid((int) $employeeId, $weekOf);
+        }
+
         return response()->json([
             'message' => "Presence generated successfully for {$count} employee(s)",
         ]);
+    }
+
+    private function reopenSalaryIfPaid(int $employeeId, Carbon $weekOf): void
+    {
+        $salary = SalaryEmployee::where('employee_id', $employeeId)
+            ->where('date', $weekOf->toDateString())
+            ->first();
+
+        if ($salary) {
+            $this->upsertSalaryEmployeeAction->reopenIfPaid($salary);
+        }
     }
 }

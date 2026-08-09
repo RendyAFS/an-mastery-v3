@@ -43,7 +43,6 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.is_change'          => 'nullable|boolean',
             'employee_details.*.employee_change_id' => 'nullable|exists:employees,id|different:employee_details.*.employee_id',
             'employee_details.*.is_bon'             => 'nullable|boolean',
-            'employee_details.*.is_paid'           => 'nullable|boolean',
             'employee_details.*.notes'              => 'nullable|string|max:255',
         ];
     }
