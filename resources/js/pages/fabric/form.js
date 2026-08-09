@@ -96,6 +96,16 @@ const PageScript = (function () {
     function resetForm() {
         form.reset();
 
+        form.querySelectorAll("select[data-hs-select]").forEach((select) => {
+            const instance = HSSelect.getInstance(select);
+            instance?.setValue("");
+
+            const clearBtn = document.querySelector(
+                `[data-clear-select="${select.id}"]`,
+            );
+            if (clearBtn) clearBtn.style.display = "none";
+        });
+
         const data = getAlpineData();
         data.rows = Array.from({ length: 4 }, () => data.buildRow());
     }

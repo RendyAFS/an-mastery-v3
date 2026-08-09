@@ -22,8 +22,8 @@ return [
     'fetch_error'          => 'Gagal mengambil data harga supplier',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier wajib dipilih.',
-            'exists'   => 'Supplier yang dipilih tidak valid.',
+            'required' => 'Konveksi wajib dipilih.',
+            'exists'   => 'Konveksi yang dipilih tidak valid.',
             'unique'   => 'Kombinasi supplier, jenis kain, dan jenis warna sudah digunakan.',
         ],
 

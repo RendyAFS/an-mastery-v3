@@ -14,7 +14,7 @@ class SavePriceSupplierRequest extends FormRequest
 
     public function rules(): array
     {
-        $priceSupplier = $this->route('priceSupplier');
+        $priceSupplier = $this->route('price_supplier');
 
         return [
             'supplier_id' => [
@@ -37,16 +37,16 @@ class SavePriceSupplierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'supplier_id.required'    => __('price_supplier.validation.supplier_id.required'),
-            'supplier_id.exists'      => __('price_supplier.validation.supplier_id.exists'),
-            'supplier_id.unique'      => __('price_supplier.validation.supplier_id.unique'),
-            'type_fabric_id.required' => __('price_supplier.validation.type_fabric_id.required'),
-            'type_fabric_id.exists'   => __('price_supplier.validation.type_fabric_id.exists'),
-            'type_color_id.required'  => __('price_supplier.validation.type_color_id.required'),
-            'type_color_id.exists'    => __('price_supplier.validation.type_color_id.exists'),
-            'price.required'          => __('price_supplier.validation.price.required'),
-            'price.numeric'           => __('price_supplier.validation.price.numeric'),
-            'notes.string'            => __('price_supplier.validation.notes.string'),
+            'supplier_id.required'    => __('price-supplier.validation.supplier_id.required'),
+            'supplier_id.exists'      => __('price-supplier.validation.supplier_id.exists'),
+            'supplier_id.unique'      => __('price-supplier.validation.supplier_id.unique'),
+            'type_fabric_id.required' => __('price-supplier.validation.type_fabric_id.required'),
+            'type_fabric_id.exists'   => __('price-supplier.validation.type_fabric_id.exists'),
+            'type_color_id.required'  => __('price-supplier.validation.type_color_id.required'),
+            'type_color_id.exists'    => __('price-supplier.validation.type_color_id.exists'),
+            'price.required'          => __('price-supplier.validation.price.required'),
+            'price.numeric'           => __('price-supplier.validation.price.numeric'),
+            'notes.string'            => __('price-supplier.validation.notes.string'),
         ];
     }
 

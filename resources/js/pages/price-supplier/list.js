@@ -9,7 +9,7 @@ import Loading from "@/utils/loading";
 const PageScript = (function () {
     let datatable;
     let form;
-    const modelName = window.langModels?.PriceSupplier ?? "Price Supplier";
+    const modelName = window.langModels?.PriceSupplier ?? "Price Konveksi";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);

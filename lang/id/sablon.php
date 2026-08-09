@@ -20,7 +20,7 @@ return [
     'main_info'     => [
         'title'  => 'Info Utama',
         'fields' => [
-            'supplier'             => 'Supplier',
+            'supplier'             => 'Konveksi',
             'fabric'               => 'Kain',
             'image_fabric'         => 'Gambar Kain',
             'type_color'           => 'Jenis Warna',
@@ -34,7 +34,7 @@ return [
             'notes'                => 'Catatan',
         ],
         'placeholders' => [
-            'supplier'       => 'Pilih Supplier',
+            'supplier'       => 'Pilih Konveksi',
             'fabric'         => 'Pilih Kain',
             'image_fabric'   => 'Pilih Gambar Kain',
             'type_color'     => 'Pilih Jenis Warna',
@@ -50,7 +50,7 @@ return [
             'type_fabric'    => 'Cari jenis kain...',
             'price_employee' => 'Cari...',
         ],
-        'hint_choose_supplier_first' => 'Pilih Supplier dulu untuk menampilkan Kain',
+        'hint_choose_supplier_first' => 'Pilih Konveksi dulu untuk menampilkan Kain',
         'hint_total_long_fabric'     => 'Otomatis dari total Detail Kain',
     ],
 
@@ -113,8 +113,8 @@ return [
     'status_updated_success'       => 'Status berhasil diperbarui',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier wajib dipilih.',
-            'exists'   => 'Supplier yang dipilih tidak valid.',
+            'required' => 'Konveksi wajib dipilih.',
+            'exists'   => 'Konveksi yang dipilih tidak valid.',
         ],
 
         'fabric_id' => [

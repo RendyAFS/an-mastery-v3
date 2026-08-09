@@ -1,15 +1,15 @@
 <?php
 return [
-    'description'          => 'Manage price supplier data',
+    'description'          => 'Manage price konveksi data',
     'fields'               => [
-        'supplier'    => 'Supplier',
+        'supplier'    => 'Konveksi',
         'type_fabric' => 'Type Fabric',
         'type_color'  => 'Type Color',
         'price'       => 'Price',
         'notes'       => 'Notes',
     ],
     'placeholders'         => [
-        'supplier'    => 'Choose Supplier',
+        'supplier'    => 'Choose Konveksi',
         'type_fabric' => 'Choose Type Fabric',
         'type_color'  => 'Choose Type Color',
     ],
@@ -22,7 +22,7 @@ return [
     'fetch_error'          => 'Failed to fetch price supplier data',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier is required.',
+            'required' => 'Konveksi is required.',
             'exists'   => 'Please select a valid supplier.',
             'unique'   => 'This supplier, fabric type, and color type combination already exists.',
         ],

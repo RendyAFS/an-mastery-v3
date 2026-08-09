@@ -27,13 +27,41 @@ const PageScript = (function () {
         return Alpine.$data(container);
     }
 
+    function resetHsSelects(form) {
+        form.querySelectorAll("select[data-hs-select]").forEach((select) => {
+            const instance = HSSelect.getInstance(select);
+            instance?.setValue("");
+
+            const clearBtn = document.querySelector(
+                `[data-clear-select="${select.id}"]`,
+            );
+            if (clearBtn) clearBtn.style.display = "none";
+        });
+    }
+
     function resetForm() {
         form.reset();
+
         const data = getAlpineData();
+
+        const fabricEl = document.getElementById("fabric_id");
+        if (fabricEl) {
+            const hsInstance = HSSelect.getInstance(fabricEl);
+            [...fabricEl.options].forEach((opt) => {
+                if (opt.value !== "") hsInstance?.removeOption(opt.value);
+            });
+        }
+
+        resetHsSelects(form);
+
         data.fabricRows = [];
         data.employeeRows = [];
+        data.fabricOptions = [];
         data.selectedFabricId = null;
         data.selectedSupplierId = null;
+        data.selectedPriceEmployeeId = null;
+        data.selectedTypeColorId = null;
+        data.totalSablon = 0;
     }
 
     function getFabricDetails(data) {

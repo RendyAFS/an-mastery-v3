@@ -12,7 +12,7 @@ import {
 
 const PageScript = (function () {
     let form, mode, batch, supplierId, weekStart, weekEnd;
-    const modelName = window.langModels?.BillSupplier ?? "Bill Supplier";
+    const modelName = window.langModels?.BillSupplier ?? "Bill Konveksi";
 
     const renderSablonCards = (sablons) => {
         const listContainer = $("#sablon-modal-list");

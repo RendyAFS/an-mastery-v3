@@ -51,8 +51,8 @@ return [
     'fetch_error'                  => 'Gagal mengambil data kain',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier wajib dipilih.',
-            'exists'   => 'Supplier tidak ditemukan.',
+            'required' => 'Konveksi wajib dipilih.',
+            'exists'   => 'Konveksi tidak ditemukan.',
         ],
 
         'type_fabric_id' => [

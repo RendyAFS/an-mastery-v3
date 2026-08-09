@@ -7,7 +7,7 @@ import trans from "@/utils/trans";
 const PageScript = (function () {
     let datatable;
     let form;
-    const modelName = window.langModels?.Supplier ?? "Supplier";
+    const modelName = window.langModels?.Supplier ?? "Konveksi";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);

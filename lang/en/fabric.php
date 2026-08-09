@@ -9,7 +9,7 @@ return [
         'reset'      => 'Reset Filter',
     ],
     'fields'             => [
-        'supplier'    => 'Supplier',
+        'supplier'    => 'Konveksi',
         'code'        => 'Code',
         'type_seri'   => 'Type Seri',
         'stock_total' => 'Stock Total',
@@ -19,7 +19,7 @@ return [
         'date_coming' => 'Date Coming',
     ],
     'placeholders'        => [
-        'supplier'    => 'Choose Supplier',
+        'supplier'    => 'Choose Konveksi',
         'type_fabric' => 'Choose Type Fabric',
         'color'       => 'Choose Color',
     ],
@@ -30,7 +30,7 @@ return [
     ],
     'hints'              => [
         'total_stock' => 'Automatically calculated from Fabric Detail total stock',
-        'code'        => 'Code is automatically generated from Supplier and timestamp',
+        'code'        => 'Code is automatically generated from Konveksi and timestamp',
     ],
     'clear_selection'    => 'Clear selection',
     'no_color_found'     => 'No color found',
@@ -51,8 +51,8 @@ return [
     'fetch_error'                  => 'Failed to fetch fabric data',
     'validation' => [
         'supplier_id' => [
-            'required' => 'Supplier is required.',
-            'exists'   => 'Supplier does not exist.',
+            'required' => 'Konveksi is required.',
+            'exists'   => 'Konveksi does not exist.',
         ],
 
         'type_fabric_id' => [

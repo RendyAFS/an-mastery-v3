@@ -35,9 +35,12 @@ const PageScript = (function () {
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
         const currentWeek = getISOWeekString(new Date());
+        const nextWeek = getISOWeekString(
+            new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+        );
 
         $("#filter-week-start").val(params.get("week_start") || currentWeek);
-        $("#filter-week-end").val(params.get("week_end") || currentWeek);
+        $("#filter-week-end").val(params.get("week_end") || nextWeek);
     };
 
     const syncUrl = () => {
@@ -51,8 +54,12 @@ const PageScript = (function () {
 
     const setDefaultWeekFilters = () => {
         const currentWeek = getISOWeekString(new Date());
+        const nextWeek = getISOWeekString(
+            new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+        );
+
         $("#filter-week-start").val(currentWeek);
-        $("#filter-week-end").val(currentWeek);
+        $("#filter-week-end").val(nextWeek);
         syncUrl();
     };
 
