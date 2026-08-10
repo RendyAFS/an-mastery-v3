@@ -9,12 +9,15 @@ export const renderPresences = (presences) => {
         return;
     }
 
+    const formatRupiah = (value) =>
+        "Rp" + Number(value || 0).toLocaleString("id-ID");
+
     const rows = presences
         .map(
             (p) => `
                 <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-(--color-gray)/10">
                     <span class="text-sm">${p.name}</span>
-                    <span class="text-sm font-semibold">${p.total}</span>
+                    <span class="text-sm font-semibold">${formatRupiah(p.total)}</span>
                 </div>
             `,
         )
