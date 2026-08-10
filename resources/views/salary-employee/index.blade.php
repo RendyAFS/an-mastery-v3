@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <x-cardgrid id="salary-employee-cardgrid" filterId="filter-salary-employee" :defaultLength="12" :lengthOptions="[12, 24, 48]"
+        <x-cardgrid id="salary-employee-cardgrid" filterId="filter-salary-employee" :defaultLength="48" :lengthOptions="[12, 24, 48]"
             :filterOptions="[
                 'PENDING' => __('enums.status_salary_employee.PENDING'),
                 'PAID' => __('enums.status_salary_employee.PAID'),

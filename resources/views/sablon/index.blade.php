@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="12" :lengthOptions="[12, 24, 48]" />
+        <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="48" :lengthOptions="[12, 24, 48]" />
     </div>
 
     @include('sablon.partials._modal-update-status')
