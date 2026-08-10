@@ -119,17 +119,17 @@ return [
         'url'  => '/salary-employees',
     ],
 
-    // Gallery
-    [
-        'name' => 'Gallery',
-        'icon' => 'image',
-        'url'  => '/galleries',
-    ],
-
     // Memo
     [
         'name' => 'Memo',
         'icon' => 'file-text',
         'url'  => '/memos',
+    ],
+
+    // Gallery
+    [
+        'name' => 'Gallery',
+        'icon' => 'image',
+        'url'  => '/galleries',
     ],
 ];
