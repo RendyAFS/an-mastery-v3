@@ -64,13 +64,15 @@ class PresenceRepository
         );
     }
 
-    public function bulkGenerate(array $employeeIds, Carbon $weekOf, int $amount): int
+    public function bulkGenerate(array $employeeIds, Carbon $weekOf, int $amount, array $days): int
     {
-        $generateDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        $values = array_fill_keys($this->days, 0);
 
-        $values = array_fill_keys($generateDays, $amount);
-        $values['sunday'] = 0;
-        $values['total']  = $amount * count($generateDays);
+        foreach ($days as $day) {
+            $values[$day] = $amount;
+        }
+
+        $values['total'] = $amount * count($days);
 
         return DB::transaction(function () use ($employeeIds, $weekOf, $values) {
             $count = 0;

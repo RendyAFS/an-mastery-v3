@@ -109,7 +109,8 @@ class PresenceController extends Controller
         $count = $this->presenceRepository->bulkGenerate(
             $employeeIds,
             $weekOf,
-            $request->validated('amount')
+            $request->validated('amount'),
+            $request->validated('days')
         );
 
         foreach ($employeeIds as $employeeId) {

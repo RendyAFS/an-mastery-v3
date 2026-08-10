@@ -72,6 +72,36 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+                                {{ __('presence.bulk.days') }}
+                            </label>
+                            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                                <input type="checkbox" id="bulk_check_all_days" class="checkbox-custom" checked />
+                                {{ __('presence.bulk.select_all_days') }}
+                            </label>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ([
+                                'monday' => __('presence.days.monday'),
+                                'tuesday' => __('presence.days.tuesday'),
+                                'wednesday' => __('presence.days.wednesday'),
+                                'thursday' => __('presence.days.thursday'),
+                                'friday' => __('presence.days.friday'),
+                                'saturday' => __('presence.days.saturday'),
+                                'sunday' => __('presence.days.sunday'),
+                            ] as $key => $label)
+                                <label class="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg
+                                    border border-(--color-gray) dark:border-(--color-slate) cursor-pointer">
+                                    <input type="checkbox" class="bulk-day-checkbox checkbox-custom" data-day="{{ $key }}" value="{{ $key }}"
+                                        {{ $key !== 'sunday' ? 'checked' : '' }} />
+                                    {{ $label }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                                 {{ __('presence.bulk.employees') }}
                             </label>
                             <label class="flex items-center gap-2 text-sm cursor-pointer">

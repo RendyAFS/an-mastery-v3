@@ -43,9 +43,14 @@ return [
             'date'     => 'Week must be a valid date.',
         ],
 
+        'select_all_days'   => 'Select all (Mon-Sat)',
+        'select_day_error'  => 'Please select at least one day',
+
         'days' => [
-            'integer' => 'Attendance value must be an integer.',
-            'min'     => 'Attendance value must be at least 0.',
+            'required' => 'Please select at least one day.',
+            'min'      => 'Please select at least one day.',
+            'integer'  => 'Attendance value must be an integer.',
+            'in'       => 'Selected day is invalid.',
         ],
 
         'amount' => [

@@ -50,6 +50,10 @@ const BulkGenerateModal = (function () {
         $("#bulk_amount").val("0");
         RupiahInput.refresh(document.getElementById("bulk_amount"));
         $("#bulk_check_all").prop("checked", false);
+        $("#bulk_check_all_days").prop("checked", true);
+        $(".bulk-day-checkbox").each(function () {
+            $(this).prop("checked", $(this).data("day") !== "sunday");
+        });
 
         renderEmployeeList([]);
         const employees = await loadEmployees();
@@ -74,6 +78,11 @@ const BulkGenerateModal = (function () {
     const submit = async (submitter) => {
         const weekValue = $("#bulk_week_of").val();
         const amount = rawNumber($("#bulk_amount").val());
+        const days = $(".bulk-day-checkbox:checked")
+            .map(function () {
+                return $(this).val();
+            })
+            .get();
         const employeeIds = $(".bulk-employee-checkbox:checked")
             .map(function () {
                 return $(this).val();
@@ -84,6 +93,15 @@ const BulkGenerateModal = (function () {
             Toast.error(
                 window.langCustomAlert.error,
                 window.langPresence.bulk.select_week_error,
+            );
+            stopLoading(submitter);
+            return;
+        }
+
+        if (days.length === 0) {
+            Toast.error(
+                window.langCustomAlert.error,
+                window.langPresence.bulk.select_day_error,
             );
             stopLoading(submitter);
             return;
@@ -101,6 +119,7 @@ const BulkGenerateModal = (function () {
         const payload = {
             week_of: isoWeekToDateStr(weekValue),
             amount,
+            days,
             employee_ids: employeeIds,
         };
 
@@ -142,6 +161,27 @@ const BulkGenerateModal = (function () {
             $("#bulk_check_all").prop(
                 "checked",
                 total > 0 && total === checked,
+            );
+        });
+
+        $(document).on("change", "#bulk_check_all_days", function () {
+            const isChecked = $(this).is(":checked");
+            $(".bulk-day-checkbox").each(function () {
+                if ($(this).data("day") !== "sunday") {
+                    $(this).prop("checked", isChecked);
+                }
+            });
+        });
+
+        $(document).on("change", ".bulk-day-checkbox", function () {
+            const weekdays = $(".bulk-day-checkbox").filter(function () {
+                return $(this).data("day") !== "sunday";
+            });
+            const checkedWeekdays = weekdays.filter(":checked");
+            $("#bulk_check_all_days").prop(
+                "checked",
+                weekdays.length > 0 &&
+                    weekdays.length === checkedWeekdays.length,
             );
         });
 

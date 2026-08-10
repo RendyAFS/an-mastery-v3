@@ -43,11 +43,16 @@ return [
             'date'     => 'Format minggu tidak valid.',
         ],
 
-        'days' => [
-            'integer' => 'Jumlah kehadiran harus berupa angka.',
-            'min'     => 'Jumlah kehadiran minimal 0.',
-        ],
+        'select_all_days'   => 'Pilih semua (Sen-Sab)',
+        'select_day_error'  => 'Silakan pilih minimal satu hari',
 
+        'days' => [
+            'required' => 'Pilih minimal satu hari.',
+            'min'      => 'Pilih minimal satu hari.',
+            'integer'  => 'Jumlah kehadiran harus berupa angka.',
+            'in'       => 'Hari yang dipilih tidak valid.',
+        ],
+        
         'amount' => [
             'required' => 'Nominal per hari wajib diisi.',
             'integer'  => 'Nominal per hari harus berupa angka.',
