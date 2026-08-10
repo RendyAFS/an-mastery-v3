@@ -6,7 +6,7 @@ return [
     'filter'       => [
         'week_start' => 'From Week',
         'week_end'   => 'To Week',
-        'reset'      => 'Reset Filter',
+        'reset'      => 'Reset',
     ],
     'fields'             => [
         'supplier'    => 'Konveksi',
