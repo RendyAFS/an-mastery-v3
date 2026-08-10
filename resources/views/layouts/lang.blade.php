@@ -29,6 +29,7 @@
         'unknownError' => __('api-provider.Unknown Error'),
     ];
     // CRUD
+    $langDashboard = collect(trans('dashboard'))->toArray();
     $langUser = collect(trans('user'))->toArray();
     $langEmployee = collect(trans('employee'))->toArray();
     $langRole = collect(trans('role'))->toArray();
@@ -58,6 +59,7 @@
     window.langFilepond = @json($langFilepond);
     window.langEnums = @json($langEnums);
     // CRUD
+    window.langDashboard = @json($langDashboard);
     window.langUser = @json($langUser);
     window.langEmployee = @json($langEmployee);
     window.langRole = @json($langRole);

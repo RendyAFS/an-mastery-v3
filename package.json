@@ -27,6 +27,7 @@
         "@pqina/pintura": "^8.95.7",
         "@preline/datatable": "^3.2.3",
         "alpinejs": "^3.15.3",
+        "apexcharts": "^6.8.0",
         "datatables.net-dt": "^2.3.6",
         "filepond": "^4.32.11",
         "filepond-plugin-file-validate-type": "^1.2.9",

@@ -9,6 +9,8 @@ Route::get('/locale/{locale}', [App\Http\Controllers\LocaleController::class, 's
 
 Route::middleware(['auth', 'check.active'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/fabrics', [App\Http\Controllers\DashboardController::class, 'fabrics'])->name('dashboard.fabrics');
+    Route::get('/dashboard/latest-sablons', [App\Http\Controllers\DashboardController::class, 'latestSablons'])->name('dashboard.latest-sablons');
 
     // Filepond
     Route::post('/filepond/process', [App\Http\Controllers\FilepondController::class, 'process'])->name('filepond.process');

@@ -1,27 +1,11 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import trans from "@/utils/trans";
+import { dateToIsoWeek } from "@/utils/week";
 
 const PageScript = (function () {
     let datatable;
     const modelName = window.langModels?.Fabric ?? "Fabric";
-
-    const getISOWeekString = (date) => {
-        const target = new Date(date.valueOf());
-        const dayNr = (date.getDay() + 6) % 7;
-        target.setDate(target.getDate() - dayNr + 3);
-
-        const firstThursday = target.valueOf();
-        target.setMonth(0, 1);
-
-        if (target.getDay() !== 4) {
-            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-        }
-
-        const week = 1 + Math.round((firstThursday - target) / 604800000);
-
-        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
-    };
 
     const getMonthWeekRange = () => {
         const now = new Date();
@@ -29,8 +13,8 @@ const PageScript = (function () {
         const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
         return {
-            start: getISOWeekString(firstDay),
-            end: getISOWeekString(lastDay),
+            start: dateToIsoWeek(firstDay),
+            end: dateToIsoWeek(lastDay),
         };
     };
 

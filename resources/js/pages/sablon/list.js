@@ -1,6 +1,7 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
 import trans from "@/utils/trans";
+import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
 
 const statusBadgeMap = {
     ON_PROGRESS: "badge-warning",
@@ -13,34 +14,15 @@ const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.Sablon ?? "Sablon";
 
-    const getISOWeekString = (date) => {
-        const target = new Date(date.valueOf());
-        const dayNr = (date.getDay() + 6) % 7;
-        target.setDate(target.getDate() - dayNr + 3);
-
-        const firstThursday = target.valueOf();
-        target.setMonth(0, 1);
-
-        if (target.getDay() !== 4) {
-            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-        }
-
-        const week = 1 + Math.round((firstThursday - target) / 604800000);
-
-        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
-    };
-
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
-        const currentWeek = getISOWeekString(new Date());
-        const nextWeek = getISOWeekString(
-            new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-        );
 
-        $("#filter-week-start").val(params.get("week_start") || currentWeek);
-        $("#filter-week-end").val(params.get("week_end") || nextWeek);
+        $("#filter-week-start").val(
+            params.get("week_start") || currentIsoWeek(),
+        );
+        $("#filter-week-end").val(params.get("week_end") || nextIsoWeek());
     };
 
     const syncUrl = () => {
@@ -53,13 +35,8 @@ const PageScript = (function () {
     };
 
     const setDefaultWeekFilters = () => {
-        const currentWeek = getISOWeekString(new Date());
-        const nextWeek = getISOWeekString(
-            new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-        );
-
-        $("#filter-week-start").val(currentWeek);
-        $("#filter-week-end").val(nextWeek);
+        $("#filter-week-start").val(currentIsoWeek());
+        $("#filter-week-end").val(nextIsoWeek());
         syncUrl();
     };
 
@@ -281,7 +258,7 @@ const PageScript = (function () {
                 },
             },
             renderCard,
-            pageLength: 12,
+            pageLength: 48,
             cardClickRoute: (row) => route("sablons.edit", row.id),
         });
     };

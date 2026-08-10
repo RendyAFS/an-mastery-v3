@@ -73,6 +73,22 @@ export const currentMonday = () => {
 export const currentIsoWeek = () => dateToIsoWeek(currentMonday());
 
 /**
+ * Get the Monday of next week (local time).
+ * @returns {Date}
+ */
+export const nextMonday = () => {
+    const monday = currentMonday();
+    monday.setDate(monday.getDate() + 7);
+    return monday;
+};
+
+/**
+ * Get next week as an ISO week string ("2026-W27").
+ * @returns {string}
+ */
+export const nextIsoWeek = () => dateToIsoWeek(nextMonday());
+
+/**
  * Convert an ISO week string directly to a "YYYY-MM-DD" Monday date string.
  * Convenience wrapper for the common isoWeekToMonday -> toDateStr chain.
  * @param {string} isoWeekStr

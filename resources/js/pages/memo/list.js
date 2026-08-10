@@ -3,6 +3,7 @@ import initDatatable from "@/utils/datatable";
 import "@/utils/custom-select";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import trans from "@/utils/trans";
+import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
 
 const formatRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
@@ -75,12 +76,11 @@ const PageScript = (function () {
     };
 
     const setDefaultFilter = () => {
-        const currentWeek = getISOWeekString(new Date());
         const startEl = document.getElementById("filter-week-start");
         const endEl = document.getElementById("filter-week-end");
 
-        if (startEl && !startEl.value) startEl.value = currentWeek;
-        if (endEl && !endEl.value) endEl.value = currentWeek;
+        if (startEl && !startEl.value) startEl.value = currentIsoWeek();
+        if (endEl && !endEl.value) endEl.value = nextIsoWeek();
     };
 
     const initDataTable = () => {
@@ -455,9 +455,9 @@ const PageScript = (function () {
         });
 
         $(document).on("click", "#btn-reset-filter", () => {
-            const currentWeek = getISOWeekString(new Date());
-            document.getElementById("filter-week-start").value = currentWeek;
-            document.getElementById("filter-week-end").value = currentWeek;
+            document.getElementById("filter-week-start").value =
+                currentIsoWeek();
+            document.getElementById("filter-week-end").value = nextIsoWeek();
             reloadDatatable();
         });
     };

@@ -1,6 +1,7 @@
 import ApiProvider from "@/utils/api-provider";
 import RupiahInput from "@/utils/rupiah-input";
 import trans from "@/utils/trans";
+import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
 
 const PageScript = (function () {
     let supplierId;
@@ -8,23 +9,6 @@ const PageScript = (function () {
     let weekEnd;
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
-
-    const getISOWeekString = (date) => {
-        const target = new Date(date.valueOf());
-        const dayNr = (date.getDay() + 6) % 7;
-        target.setDate(target.getDate() - dayNr + 3);
-
-        const firstThursday = target.valueOf();
-        target.setMonth(0, 1);
-
-        if (target.getDay() !== 4) {
-            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-        }
-
-        const week = 1 + Math.round((firstThursday - target) / 604800000);
-
-        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
-    };
 
     const summaryCard = (label, value, icon) => `
         <div class="rounded-xl bg-white/12 backdrop-blur border border-white/20 p-4 flex items-center gap-3">
@@ -198,9 +182,8 @@ const PageScript = (function () {
     };
 
     const initFilters = () => {
-        const currentWeek = getISOWeekString(new Date());
-        weekStart = weekStart || currentWeek;
-        weekEnd = weekEnd || currentWeek;
+        weekStart = weekStart || currentIsoWeek();
+        weekEnd = weekEnd || nextIsoWeek();
 
         $("#filter-week-start").val(weekStart);
         $("#filter-week-end").val(weekEnd);
@@ -291,9 +274,8 @@ const PageScript = (function () {
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            const currentWeek = getISOWeekString(new Date());
-            weekStart = currentWeek;
-            weekEnd = currentWeek;
+            weekStart = currentIsoWeek();
+            weekEnd = nextIsoWeek();
             $("#filter-week-start").val(weekStart);
             $("#filter-week-end").val(weekEnd);
             syncUrl();
