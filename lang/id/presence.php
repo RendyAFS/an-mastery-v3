@@ -19,15 +19,18 @@ return [
         'sunday'    => 'Minggu',
     ],
     'bulk'                     => [
-        'title'              => 'Generate Kehadiran',
-        'week_of'            => 'Minggu Ke',
-        'nominal_per_day'     => 'Nominal per hari',
-        'employees'          => 'Karyawan',
-        'select_all'         => 'Pilih semua',
-        'no_employees_found' => 'Karyawan tidak ditemukan',
-        'select_week_error'  => 'Silakan pilih minggu',
-        'select_employee_error' => 'Silakan pilih minimal satu karyawan',
-        'generated_success'  => 'Kehadiran berhasil di-generate',
+        'title'                  => 'Generate Kehadiran',
+        'week_of'                => 'Minggu Ke',
+        'nominal_per_day'        => 'Nominal per hari',
+        'days'                   => 'Hari',
+        'select_all_days'        => 'Pilih semua (Senin-Sabtu)',
+        'employees'              => 'Karyawan',
+        'select_all'             => 'Pilih semua',
+        'no_employees_found'     => 'Karyawan tidak ditemukan',
+        'select_week_error'      => 'Silakan pilih minggu',
+        'select_day_error'       => 'Silakan pilih minimal satu hari',
+        'select_employee_error'  => 'Silakan pilih minimal satu karyawan',
+        'generated_success'      => 'Kehadiran berhasil di-generate',
     ],
     'updated_success'          => 'Kehadiran berhasil diperbarui',
     'fetch_error'              => 'Gagal mengambil data kehadiran',
@@ -43,16 +46,13 @@ return [
             'date'     => 'Format minggu tidak valid.',
         ],
 
-        'select_all_days'   => 'Pilih semua (Sen-Sab)',
-        'select_day_error'  => 'Silakan pilih minimal satu hari',
-
         'days' => [
             'required' => 'Pilih minimal satu hari.',
             'min'      => 'Pilih minimal satu hari.',
             'integer'  => 'Jumlah kehadiran harus berupa angka.',
             'in'       => 'Hari yang dipilih tidak valid.',
         ],
-        
+
         'amount' => [
             'required' => 'Nominal per hari wajib diisi.',
             'integer'  => 'Nominal per hari harus berupa angka.',
