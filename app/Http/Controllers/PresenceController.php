@@ -69,7 +69,7 @@ class PresenceController extends Controller
     public function update(SavePresenceRequest $request, Employee $employee)
     {
         if ($employee->trashed()) {
-            return response()->json(['message' => 'Cannot update presence for a deleted employee'], 422);
+            return response()->json(['message' => __('presence.deleted_employee_error')], 422);
         }
 
         $weekOf = Carbon::parse($request->validated('week_of'))->startOfWeek(Carbon::MONDAY);
@@ -83,8 +83,12 @@ class PresenceController extends Controller
 
         $this->reopenSalaryIfPaid($employee->id, $weekOf);
 
+        $message = $presence->wasRecentlyCreated
+            ? __('presence.created_success')
+            : __('presence.updated_success');
+
         return (new PresenceResource($presence->load('employee')))
-            ->additional(['message' => 'Presence updated successfully']);
+            ->additional(['message' => $message]);
     }
 
     private function resolveWeekOf(?string $date): Carbon
