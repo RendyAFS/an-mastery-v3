@@ -26,6 +26,7 @@ return [
         'nominal' => 'Nominal',
         'notes' => 'Catatan',
         'notes_placeholder' => 'Masukkan Catatan',
+        'locked_hint' => 'Tidak dapat mengedit gaji  yang sudah dibayar ubah ke Belum Dibayar terlebih dahulu',
     ],
     'card' => [
         'no_sablon_data' => 'Belum ada data sablon',

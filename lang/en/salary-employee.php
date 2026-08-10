@@ -26,6 +26,7 @@ return [
         'nominal' => 'Nominal',
         'notes' => 'Notes',
         'notes_placeholder' => 'Notes',
+        'locked_hint' => 'Cannot edit paid salary locked change to Unpaid first',
     ],
     'card' => [
         'no_sablon_data' => 'No sablon data yet',
