@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.TypeColor')])
 
 @push('scripts')
-    @vite('resources/js/pages/type-color/list.js')
+    @vite('resources/js/pages/type-color/index.js')
 @endpush
 
 @section('content')

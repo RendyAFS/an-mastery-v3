@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.Sablon')])
 
 @push('scripts')
-    @vite('resources/js/pages/sablon/list.js')
+    @vite('resources/js/pages/sablon/index.js')
 @endpush
 
 @section('content')

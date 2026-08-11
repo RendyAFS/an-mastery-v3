@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.PriceSupplier')])
 
 @push('scripts')
-    @vite('resources/js/pages/price-supplier/list.js')
+    @vite('resources/js/pages/price-supplier/index.js')
 @endpush
 
 @section('content')

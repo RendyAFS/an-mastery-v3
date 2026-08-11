@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.Fabric')])
 
 @push('scripts')
-    @vite('resources/js/pages/fabric/list.js')
+    @vite('resources/js/pages/fabric/index.js')
 @endpush
 
 @section('content')

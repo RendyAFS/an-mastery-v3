@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.Gallery')])
 
 @push('scripts')
-    @vite('resources/js/pages/gallery/list.js')
+    @vite('resources/js/pages/gallery/index.js')
 @endpush
 
 @section('content')

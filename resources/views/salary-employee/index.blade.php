@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.SalaryEmployee')])
 
 @push('scripts')
-    @vite('resources/js/pages/salary-employee/list.js')
+    @vite('resources/js/pages/salary-employee/index.js')
 @endpush
 
 @section('content')

@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.ColorFabric')])
 
 @push('scripts')
-    @vite('resources/js/pages/color-fabric/list.js')
+    @vite('resources/js/pages/color-fabric/index.js')
 @endpush
 
 @section('content')

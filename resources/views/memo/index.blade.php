@@ -1,7 +1,7 @@
 @extends('layouts.main', ['title' => __('models.Memo')])
 
 @push('scripts')
-    @vite('resources/js/pages/memo/list.js')
+    @vite('resources/js/pages/memo/index.js')
 @endpush
 
 @section('content')
