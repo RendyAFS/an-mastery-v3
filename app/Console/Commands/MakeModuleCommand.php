@@ -107,7 +107,7 @@ class MakeModuleCommand extends Command
             $files = [
                 "{$baseViewPath}/index.blade.php",
                 "{$baseViewPath}/form.blade.php",
-                "{$baseJsPath}/list.js",
+                "{$baseJsPath}/index.js",
             ];
 
             if ($isSimple) {

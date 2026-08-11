@@ -14,7 +14,7 @@ Gunakan panduan ini setiap kali Anda membuat file JS baru di folder `resources/j
 5. **AlpineJS Bindings**: Modul interaksi baris formulir kompleks menggunakan inisialisasi reaktivitas AlpineJS yang dihubungkan dengan daur hidup PageScript.
 
 ## Struktur
-Setiap halaman JavaScript standar (`list.js` atau `form.js`) terstruktur sebagai berikut:
+Setiap halaman JavaScript standar (`index.js` atau `form.js`) terstruktur sebagai berikut:
 - **Bagian Import**: Memuat dependensi global kustom (misal: `ApiProvider`, `initDatatable`, `normalizeFormInputs`).
 - **Deklarasi PageScript**: Fungsi modul IIFE utama.
   - Deklarasi state internal halaman (misal: variabel datatable, parameter filter).
@@ -27,7 +27,7 @@ Setiap halaman JavaScript standar (`list.js` atau `form.js`) terstruktur sebagai
 
 ## Contoh implementasi
 Implementasi nyata Javascript untuk modul standard dan asinkron:
-- Kode Halaman Supplier: [list.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/list.js)
+- Kode Halaman Supplier: [index.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/index.js)
 - Pustaka AJAX Provider: [api-provider.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/api-provider.js)
 
 ## Contoh kode

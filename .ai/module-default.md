@@ -23,7 +23,7 @@ Jika Anda membuat modul bernama `Sablon`, generator akan menghasilkan berkas-ber
   - `resources/views/sablon/create.blade.php` (Halaman pembungkus form tambah)
   - `resources/views/sablon/edit.blade.php` (Halaman pembungkus form edit)
 - **Javascript**:
-  - `resources/js/pages/sablon/list.js` (Mengontrol tabel/grid di halaman index)
+  - `resources/js/pages/sablon/index.js` (Mengontrol tabel/grid di halaman index)
   - `resources/js/pages/sablon/form.js` (Mengontrol interaksi/validasi form)
   - `resources/js/pages/sablon/alpine-component.js` (Mengolah reaktivitas tabel dinamis - opsional)
 
@@ -69,7 +69,7 @@ public function edit(Sablon $sablon)
 - [ ] Apakah rute resource untuk modul default sudah didaftarkan di `web.php`?
 - [ ] Apakah berkas `form.blade.php` sudah di-include di dalam `create.blade.php` dan `edit.blade.php`?
 - [ ] Apakah form submit di Javascript sudah menangani pengalihan halaman kembali ke index (`window.location.href = route('...')`) setelah proses simpan berhasil?
-- [ ] Apakah file JavaScript untuk halaman list (`list.js`) dan halaman form (`form.js`) terpisah secara modular?
+- [ ] Apakah file JavaScript untuk halaman list (`index.js`) dan halaman form (`form.js`) terpisah secara modular?
 
 ## Best Practice
 - **Pisahkan Logika Form**: Simpan kode baris dinamis (seperti perhitungan nominal otomatis) di dalam berkas AlpineJS kustom (`alpine-component.js`) dan biarkan `page-script.js` fokus mengontrol pengiriman request AJAX dan penanganan response.
