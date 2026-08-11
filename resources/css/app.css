@@ -1,6 +1,7 @@
 @import "./theme.css";
 @import "tailwindcss";
 @import "./loading.css";
+@import "./splash.css";
 
 /* Toggling Manual Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));

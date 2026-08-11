@@ -379,7 +379,7 @@
     }
 }"
     x-effect="document.body.style.overflow = modalOpen ? 'hidden' : ''">
-
+    <x-splash-screen />
     {{-- NAVBAR --}}
     <nav class="landing-nav sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">

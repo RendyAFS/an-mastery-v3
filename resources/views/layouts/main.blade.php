@@ -33,7 +33,6 @@
 </head>
 
 <body>
-    <x-custom-alert top="top-22" right="right-4" align="align-end" />
     <x-sidebar />
 
     <div id="app-content-area" class="transition-all duration-300 lg:ms-64 hs-overlay-minified:lg:ms-14">

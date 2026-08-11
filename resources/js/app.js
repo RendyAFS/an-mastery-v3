@@ -15,6 +15,9 @@ import "./utils/number-input";
 
 import disableNumberScroll from "./utils/disable-number-scroll";
 import initUi from "./utils/ui-init";
+import initSplashScreen from "./utils/splash-screen";
+
+initSplashScreen();
 
 document.addEventListener("DOMContentLoaded", () => {
     initUi();
