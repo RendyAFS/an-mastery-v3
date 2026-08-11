@@ -1,7 +1,7 @@
 # Repository Pattern Standards (repository.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar implementasi **Repository Pattern** di backend proyek **AN Mastery V3**. Pola ini mengisolasi logika query basis data agar tidak tersebar di controller maupun model.
+Dokumen ini menjelaskan standar implementasi **Repository Pattern** di backend proyek ini. Pola ini mengisolasi logika query basis data agar tidak tersebar di controller maupun model.
 
 ## Kapan digunakan
 Gunakan panduan ini setiap kali Anda menulis query pembacaan data, manipulasi pengambilan data bertingkat (`with` relationships), filter pencarian, pagination, atau seleksi data opsi drop-down.
@@ -18,22 +18,22 @@ Setiap kelas Repository terletak di bawah folder `app/Repositories/` dan dinamai
 - `findWithDetails(Model $model)`: Memuat kembali instansi model beserta seluruh eager-loaded relasinya untuk halaman detail atau form edit.
 
 ## Contoh implementasi
-Pola repository dapat dipelajari pada berkas:
-- Repositori Supplier: [SupplierRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SupplierRepository.php)
-- Repositori Sablon: [SablonRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SablonRepository.php)
+Referensi repository yang sudah ada di proyek ini:
+- Repository Simple (tanpa relasi): [SupplierRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SupplierRepository.php)
+- Repository Kompleks (dengan relasi): [SablonRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SablonRepository.php)
 
 ## Contoh kode
-Berikut adalah contoh implementasi pencarian dan data select dinamis di Repository:
+Berikut adalah contoh implementasi pencarian dan data select dinamis di Repository (ganti `{Module}` dengan nama modul Anda):
 ```php
 namespace App\Repositories;
 
-use App\Models\Supplier;
+use App\Models\{Module};
 
-class SupplierRepository
+class {Module}Repository
 {
     public function getAll($filter = 'active')
     {
-        $query = Supplier::query()->orderBy('id', 'desc');
+        $query = {Module}::query()->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {
             $query->onlyTrashed();
@@ -46,12 +46,17 @@ class SupplierRepository
 
     public function getDataSelect(?string $search = null, ?int $id = null, int $limit = 10, int $page = 1)
     {
-        return Supplier::query()
+        return {Module}::query()
             ->select('id', 'name')
             ->when($id, fn($query) => $query->whereKey($id))
             ->when($search, fn($query) => $query->where('name', 'like', "%{$search}%"))
             ->orderBy('name')
             ->paginate($limit, ['*'], 'page', $page);
+    }
+
+    public function findWithDetails({Module} $model): {Module}
+    {
+        return $model->loadMissing(['relation1', 'relation2']);
     }
 }
 ```

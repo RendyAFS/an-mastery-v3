@@ -1,28 +1,28 @@
 # Simple Module Development Guide (module-simple.md)
 
 ## Tujuan
-Dokumen ini menjelaskan panduan langkah demi langkah untuk membuat **Modul Simple (Modal-based CRUD)** di proyek **AN Mastery V3**. Dokumen ini memastikan keseragaman interaksi modal pop-up dan reload data.
+Dokumen ini menjelaskan panduan langkah demi langkah untuk membuat **Modul Simple (Modal-based CRUD)** di proyek ini. Dokumen ini memastikan keseragaman interaksi modal pop-up dan reload data.
 
 ## Kapan digunakan
 Gunakan dokumen ini setiap kali Anda membangun modul CRUD dengan input data sederhana yang tidak memiliki banyak relasi dinamis (misal: modul Supplier, Color Fabric, Type Fabric, Type Color).
 
 ## Cara kerja
-Modul Simple memusatkan semua aksi CRUD pada satu halaman indeks saja (`index.blade.php`). Proses penambahan dan pengeditan data memanfaatkan modal tunggal (`modal.blade.php`) secara pop-up. JavaScript halaman (`list.js`) menangani pembukaan modal, pengisian nilai form via AJAX request, submit data form, penutupan modal, dan reload dinamis DataTable tanpa memicu refresh halaman browser.
+Modul Simple memusatkan semua aksi CRUD pada satu halaman indeks saja (`index.blade.php`). Proses penambahan dan pengeditan data memanfaatkan modal tunggal (`modal.blade.php`) secara pop-up. JavaScript halaman (`index.js`) menangani pembukaan modal, pengisian nilai form via AJAX request, submit data form, penutupan modal, dan reload dinamis DataTable tanpa memicu refresh halaman browser.
 
 ## Struktur
 ### 1. Struktur Folder & Berkas Modul Simple
-Jika Anda membuat modul bernama `Supplier`, generator akan menghasilkan berkas-berkas berikut:
+Jika Anda membuat modul bernama `{Module}`, generator akan menghasilkan berkas-berkas berikut:
 - **Backend**:
-  - `app/Http/Controllers/SupplierController.php` (Mengontrol response index/API data)
-  - `app/Repositories/SupplierRepository.php` (Menyediakan query data)
-  - `app/Http/Requests/Supplier/SaveSupplierRequest.php` (Validasi kolom form)
-  - `app/Http/Resources/SupplierResource.php` (Format data JSON)
+  - `app/Http/Controllers/{Module}Controller.php` (Mengontrol response index/API data)
+  - `app/Repositories/{Module}Repository.php` (Menyediakan query data)
+  - `app/Http/Requests/{Module}/Save{Module}Request.php` (Validasi kolom form)
+  - `app/Http/Resources/{Module}Resource.php` (Format data JSON)
 - **Views (Blade)**:
-  - `resources/views/supplier/index.blade.php` (Halaman utama penampil tabel)
-  - `resources/views/supplier/form.blade.php` (Berisi input field input)
-  - `resources/views/supplier/modal.blade.php` (Kerangka modal pembungkus form)
+  - `resources/views/{module}/index.blade.php` (Halaman utama penampil tabel)
+  - `resources/views/{module}/form.blade.php` (Berisi input field input)
+  - `resources/views/{module}/modal.blade.php` (Kerangka modal pembungkus form)
 - **Javascript**:
-  - `resources/js/pages/supplier/list.js` (Script pengendali utama CRUD modal)
+  - `resources/js/pages/{module}/index.js` (Script pengendali utama CRUD modal)
 
 ### 2. Perbandingan Modul Default vs Modul Simple
 - **Modul Default (Full Page)**:
@@ -33,21 +33,21 @@ Jika Anda membuat modul bernama `Supplier`, generator akan menghasilkan berkas-b
   - *Kekurangan*: Sulit dipelihara jika formulir memiliki input bertumpuk dan tabel relasi yang banyak.
 
 ## Contoh implementasi
-Pola modal-based CRUD dapat dipelajari pada berkas:
-- View Utama Halaman: [index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
-- Desain Modal Pembungkus: [modal.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/modal.blade.php)
-- Script Client-side CRUD: [list.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/list.js)
+Referensi modul simple yang sudah ada di proyek ini:
+- View halaman utama: [supplier/index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
+- Modal pembungkus form: [supplier/modal.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/modal.blade.php)
+- Script CRUD client-side: [supplier/index.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/index.js)
 
 ## Contoh kode
 Berikut adalah logika penanganan pembukaan form edit pada modal asinkron di Javascript:
 ```javascript
 const handleEdit = async (id) => {
-    setModalTitle("Edit Supplier");
+    setModalTitle(trans("langCrud", "edit_title", { model: modelName }));
     setFormMode("edit", id); // Simpan status mode dan ID target di elemen form dataset
 
     try {
         // Ambil data detail terupdate dari server
-        const response = await ApiProvider.get(route("suppliers.show", id));
+        const response = await ApiProvider.get(route("{modules}.show", id));
         fillForm(response.data); // Isi value field form input
         openModal(); // Buka modal Preline
     } catch (error) {

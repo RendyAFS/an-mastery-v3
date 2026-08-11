@@ -1,7 +1,7 @@
 # Routing Standards (routing.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar perutean (*routing*) yang digunakan di proyek **AN Mastery V3**, baik untuk rute web backend Laravel maupun rute API yang dikonsumsi oleh JavaScript client-side melalui pustaka Ziggy.
+Dokumen ini menjelaskan standar perutean (*routing*) yang digunakan di proyek ini, baik untuk rute web backend Laravel maupun rute API yang dikonsumsi oleh JavaScript client-side melalui pustaka Ziggy.
 
 ## Kapan digunakan
 Gunakan panduan ini setiap kali Anda menambahkan endpoint baru, mendefinisikan rute modul, mengelompokkan middleware, atau melakukan rujukan rute di dalam file JavaScript.
@@ -21,20 +21,21 @@ Berikut adalah aturan penamaan URL dan penamaan rute (*named routes*):
 Penerapan rute yang konsisten dalam file [web.php](file:///d:/laragon/www/an-mastery-v3/routes/web.php):
 ```php
 // Rute Tambahan (dikelompokkan terlebih dahulu)
-Route::prefix('suppliers')->as('suppliers.')->group(function () {
-    Route::put('{supplier}/toggle-active', [App\Http\Controllers\SupplierController::class, 'toggleActive'])->name('toggle-active');
-    Route::put('{supplier}/restore', [App\Http\Controllers\SupplierController::class, 'restore'])->name('restore');
-    Route::delete('{supplier}/force-delete', [App\Http\Controllers\SupplierController::class, 'forceDelete'])->name('force-delete');
-    Route::get('select/suppliers', [App\Http\Controllers\SupplierController::class, 'select'])->name('select');
+Route::prefix('{modules}')->as('{modules}.')-group(function () {
+    Route::put('{model}/toggle-active', [{Module}Controller::class, 'toggleActive'])->name('toggle-active');
+    Route::put('{model}/restore', [{Module}Controller::class, 'restore'])->name('restore');
+    Route::delete('{model}/force-delete', [{Module}Controller::class, 'forceDelete'])->name('force-delete');
+    Route::get('select', [{Module}Controller::class, 'select'])->name('select');
 });
 // Rute Resource utama
-Route::resource('suppliers', App\Http\Controllers\SupplierController::class)->names('suppliers');
+Route::resource('{modules}', {Module}Controller::class)->names('{modules}');
 ```
 
 ## Contoh kode
 ### 1. Pendaftaran rute di backend:
 ```php
 Route::middleware(['auth', 'check.active'])->group(function () {
+    // Contoh modul multi-kata (kebab-case URL, snake_case route name)
     Route::prefix('color-fabrics')->as('color_fabrics.')->group(function () {
         Route::put('{colorFabric}/restore', [App\Http\Controllers\ColorFabricController::class, 'restore'])->name('restore');
         Route::delete('{colorFabric}/force-delete', [App\Http\Controllers\ColorFabricController::class, 'forceDelete'])->name('force-delete');
@@ -46,9 +47,9 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 ### 2. Penggunaan di Javascript (via Ziggy):
 ```javascript
 // Memanggil endpoint asinkron dengan rute dinamis
-const urlStore = route("suppliers.store");
-const urlUpdate = route("suppliers.update", supplierId);
-const urlDelete = route("suppliers.destroy", supplierId);
+const urlStore  = route("{modules}.store");
+const urlUpdate = route("{modules}.update", id);
+const urlDelete = route("{modules}.destroy", id);
 ```
 
 ## Hubungan dengan file lain

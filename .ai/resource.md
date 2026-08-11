@@ -1,7 +1,7 @@
 # API Resource Standards (resource.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standardisasi transformasi data respons menggunakan **API Resources** di Laravel pada proyek **AN Mastery V3**. Pola ini mengontrol data apa saja yang diekspos ke antarmuka JavaScript client-side dan menjamin keseragaman format data.
+Dokumen ini menjelaskan standardisasi transformasi data respons menggunakan **API Resources** di Laravel pada proyek ini. Pola ini mengontrol data apa saja yang diekspos ke antarmuka JavaScript client-side dan menjamin keseragaman format data.
 
 ## Kapan digunakan
 Gunakan dokumen ini setiap kali Anda membuat API Resource baru atau memperbarui properti data JSON yang dikirimkan dari server Laravel ke JavaScript client-side.
@@ -19,12 +19,12 @@ Setiap kelas API Resource berada di bawah folder `app/Http/Resources/` dan diber
 - Method `toArray(Request $request)`: Mengembalikan array asosiatif representasi data JSON.
 
 ## Contoh implementasi
-Pola API Resource dapat dipelajari pada berkas:
-- Resource Supplier: [SupplierResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SupplierResource.php)
-- Resource Sablon: [SablonResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SablonResource.php)
+Referensi API Resource yang sudah ada di proyek ini:
+- Resource sederhana (tanpa relasi): [SupplierResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SupplierResource.php)
+- Resource dengan relasi bersyarat: [SablonResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SablonResource.php)
 
 ## Contoh kode
-Berikut adalah contoh penulisan API Resource terstandar:
+Berikut adalah contoh penulisan API Resource terstandar (ganti `{Module}` dengan nama modul Anda):
 ```php
 namespace App\Http\Resources;
 
@@ -32,26 +32,26 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Helpers\RupiahHelper;
 
-class SablonResource extends JsonResource
+class {Module}Resource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'id'                    => $this->id,
-            'total_sablon'          => $this->total_sablon,
-            'total_sablon_formated' => RupiahHelper::format($this->total_sablon), // Rp 150.000
-            'date_sablon'           => $this->date_sablon?->format('Y-m-d'),
-            'status'                => $this->status,
-            'notes'                 => $this->notes,
-            'created_at'            => $this->created_at?->format('Y-m-d H:i:s'),
-            'deleted_at'            => $this->deleted_at?->format('Y-m-d H:i:s'),
-            'created_by'            => $this->created_by,
-            'updated_by'            => $this->updated_by,
-            'deleted_by'            => $this->deleted_by,
+            'id'                   => $this->id,
+            'amount'               => $this->amount,
+            'amount_formated'      => RupiahHelper::format($this->amount), // Rp 150.000
+            'date'                 => $this->date?->format('Y-m-d'),
+            'status'               => $this->status,
+            'notes'                => $this->notes,
+            'deleted_at'           => $this->deleted_at?->format('Y-m-d H:i:s'),
+            'created_at'           => $this->created_at?->format('Y-m-d H:i:s'),
+            'created_by'           => $this->created_by,
+            'updated_by'           => $this->updated_by,
+            'deleted_by'           => $this->deleted_by,
 
-            // Relasi bersyarat untuk menghindari lazy loading
-            'supplier'              => new SupplierResource($this->whenLoaded('supplier')),
-            'fabric'                => new FabricResource($this->whenLoaded('fabric')),
+            // Relasi bersyarat — hanya dikirim jika sudah di-eager load
+            'relation_a'           => new RelationAResource($this->whenLoaded('relationA')),
+            'relation_b'           => new RelationBResource($this->whenLoaded('relationB')),
         ];
     }
 }

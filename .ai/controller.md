@@ -1,7 +1,7 @@
 # Controller Standards (controller.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar implementasi HTTP Controller di proyek **AN Mastery V3**. Standar ini mencakup struktur dasar, penyuntikan dependensi, pemeriksaan otorisasi, penanganan AJAX response, dan pendelegasian proses penulisan data.
+Dokumen ini menjelaskan standar implementasi HTTP Controller di proyek ini. Standar ini mencakup struktur dasar, penyuntikan dependensi, pemeriksaan otorisasi, penanganan AJAX response, dan pendelegasian proses penulisan data.
 
 ## Kapan digunakan
 Gunakan dokumen ini setiap kali Anda membuat controller baru atau menambahkan method aksi pada controller yang sudah ada untuk memastikan keselarasan arsitektur.
@@ -31,44 +31,80 @@ Berikut adalah susunan method yang terstandarisasi dalam controller resource:
 - `forceDelete()`: Menghapus data secara permanen dari database.
 
 ## Contoh implementasi
-Pola controller standard dapat dipelajari pada berkas:
-- Kontroler Supplier: [SupplierController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SupplierController.php)
-- Kontroler Sablon: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
+Referensi controller yang sudah ada di proyek ini:
+- Controller Simple CRUD (modal): [SupplierController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SupplierController.php)
+- Controller Full Page CRUD: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
 
 ## Contoh kode
-Berikut adalah contoh struktur penulisan controller yang direkomendasikan:
+Berikut adalah contoh struktur penulisan controller yang direkomendasikan (ganti `{Module}` dengan nama modul Anda):
 ```php
 namespace App\Http\Controllers;
 
-use App\Repositories\SupplierRepository;
-use App\Http\Requests\Supplier\SaveSupplierRequest;
-use App\Http\Resources\SupplierResource;
-use App\Models\Supplier;
+use App\Repositories\{Module}Repository;
+use App\Http\Requests\{Module}\Save{Module}Request;
+use App\Http\Resources\{Module}Resource;
+use App\Models\{Module};
 
-class SupplierController extends Controller
+class {Module}Controller extends Controller
 {
     public function __construct(
-        private SupplierRepository $supplierRepository
+        private {Module}Repository ${module}Repository
     ) {}
 
     public function index()
     {
-        $this->authorize('suppliers.view');
+        $this->authorize('{modules}.view');
 
         if (request()->expectsJson()) {
             $filter = request('filter', 'active');
-            $suppliers = $this->supplierRepository->getAll($filter);
-            return SupplierResource::collection($suppliers);
+            ${modules} = $this->{module}Repository->getAll($filter);
+            return {Module}Resource::collection(${modules});
         }
 
-        return view('supplier.index');
+        return view('{module}.index');
     }
 
-    public function store(SaveSupplierRequest $request)
+    public function store(Save{Module}Request $request)
     {
-        $this->authorize('suppliers.create');
-        $supplier = Supplier::create($request->validated());
-        return new SupplierResource($supplier);
+        $this->authorize('{modules}.create');
+        ${module} = {Module}::create($request->validated());
+        return new {Module}Resource(${module});
+    }
+
+    public function show({Module} ${module})
+    {
+        $this->authorize('{modules}.view');
+        return new {Module}Resource(${module});
+    }
+
+    public function update(Save{Module}Request $request, {Module} ${module})
+    {
+        $this->authorize('{modules}.edit');
+        ${module}->update($request->validated());
+        return new {Module}Resource(${module});
+    }
+
+    public function destroy({Module} ${module})
+    {
+        $this->authorize('{modules}.delete');
+        ${module}->delete();
+        return response()->noContent();
+    }
+
+    public function restore(int $id)
+    {
+        $this->authorize('{modules}.delete');
+        ${module} = {Module}::onlyTrashed()->findOrFail($id);
+        ${module}->restore();
+        return new {Module}Resource(${module});
+    }
+
+    public function forceDelete(int $id)
+    {
+        $this->authorize('{modules}.delete');
+        ${module} = {Module}::onlyTrashed()->findOrFail($id);
+        ${module}->forceDelete();
+        return response()->noContent();
     }
 }
 ```
@@ -91,4 +127,4 @@ class SupplierController extends Controller
 
 ## Catatan penting
 > [!IMPORTANT]
-> Aksi pemulihan (`restore`) dan penghapusan permanen (`forceDelete`) harus mencari data menggunakan `onlyTrashed()` agar data yang berstatus terhapus secara soft-delete dapat terdeteksi: `Supplier::onlyTrashed()->findOrFail($id)`.
+> Aksi pemulihan (`restore`) dan penghapusan permanen (`forceDelete`) harus mencari data menggunakan `onlyTrashed()` agar data yang berstatus terhapus secara soft-delete dapat terdeteksi: `{Module}::onlyTrashed()->findOrFail($id)`.

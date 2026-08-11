@@ -1,7 +1,7 @@
 # Form Request Standards (request.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar pembuatan dan penulisan berkas validasi **Form Request** di Laravel pada proyek **AN Mastery V3**.
+Dokumen ini menjelaskan standar pembuatan dan penulisan berkas validasi **Form Request** di Laravel pada proyek ini.
 
 ## Kapan digunakan
 Gunakan panduan ini setiap kali Anda menambahkan atau mengedit skema validasi input form untuk modul baru maupun fitur yang sudah ada.
@@ -20,18 +20,18 @@ Setiap kelas Form Request kustom berada di folder `app/Http/Requests/{ModuleName
 - Method `messages()`: Mengembalikan kustomisasi pesan kesalahan validasi field.
 
 ## Contoh implementasi
-Pola berkas validasi dapat dipelajari pada berkas:
-- Validasi Supplier: [SaveSupplierRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Supplier/SaveSupplierRequest.php)
-- Validasi Sablon: [SaveSablonRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Sablon/SaveSablonRequest.php)
+Referensi Form Request yang sudah ada di proyek ini:
+- Request modul simple: [SaveSupplierRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Supplier/SaveSupplierRequest.php)
+- Request modul dengan array dinamis: [SaveSablonRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Sablon/SaveSablonRequest.php)
 
 ## Contoh kode
-Berikut adalah contoh standard implementasi Form Request:
+Berikut adalah contoh standard implementasi Form Request (ganti `{Module}` dengan nama modul Anda):
 ```php
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\{Module};
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveSupplierRequest extends FormRequest
+class Save{Module}Request extends FormRequest
 {
     public function authorize(): bool
     {
@@ -41,20 +41,23 @@ class SaveSupplierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:255',
-            'address'   => 'required|string',
-            'contact'   => 'nullable|string',
-            'is_active' => 'nullable|boolean',
-            'notes'     => 'nullable|string',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'is_active'   => 'nullable|boolean',
+            'notes'       => 'nullable|string',
+            // Validasi relasi/FK:
+            'relation_id' => 'nullable|exists:related_table,id',
+            // Validasi array dinamis:
+            'details.*.item_id' => 'required|exists:items,id',
+            'details.*.qty'     => 'required|numeric|min:1',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'    => 'Name is required.',
-            'address.required' => 'Address is required.',
-            'contact.string'   => 'Contact must be a string.',
+            'name.required'         => 'Name is required.',
+            'details.*.item_id.required' => 'Item on row :index is required.',
         ];
     }
 }

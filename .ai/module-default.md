@@ -1,7 +1,7 @@
 # Default Module Development Guide (module-default.md)
 
 ## Tujuan
-Dokumen ini menjelaskan panduan langkah demi langkah untuk membuat **Modul Default (Full Page CRUD)** di proyek **AN Mastery V3**. Dokumen ini memastikan keseragaman alur data dan struktur halaman saat mengembangkan modul berhalaman penuh.
+Dokumen ini menjelaskan panduan langkah demi langkah untuk membuat **Modul Default (Full Page CRUD)** di proyek ini. Dokumen ini memastikan keseragaman alur data dan struktur halaman saat mengembangkan modul berhalaman penuh.
 
 ## Kapan digunakan
 Gunakan dokumen ini setiap kali Anda membuat modul CRUD besar yang memerlukan form pembuatan dan pengeditan di halaman terpisah (bukan di dalam modal pop-up), seperti modul Sablon atau Fabric.
@@ -35,10 +35,10 @@ Jika Anda membuat modul bernama `Sablon`, generator akan menghasilkan berkas-ber
 - **Aksi Update**: Mengirim data terupdate via `ApiProvider.put(...)` dan mengalihkan halaman kembali ke index.
 
 ## Contoh implementasi
-Implementasi modul ini dapat dipelajari pada berkas:
-- Kontroler Utama: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
-- View Halaman Tambah: [create.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/sablon/create.blade.php)
-- Javascript Controller Form: [page-script.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/sablon/page-script.js)
+Referensi modul default yang sudah ada di proyek ini:
+- Controller: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
+- View halaman create: [sablon/create.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/sablon/create.blade.php)
+- Script form: [sablon/form.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/sablon/form.js)
 
 ## Contoh kode
 Berikut adalah kerangka penulisan method controller untuk melayani pendaftaran halaman modul default:

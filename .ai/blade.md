@@ -1,7 +1,7 @@
 # Blade Template Standards (blade.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar penyusunan layout, penulisan sintaks, dan pemanfaatan komponen **Blade Template** pada proyek **AN Mastery V3**.
+Dokumen ini menjelaskan standar penyusunan layout, penulisan sintaks, dan pemanfaatan komponen **Blade Template** pada proyek ini.
 
 ## Kapan digunakan
 Gunakan panduan ini setiap kali Anda membuat file view `.blade.php` baru, mendesain form, menyusun struktur tabel, menyertakan modal, atau membuat komponen UI baru.
@@ -23,17 +23,17 @@ Setiap halaman Blade standard terstruktur sebagai berikut:
 - **Penutup Konten**: `@endsection`
 
 ## Contoh implementasi
-Pola berkas Blade dapat dipelajari pada berkas:
-- View Index Supplier: [index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
-- Layout Utama Main: [main.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/layouts/main.blade.php)
+Referensi berkas Blade yang sudah ada di proyek ini:
+- View index modul simple: [supplier/index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
+- Layout utama admin: [layouts/main.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/layouts/main.blade.php)
 
 ## Contoh kode
-Berikut adalah kerangka penulisan halaman view terstandar:
+Berikut adalah kerangka penulisan halaman view terstandar (ganti `{module}` dan `{Module}` dengan nama modul Anda):
 ```html
-@extends('layouts.main', ['title' => 'Supplier'])
+@extends('layouts.main', ['title' => '{Module}'])
 
 @push('scripts')
-    @vite('resources/js/pages/supplier/list.js')
+    @vite('resources/js/pages/{module}/index.js')
 @endpush
 
 @section('content')
@@ -41,23 +41,22 @@ Berikut adalah kerangka penulisan halaman view terstandar:
         {{-- Header Halaman --}}
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold">Supplier</h1>
-                <p class="text-sm text-(--color-dark-gray)">Manage supplier data</p>
+                <h1 class="text-3xl font-bold">{Module}</h1>
+                <p class="text-sm text-(--color-dark-gray)">Manage {module} data</p>
             </div>
 
-            <button type="button" data-hs-overlay="#hs-supplier-modal" id="btn-create-supplier"
+            <button type="button" data-hs-overlay="#hs-{module}-modal" id="btn-create-{module}"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-(--color-primary) text-white cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
-                Add Supplier
+                Add {Module}
             </button>
         </div>
 
         {{-- Komponen DataTable --}}
-        <x-datatable id="suppliers-datatable" filterId="filter-suppliers">
+        <x-datatable id="{module}s-datatable" filterId="filter-{module}s">
             <thead class="border-b">
                 <tr>
                     <th class="px-6 py-3 text-xs font-medium uppercase">Name</th>
-                    <th class="px-6 py-3 text-xs font-medium uppercase">Contact</th>
                     <th class="px-6 py-3 text-xs font-medium uppercase text-center">Is Active</th>
                     <th class="px-6 py-3 text-xs font-medium uppercase text-center">Action</th>
                 </tr>
@@ -66,7 +65,7 @@ Berikut adalah kerangka penulisan halaman view terstandar:
         </x-datatable>
     </div>
 
-    @include('supplier.modal')
+    @include('{module}.modal')
 @endsection
 ```
 
