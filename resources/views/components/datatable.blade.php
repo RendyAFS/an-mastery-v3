@@ -14,22 +14,17 @@
     'defaultLength' => 10,
 ])
 
-{{-- Top Bar --}}
 <div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
-    {{-- LEFT SIDE --}}
     <div class="flex items-center gap-3 w-full sm:w-auto">
 
-        {{-- Search --}}
         @if ($search)
             <div class="relative w-full sm:w-64">
 
-                {{-- Search Icon --}}
                 <div class="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-4 z-10">
                     <i data-lucide="search" class="size-4"></i>
                 </div>
 
-                {{-- Input --}}
-                <input type="text" id="dt-search"
+                <input type="text" id="dt-search-{{ $id }}"
                     class="w-full ps-10 pe-10 py-2 px-3 text-sm rounded-lg
                     text-(--color-dark) dark:text-(--color-light)
                     border border-(--color-gray) dark:border-(--color-dark-gray)
@@ -37,8 +32,7 @@
                     focus:ring-2 focus:ring-(--color-primary)/30"
                     placeholder="{{ __('datatable.Search...') }}">
 
-                {{-- Clear Button --}}
-                <button type="button" id="dt-search-clear"
+                <button type="button" id="dt-search-clear-{{ $id }}"
                     class="absolute inset-y-0 inset-e-0 hidden items-center pe-3
                         text-(--color-gray)
                         hover:text-(--color-dark)
@@ -49,9 +43,8 @@
             </div>
         @endif
 
-        {{-- Global Filter --}}
         @if ($filter)
-            <select id="{{ $filterId }}" class="hidden w-auto sm:w-40"
+            <select id="{{ $filterId }}-{{ $id }}" class="hidden w-auto sm:w-40"
                 data-hs-select='{
                     "placeholder": "{{ __('datatable.Filter') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
@@ -73,7 +66,7 @@
     @if ($length)
         <div class="flex items-center gap-2 w-auto sm:w-auto justify-end">
             <span class="text-sm whitespace-nowrap">{{ __('datatable.Show') }}</span>
-            <select id="dt-length" class="hidden w-auto sm:w-28"
+            <select id="dt-length-{{ $id }}" class="hidden w-auto sm:w-28"
                 data-hs-select='{
                             "placeholder": "{{ __('datatable.Show') }}",
                             "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
@@ -94,7 +87,6 @@
     @endif
 </div>
 
-{{-- Table --}}
 <div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 md:p-10">
     <div
         class="border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
@@ -104,26 +96,24 @@
     </div>
 </div>
 
-{{-- Footer --}}
 <div class="flex flex-col gap-3 mt-4 sm:flex-row sm:justify-between sm:items-center">
-    <div id="dt-info" class="text-sm text-center sm:text-left"></div>
-    <div id="dt-pagination" class="flex flex-wrap justify-center gap-1 sm:justify-end"></div>
+    <div id="dt-info-{{ $id }}" class="text-sm text-center sm:text-left"></div>
+    <div id="dt-pagination-{{ $id }}" class="flex flex-wrap justify-center gap-1 sm:justify-end"></div>
 </div>
 
-{{-- Pagination Templates (Hidden) --}}
-<template id="dt-pagination-btn-template">
+<template id="dt-pagination-btn-template-{{ $id }}">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         data-page=""></button>
 </template>
 
-<template id="dt-pagination-ellipsis-template">
+<template id="dt-pagination-ellipsis-template-{{ $id }}">
     <span class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm text-(--color-gray)">
         …
     </span>
 </template>
 
-<template id="dt-pagination-prev-template">
+<template id="dt-pagination-prev-template-{{ $id }}">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
         data-page="" aria-label="{{ __('datatable.Previous') }}">
@@ -131,7 +121,7 @@
     </button>
 </template>
 
-<template id="dt-pagination-next-template">
+<template id="dt-pagination-next-template-{{ $id }}">
     <button type="button"
         class="min-h-9.5 min-w-9.5 flex justify-center items-center text-sm rounded-lg focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none border border-transparent cursor-pointer"
         data-page="" aria-label="{{ __('datatable.Next') }}">

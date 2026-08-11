@@ -4,13 +4,21 @@ export default function initDatatable({
     table,
     ajax,
     columns,
-    pageLength = parseInt(document.getElementById("dt-length")?.value) || 10,
+    pageLength,
     order = [],
     filterSelector = null,
     rowClickRoute = null,
     onRowClick = null,
 }) {
     if (!document.querySelector(table)) return;
+
+    const tableId = table.replace("#", "");
+
+    if (!pageLength) {
+        pageLength =
+            parseInt(document.getElementById(`dt-length-${tableId}`)?.value) ||
+            10;
+    }
 
     const datatable = $(table).DataTable({
         dom: "t",
@@ -29,7 +37,7 @@ export default function initDatatable({
                     </div>
 
                     <div class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        ${window.langDatatable?.[table.replace("#", "")]?.loading ?? "Loading data..."}
+                        ${window.langDatatable?.[tableId]?.loading ?? "Loading data..."}
                     </div>
                 </div>
             </div>
@@ -86,16 +94,17 @@ export default function initDatatable({
         },
     });
 
-    // Search handler
     let searchTimeout = null;
 
-    const searchInput = $("#dt-search");
-    const clearBtn = $("#dt-search-clear");
+    const searchInput = $(`#dt-search-${tableId}`);
+    const clearBtn = $(`#dt-search-clear-${tableId}`);
+    const lengthSelect = $(`#dt-length-${tableId}`);
+    const paginationContainer = $(`#dt-pagination-${tableId}`);
+    const infoContainer = $(`#dt-info-${tableId}`);
 
     searchInput.on("keyup", function () {
         const value = this.value;
 
-        // toggle clear button
         if (value.length > 0) {
             clearBtn.removeClass("hidden").addClass("flex");
         } else {
@@ -109,7 +118,6 @@ export default function initDatatable({
         }, 500);
     });
 
-    // Clear search
     clearBtn.on("click", function () {
         searchInput.val("");
 
@@ -120,48 +128,42 @@ export default function initDatatable({
         searchInput.trigger("focus");
     });
 
-    // Length change handler
-    $("#dt-length").on("change", function () {
+    lengthSelect.on("change", function () {
         datatable.page.len(this.value).draw();
     });
 
-    // Global filter handler
     if (filterSelector) {
         $(document).on("change", filterSelector, function () {
             datatable.ajax.reload(null, false);
         });
     }
 
-    // Pagination click handler
-    $(document).on("click", "#dt-pagination button[data-page]", function () {
+    paginationContainer.on("click", "button[data-page]", function () {
         datatable.page($(this).data("page")).draw("page");
     });
 
-    // Render pagination using templates
     const renderPagination = () => {
         const info = datatable.page.info();
-        const container = $("#dt-pagination");
+        const container = paginationContainer;
         container.empty();
 
         const current = info.page;
         const total = info.pages;
         const last = total - 1;
 
-        // Clone templates
         const btnTemplate = document.getElementById(
-            "dt-pagination-btn-template",
+            `dt-pagination-btn-template-${tableId}`,
         );
         const ellipsisTemplate = document.getElementById(
-            "dt-pagination-ellipsis-template",
+            `dt-pagination-ellipsis-template-${tableId}`,
         );
         const prevTemplate = document.getElementById(
-            "dt-pagination-prev-template",
+            `dt-pagination-prev-template-${tableId}`,
         );
         const nextTemplate = document.getElementById(
-            "dt-pagination-next-template",
+            `dt-pagination-next-template-${tableId}`,
         );
 
-        // Helper function to create button from template
         const createBtn = (page, label = null, isCurrent = false) => {
             const btn = btnTemplate.content
                 .cloneNode(true)
@@ -189,7 +191,6 @@ export default function initDatatable({
             return btn;
         };
 
-        // Prev button
         const prevBtn = prevTemplate.content
             .cloneNode(true)
             .querySelector("button");
@@ -202,10 +203,8 @@ export default function initDatatable({
         }
         container.append(prevBtn);
 
-        // First page
         container.append(createBtn(0, null, current === 0));
 
-        // Calculate middle pages
         let start, end;
         if (current <= 3) {
             start = 1;
@@ -218,29 +217,24 @@ export default function initDatatable({
             end = current + 1;
         }
 
-        // Start ellipsis
         if (start > 1) {
             container.append(ellipsisTemplate.content.cloneNode(true));
         }
 
-        // Middle pages
         for (let i = start; i <= end; i++) {
             if (i > 0 && i < last) {
                 container.append(createBtn(i, null, i === current));
             }
         }
 
-        // End ellipsis
         if (end < last - 1) {
             container.append(ellipsisTemplate.content.cloneNode(true));
         }
 
-        // Last page
         if (last > 0) {
             container.append(createBtn(last, total, current === last));
         }
 
-        // Next button
         const nextBtn = nextTemplate.content
             .cloneNode(true)
             .querySelector("button");
@@ -253,11 +247,10 @@ export default function initDatatable({
         }
         container.append(nextBtn);
 
-        // Update info text
-        const lang = window.langDatatable?.[table.replace("#", "")] ?? {};
+        const lang = window.langDatatable?.[tableId] ?? {};
         const template = lang.showing ?? "Showing :from - :to of :total";
 
-        $("#dt-info").text(
+        infoContainer.text(
             template
                 .replace(":from", info.start + 1)
                 .replace(":to", info.end)

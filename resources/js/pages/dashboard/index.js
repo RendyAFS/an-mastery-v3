@@ -3,7 +3,7 @@ import { renderStats } from "./stats";
 import { initCharts, updateCharts } from "./charts";
 import { renderPresences } from "./presence";
 import { initFabricsTable } from "./fabrics-table";
-import { initLatestSablonsTable, reloadLatestSablonsTable } from "./table";
+import { initLatestSablonsTable, reloadLatestSablonsTable } from "./latest-sablons-table";
 import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
 
 const PageScript = (function () {
