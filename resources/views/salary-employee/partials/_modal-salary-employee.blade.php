@@ -1,4 +1,4 @@
-<x-modal id="hs-salary-employee-modal" title="{{ __('salary-employee.modal.title') }}" size="lg">
+<x-modal id="hs-salary-employee-modal" title="{{ __('salary-employee.modal.title') }}" size="2xl">
     <input type="hidden" id="salary-employee-id" />
     <input type="hidden" id="salary-week-of" />
 
@@ -65,11 +65,11 @@
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 {{ __('salary-employee.modal.notes') }}
             </label>
-            <input type="text" placeholder="{{ __('salary-employee.modal.notes_placeholder') }}"
+            <textarea placeholder="{{ __('salary-employee.modal.notes_placeholder') }}" rows="3" maxlength="255"
                 class="af-notes mt-1 px-4 py-2 block w-full rounded-lg
-                    bg-(--color-light-gray) border border-(--color-gray)
-                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                bg-(--color-light-gray) border border-(--color-gray)
+                text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)"></textarea>
         </div>
     </div>
 </template>

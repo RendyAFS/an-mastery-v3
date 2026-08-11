@@ -60,8 +60,25 @@ class SalaryEmployeeRepository
             ->get()
             ->keyBy(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)->toDateString());
 
-        $existingSalaries->each(function (SalaryEmployee $s) use ($presences) {
+        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $eligibleDetails, $pendingMemosByEmployee) {
             $key = $s->employee_id . '|' . Carbon::parse($s->date)->toDateString();
+
+            if ($s->status !== StatusSalaryEmployeeEnum::PAID) {
+                if ($eligibleDetails->has($key)) {
+                    $s->setRelation(
+                        'sablonEmployeeDetails',
+                        $s->sablonEmployeeDetails->concat($eligibleDetails->get($key))
+                    );
+                }
+
+                if ($pendingMemosByEmployee->has($s->employee_id)) {
+                    $s->setRelation(
+                        'memos',
+                        $s->memos->concat($pendingMemosByEmployee->get($s->employee_id))
+                    );
+                }
+            }
+
             $s->setRelation('presence', $presences->get($key));
         });
 

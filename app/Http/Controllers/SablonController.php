@@ -10,7 +10,6 @@ use App\Http\Resources\SablonResource;
 use App\Models\Fabric;
 use App\Models\Sablon;
 use App\Models\Supplier;
-use App\Repositories\FabricRepository;
 use App\Repositories\SablonRepository;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;

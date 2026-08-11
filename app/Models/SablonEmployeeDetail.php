@@ -55,7 +55,10 @@ class SablonEmployeeDetail extends Model
 
     public function scopeEligibleForSalary(Builder $query): Builder
     {
-        return $query->where('is_paid', false)
+        return $query->where(function (Builder $q) {
+            $q->where('is_paid', false)
+                ->orWhereNull('is_paid');
+        })
             ->where(function (Builder $q) {
                 $q->where(function (Builder $q1) {
                     $q1->where('is_bon', false)
@@ -63,10 +66,7 @@ class SablonEmployeeDetail extends Model
                             StatusSablonEnum::DONE,
                             StatusSablonEnum::DELIVERED,
                         ]));
-                })->orWhere(function (Builder $q2) {
-                    $q2->where('is_bon', true)
-                        ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::ON_PROGRESS));
-                });
+                })->orWhere('is_bon', true);
             });
     }
 }

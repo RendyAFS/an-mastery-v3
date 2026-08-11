@@ -54,7 +54,7 @@ const PageScript = (function () {
                         ${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}
                     </p>
                     <p class="text-sm text-(--color-dark-gray)">
-                        ${item.fabric?.date_coming}
+                        ${item.date_sablon}
                     </p>
                 </div>
 
