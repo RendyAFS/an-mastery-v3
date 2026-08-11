@@ -122,7 +122,7 @@ class PresenceController extends Controller
         }
 
         return response()->json([
-            'message' => "Presence generated successfully for {$count} employee(s)",
+            'message' => __('presence.generated_success_count', ['count' => $count]),
         ]);
     }
 

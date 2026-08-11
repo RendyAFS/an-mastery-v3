@@ -1,6 +1,7 @@
 <?php
 return [
     'description'   => 'Weekly supplier bill recap',
+    'batch'         => 'Batch',
     'create_title'  => 'Create Bill Konveksi',
     'edit_title'    => 'Edit Bill Konveksi',
     'create_heading' => 'Create Bill Konveksi — :supplier',

@@ -99,7 +99,7 @@ class MemoController extends Controller
             $this->upsertSalaryEmployeeAction->reopenIfPaid($memo->salaryEmployee);
         }
 
-        return response()->json(['message' => 'Memo restored successfully']);
+        return response()->json(['message' => __('crud.restored', ['model' => __('models.Memo')])]);
     }
 
     public function forceDelete(int $id)
@@ -109,6 +109,6 @@ class MemoController extends Controller
         $memo = Memo::onlyTrashed()->findOrFail($id);
         $memo->forceDelete();
 
-        return response()->json(['message' => 'Memo permanently deleted']);
+        return response()->json(['message' => __('crud.force_deleted', ['model' => __('models.Memo')])]);
     }
 }

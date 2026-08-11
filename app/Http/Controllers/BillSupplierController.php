@@ -212,7 +212,7 @@ class BillSupplierController extends Controller
 
         BillSupplier::onlyTrashed()->where('batch', $batch)->get()->each->restore();
 
-        return response()->json(['message' => 'Batch restored successfully']);
+        return response()->json(['message' => __('crud.restored', ['model' => __('bill-supplier.batch')])]);
     }
 
     public function forceDeleteBatch(string $batch)
@@ -221,6 +221,6 @@ class BillSupplierController extends Controller
 
         BillSupplier::onlyTrashed()->where('batch', $batch)->get()->each->forceDelete();
 
-        return response()->json(['message' => 'Batch permanently deleted']);
+        return response()->json(['message' => __('crud.force_deleted', ['model' => __('bill-supplier.batch')])]);
     }
 }

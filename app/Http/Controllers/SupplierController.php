@@ -83,7 +83,7 @@ class SupplierController extends Controller
         $supplier->restore();
 
         return response()->json([
-            'message' => 'Supplier restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.Supplier')])
         ]);
     }
 
@@ -96,7 +96,7 @@ class SupplierController extends Controller
         $supplier->forceDelete();
 
         return response()->json([
-            'message' => 'Supplier permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.Supplier')])
         ]);
     }
 
@@ -128,7 +128,7 @@ class SupplierController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Supplier status updated',
+            'message' => __('supplier.toggle_active_success'),
             'is_active' => $supplier->is_active,
         ]);
     }

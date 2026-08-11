@@ -8,4 +8,5 @@ return [
     'process_error' => 'Gagal memproses gambar',
     'cancel'        => 'Batal',
     'take_photo'    => 'Ambil Foto',
+    'file_not_found' => 'File tidak ditemukan',
 ];

@@ -1,8 +1,9 @@
 <?php
 return [
-    'description'   => 'Manage sablon data',
-    'create_title'  => 'Create Sablon',
-    'edit_title'    => 'Edit Sablon',
+    'description'            => 'Manage sablon data',
+    'create_title'           => 'Create Sablon',
+    'edit_title'             => 'Edit Sablon',
+    'status_updated_success' => 'Status updated successfully.',
 
     'filter'        => [
         'week_start' => 'From Week',

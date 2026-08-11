@@ -11,6 +11,7 @@ return [
     'toggle_active_confirm_message'  => 'Apakah kamu yakin ingin mengubah status konveksi ini?',
     'toggle_active_success'          => 'Status konveksi berhasil diperbarui',
     'toggle_active_error'            => 'Gagal memperbarui status konveksi',
+    'cover_style_saved'              => 'Gaya sampul berhasil disimpan',
     'fetch_error'                    => 'Gagal mengambil data konveksi',
     'validation' => [
         'name' => [

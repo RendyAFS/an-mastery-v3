@@ -12,6 +12,7 @@ return [
         'button' => 'Sync Data',
         'loading' => 'Syncing...',
         'select_week_warning' => 'Please select a week range first',
+        'synced_success' => 'Synced :count employee salary records.',
     ],
     'status' => [
         'PENDING' => 'Pending',

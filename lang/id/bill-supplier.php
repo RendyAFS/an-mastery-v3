@@ -1,6 +1,7 @@
 <?php
 return [
     'description'    => 'Rekap tagihan konveksi per minggu',
+    'batch'          => 'Batch',
     'create_title'   => 'Tambah Tagihan Konveksi',
     'edit_title'     => 'Ubah Tagihan Konveksi',
     'create_heading' => 'Buat Tagihan Konveksi — :supplier',

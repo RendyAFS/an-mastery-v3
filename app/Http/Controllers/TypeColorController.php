@@ -83,7 +83,7 @@ class TypeColorController extends Controller
         $typeColor->restore();
 
         return response()->json([
-            'message' => 'Type Color restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.TypeColor')])
         ]);
     }
 
@@ -96,7 +96,7 @@ class TypeColorController extends Controller
         $typeColor->forceDelete();
 
         return response()->json([
-            'message' => 'Type Color permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.TypeColor')])
         ]);
     }
 

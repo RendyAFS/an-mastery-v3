@@ -86,7 +86,7 @@ class GalleryController extends Controller
         $gallery->restore();
 
         return response()->json([
-            'message' => 'Gallery restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.Gallery')])
         ]);
     }
 
@@ -99,7 +99,7 @@ class GalleryController extends Controller
         $gallery->forceDelete();
 
         return response()->json([
-            'message' => 'Gallery permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.Gallery')])
         ]);
     }
 }

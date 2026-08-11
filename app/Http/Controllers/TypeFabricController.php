@@ -83,7 +83,7 @@ class TypeFabricController extends Controller
         $typeFabric->restore();
 
         return response()->json([
-            'message' => 'Type Fabric restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.TypeFabric')])
         ]);
     }
 
@@ -96,7 +96,7 @@ class TypeFabricController extends Controller
         $typeFabric->forceDelete();
 
         return response()->json([
-            'message' => 'Type Fabric permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.TypeFabric')])
         ]);
     }
 

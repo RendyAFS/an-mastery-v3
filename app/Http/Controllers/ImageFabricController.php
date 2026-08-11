@@ -86,7 +86,7 @@ class ImageFabricController extends Controller
         $imageFabric->restore();
 
         return response()->json([
-            'message' => 'Image Fabric restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.ImageFabric')])
         ]);
     }
 
@@ -99,7 +99,7 @@ class ImageFabricController extends Controller
         $imageFabric->forceDelete();
 
         return response()->json([
-            'message' => 'Image Fabric permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.ImageFabric')])
         ]);
     }
 }

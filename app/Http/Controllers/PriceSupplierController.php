@@ -91,7 +91,7 @@ class PriceSupplierController extends Controller
         $priceSupplier->restore();
 
         return response()->json([
-            'message' => 'Price Supplier restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.PriceSupplier')])
         ]);
     }
 
@@ -104,7 +104,7 @@ class PriceSupplierController extends Controller
         $priceSupplier->forceDelete();
 
         return response()->json([
-            'message' => 'Price Supplier permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.PriceSupplier')])
         ]);
     }
 }

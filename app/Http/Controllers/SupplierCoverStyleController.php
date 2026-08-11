@@ -31,7 +31,7 @@ class SupplierCoverStyleController extends Controller
         );
 
         return response()->json([
-            'message' => 'Cover style berhasil disimpan',
+            'message' => __('supplier.cover_style_saved'),
             'style'   => $supplier->fresh()->resolvedCoverStyle(),
         ]);
     }

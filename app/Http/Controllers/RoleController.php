@@ -62,7 +62,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($validated['permissions'] ?? []);
 
-        return response()->json(['message' => 'Role created']);
+        return response()->json(['message' => __('crud.created', ['model' => __('models.Role')])]);
     }
 
 
@@ -108,7 +108,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($validated['permissions'] ?? []);
 
-        return response()->json(['message' => 'Role updated']);
+        return response()->json(['message' => __('crud.updated', ['model' => __('models.Role')])]);
     }
 
     public function destroy(Role $role)
@@ -129,7 +129,7 @@ class RoleController extends Controller
         $role->restore();
 
         return response()->json([
-            'message' => 'Role restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.Role')])
         ]);
     }
 
@@ -142,7 +142,7 @@ class RoleController extends Controller
         $role->forceDelete();
 
         return response()->json([
-            'message' => 'Role permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.Role')])
         ]);
     }
 }

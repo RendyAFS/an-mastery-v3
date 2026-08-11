@@ -102,7 +102,7 @@ class SablonController extends Controller
         $sablon->restore();
 
         return response()->json([
-            'message' => 'Sablon restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.Sablon')])
         ]);
     }
 
@@ -115,7 +115,7 @@ class SablonController extends Controller
         $sablon->forceDelete();
 
         return response()->json([
-            'message' => 'Sablon permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.Sablon')])
         ]);
     }
 
@@ -149,7 +149,7 @@ class SablonController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Status updated successfully.',
+            'message' => __('sablon.status_updated_success'),
         ]);
     }
 }

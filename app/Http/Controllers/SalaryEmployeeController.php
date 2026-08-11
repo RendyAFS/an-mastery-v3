@@ -51,7 +51,7 @@ class SalaryEmployeeController extends Controller
         $count = $this->upsertSalaryEmployeeAction->handleBulk($dateFrom, $dateTo);
 
         return response()->json([
-            'message' => "Synced {$count} employee salary records.",
+            'message' => __('salary-employee.sync.synced_success', ['count' => $count]),
         ]);
     }
 

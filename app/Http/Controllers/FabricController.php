@@ -98,7 +98,7 @@ class FabricController extends Controller
         $fabric = Fabric::onlyTrashed()->findOrFail($id);
         $fabric->restore();
 
-        return response()->json(['message' => 'Fabric restored successfully']);
+        return response()->json(['message' => __('crud.restored', ['model' => __('models.Fabric')])]);
     }
 
     public function forceDelete(int $id)
@@ -108,7 +108,7 @@ class FabricController extends Controller
         $fabric = Fabric::onlyTrashed()->findOrFail($id);
         $fabric->forceDelete();
 
-        return response()->json(['message' => 'Fabric permanently deleted']);
+        return response()->json(['message' => __('crud.force_deleted', ['model' => __('models.Fabric')])]);
     }
 
     public function select(Request $request)

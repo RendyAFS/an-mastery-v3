@@ -8,4 +8,5 @@ return [
     'process_error' => 'Failed to process image',
     'cancel'        => 'Cancel',
     'take_photo'    => 'Take Photo',
+    'file_not_found' => 'File not found',
 ];

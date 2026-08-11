@@ -12,6 +12,7 @@ return [
         'button' => 'Sync Data',
         'loading' => 'Syncing...',
         'select_week_warning' => 'Pilih rentang minggu terlebih dahulu',
+        'synced_success' => 'Berhasil menyinkronkan :count data gaji karyawan.',
     ],
     'status' => [
         'PENDING' => 'Belum Dibayar',

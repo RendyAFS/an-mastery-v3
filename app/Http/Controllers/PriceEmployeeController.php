@@ -89,7 +89,7 @@ class PriceEmployeeController extends Controller
         $priceEmployee->restore();
 
         return response()->json([
-            'message' => 'Price Supplier restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.PriceEmployee')])
         ]);
     }
 
@@ -102,7 +102,7 @@ class PriceEmployeeController extends Controller
         $priceEmployee->forceDelete();
 
         return response()->json([
-            'message' => 'Price Supplier permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.PriceEmployee')])
         ]);
     }
 }

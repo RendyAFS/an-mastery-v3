@@ -83,7 +83,7 @@ class EmployeeController extends Controller
         $employee->restore();
 
         return response()->json([
-            'message' => 'Employee restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.Employee')])
         ]);
     }
 
@@ -96,7 +96,7 @@ class EmployeeController extends Controller
         $employee->forceDelete();
 
         return response()->json([
-            'message' => 'Employee permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.Employee')])
         ]);
     }
 
@@ -128,7 +128,7 @@ class EmployeeController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Employee status updated',
+            'message' => __('employee.toggle_active_success'),
             'is_active' => $employee->is_active,
         ]);
     }

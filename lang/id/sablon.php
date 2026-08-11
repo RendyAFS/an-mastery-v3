@@ -1,8 +1,9 @@
 <?php
 return [
-    'description'   => 'Kelola data sablon',
-    'create_title'  => 'Tambah Sablon',
-    'edit_title'    => 'Ubah Sablon',
+    'description'            => 'Kelola data sablon',
+    'create_title'           => 'Tambah Sablon',
+    'edit_title'             => 'Ubah Sablon',
+    'status_updated_success' => 'Status berhasil diperbarui.',
 
     'filter'        => [
         'week_start' => 'Dari Minggu',

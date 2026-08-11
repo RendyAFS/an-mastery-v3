@@ -82,7 +82,7 @@ class ColorFabricController extends Controller
         $colorFabric->restore();
 
         return response()->json([
-            'message' => 'ColorFabric restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.ColorFabric')])
         ]);
     }
 
@@ -95,7 +95,7 @@ class ColorFabricController extends Controller
         $colorFabric->forceDelete();
 
         return response()->json([
-            'message' => 'ColorFabric permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.ColorFabric')])
         ]);
     }
 }

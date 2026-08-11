@@ -13,7 +13,7 @@ class FilepondController extends Controller
         $filePath = $request->query('file');
 
         if (!$filePath) {
-            return response()->json(['error' => 'File not found'], 404);
+            return response()->json(['error' => __('filepond.file_not_found')], 404);
         }
 
         if (file_exists($filePath)) {
@@ -36,7 +36,7 @@ class FilepondController extends Controller
                 ->header('Content-Disposition', "inline; filename=\"$name\"");
         }
 
-        return response()->json(['error' => 'File not found'], 404);
+        return response()->json(['error' => __('filepond.file_not_found')], 404);
     }
 
     public function process(Request $request)

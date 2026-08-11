@@ -90,7 +90,7 @@ class UserController extends Controller
         $user->restore();
 
         return response()->json([
-            'message' => 'User restored successfully'
+            'message' => __('crud.restored', ['model' => __('models.User')])
         ]);
     }
 
@@ -103,7 +103,7 @@ class UserController extends Controller
         $user->forceDelete();
 
         return response()->json([
-            'message' => 'User permanently deleted'
+            'message' => __('crud.force_deleted', ['model' => __('models.User')])
         ]);
     }
 
@@ -116,7 +116,7 @@ class UserController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'User status updated',
+            'message' => __('user.toggle_active_success'),
             'is_active' => $user->is_active,
         ]);
     }
