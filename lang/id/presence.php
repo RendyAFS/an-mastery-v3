@@ -1,9 +1,9 @@
 <?php
 return [
-    'description'              => 'Kelola data kehadiran karyawan mingguan',
+    'description'              => 'Kelola data absensi karyawan mingguan',
     'filter_week_label'        => 'Minggu Ke',
-    'generate_button'          => 'Generate Kehadiran',
-    'modal_title_prefix'       => 'Kehadiran',
+    'generate_button'          => 'Generate Absensi',
+    'modal_title_prefix'       => 'Absensi',
     'nominal_per_day'          => 'Nominal per hari',
     'generate'                 => 'Generate',
     'notes'                    => 'Catatan',
@@ -19,7 +19,7 @@ return [
         'sunday'    => 'Minggu',
     ],
     'bulk'                     => [
-        'title'                  => 'Generate Kehadiran',
+        'title'                  => 'Generate Absensi',
         'week_of'                => 'Minggu Ke',
         'nominal_per_day'        => 'Nominal per hari',
         'days'                   => 'Hari',
@@ -30,13 +30,13 @@ return [
         'select_week_error'      => 'Silakan pilih minggu',
         'select_day_error'       => 'Silakan pilih minimal satu hari',
         'select_employee_error'  => 'Silakan pilih minimal satu karyawan',
-        'generated_success'      => 'Kehadiran berhasil di-generate',
+        'generated_success'      => 'Absensi berhasil di-generate',
     ],
-    'generated_success_count' => 'Kehadiran berhasil di-generate untuk :count karyawan',
-    'updated_success'         => 'Kehadiran berhasil diperbarui',
-    'created_success'         => 'Kehadiran berhasil dibuat',
-    'deleted_employee_error'  => 'Tidak dapat memperbarui kehadiran karyawan yang terhapus',
-    'fetch_error'             => 'Gagal mengambil data kehadiran',
+    'generated_success_count' => 'Absensi berhasil di-generate untuk :count karyawan',
+    'updated_success'         => 'Absensi berhasil diperbarui',
+    'created_success'         => 'Absensi berhasil dibuat',
+    'deleted_employee_error'  => 'Tidak dapat memperbarui absensi karyawan yang terhapus',
+    'fetch_error'             => 'Gagal mengambil data absensi',
     'form'                    => [
         'employee'  => 'Karyawan',
         'week_of'   => 'Minggu',
@@ -66,7 +66,7 @@ return [
         'days' => [
             'required' => 'Pilih minimal satu hari.',
             'min'      => 'Pilih minimal satu hari.',
-            'integer'  => 'Jumlah kehadiran harus berupa angka.',
+            'integer'  => 'Jumlah absensi harus berupa angka.',
             'in'       => 'Hari yang dipilih tidak valid.',
         ],
 

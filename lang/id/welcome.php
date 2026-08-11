@@ -63,7 +63,7 @@ return [
         ],
         'presence' => [
             'title' => 'Absensi',
-            'desc'  => 'Pantau kehadiran harian setiap karyawan. Sinkron otomatis dengan perhitungan gaji.',
+            'desc'  => 'Pantau absensi harian setiap karyawan. Sinkron otomatis dengan perhitungan gaji.',
         ],
     ],
 

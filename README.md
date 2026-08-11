@@ -23,7 +23,7 @@
 
 **AN Mastery V3** adalah aplikasi sistem manajemen konveksi terpadu yang dirancang khusus untuk operasional **Andri Sablon** yang berlokasi di Gedangsewu, Tulungagung, Jawa Timur.
 
-Aplikasi ini mengintegrasikan seluruh alur kerja bisnis konveksi dan sablon dari hulu ke hilir: pengelolaan inventaris kain, pencatatan order pekerjaan sablon, manajemen tagihan supplier, rekap kehadiran karyawan, hingga kalkulasi gaji otomatis. Selain fitur internal manajemen, aplikasi ini dilengkapi halaman publik (**Welcome Page**) yang menyajikan profil bisnis, galeri hasil produksi, katalog bahan kain, serta peta lokasi workshop.
+Aplikasi ini mengintegrasikan seluruh alur kerja bisnis konveksi dan sablon dari hulu ke hilir: pengelolaan inventaris kain, pencatatan order pekerjaan sablon, manajemen tagihan supplier, rekap kehadiran (absensi) karyawan, hingga kalkulasi gaji otomatis. Selain fitur internal manajemen, aplikasi ini dilengkapi halaman publik (**Welcome Page**) yang menyajikan profil bisnis, galeri hasil produksi, katalog bahan kain, serta peta lokasi workshop.
 
 ---
 
@@ -48,7 +48,7 @@ Halaman depan (`welcome.blade.php`) didesain modern, dinamis, dan responsif deng
 2. **Order & Produksi Sablon**: Pencatatan pekerjaan sablon, pelacakan status pengerjaan, dan riwayat pesanan.
 3. **Tagihan Supplier (Supplier Billing)**: Pengelolaan invoice dan status pembayaran ke supplier secara teratur.
 4. **Manajemen Karyawan & Gaji**: Manajamen data karyawan, absensi harian, dan perhitungan gaji mingguan/bulanan.
-5. **Manajemen Absensi (Attendance)**: Pencatatan kehadiran harian karyawan yang tersinkronisasi otomatis dengan modul penggajian.
+5. **Manajemen Absensi (Attendance)**: Pencatatan kehadiran (absensi) harian karyawan yang tersinkronisasi otomatis dengan modul penggajian.
 6. **Galeri Produksi**: Manajemen unggahan foto produk dan hasil karya konveksi.
 
 ### ⚙️ Fitur Sistem & UX
