@@ -66,25 +66,30 @@ class PresenceRepository
 
     public function bulkGenerate(array $employeeIds, Carbon $weekOf, int $amount, array $days): int
     {
-        $values = array_fill_keys($this->days, 0);
-
-        foreach ($days as $day) {
-            $values[$day] = $amount;
-        }
-
-        $values['total'] = $amount * count($days);
-
-        return DB::transaction(function () use ($employeeIds, $weekOf, $values) {
+        return DB::transaction(function () use ($employeeIds, $weekOf, $amount, $days) {
             $count = 0;
 
             foreach ($employeeIds as $employeeId) {
-                Presence::updateOrCreate(
-                    [
-                        'employee_id' => $employeeId,
-                        'week_of'     => $weekOf->toDateString(),
-                    ],
-                    $values
-                );
+                $presence = Presence::firstOrNew([
+                    'employee_id' => $employeeId,
+                    'week_of'     => $weekOf->toDateString(),
+                ]);
+
+                if (! $presence->exists) {
+                    foreach ($this->days as $day) {
+                        $presence->{$day} = 0;
+                    }
+                }
+
+                foreach ($days as $day) {
+                    $presence->{$day} = $amount;
+                }
+
+                $presence->total = collect($this->days)
+                    ->sum(fn($day) => (int) $presence->{$day});
+
+                $presence->save();
+
                 $count++;
             }
 
