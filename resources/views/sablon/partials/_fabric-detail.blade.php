@@ -56,7 +56,7 @@
                                             <li @click="selectFabricDetail(row, option)"
                                                 class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
                                                    hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
-                                                x-text="option.color_name + ' (stock: ' + option.stock + ')'"></li>
+                                                x-text="option.color_name"></li>
                                         </template>
                                         <template x-if="filteredFabricDetails(row.search).length === 0">
                                             <li class="px-4 py-2 text-sm text-(--color-dark-gray)">

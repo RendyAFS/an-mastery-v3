@@ -353,7 +353,7 @@ export default function sablonForm(
             const found = this.fabricDetailOptions.find(
                 (d) => String(d.id) === String(id),
             );
-            return found ? `${found.color_name} (stock: ${found.stock})` : "";
+            return found ? `${found.color_name}` : "";
         },
 
         employeeLabel(id) {
