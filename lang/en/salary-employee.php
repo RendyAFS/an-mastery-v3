@@ -9,10 +9,12 @@ return [
         'all' => 'All',
     ],
     'sync' => [
-        'button' => 'Sync Data',
-        'loading' => 'Syncing...',
+        'button'              => 'Sync Data',
+        'loading'             => 'Syncing...',
         'select_week_warning' => 'Please select a week range first',
-        'synced_success' => 'Synced :count employee salary records.',
+        'synced_success'      => 'Synced :count employee salary records.',
+        'confirm_title'       => 'Sync Salary Data?',
+        'confirm_message'     => 'This will recalculate & lock in eligible sablon, bon, and memo data into employee salaries for the selected week. Salary records already marked "Paid" will automatically reopen to "Pending" if new data comes in.',
     ],
     'status' => [
         'PENDING' => 'Pending',

@@ -9,10 +9,12 @@ return [
         'all' => 'Semua',
     ],
     'sync' => [
-        'button' => 'Sync Data',
-        'loading' => 'Syncing...',
+        'button'              => 'Sync Data',
+        'loading'             => 'Syncing...',
         'select_week_warning' => 'Pilih rentang minggu terlebih dahulu',
-        'synced_success' => 'Berhasil menyinkronkan :count data gaji karyawan.',
+        'synced_success'      => 'Berhasil menyinkronkan :count data gaji karyawan.',
+        'confirm_title'       => 'Sinkronkan Data Gaji?',
+        'confirm_message'     => 'Ini akan menghitung ulang & mengunci data sablon, bon, dan memo yang sudah memenuhi syarat ke gaji karyawan untuk minggu yang dipilih. Data gaji yang sudah berstatus "Sudah Dibayar" akan otomatis dibuka kembali menjadi "Belum Dibayar" jika ada data baru yang masuk.',
     ],
     'status' => [
         'PENDING' => 'Belum Dibayar',

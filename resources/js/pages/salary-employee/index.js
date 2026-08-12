@@ -372,6 +372,15 @@ const PageScript = (function () {
                 return;
             }
 
+            const confirmed = await Confirm.show(
+                window.langSalaryEmployee.sync.confirm_message,
+                window.langSalaryEmployee.sync.confirm_title,
+                window.langCustomAlert.confirm,
+                window.langCustomAlert.cancel,
+            );
+
+            if (!confirmed) return;
+
             startLoading(this);
 
             try {

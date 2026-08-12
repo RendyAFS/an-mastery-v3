@@ -59,6 +59,8 @@
 
     @include('layouts.lang')
 
+    <x-custom-alert />
+
     @vite(['resources/js/app.js'])
 
     @stack('scripts')
