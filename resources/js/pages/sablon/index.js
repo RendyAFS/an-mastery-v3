@@ -124,8 +124,13 @@ const PageScript = (function () {
                                                 <p class="text-[11px] text-(--color-dark-gray)">
                                                     ${detail.layers ?? 0} ${window.langSablon.card.layer_suffix}
                                                     ${
-                                                        detail.is_bon
-                                                            ? `• <span class="text-(--color-red)">${window.langSablon.card.bon}</span>`
+                                                        detail.settlement_of_id
+                                                            ? `• <span class="text-(--color-primary) font-bold">${window.langSablon.card.settlement_bon}</span>`
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        detail.is_bon && !detail.settlement_of_id
+                                                            ? `• <span class="text-(--color-red) font-bold">${window.langSablon.card.bon}</span>`
                                                             : ""
                                                     }
                                                     ${
