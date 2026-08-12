@@ -69,4 +69,20 @@ class SablonEmployeeDetail extends Model
                 })->orWhere('is_bon', true);
             });
     }
+
+    public function isEligibleForSalary(): bool
+    {
+        if ($this->is_paid) {
+            return false;
+        }
+
+        if ($this->is_bon) {
+            return true;
+        }
+
+        return in_array($this->sablon?->status, [
+            StatusSablonEnum::DONE,
+            StatusSablonEnum::DELIVERED,
+        ]);
+    }
 }

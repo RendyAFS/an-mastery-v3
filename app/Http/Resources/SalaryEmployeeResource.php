@@ -10,7 +10,9 @@ class SalaryEmployeeResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $sablonFeeTotal = $this->sablonEmployeeDetails->sum(fn($detail) => (float) $detail->fee);
+        $sablonFeeTotal = $this->sablonEmployeeDetails
+            ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
+            ->sum(fn($detail) => (float) $detail->fee);
 
         $sablonGroups = $this->sablonEmployeeDetails
             ->groupBy(fn($detail) => $detail->sablon?->supplier?->name ?? '-')
@@ -18,14 +20,19 @@ class SalaryEmployeeResource extends JsonResource
                 return [
                     'supplier_name' => $supplierName,
                     'items' => $details->map(function ($detail) {
-                        $detailFee = (float) $detail->fee
-                            + collect($detail->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                        $isCounted = $detail->salary_employee_id !== null || $detail->isEligibleForSalary();
+                        $detailFee = $isCounted
+                            ? (float) $detail->fee + collect($detail->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
+                            : 0;
 
                         return [
                             'image_fabric_name' => $detail->sablon?->imageFabric?->name ?? '-',
                             'layers'            => $detail->layers,
                             'fee'               => $detailFee,
                             'fee_formated'      => RupiahHelper::format($detailFee),
+                            'is_eligible'       => $isCounted,
+                            'is_bon'            => (bool) $detail->is_bon,
+                            'status'            => $detail->sablon?->status ? __('enums.status_sablon.' . $detail->sablon->status->value) : null,
                         ];
                     })->values(),
                 ];

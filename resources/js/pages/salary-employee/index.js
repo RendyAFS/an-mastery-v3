@@ -104,22 +104,22 @@ const PageScript = (function () {
                     ${item.sablon_groups
                         .map(
                             (group) => `
-                        <div class="space-y-1">
-                            <p class="text-xs font-semibold">${group.supplier_name}</p>
-                            <ul class="space-y-1 text-xs">
-                                ${group.items
-                                    .map(
-                                        (i) => `
-                                    <li class="flex justify-between">
-                                        <span>• ${i.image_fabric_name} • ${i.layers ?? 0} Layer</span>
-                                        <span class="font-medium">${i.fee_formated}</span>
-                                    </li>
-                                `,
-                                    )
-                                    .join("")}
-                            </ul>
-                        </div>
-                    `,
+                            <div class="space-y-1">
+                                <p class="text-xs font-semibold">${group.supplier_name}</p>
+                                <ul class="space-y-1 text-xs">
+                                    ${group.items
+                                        .map(
+                                            (i) => `
+                                                <li class="flex justify-between ${i.is_eligible ? "" : "opacity-60"}">
+                                                    <span>• ${i.image_fabric_name} • ${i.layers ?? 0} Layer ${i.is_bon ? `<span class="text-[10px] text-(--color-danger) font-bold">(Bon)</span>` : ""} ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) t-semibold">(${i.status})</span>`}</span>
+                                                    <span class="font-medium">${i.fee_formated}</span>
+                                                </li>
+                                            `,
+                                        )
+                                        .join("")}
+                                </ul>
+                            </div>
+                        `,
                         )
                         .join("")}
                 </div>

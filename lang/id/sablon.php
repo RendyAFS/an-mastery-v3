@@ -12,7 +12,7 @@ return [
     ],
 
     'statuses'      => [
-        'ON_PROGRESS' => 'Sedang Proses',
+        'ON_PROGRESS' => 'Diproses',
         'DONE'        => 'Selesai',
         'DELIVERED'   => 'Terkirim',
         'RETURNED'    => 'Dikembalikan',

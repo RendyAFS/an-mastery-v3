@@ -60,14 +60,27 @@ class SalaryEmployeeRepository
             ->get()
             ->keyBy(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)->toDateString());
 
-        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $eligibleDetails, $pendingMemosByEmployee) {
+        $allDetails = SablonEmployeeDetail::query()
+            ->whereNull('salary_employee_id')
+            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
+            ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
+            ->get()
+            ->groupBy(function (SablonEmployeeDetail $detail) {
+                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->toDateString();
+
+                return $detail->employee_id . '|' . $weekStart;
+            });
+
+        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $allDetails, $pendingMemosByEmployee) {
             $key = $s->employee_id . '|' . Carbon::parse($s->date)->toDateString();
 
             if ($s->status !== StatusSalaryEmployeeEnum::PAID) {
-                if ($eligibleDetails->has($key)) {
+                if ($allDetails->has($key)) {
                     $s->setRelation(
                         'sablonEmployeeDetails',
-                        $s->sablonEmployeeDetails->concat($eligibleDetails->get($key))
+                        $s->sablonEmployeeDetails->concat($allDetails->get($key))
                     );
                 }
 
@@ -84,7 +97,7 @@ class SalaryEmployeeRepository
 
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
-            ->map(function ($details) use ($presences, $pendingMemosByEmployee) {
+            ->map(function ($details, $key) use ($presences, $pendingMemosByEmployee, $allDetails) {
                 $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
                 $first    = $details->first();
 
@@ -102,7 +115,7 @@ class SalaryEmployeeRepository
                 ]);
 
                 $salary->setRelation('employee', $first->employee);
-                $salary->setRelation('sablonEmployeeDetails', $details);
+                $salary->setRelation('sablonEmployeeDetails', $allDetails->get($key, $details));
                 $salary->setRelation('presence', $presences->get($first->employee_id . '|' . $weekStart));
                 $salary->setRelation('memos', $pendingMemosByEmployee->get($first->employee_id, collect()));
 
