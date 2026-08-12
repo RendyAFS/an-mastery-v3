@@ -12,7 +12,7 @@ class SalaryEmployeeResource extends JsonResource
     {
         $sablonFeeTotal = $this->sablonEmployeeDetails
             ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
-            ->sum(fn($detail) => (float) $detail->fee + collect($detail->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0)));
+            ->sum(fn($detail) => $detail->countableAmount());
 
         $sablonGroups = $this->sablonEmployeeDetails
             ->groupBy(fn($detail) => $detail->sablon?->supplier?->name ?? '-')
@@ -21,9 +21,7 @@ class SalaryEmployeeResource extends JsonResource
                     'supplier_name' => $supplierName,
                     'items' => $details->map(function ($detail) {
                         $isCounted = $detail->salary_employee_id !== null || $detail->isEligibleForSalary();
-                        $detailFee = $isCounted
-                            ? (float) $detail->fee + collect($detail->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
-                            : 0;
+                        $detailFee = $isCounted ? $detail->countableAmount() : 0;
 
                         return [
                             'image_fabric_name' => $detail->sablon?->imageFabric?->name ?? '-',

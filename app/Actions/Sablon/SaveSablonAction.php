@@ -56,11 +56,13 @@ class SaveSablonAction
             ->unique()
             ->values();
 
-        $additionalFeesByEmployee = collect($employeeDetails)
-            ->groupBy('employee_id')
-            ->map(fn($details) => $details->flatMap(fn($detail) => $detail['additional_fees'] ?? [])->values());
-
-        $sablon->sablonEmployeeDetails()->delete();
+        $sablon->sablonEmployeeDetails()
+            ->where(function ($q) {
+                $q->where('is_paid', false)->orWhereNull('is_paid');
+            })
+            ->where('is_settled', false)
+            ->whereNull('settlement_of_id')
+            ->delete();
 
         foreach ($employeeDetails as $detail) {
             $sablon->sablonEmployeeDetails()->create([
@@ -88,17 +90,8 @@ class SaveSablonAction
 
         $weekOf = $sablon->date_sablon->toDateString();
 
-        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf, $additionalFeesByEmployee) {
-            $additionalFees = $additionalFeesByEmployee->get($employeeId, collect())->all();
-
-            $this->upsertSalaryEmployeeAction->handleForEmployee(
-                (int) $employeeId,
-                $weekOf,
-                null,
-                $additionalFees ?: null,
-                null,
-                true
-            );
+        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
+            $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
         });
     }
 }

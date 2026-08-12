@@ -47,7 +47,7 @@ class UpsertSalaryEmployeeAction
                 ->where('employee_id', $employeeId)
                 ->whereNull('salary_employee_id')
                 ->eligibleForSalary()
-                ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
+                ->inWeek($start, $end)
                 ->get();
 
             $alreadyLinkedMemos = $salary->exists
@@ -63,9 +63,7 @@ class UpsertSalaryEmployeeAction
             $hasNewData = $newEligibleDetails->isNotEmpty() || $newEligibleMemos->isNotEmpty();
 
             $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
-            $totalFee = $eligibleDetails->sum(
-                fn(SablonEmployeeDetail $d) => (float) $d->fee + collect($d->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
-            );
+            $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => $d->countableAmount());
 
             $eligibleMemos = $alreadyLinkedMemos->concat($newEligibleMemos);
             $memoTotal = $eligibleMemos->sum(fn(Memo $m) => (int) $m->nominal);
@@ -154,18 +152,18 @@ class UpsertSalaryEmployeeAction
         $pairs = SablonEmployeeDetail::query()
             ->whereNull('salary_employee_id')
             ->eligibleForSalary()
-            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start->toDateString(), $end->toDateString()]))
+            ->inWeek($start->toDateString(), $end->toDateString())
             ->with('sablon')
             ->get()
             ->map(function (SablonEmployeeDetail $detail) {
-                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                $weekStart = Carbon::parse($detail->weekAnchorDate())
                     ->startOfWeek(Carbon::MONDAY)
                     ->toDateString();
 
                 return $detail->employee_id . '|' . $weekStart;
             })
             ->unique();
-
+            
         foreach ($pairs as $pair) {
             [$employeeId, $weekStart] = explode('|', $pair);
             $this->handleForEmployee((int) $employeeId, $weekStart);

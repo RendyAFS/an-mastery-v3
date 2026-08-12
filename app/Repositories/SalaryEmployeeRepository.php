@@ -38,11 +38,11 @@ class SalaryEmployeeRepository
         $eligibleDetails = SablonEmployeeDetail::query()
             ->whereNull('salary_employee_id')
             ->eligibleForSalary()
-            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
+            ->inWeek($start, $end)
             ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
             ->get()
             ->groupBy(function (SablonEmployeeDetail $detail) {
-                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                $weekStart = Carbon::parse($detail->weekAnchorDate())
                     ->startOfWeek(Carbon::MONDAY)
                     ->toDateString();
 
@@ -62,11 +62,11 @@ class SalaryEmployeeRepository
 
         $allDetails = SablonEmployeeDetail::query()
             ->whereNull('salary_employee_id')
-            ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [$start, $end]))
+            ->inWeek($start, $end)
             ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
             ->get()
             ->groupBy(function (SablonEmployeeDetail $detail) {
-                $weekStart = Carbon::parse($detail->sablon->date_sablon)
+                $weekStart = Carbon::parse($detail->weekAnchorDate())
                     ->startOfWeek(Carbon::MONDAY)
                     ->toDateString();
 
@@ -98,7 +98,7 @@ class SalaryEmployeeRepository
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
             ->map(function ($details, $key) use ($presences, $pendingMemosByEmployee, $allDetails) {
-                $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+                $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => $d->countableAmount());
                 $first    = $details->first();
 
                 $weekStart = Carbon::parse($first->sablon->date_sablon)

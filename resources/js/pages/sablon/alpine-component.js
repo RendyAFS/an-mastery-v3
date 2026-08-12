@@ -260,6 +260,8 @@ export default function sablonForm(
                 openEmpChange: false,
                 searchEmp: "",
                 searchEmpChange: "",
+                locked: !!row.locked,
+                isSettlementRow: !!row.is_settlement_row,
             };
         },
 
@@ -323,6 +325,7 @@ export default function sablonForm(
         },
 
         removeEmployeeRow(index) {
+            if (this.employeeRows[index]?.locked) return;
             this.employeeRows.splice(index, 1);
         },
 
@@ -390,6 +393,7 @@ export default function sablonForm(
         },
 
         computeFee(row) {
+            if (row.locked) return row.fee;
             const fee = calc.computeFee(this.ratePerLayer, row.layers);
             row.fee = fee;
             return fee;

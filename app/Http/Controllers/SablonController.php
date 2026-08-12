@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
+use App\Actions\Sablon\SettleBonAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
 use App\Http\Requests\Sablon\SaveSablonRequest;
@@ -74,11 +75,13 @@ class SablonController extends Controller
         return view('sablon.edit', array_merge(['sablon' => $sablon], $formData));
     }
 
-    public function update(SaveSablonRequest $request, Sablon $sablon, SaveSablonAction $action)
+    public function update(SaveSablonRequest $request, Sablon $sablon, SaveSablonAction $action, SettleBonAction $settleBonAction)
     {
         $this->authorize('sablons.update');
 
         $sablon = $action->handle($request, $sablon);
+
+        $settleBonAction->handle($sablon);
 
         return new SablonResource($sablon);
     }
@@ -137,7 +140,7 @@ class SablonController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Sablon $sablon)
+    public function updateStatus(Request $request, Sablon $sablon, SettleBonAction $settleBonAction)
     {
         $validated = $request->validate([
             'status' => ['required', new Enum(StatusSablonEnum::class)],
@@ -146,6 +149,8 @@ class SablonController extends Controller
         $sablon->update([
             'status' => $validated['status'],
         ]);
+
+        $settleBonAction->handle($sablon);
 
         return response()->json([
             'message' => __('sablon.status_updated_success'),

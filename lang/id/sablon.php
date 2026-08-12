@@ -86,6 +86,9 @@ return [
         'no_employee_found'           => 'Karyawan tidak ditemukan',
         'no_employee_detail_yet'      => 'Belum ada detail karyawan',
         'add_employee'                => 'Tambah Karyawan',
+        'locked_badge'                => 'Terkunci',
+        'settlement_badge'            => 'Settlement',
+        'bon_badge'                   => 'Bon',
         'additional_fee_label'        => 'Biaya Tambahan (otomatis terhubung ke Gaji)',
         'add_fee'                     => 'Tambah Biaya',
         'no_additional_fee_yet'       => 'Belum ada biaya tambahan',
@@ -223,4 +226,5 @@ return [
             ],
         ],
     ],
+    'settlement_notes' => 'Settlement bon dari detail #:id',
 ];

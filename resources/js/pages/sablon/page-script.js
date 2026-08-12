@@ -73,31 +73,35 @@ const PageScript = (function () {
     }
 
     function getEmployeeDetails(data) {
-        return data.employeeRows.map((row) => {
-            const fee = data.computeFee(row);
+        return data.employeeRows
+            .filter((row) => !row.locked)
+            .map((row) => {
+                const fee = data.computeFee(row);
 
-            return {
-                fabric_detail_id: row.fabric_detail_id || null,
-                employee_id: row.employee_id,
-                layers: row.layers || 0,
-                fee,
-                is_change: row.is_change,
-                employee_change_id: row.is_change
-                    ? row.employee_change_id || null
-                    : null,
-                is_bon: row.is_bon,
-                is_paid: row.is_paid,
-                notes: row.notes,
-                additional_fees: row.is_bon
-                    ? row.additionalFees
-                          .filter((af) => af.nominal !== 0 || af.notes !== "")
-                          .map((af) => ({
-                              nominal: af.nominal,
-                              notes: af.notes || "",
-                          }))
-                    : [],
-            };
-        });
+                return {
+                    fabric_detail_id: row.fabric_detail_id || null,
+                    employee_id: row.employee_id,
+                    layers: row.layers || 0,
+                    fee,
+                    is_change: row.is_change,
+                    employee_change_id: row.is_change
+                        ? row.employee_change_id || null
+                        : null,
+                    is_bon: row.is_bon,
+                    is_paid: row.is_paid,
+                    notes: row.notes,
+                    additional_fees: row.is_bon
+                        ? row.additionalFees
+                              .filter(
+                                  (af) => af.nominal !== 0 || af.notes !== "",
+                              )
+                              .map((af) => ({
+                                  nominal: af.nominal,
+                                  notes: af.notes || "",
+                              }))
+                        : [],
+                };
+            });
     }
 
     async function submitForm(action, submitter) {
