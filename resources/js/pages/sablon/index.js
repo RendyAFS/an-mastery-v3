@@ -125,7 +125,7 @@ const PageScript = (function () {
                                                     ${detail.layers ?? 0} ${window.langSablon.card.layer_suffix}
                                                     ${
                                                         detail.is_bon
-                                                            ? `• ${window.langSablon.card.bon}`
+                                                            ? `• <span class="text-(--color-red)">${window.langSablon.card.bon}</span>`
                                                             : ""
                                                     }
                                                     ${

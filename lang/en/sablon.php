@@ -1,9 +1,12 @@
 <?php
 return [
-    'description'            => 'Manage sablon data',
-    'create_title'           => 'Create Sablon',
-    'edit_title'             => 'Edit Sablon',
-    'status_updated_success' => 'Status updated successfully.',
+    'description'                  => 'Manage sablon data',
+    'create_title'                 => 'Create Sablon',
+    'edit_title'                   => 'Edit Sablon',
+    'status_updated_success'       => 'Status updated successfully.',
+    'delete_confirm_message'       => 'Are you sure you want to delete this Sablon?',
+    'restore_confirm_message'      => 'Restore this Sablon?',
+    'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
 
     'filter'        => [
         'week_start' => 'From Week',
@@ -83,6 +86,12 @@ return [
         'no_employee_found'        => 'No employee found',
         'no_employee_detail_yet'   => 'No employee detail yet',
         'add_employee'             => 'Add Employee',
+        'additional_fee_label'     => 'Additional Fee (auto-linked to Salary)',
+        'add_fee'                  => 'Add Fee',
+        'no_additional_fee_yet'    => 'No additional fee yet',
+        'nominal'                  => 'Nominal',
+        'notes'                    => 'Notes',
+        'notes_placeholder'        => 'e.g. Bon Kain',
     ],
 
     'status_modal'  => [
@@ -108,10 +117,7 @@ return [
         'delete'              => 'Delete',
     ],
 
-    'delete_confirm_message'       => 'Are you sure you want to delete this Sablon?',
-    'restore_confirm_message'      => 'Restore this Sablon?',
-    'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
-    'status_updated_success'       => 'Status updated successfully',
+
     'validation' => [
         'supplier_id' => [
             'required' => 'Konveksi is required.',

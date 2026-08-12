@@ -17,9 +17,10 @@ class UpsertSalaryEmployeeAction
         string $weekOf,
         ?string $status = null,
         ?array $additionalFee = null,
-        ?string $notes = null
+        ?string $notes = null,
+        bool $appendAdditionalFee = false
     ): SalaryEmployee {
-        return DB::transaction(function () use ($employeeId, $weekOf, $status, $additionalFee, $notes) {
+        return DB::transaction(function () use ($employeeId, $weekOf, $status, $additionalFee, $notes, $appendAdditionalFee) {
             $start = Carbon::parse($weekOf)->startOfWeek(Carbon::MONDAY)->toDateString();
             $end   = Carbon::parse($weekOf)->endOfWeek(Carbon::SUNDAY)->toDateString();
 
@@ -80,12 +81,14 @@ class UpsertSalaryEmployeeAction
             }
 
             if ($additionalFee !== null) {
-                $salary->additional_fee = array_values(
-                    array_map(fn($af) => [
-                        'nominal' => (float) ($af['nominal'] ?? 0),
-                        'notes'   => (string) ($af['notes'] ?? ''),
-                    ], $additionalFee)
-                );
+                $normalized = array_map(fn($af) => [
+                    'nominal' => (float) ($af['nominal'] ?? 0),
+                    'notes'   => (string) ($af['notes'] ?? ''),
+                ], $additionalFee);
+
+                $salary->additional_fee = $appendAdditionalFee
+                    ? array_values(array_merge($salary->additional_fee ?? [], $normalized))
+                    : array_values($normalized);
             }
 
             if ($notes !== null) {

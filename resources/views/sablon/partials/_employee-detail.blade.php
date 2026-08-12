@@ -149,6 +149,59 @@
                         <label :for="'payed_' + row.uid"
                             class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.is_paid') }}</label>
                     </div>
+
+                    <div class="md:col-span-3 space-y-3 pt-3 border-t border-(--color-gray) dark:border-(--color-slate)"
+                        x-show="row.is_bon" x-cloak>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-medium text-(--color-dark-gray)">
+                                {{ __('sablon.employee_detail.additional_fee_label') }}
+                            </label>
+                            <button type="button" @click="addAdditionalFeeRow(row)"
+                                class="inline-flex items-center gap-1 text-xs font-semibold text-(--color-primary) hover:opacity-80 cursor-pointer">
+                                <i data-lucide="plus" class="size-3.5"></i>
+                                {{ __('sablon.employee_detail.add_fee') }}
+                            </button>
+                        </div>
+
+                        <template x-for="(af, afIndex) in row.additionalFees" :key="af.uid">
+                            <div
+                                class="relative grid grid-cols-2 gap-3 p-3 rounded-lg border border-(--color-gray)/40 dark:border-(--color-dark-gray)">
+                                <button type="button" @click="removeAdditionalFeeRow(row, afIndex)"
+                                    class="absolute top-2 inset-e-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-danger) cursor-pointer">
+                                    <i data-lucide="trash-2" class="size-3.5"></i>
+                                </button>
+
+                                <div class="col-span-1">
+                                    <label class="text-xs font-medium text-(--color-dark-gray)">
+                                        {{ __('sablon.employee_detail.nominal') }}
+                                    </label>
+                                    <input type="text" inputmode="numeric" x-model="af.nominalDisplay"
+                                        @input="onAdditionalFeeNominalInput(af, $event)"
+                                        class="mt-1 px-3 py-2 block w-full rounded-lg
+                                            bg-(--color-light-gray) border border-(--color-gray)
+                                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                                </div>
+
+                                <div class="col-span-1">
+                                    <label class="text-xs font-medium text-(--color-dark-gray)">
+                                        {{ __('sablon.employee_detail.notes') }}
+                                    </label>
+                                    <textarea x-model="af.notes" rows="3" maxlength="255"
+                                        placeholder="{{ __('sablon.employee_detail.notes_placeholder') }}"
+                                        class="mt-1 px-3 py-2 block w-full rounded-lg
+                                            bg-(--color-light-gray) border border-(--color-gray)
+                                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)"></textarea>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template x-if="row.additionalFees.length === 0">
+                            <p class="text-xs text-(--color-dark-gray)">
+                                {{ __('sablon.employee_detail.no_additional_fee_yet') }}</p>
+                        </template>
+                    </div>
                 </div>
             </div>
         </template>

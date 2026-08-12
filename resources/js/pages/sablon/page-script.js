@@ -88,6 +88,14 @@ const PageScript = (function () {
                 is_bon: row.is_bon,
                 is_paid: row.is_paid,
                 notes: row.notes,
+                additional_fees: row.is_bon
+                    ? row.additionalFees
+                          .filter((af) => af.nominal !== 0 || af.notes !== "")
+                          .map((af) => ({
+                              nominal: af.nominal,
+                              notes: af.notes || "",
+                          }))
+                    : [],
             };
         });
     }

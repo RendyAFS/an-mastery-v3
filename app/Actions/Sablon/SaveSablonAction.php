@@ -56,6 +56,10 @@ class SaveSablonAction
             ->unique()
             ->values();
 
+        $additionalFeesByEmployee = collect($employeeDetails)
+            ->groupBy('employee_id')
+            ->map(fn($details) => $details->flatMap(fn($detail) => $detail['additional_fees'] ?? [])->values());
+
         $sablon->sablonEmployeeDetails()->delete();
 
         foreach ($employeeDetails as $detail) {
@@ -78,8 +82,17 @@ class SaveSablonAction
 
         $weekOf = $sablon->date_sablon->toDateString();
 
-        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
-            $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf, $additionalFeesByEmployee) {
+            $additionalFees = $additionalFeesByEmployee->get($employeeId, collect())->all();
+
+            $this->upsertSalaryEmployeeAction->handleForEmployee(
+                (int) $employeeId,
+                $weekOf,
+                null,
+                $additionalFees ?: null,
+                null,
+                true
+            );
         });
     }
 }

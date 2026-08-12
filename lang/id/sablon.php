@@ -1,9 +1,12 @@
 <?php
 return [
-    'description'            => 'Kelola data sablon',
-    'create_title'           => 'Tambah Sablon',
-    'edit_title'             => 'Ubah Sablon',
-    'status_updated_success' => 'Status berhasil diperbarui.',
+    'description'                  => 'Kelola data sablon',
+    'create_title'                 => 'Tambah Sablon',
+    'edit_title'                   => 'Ubah Sablon',
+    'status_updated_success'       => 'Status berhasil diperbarui.',
+    'delete_confirm_message'       => 'Apakah kamu yakin ingin menghapus Sablon ini?',
+    'restore_confirm_message'      => 'Pulihkan Sablon ini?',
+    'force_delete_confirm_message' => 'Ini akan menghapus Sablon secara permanen. Lanjutkan?',
 
     'filter'        => [
         'week_start' => 'Dari Minggu',
@@ -83,6 +86,12 @@ return [
         'no_employee_found'           => 'Karyawan tidak ditemukan',
         'no_employee_detail_yet'      => 'Belum ada detail karyawan',
         'add_employee'                => 'Tambah Karyawan',
+        'additional_fee_label'        => 'Biaya Tambahan (otomatis terhubung ke Gaji)',
+        'add_fee'                     => 'Tambah Biaya',
+        'no_additional_fee_yet'       => 'Belum ada biaya tambahan',
+        'nominal'                     => 'Nominal',
+        'notes'                       => 'Catatan',
+        'notes_placeholder'           => 'cth. Bon Kain',
     ],
 
     'status_modal'  => [
@@ -108,10 +117,6 @@ return [
         'delete'              => 'Hapus',
     ],
 
-    'delete_confirm_message'       => 'Apakah kamu yakin ingin menghapus Sablon ini?',
-    'restore_confirm_message'      => 'Pulihkan Sablon ini?',
-    'force_delete_confirm_message' => 'Ini akan menghapus Sablon secara permanen. Lanjutkan?',
-    'status_updated_success'       => 'Status berhasil diperbarui',
     'validation' => [
         'supplier_id' => [
             'required' => 'Konveksi wajib dipilih.',

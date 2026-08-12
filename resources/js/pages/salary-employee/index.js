@@ -110,9 +110,12 @@ const PageScript = (function () {
                                     ${group.items
                                         .map(
                                             (i) => `
-                                                <li class="flex justify-between ${i.is_eligible ? "" : "opacity-60"}">
-                                                    <span>• ${i.image_fabric_name} • ${i.layers ?? 0} Layer ${i.is_bon ? `<span class="text-[10px] text-(--color-danger) font-bold">(Bon)</span>` : ""} ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) t-semibold">(${i.status})</span>`}</span>
-                                                    <span class="font-medium">${i.fee_formated}</span>
+                                                <li class="flex justify-between">
+                                                    <span>
+                                                        <span class="${i.is_eligible ? "" : "opacity-40"}">• ${i.image_fabric_name} • ${i.layers ?? 0} Layer ${i.is_bon ? `<span class="text-[10px] text-(--color-danger) font-bold">(Bon)</span>` : ""}</span>
+                                                        ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
+                                                    </span>
+                                                    <span class="font-medium ${i.is_eligible ? "" : "opacity-40"}">${i.fee_formated}</span>
                                                 </li>
                                             `,
                                         )

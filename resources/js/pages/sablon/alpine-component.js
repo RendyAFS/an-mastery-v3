@@ -253,11 +253,59 @@ export default function sablonForm(
                 is_bon: !!row.is_bon,
                 is_paid: !!row.is_paid,
                 notes: row.notes ?? "",
+                additionalFees: (row.additional_fees || []).map((af) =>
+                    this.buildAdditionalFeeRow(af),
+                ),
                 openEmp: false,
                 openEmpChange: false,
                 searchEmp: "",
                 searchEmpChange: "",
             };
+        },
+
+        buildAdditionalFeeRow(af = {}) {
+            const nominal = af.nominal ?? 0;
+            return {
+                uid: crypto.randomUUID(),
+                nominal,
+                nominalDisplay: nominal
+                    ? this.formatSignedRupiah(String(nominal))
+                    : "",
+                notes: af.notes ?? "",
+            };
+        },
+
+        formatSignedRupiah(value) {
+            const raw = String(value ?? "").replace(/[^0-9-]/g, "");
+            const isNegative = raw.startsWith("-");
+            const digits = raw.replace(/-/g, "");
+            if (!digits) return isNegative ? "-" : "";
+            const formatted = Number(digits).toLocaleString("id-ID");
+            return isNegative ? `-${formatted}` : formatted;
+        },
+
+        unformatSignedRupiah(value) {
+            const raw = String(value ?? "").replace(/[^0-9-]/g, "");
+            const isNegative = raw.startsWith("-");
+            const digits = raw.replace(/-/g, "");
+            if (!digits) return 0;
+            const num = Number(digits);
+            return isNegative ? -num : num;
+        },
+
+        onAdditionalFeeNominalInput(af, e) {
+            af.nominalDisplay = this.formatSignedRupiah(e.target.value);
+            af.nominal = this.unformatSignedRupiah(af.nominalDisplay);
+        },
+
+        addAdditionalFeeRow(row) {
+            row.additionalFees.push(this.buildAdditionalFeeRow());
+            this.$nextTick(() => reInitUi());
+        },
+
+        removeAdditionalFeeRow(row, index) {
+            row.additionalFees.splice(index, 1);
+            this.$nextTick(() => reInitUi());
         },
 
         addFabricRow() {
