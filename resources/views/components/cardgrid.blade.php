@@ -18,12 +18,8 @@
 <div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
     {{-- LEFT SIDE --}}
     <div class="flex items-center gap-3 w-full sm:w-auto">
-
-        {{-- Search --}}
         @if ($search)
             <div class="relative w-full sm:w-64">
-
-                {{-- Search Icon --}}
                 <div class="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-4 z-10">
                     <i data-lucide="search" class="size-4"></i>
                 </div>
@@ -36,7 +32,6 @@
                     focus:ring-2 focus:ring-(--color-primary)/30"
                     placeholder="{{ __('cardgrid.Search...') }}">
 
-                {{-- Clear Button --}}
                 <button type="button" id="cg-search-clear"
                     class="absolute inset-y-0 inset-e-0 hidden items-center pe-3
                         text-(--color-gray)
@@ -48,7 +43,6 @@
             </div>
         @endif
 
-        {{-- Global Filter --}}
         @if ($filter)
             <select id="{{ $filterId }}" class="hidden w-auto sm:w-40"
                 data-hs-select='{
@@ -65,6 +59,12 @@
                 @endforeach
             </select>
         @endif
+
+        @isset($filters)
+            <div class="w-auto sm:w-48">
+                {{ $filters }}
+            </div>
+        @endisset
     </div>
 
     @if ($length)

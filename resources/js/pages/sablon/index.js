@@ -19,6 +19,10 @@ const PageScript = (function () {
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
 
+        if (params.get("supplier_id")) {
+            $("#filter-supplier").val(params.get("supplier_id"));
+        }
+
         $("#filter-week-start").val(
             params.get("week_start") || currentIsoWeek(),
         );
@@ -29,6 +33,12 @@ const PageScript = (function () {
         const params = getUrlParams();
         params.set("week_start", $("#filter-week-start").val());
         params.set("week_end", $("#filter-week-end").val());
+
+        if ($("#filter-supplier").val()) {
+            params.set("supplier_id", $("#filter-supplier").val());
+        } else {
+            params.delete("supplier_id");
+        }
 
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, "", newUrl);
@@ -129,7 +139,8 @@ const PageScript = (function () {
                                                             : ""
                                                     }
                                                     ${
-                                                        detail.is_bon && !detail.settlement_of_id
+                                                        detail.is_bon &&
+                                                        !detail.settlement_of_id
                                                             ? `• <span class="text-(--color-red) font-bold">${window.langSablon.card.bon}</span>`
                                                             : ""
                                                     }
@@ -259,6 +270,7 @@ const PageScript = (function () {
                     return {
                         week_start: $("#filter-week-start").val(),
                         week_end: $("#filter-week-end").val(),
+                        supplier_id: $("#filter-supplier").val(),
                     };
                 },
             },
@@ -335,6 +347,11 @@ const PageScript = (function () {
             } catch (e) {
                 console.error(e);
             }
+        });
+
+        $(document).on("change", "#filter-supplier", function () {
+            syncUrl();
+            cardgrid.reload();
         });
 
         $(document).on(

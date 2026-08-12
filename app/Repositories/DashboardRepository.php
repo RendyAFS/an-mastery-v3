@@ -33,21 +33,31 @@ class DashboardRepository
 
     public function getStatusSablonChart(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $counts = Sablon::query()
+        $rows = Sablon::query()
             ->whereBetween('date_sablon', [$dateFrom, $dateTo])
-            ->selectRaw('status, count(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status');
+            ->selectRaw('status, supplier_id, count(*) as total')
+            ->groupBy('status', 'supplier_id')
+            ->with('supplier:id,name')
+            ->get();
 
-        $labels = [];
-        $series = [];
+        $labels    = [];
+        $series    = [];
+        $suppliers = [];
 
         foreach (StatusSablonEnum::cases() as $status) {
-            $labels[] = $status->labels();
-            $series[] = (int) ($counts[$status->value] ?? 0);
+            $statusRows = $rows->where('status', $status);
+
+            $labels[]    = $status->labels();
+            $series[]    = (int) $statusRows->sum('total');
+            $suppliers[] = $statusRows
+                ->map(fn($r) => [
+                    'supplier' => $r->supplier?->name ?? '-',
+                    'total'    => (int) $r->total,
+                ])
+                ->values();
         }
 
-        return compact('labels', 'series');
+        return compact('labels', 'series', 'suppliers');
     }
 
     public function getSablonPerDayChart(Carbon $dateFrom, Carbon $dateTo): array

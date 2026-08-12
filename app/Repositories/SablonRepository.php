@@ -21,7 +21,8 @@ class SablonRepository
         ?string $search = null,
         int $perPage = 12,
         ?\Carbon\Carbon $dateFrom = null,
-        ?\Carbon\Carbon $dateTo = null
+        ?\Carbon\Carbon $dateTo = null,
+        ?int $supplierId = null
     ) {
         $query = Sablon::query()
             ->with([
@@ -48,8 +49,14 @@ class SablonRepository
             $query->where(function ($q) use ($search) {
                 $q->where('notes', 'like', "%{$search}%")
                     ->orWhereHas('supplier', fn($s) => $s->where('name', 'like', "%{$search}%"))
-                    ->orWhereHas('fabric', fn($f) => $f->where('code', 'like', "%{$search}%"));
+                    ->orWhereHas('fabric', fn($f) => $f->where('code', 'like', "%{$search}%"))
+                    ->orWhereHas('imageFabric', fn($i) => $i->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('sablonEmployeeDetails.employee', fn($e) => $e->where('name', 'like', "%{$search}%"));
             });
+        }
+
+        if ($supplierId) {
+            $query->where('supplier_id', $supplierId);
         }
 
         if ($dateFrom && $dateTo) {

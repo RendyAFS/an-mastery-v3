@@ -9,9 +9,11 @@ return [
     'force_delete_confirm_message' => 'Ini akan menghapus Sablon secara permanen. Lanjutkan?',
 
     'filter'        => [
-        'week_start' => 'Dari Minggu',
-        'week_end'   => 'Sampai Minggu',
-        'reset'      => 'Reset',
+        'supplier'      => 'Supplier',
+        'all_suppliers' => 'Semua Supplier',
+        'week_start'    => 'Dari Minggu',
+        'week_end'      => 'Sampai Minggu',
+        'reset'         => 'Reset',
     ],
 
     'statuses'      => [

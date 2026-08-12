@@ -9,9 +9,11 @@ return [
     'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
 
     'filter'        => [
-        'week_start' => 'From Week',
-        'week_end'   => 'To Week',
-        'reset'      => 'Reset',
+        'supplier'      => 'Supplier',
+        'all_suppliers' => 'All Suppliers',
+        'week_start'    => 'From Week',
+        'week_end'      => 'To Week',
+        'reset'         => 'Reset',
     ],
 
     'statuses'      => [
