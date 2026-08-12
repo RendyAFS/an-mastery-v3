@@ -32,7 +32,9 @@ const PageScript = (function () {
                     const isBilledInAdvance =
                         s.status === "ON_PROGRESS" && !!s.is_billed_in_advance;
                     const disabled =
-                        s.status !== "DONE" && !inBatch && !isBilledInAdvance;
+                        !["DONE", "DELIVERED"].includes(s.status) &&
+                        !inBatch &&
+                        !isBilledInAdvance;
                     const checked = mode === "edit" ? inBatch : !disabled;
 
                     return `
