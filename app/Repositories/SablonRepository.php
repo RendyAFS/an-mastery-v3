@@ -60,7 +60,10 @@ class SablonRepository
         }
 
         if ($dateFrom && $dateTo) {
-            $query->whereBetween('date_sablon', [$dateFrom, $dateTo]);
+            $query->where(function ($q) use ($dateFrom, $dateTo) {
+                $q->whereBetween('date_sablon', [$dateFrom, $dateTo])
+                    ->orWhere('status', StatusSablonEnum::ON_PROGRESS);
+            });
         }
 
         return $query->paginate($perPage);
