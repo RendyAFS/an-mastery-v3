@@ -63,7 +63,9 @@ class UpsertSalaryEmployeeAction
             $hasNewData = $newEligibleDetails->isNotEmpty() || $newEligibleMemos->isNotEmpty();
 
             $eligibleDetails = $alreadyLinkedDetails->concat($newEligibleDetails);
-            $totalFee = $eligibleDetails->sum(fn(SablonEmployeeDetail $d) => (float) $d->fee);
+            $totalFee = $eligibleDetails->sum(
+                fn(SablonEmployeeDetail $d) => (float) $d->fee + collect($d->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0))
+            );
 
             $eligibleMemos = $alreadyLinkedMemos->concat($newEligibleMemos);
             $memoTotal = $eligibleMemos->sum(fn(Memo $m) => (int) $m->nominal);

@@ -15,6 +15,7 @@ class SablonEmployeeDetail extends Model
         'salary_employee_id',
         'layers',
         'fee',
+        'additional_fee',
         'is_change',
         'employee_change_id',
         'is_bon',
@@ -23,9 +24,10 @@ class SablonEmployeeDetail extends Model
     ];
 
     protected $casts = [
-        'is_change' => 'boolean',
-        'is_bon'    => 'boolean',
-        'is_paid'  => 'boolean',
+        'additional_fee' => 'array',
+        'is_change'      => 'boolean',
+        'is_bon'         => 'boolean',
+        'is_paid'        => 'boolean',
     ];
 
     public function sablon(): BelongsTo

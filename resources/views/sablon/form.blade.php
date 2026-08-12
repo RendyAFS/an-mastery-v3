@@ -21,6 +21,7 @@
                 'is_bon' => $d->is_bon,
                 'is_paid' => $d->is_paid,
                 'notes' => $d->notes,
+                'additional_fees' => $d->additional_fee ?? [],
             ],
         )
         ->values();

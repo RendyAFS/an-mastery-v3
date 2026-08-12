@@ -12,7 +12,7 @@ class SalaryEmployeeResource extends JsonResource
     {
         $sablonFeeTotal = $this->sablonEmployeeDetails
             ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
-            ->sum(fn($detail) => (float) $detail->fee);
+            ->sum(fn($detail) => (float) $detail->fee + collect($detail->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0)));
 
         $sablonGroups = $this->sablonEmployeeDetails
             ->groupBy(fn($detail) => $detail->sablon?->supplier?->name ?? '-')

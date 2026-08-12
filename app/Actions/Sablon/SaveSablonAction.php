@@ -68,6 +68,12 @@ class SaveSablonAction
                 'employee_id'        => $detail['employee_id'],
                 'layers'             => $detail['layers'] ?? 0,
                 'fee'                => $detail['fee'] ?? 0,
+                'additional_fee'     => array_values(
+                    array_map(fn($af) => [
+                        'nominal' => (float) ($af['nominal'] ?? 0),
+                        'notes'   => (string) ($af['notes'] ?? ''),
+                    ], $detail['additional_fees'] ?? [])
+                ),
                 'is_change'          => $detail['is_change'] ?? false,
                 'employee_change_id' => $detail['employee_change_id'] ?? null,
                 'is_bon'             => $detail['is_bon'] ?? false,
