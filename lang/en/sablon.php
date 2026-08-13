@@ -56,7 +56,6 @@ return [
             'type_fabric'    => 'Search type fabric...',
             'price_employee' => 'Search...',
         ],
-        'hint_choose_supplier_first' => 'Choose Konveksi first to show Fabric',
         'hint_total_long_fabric'     => 'Automatically from total Fabric Detail',
     ],
 

@@ -40,7 +40,8 @@
     {{ Js::from($typeColorsRaw) }},
     {{ Js::from($sablon?->fabric_id ?? null) }},
     {{ Js::from($sablon?->supplier_id ?? null) }},
-    {{ Js::from($fabrics) }}
+    {{ Js::from($fabrics) }},
+    {{ Js::from($priceEmployeeMap) }}
 )" x-init="init()">
 
     @include('sablon.partials._main_info', ['statusOptions' => $statusOptions])

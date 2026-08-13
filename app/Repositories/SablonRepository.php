@@ -100,6 +100,7 @@ class SablonRepository
             'typeFabrics'       => TypeFabric::orderBy('name')->pluck('name', 'id'),
             'priceEmployees'    => PriceEmployee::with('typeColor')->orderBy('id')->get()->mapWithKeys(fn($item) => [$item->id => $item->typeFabric?->name . ' - ' . RupiahHelper::format($item->price) . ' - ' . $item->typeColor?->name . ' Warna'])->toArray(),
             'priceEmployeesRaw' => PriceEmployee::orderBy('id')->pluck('price', 'id')->toArray(),
+            'priceEmployeeMap'  => PriceEmployee::orderBy('id')->get()->mapWithKeys(fn($p) => [$p->type_fabric_id . '_' . $p->type_color_id => $p->id])->toArray(),
             'employees'         => Employee::orderBy('name')->pluck('name', 'id'),
             'fabricDetails'     => FabricDetail::with([
                 'colorFabric',

@@ -14,9 +14,6 @@
             <x-select id="fabric_id" name="fabric_id" label="{{ __('sablon.main_info.fields.fabric') }}"
                 :options="$fabrics" :value="$sablon?->fabric_id ?? null" placeholder="{{ __('sablon.main_info.placeholders.fabric') }}"
                 search-placeholder="{{ __('sablon.main_info.search_placeholders.fabric') }}" clearable="true" />
-            <small x-show="!selectedSupplierId" class="text-xs text-(--color-dark-gray)">
-                {{ __('sablon.main_info.hint_choose_supplier_first') }}
-            </small>
         </div>
 
         <div class="mb-2 space-y-2">
@@ -67,6 +64,7 @@
                 text-(--color-dark) font-semibold focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
             <input type="hidden" name="total_sablon" :value="computedTotalSablon">
+            <small class="text-xs text-(--color-dark-gray)">{{ __('sablon.main_info.hint_total_long_fabric') }}</small>
         </div>
 
         <div class="mb-2 space-y-2">

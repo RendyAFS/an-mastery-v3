@@ -56,7 +56,6 @@ return [
             'type_fabric'    => 'Cari jenis kain...',
             'price_employee' => 'Cari...',
         ],
-        'hint_choose_supplier_first' => 'Pilih Konveksi dulu untuk menampilkan Kain',
         'hint_total_long_fabric'     => 'Otomatis dari total Detail Kain',
     ],
 
