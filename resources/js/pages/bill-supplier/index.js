@@ -120,7 +120,13 @@ const PageScript = (function () {
 
                 <div class="relative mt-5">
                     <p class="font-bold text-lg text-white leading-snug line-clamp-2">${item.name}</p>
-                    ${item.contact ? `<p class="text-xs text-white/80 mt-1 flex items-center gap-1"><i data-lucide="phone" class="size-3.5"></i> ${item.contact}</p>` : ""}
+                    ${item.contact
+                    ? `<p class="text-xs text-(--color-light) mt-1 flex items-center gap-1"><i data-lucide="phone" class="size-3.5"></i> ${item.contact}</p>`
+                    : `<p class="text-sm text-(--color-light) dark:text-(--color-light-gray) italic line-clamp-2 flex items-start gap-1.5">
+                            <i data-lucide="phone-off" class="size-3.5 mt-0.5 shrink-0"></i>
+                            <span>${window.langBillSupplier.card.no_contact}</span>
+                        </p>`
+                    }
                 </div>
             </div>
 
@@ -132,11 +138,14 @@ const PageScript = (function () {
                 ${
                     item.address
                         ? `
-                <p class="text-sm text-(--color-dark-gray) dark:text-(--color-light-gray) line-clamp-2 flex items-start gap-1.5">
-                    <i data-lucide="map-pin" class="size-3.5 mt-0.5 shrink-0"></i>
-                    <span>${item.address}</span>
-                </p>`
-                        : ""
+                            <p class="text-sm text-(--color-dark-gray) dark:text-(--color-light-gray) line-clamp-2 flex items-start gap-1.5">
+                                <i data-lucide="map-pin" class="size-3.5 mt-0.5 shrink-0"></i>
+                                <span>${item.address}</span>
+                            </p>`
+                        : `<p class="text-sm text-(--color-red) italic line-clamp-2 flex items-start gap-1.5">
+                            <i data-lucide="map-pin-off" class="size-3.5 mt-0.5 shrink-0"></i>
+                            <span>${window.langBillSupplier.card.no_address}</span>
+                        </p>`
                 }
 
                 <div class="grid grid-cols-2 gap-2 mt-1">

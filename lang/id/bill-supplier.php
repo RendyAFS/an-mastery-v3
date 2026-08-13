@@ -13,12 +13,14 @@ return [
     ],
 
     'card'          => [
-        'deleted'         => 'Terhapus',
-        'inactive'        => 'Nonaktif',
-        'active'          => 'Aktif',
-        'unbilled'        => 'Belum Ditagih',
-        'unpaid'          => 'Belum Lunas',
-        'total_bill'      => 'Total Tagihan',
+        'deleted'    => 'Terhapus',
+        'inactive'   => 'Nonaktif',
+        'active'     => 'Aktif',
+        'unbilled'   => 'Belum Ditagih',
+        'unpaid'     => 'Belum Lunas',
+        'total_bill' => 'Total Tagihan',
+        'no_address' => 'Alamat belum di simpan',
+        'no_contact' => 'Kontak belum di simpan',
     ],
 
     'cover_style'   => [

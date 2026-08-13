@@ -19,6 +19,8 @@ return [
         'unbilled'        => 'Unbilled',
         'unpaid'          => 'Unpaid',
         'total_bill'      => 'Total Bill',
+        'no_address'      => 'Address not yet saved',
+        'no_contact'      => 'Contact not yet saved',
     ],
 
     'cover_style'   => [
