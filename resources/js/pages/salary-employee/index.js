@@ -202,7 +202,7 @@ const PageScript = (function () {
             </div>
 
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
-                <button data-employee-id="${item.employee_id}" data-status="${item.status}"
+                <button data-employee-id="${item.employee_id}" data-employee-name="${item.employee?.name ?? "-"}" data-status="${item.status}"
                     data-date="${item.date ?? ""}"
                     data-additional-fee='${JSON.stringify(additionalFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
@@ -248,12 +248,14 @@ const PageScript = (function () {
             e.stopPropagation();
 
             const employeeId = $(this).data("employee-id");
+            const employeeName = $(this).data("employee-name");
             const status = $(this).data("status");
             const date = $(this).data("date");
             const existing = $(this).data("additional-fee") || [];
 
             $("#salary-employee-id").val(employeeId);
             $("#salary-week-of").val(date);
+            $("#salary-employee-name").text(employeeName || "-");
             $("#additional-fee-rows").empty();
 
             const instance = HSSelect.getInstance("#modal-salary-status");

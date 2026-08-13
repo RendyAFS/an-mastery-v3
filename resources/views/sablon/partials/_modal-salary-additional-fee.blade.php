@@ -3,7 +3,7 @@
     <input type="hidden" id="sablon-salary-fee-week-of" />
     <input type="hidden" id="sablon-salary-fee-status" />
 
-    <p class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light)">
+    <p class="text-lg font-semibold text-(--color-dark) dark:text-(--color-light) text-center">
         <span id="sablon-salary-fee-employee-name">-</span>
     </p>
     <p class="text-xs text-(--color-dark-gray) mt-1" id="sablon-salary-fee-week-label"></p>

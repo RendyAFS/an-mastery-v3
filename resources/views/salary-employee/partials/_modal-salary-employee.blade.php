@@ -1,6 +1,9 @@
 <x-modal id="hs-salary-employee-modal" title="{{ __('salary-employee.modal.title') }}" size="2xl">
     <input type="hidden" id="salary-employee-id" />
     <input type="hidden" id="salary-week-of" />
+    <p class="text-lg font-semibold text-(--color-dark) dark:text-(--color-light) text-center">
+        <span id="salary-employee-name">-</span>
+    </p>
 
     <x-select id="modal-salary-status" name="modal-salary-status" label="{{ __('salary-employee.modal.status_label') }}"
         placeholder="{{ __('salary-employee.modal.status_placeholder') }}" :options="[
