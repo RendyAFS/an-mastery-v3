@@ -10,7 +10,9 @@ use App\Models\Employee;
 use App\Models\Memo;
 use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
+use App\Models\SalaryEmployee;
 use App\Repositories\SalaryEmployeeRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 
@@ -54,8 +56,8 @@ class SalaryEmployeeController extends Controller
             $validated['week_end']
         );
 
-        $start = $dateFrom->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
-        $end   = $dateTo->copy()->endOfWeek(\Carbon\Carbon::SUNDAY);
+        $start = $dateFrom->copy()->startOfWeek(Carbon::MONDAY);
+        $end   = $dateTo->copy()->endOfWeek(Carbon::SUNDAY);
 
         $employeeIds = collect()
             ->merge(
@@ -98,6 +100,29 @@ class SalaryEmployeeController extends Controller
             'message' => __('salary-employee.sync.synced_success', [
                 'count' => $employeeIds->count(),
             ]),
+        ]);
+    }
+
+    public function additionalFee(Request $request, Employee $employee)
+    {
+        $this->authorize('salary-employees.view');
+
+        $validated = $request->validate([
+            'week_of' => 'required|date',
+        ]);
+
+        $start = Carbon::parse($validated['week_of'])
+            ->startOfWeek(Carbon::MONDAY)
+            ->toDateString();
+
+        $salary = SalaryEmployee::query()
+            ->where('employee_id', $employee->id)
+            ->where('date', $start)
+            ->first();
+
+        return response()->json([
+            'additional_fee' => $salary->additional_fee ?? [],
+            'status'         => $salary->status?->value ?? StatusSalaryEmployeeEnum::PENDING->value,
         ]);
     }
 

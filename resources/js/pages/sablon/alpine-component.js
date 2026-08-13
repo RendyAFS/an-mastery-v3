@@ -463,5 +463,18 @@ export default function sablonForm(
             row.fee = fee;
             return fee;
         },
+
+        openSalaryFeeModal(row) {
+            if (!row.employee_id) return;
+
+            window.dispatchEvent(
+                new CustomEvent("open-sablon-salary-fee-modal", {
+                    detail: {
+                        employeeId: row.employee_id,
+                        employeeName: this.employeeLabel(row.employee_id),
+                    },
+                }),
+            );
+        },
     };
 }

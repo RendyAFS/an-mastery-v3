@@ -2,7 +2,152 @@ import Alpine from "alpinejs";
 import ApiProvider from "@/utils/api-provider";
 import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
+import { initLucide } from "@/utils/lucide";
 import trans from "@/utils/trans";
+
+const formatSignedRupiah = (value) => {
+    const raw = String(value ?? "").replace(/[^0-9-]/g, "");
+    const isNegative = raw.startsWith("-");
+    const digits = raw.replace(/-/g, "");
+    if (!digits) return isNegative ? "-" : "";
+    const formatted = Number(digits).toLocaleString("id-ID");
+    return isNegative ? `-${formatted}` : formatted;
+};
+
+const unformatSignedRupiah = (el) => {
+    if (!el) return 0;
+    const raw = String(el.value ?? "").replace(/[^0-9-]/g, "");
+    const isNegative = raw.startsWith("-");
+    const digits = raw.replace(/-/g, "");
+    if (!digits) return 0;
+    const value = Number(digits);
+    return isNegative ? -value : value;
+};
+
+const bindSignedRupiahInput = (el) => {
+    el.addEventListener("input", () => {
+        const cursorAtEnd =
+            el.selectionStart === el.value.length &&
+            el.selectionEnd === el.value.length;
+        el.value = formatSignedRupiah(el.value);
+        if (cursorAtEnd) {
+            el.setSelectionRange(el.value.length, el.value.length);
+        }
+    });
+};
+
+const addSalaryFeeRow = (nominal = "", notes = "") => {
+    const tpl = document.getElementById("sablon-salary-fee-row-template");
+    const row = tpl.content.cloneNode(true);
+
+    const nominalInput = row.querySelector(".sf-nominal");
+    nominalInput.value = nominal !== "" ? formatSignedRupiah(nominal) : "";
+    row.querySelector(".sf-notes").value = notes;
+
+    document.getElementById("sablon-salary-fee-rows").append(row);
+
+    initLucide();
+    bindSignedRupiahInput(nominalInput);
+};
+
+const initSalaryFeeModal = () => {
+    const modelName = window.langModels?.SalaryEmployee ?? "Salary Employee";
+
+    window.addEventListener("open-sablon-salary-fee-modal", async (e) => {
+        const { employeeId, employeeName } = e.detail;
+        const dateSablonEl = document.getElementById("date_sablon");
+        const weekOf = dateSablonEl?.value;
+
+        if (!weekOf) {
+            Toast.error(
+                window.langCustomAlert.warning,
+                window.langSablon?.employee_detail?.pick_date_first ??
+                    "Pilih tanggal sablon terlebih dahulu",
+            );
+            return;
+        }
+
+        $("#sablon-salary-fee-employee-id").val(employeeId);
+        $("#sablon-salary-fee-week-of").val(weekOf);
+        $("#sablon-salary-fee-employee-name").text(employeeName);
+        $("#sablon-salary-fee-rows").empty();
+
+        try {
+            const res = await fetch(
+                route("salary_employees.additional-fee", employeeId) +
+                    "?week_of=" +
+                    encodeURIComponent(weekOf),
+            );
+            const data = await res.json();
+
+            $("#sablon-salary-fee-status").val(data.status);
+
+            if (data.additional_fee?.length) {
+                data.additional_fee.forEach((af) =>
+                    addSalaryFeeRow(af.nominal, af.notes),
+                );
+            } else {
+                addSalaryFeeRow();
+            }
+        } catch (err) {
+            console.error("Failed to load salary additional fee", err);
+            addSalaryFeeRow();
+        }
+
+        window.HSStaticMethods.autoInit();
+        HSOverlay.open("#hs-sablon-salary-fee-modal");
+    });
+
+    $(document).on("click", "#btn-add-sablon-salary-fee-row", function () {
+        addSalaryFeeRow();
+    });
+
+    $(document).on("click", ".btn-remove-sablon-salary-fee-row", function () {
+        $(this).closest(".sablon-salary-fee-row").remove();
+    });
+
+    $(document).on("click", "#btn-save-sablon-salary-fee", async function () {
+        const employeeId = $("#sablon-salary-fee-employee-id").val();
+        const weekOf = $("#sablon-salary-fee-week-of").val();
+        const status = $("#sablon-salary-fee-status").val();
+
+        const additionalFee = $(
+            "#sablon-salary-fee-rows .sablon-salary-fee-row",
+        )
+            .map(function () {
+                const nominalEl = $(this).find(".sf-nominal")[0];
+                const nominal = unformatSignedRupiah(nominalEl);
+                const notes = $(this).find(".sf-notes").val();
+                return { nominal, notes: notes || "" };
+            })
+            .get()
+            .filter((af) => af.nominal !== 0 || af.notes !== "");
+
+        startLoading(this);
+
+        try {
+            await ApiProvider.put(
+                route("salary_employees.update", employeeId),
+                {
+                    week_of: weekOf,
+                    status,
+                    additional_fee: additionalFee,
+                },
+            );
+
+            Toast.success(
+                window.langCustomAlert.success,
+                trans("langCrud", "updated", { model: modelName }),
+            );
+
+            HSOverlay.close("#hs-sablon-salary-fee-modal");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            stopLoading(this);
+        }
+    });
+};
 
 const PageScript = (function () {
     let form, mode, id;
@@ -154,7 +299,9 @@ const PageScript = (function () {
             if (!form) return;
             mode = form.dataset.mode;
             id = form.dataset.id;
+
             bindEvents();
+            initSalaryFeeModal();
         },
     };
 })();

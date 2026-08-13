@@ -96,6 +96,9 @@ return [
         'nominal'                     => 'Nominal',
         'notes'                       => 'Notes',
         'notes_placeholder'           => 'e.g. Bon Kain',
+        'manage_salary_fee'           => 'Manage Salary Fee',
+        'salary_fee_modal_title'      => 'Weekly Salary Additional Fee',
+        'pick_date_first'             => 'Please select the printing date first',
     ],
 
     'status_modal'  => [

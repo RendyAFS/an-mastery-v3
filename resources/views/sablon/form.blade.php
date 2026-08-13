@@ -48,3 +48,5 @@
     @include('sablon.partials._fabric-detail')
     @include('sablon.partials._employee-detail')
 </div>
+
+@include('sablon.partials._modal-salary-additional-fee')

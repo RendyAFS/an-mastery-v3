@@ -150,6 +150,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
 
     // Salary Employee
     Route::prefix('salary-employees')->as('salary_employees.')->group(function () {
+        Route::get('{employee}/additional-fee', [App\Http\Controllers\SalaryEmployeeController::class, 'additionalFee'])->name('additional-fee');
         Route::put('sync', [App\Http\Controllers\SalaryEmployeeController::class, 'sync'])->name('sync');
         Route::put('{employee}', [App\Http\Controllers\SalaryEmployeeController::class, 'update'])->name('update');
     });

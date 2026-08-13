@@ -165,6 +165,18 @@
                         </div>
                     </div>
 
+
+                    <div class="flex items-center pt-5" x-show="row.employee_id" x-cloak>
+                        <button type="button" @click="openSalaryFeeModal(row)"
+                            class="flex items-center rounded-lg gap-1
+                            bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
+                            text-[15px] text-(--color-light) hover:text-(--color-light)
+                            transition-all duration-200 cursor-pointer">
+                            <i data-lucide="wallet" class="size-3.5"></i>
+                            {{ __('sablon.employee_detail.manage_salary_fee') }}
+                        </button>
+                    </div>
+
                     <div class="md:col-span-3 space-y-3 pt-3 border-t border-(--color-gray) dark:border-(--color-slate)"
                         x-show="row.is_bon" x-cloak>
                         <div class="flex items-center justify-between">
