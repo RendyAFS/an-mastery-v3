@@ -1,6 +1,7 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
 import trans from "@/utils/trans";
+import filterStorage from "@/utils/filter-storage";
 import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
 
 const statusBadgeMap = {
@@ -10,17 +11,20 @@ const statusBadgeMap = {
     RETURNED: "badge-danger",
 };
 
+const STORAGE_KEY = "sablon-index-filters";
+
 const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.Sablon ?? "Sablon";
 
-    const getUrlParams = () => new URLSearchParams(window.location.search);
-
     const applyFiltersFromUrl = () => {
-        const params = getUrlParams();
+        const params = filterStorage.loadFilterParams();
 
         if (params.get("supplier_id")) {
-            $("#filter-supplier").val(params.get("supplier_id"));
+            window.setButtonGroupValue(
+                "filter-supplier",
+                params.get("supplier_id"),
+            );
         }
 
         $("#filter-week-start").val(
@@ -30,18 +34,16 @@ const PageScript = (function () {
     };
 
     const syncUrl = () => {
-        const params = getUrlParams();
+        const params = new URLSearchParams();
         params.set("week_start", $("#filter-week-start").val());
         params.set("week_end", $("#filter-week-end").val());
 
-        if ($("#filter-supplier").val()) {
-            params.set("supplier_id", $("#filter-supplier").val());
-        } else {
-            params.delete("supplier_id");
+        const supplierValue = $("#filter-supplier").val();
+        if (supplierValue) {
+            params.set("supplier_id", supplierValue);
         }
 
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, "", newUrl);
+        filterStorage.saveFilterParams(params);
     };
 
     const setDefaultWeekFilters = () => {

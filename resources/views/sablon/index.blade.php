@@ -52,12 +52,9 @@
             </div>
         </div>
 
-        <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="48" :lengthOptions="[12, 24, 48]">
+        <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="48" :lengthOptions="[12, 24, 48]" :filtersInline="false">
             <x-slot:filters>
-                <x-select id="filter-supplier" name="supplier_id" :options="$suppliers"
-                    placeholder="{{ __('sablon.filter.all_suppliers') }}" dropdown-z-index="z-[40]"
-                    search-placeholder="{{ __('sablon.main_info.search_placeholders.supplier') }}" clearable="true"
-                    dropdown-scope="window" bg-class="bg-(--color-light) dark:bg-(--color-dark)" />
+                <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('sablon.filter.all_suppliers')" layout="scroll" :multiple="true" />
             </x-slot:filters>
         </x-cardgrid>
     </div>

@@ -1,7 +1,10 @@
 import ApiProvider from "@/utils/api-provider";
 import RupiahInput from "@/utils/rupiah-input";
 import trans from "@/utils/trans";
+import filterStorage from "@/utils/filter-storage";
 import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+
+const STORAGE_KEY = "bill-supplier-show-filters";
 
 const PageScript = (function () {
     let supplierId;
@@ -175,15 +178,17 @@ const PageScript = (function () {
         params.set("week_start", weekStart);
         params.set("week_end", weekEnd);
 
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-
+        filterStorage.saveFilterParams(params);
         buildBackLink();
     };
 
     const initFilters = () => {
-        weekStart = weekStart || currentIsoWeek();
-        weekEnd = weekEnd || nextIsoWeek();
+        if (!weekStart || !weekEnd) {
+            const stored = filterStorage.loadFilterParams();
+            weekStart =
+                weekStart || stored.get("week_start") || currentIsoWeek();
+            weekEnd = weekEnd || stored.get("week_end") || nextIsoWeek();
+        }
 
         $("#filter-week-start").val(weekStart);
         $("#filter-week-end").val(weekEnd);

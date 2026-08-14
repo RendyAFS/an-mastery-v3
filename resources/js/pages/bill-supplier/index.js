@@ -1,7 +1,10 @@
 import initCardgrid from "@/utils/cardgrid";
 import RupiahInput from "@/utils/rupiah-input";
 import ApiProvider from "@/utils/api-provider";
+import filterStorage from "@/utils/filter-storage";
 import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+
+const STORAGE_KEY = "bill-supplier-index-filters";
 
 const PageScript = (function () {
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
@@ -9,10 +12,8 @@ const PageScript = (function () {
     let palette = [];
     let cardgrid;
 
-    const getUrlParams = () => new URLSearchParams(window.location.search);
-
     const applyFiltersFromUrl = () => {
-        const params = getUrlParams();
+        const params = filterStorage.loadFilterParams();
 
         $("#filter-week-start").val(
             params.get("week_start") || currentIsoWeek(),
@@ -21,12 +22,11 @@ const PageScript = (function () {
     };
 
     const syncUrl = () => {
-        const params = getUrlParams();
+        const params = new URLSearchParams();
         params.set("week_start", $("#filter-week-start").val());
         params.set("week_end", $("#filter-week-end").val());
 
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, "", newUrl);
+        filterStorage.saveFilterParams(params);
     };
 
     const setDefaultWeekFilters = () => {
@@ -120,9 +120,10 @@ const PageScript = (function () {
 
                 <div class="relative mt-5">
                     <p class="font-bold text-lg text-white leading-snug line-clamp-2">${item.name}</p>
-                    ${item.contact
-                    ? `<p class="text-xs text-(--color-light) mt-1 flex items-center gap-1"><i data-lucide="phone" class="size-3.5"></i> ${item.contact}</p>`
-                    : `<p class="text-sm text-(--color-light) dark:text-(--color-light-gray) italic line-clamp-2 flex items-start gap-1.5">
+                    ${
+                        item.contact
+                            ? `<p class="text-xs text-(--color-light) mt-1 flex items-center gap-1"><i data-lucide="phone" class="size-3.5"></i> ${item.contact}</p>`
+                            : `<p class="text-sm text-(--color-light) dark:text-(--color-light-gray) italic line-clamp-2 flex items-start gap-1.5">
                             <i data-lucide="phone-off" class="size-3.5 mt-0.5 shrink-0"></i>
                             <span>${window.langBillSupplier.card.no_contact}</span>
                         </p>`

@@ -23,6 +23,7 @@
 
     <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
 
+    <script src="{{ Vite::asset('resources/js/utils/init-filter-storage.js') }}"></script>
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
 
     <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">

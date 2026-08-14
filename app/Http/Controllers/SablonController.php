@@ -29,18 +29,20 @@ class SablonController extends Controller
             $filter     = request('filter', 'active');
             $search     = request('search');
             $perPage    = min((int) request('per_page', 12), 100);
-            $supplierId = request('supplier_id') ? (int) request('supplier_id') : null;
+
+            $supplierIds = request('supplier_id')
+                ? array_filter(array_map('intval', explode(',', request('supplier_id'))))
+                : null;
 
             [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
-            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo, $supplierId);
+            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo, $supplierIds);
 
             return SablonResource::collection($sablons);
         }
+        $suppliers  = Supplier::query()->where('is_active', true)->orderBy('name', 'asc')->pluck('name', 'id');
 
-        return view('sablon.index', [
-            'suppliers' => Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id'),
-        ]);
+        return view('sablon.index', compact('suppliers'));
     }
 
     public function create()
