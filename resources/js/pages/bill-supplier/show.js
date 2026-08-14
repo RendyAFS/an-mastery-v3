@@ -60,14 +60,27 @@ const PageScript = (function () {
             <p class="text-xs text-(--color-gray)">${window.langBillSupplier.show.no_data}</p>
         </div>`;
 
-    const batchItemRow = (item) => `
-        <div class="flex items-center justify-between gap-3 text-sm py-1.5">
-            <span class="truncate text-(--color-dark) dark:text-(--color-light)/90">
-                <span class="font-medium">${item.type_fabric ?? "-"} ${item.image_fabric ?? "-"}</span>
-                <span class="text-(--color-dark) dark:text-(--color-light)/90">· ${item.type_color ?? "-"} ${window.langBillSupplier.sablon_card.type_color_suffix} · ${item.total_long_fabric ?? "-"} Meter</span>
-            </span>
-            <span class="font-semibold shrink-0">${formatCurrency(item.total_fee)}</span>
+    const detailRow = (detail) => `
+        <div class="flex items-center justify-between gap-3 text-xs pl-4 py-1 text-(--color-slate) dark:text-(--color-gray)">
+            <span class="truncate">${detail.color_fabric} · ${detail.long_fabric} Meter</span>
+            <span class="font-medium shrink-0">${formatCurrency(detail.total_fee)}</span>
         </div>`;
+
+    const batchItemRow = (item) => {
+        const details = item.details ?? [];
+
+        return `
+            <div class="py-1.5 space-y-1">
+                <div class="flex items-center justify-between gap-3 text-sm">
+                    <span class="truncate text-(--color-dark) dark:text-(--color-light)/90">
+                        <span class="font-medium">${item.type_fabric ?? "-"} ${item.image_fabric ?? "-"}</span>
+                        <span class="text-(--color-dark) dark:text-(--color-light)/90">· ${item.type_color ?? "-"} ${window.langBillSupplier.sablon_card.type_color_suffix} · ${item.total_long_fabric ?? "-"} Meter</span>
+                    </span>
+                    <span class="font-semibold shrink-0">${formatCurrency(item.total_fee)}</span>
+                </div>
+                ${details.length ? details.map(detailRow).join("") : ""}
+            </div>`;
+    };
 
     const batchCard = (batch) => {
         const editUrl = `${route("bill_suppliers.batch.edit", batch.batch)}?${new URLSearchParams({ week_start: weekStart ?? "", week_end: weekEnd ?? "" })}`;

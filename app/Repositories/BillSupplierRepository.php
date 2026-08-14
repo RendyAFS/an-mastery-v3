@@ -53,7 +53,7 @@ class BillSupplierRepository
         ?Carbon $dateTo = null
     ) {
         $query = BillSupplier::query()
-            ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor', 'sablon.fabric.typeFabric'])
+            ->with(['sablon', 'sablon.imageFabric', 'sablon.typeColor', 'sablon.fabric.typeFabric', 'sablon.sablonDetails.colorFabric'])
             ->where('supplier_id', $supplierId)
             ->orderByDesc('date_bill');
 
@@ -89,13 +89,24 @@ class BillSupplierRepository
                         'notes'      => $first->notes,
                         'count'      => $group->count(),
                         'total_fee'  => (int) $group->sum('total_fee'),
-                        'items'      => $group->map(fn($bs) => [
-                            'image_fabric'      => $bs->sablon?->imageFabric?->name ?? '-',
-                            'type_color'        => $bs->sablon?->typeColor?->name ?? '-',
-                            'type_fabric'       => $bs->sablon?->fabric?->typeFabric?->name ?? '-',
-                            'total_fee'         => (int) $bs->total_fee,
-                            'total_long_fabric' => $bs->sablon?->total_long_fabric,
-                        ])->values(),
+                        'items' => $group->map(function ($bs) {
+                            $pricePerMeter = $bs->sablon?->total_long_fabric
+                                ? $bs->total_fee / $bs->sablon->total_long_fabric
+                                : 0;
+
+                            return [
+                                'image_fabric'      => $bs->sablon?->imageFabric?->name ?? '-',
+                                'type_color'        => $bs->sablon?->typeColor?->name ?? '-',
+                                'type_fabric'       => $bs->sablon?->fabric?->typeFabric?->name ?? '-',
+                                'total_fee'         => (int) $bs->total_fee,
+                                'total_long_fabric' => $bs->sablon?->total_long_fabric,
+                                'details'           => $bs->sablon?->sablonDetails->map(fn($d) => [
+                                    'color_fabric' => $d->colorFabric?->name ?? '-',
+                                    'long_fabric'  => $d->long_fabric,
+                                    'total_fee'    => round($d->long_fabric * $pricePerMeter),
+                                ])->values() ?? [],
+                            ];
+                        })->values(),
                     ];
                 })->values();
 
