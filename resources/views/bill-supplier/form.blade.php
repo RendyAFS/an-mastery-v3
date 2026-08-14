@@ -91,7 +91,7 @@
         </div>
 
         <div id="bs-calc-preview"
-            class="hidden p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5 space-y-3 sticky top-4">
+            class="hidden p-4 rounded-lg border border-(--color-primary)/30 bg-(--color-primary)/5 space-y-3 sticky top-24">
             <div>
                 <p class="text-sm font-semibold text-(--color-dark) mb-2">{{ __('bill-supplier.form.preview_title') }}
                 </p>
