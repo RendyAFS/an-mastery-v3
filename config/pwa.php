@@ -23,7 +23,7 @@ return [
         'short_name' => 'ANMT',
         'background_color' => '#6d9886',
         'display' => 'fullscreen',
-        'description' => null,
+        'description' => "",
         'theme_color' => '#6d9886',
         'icons' => [
             [
