@@ -44,4 +44,9 @@ return [
             'required' => 'Item date is required.',
         ],
     ],
+
+    'quick_items' => [
+        'Delivered Fabric',
+        'Pick Fabric',
+    ],
 ];

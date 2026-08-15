@@ -45,6 +45,14 @@ const bindRupiahInput = (el) => {
     });
 };
 
+const handleQuickName = (btn) => {
+    const target = document.querySelector(btn.dataset.target);
+    if (!target) return;
+
+    target.value = btn.dataset.quickName;
+    target.dispatchEvent(new Event("input", { bubbles: true }));
+};
+
 const PageScript = (function () {
     let datatable;
     let form;
@@ -459,6 +467,11 @@ const PageScript = (function () {
                 currentIsoWeek();
             document.getElementById("filter-week-end").value = nextIsoWeek();
             reloadDatatable();
+        });
+
+        $(document).on("mousedown", "[data-quick-name]", function (e) {
+            e.preventDefault();
+            handleQuickName(this);
         });
     };
 

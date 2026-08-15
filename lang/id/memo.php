@@ -44,4 +44,9 @@ return [
             'required' => 'Tanggal item wajib diisi.',
         ],
     ],
+
+    'quick_items' => [
+        'Kirim Kain',
+        'Ambil Kain',
+    ],
 ];

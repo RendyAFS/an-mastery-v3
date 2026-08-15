@@ -16,6 +16,21 @@
                 bg-(--color-light-gray) border border-(--color-gray)
                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+
+        <div class="flex flex-wrap gap-1 mt-1">
+            <div class="flex flex-wrap gap-1 mt-1">
+                @foreach (__('memo.quick_items') as $quick)
+                    <button type="button" data-quick-name="{{ $quick }}" data-target="#name"
+                        class="btn-quick-name px-2 py-0.5 text-[11px] rounded-md
+                        bg-(--color-light-gray) border border-(--color-gray)
+                        text-(--color-dark) hover:bg-(--color-gray)/40
+                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
+                        cursor-pointer">
+                        {{ $quick }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
