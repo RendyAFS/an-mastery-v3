@@ -1,7 +1,3 @@
-export function roundToHundreds(value) {
-    return Math.round((Number(value) || 0) / 100) * 100;
-}
-
 export function formatNumber(val) {
     return new Intl.NumberFormat("id-ID").format(Number(val) || 0);
 }
@@ -26,7 +22,5 @@ export function computeRatePerLayer(totalSablon, colorCount) {
 }
 
 export function computeFee(ratePerLayer, layers) {
-    const fee = ratePerLayer * (Number(layers) || 0);
-
-    return roundToHundreds(fee);
+    return ratePerLayer * (Number(layers) || 0);
 }
