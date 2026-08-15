@@ -20,6 +20,26 @@ export default function initDatatable({
             10;
     }
 
+    const filterId = filterSelector ? `${filterSelector}-${tableId}` : null;
+    const filterEl = filterId ? $(filterId) : null;
+
+    const ajaxOptions = typeof ajax === "string" ? { url: ajax } : { ...ajax };
+    const originalData = ajaxOptions.data;
+
+    ajaxOptions.data = function (d) {
+        if (typeof originalData === "function") {
+            originalData(d);
+        } else if (originalData) {
+            Object.assign(d, originalData);
+        }
+
+        if (filterEl && filterEl.length) {
+            d.filter = filterEl.val();
+        }
+
+        return d;
+    };
+
     const datatable = $(table).DataTable({
         dom: "t",
         paging: true,
@@ -44,7 +64,7 @@ export default function initDatatable({
         `,
         },
         serverSide: false,
-        ajax,
+        ajax: ajaxOptions,
         columns,
         order,
         drawCallback() {
@@ -132,8 +152,8 @@ export default function initDatatable({
         datatable.page.len(this.value).draw();
     });
 
-    if (filterSelector) {
-        $(document).on("change", filterSelector, function () {
+    if (filterId) {
+        $(document).on("change", filterId, function () {
             datatable.ajax.reload(null, false);
         });
     }
