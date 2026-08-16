@@ -13,6 +13,7 @@ import "./utils/sidebar-state";
 import "./utils/custom-select";
 import "./utils/button-group";
 import "./utils/number-input";
+import "./utils/flatpickr-init";
 
 import disableNumberScroll from "./utils/disable-number-scroll";
 import initUi from "./utils/ui-init";

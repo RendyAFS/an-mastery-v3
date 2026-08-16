@@ -19,7 +19,7 @@
                         {{ __('sablon.filter.week_start') }}
                     </label>
                     <input type="week" id="filter-week-start"
-                        class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
+                        class="mt-1 px-4 py-2 block w-48 rounded-lg
                             bg-(--color-light) border border-(--color-gray)
                             text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
@@ -31,7 +31,7 @@
                         {{ __('sablon.filter.week_end') }}
                     </label>
                     <input type="week" id="filter-week-end"
-                        class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
+                        class="mt-1 px-4 py-2 block w-48 rounded-lg
                             bg-(--color-light) border border-(--color-gray)
                             text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                             dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
@@ -45,7 +45,7 @@
 
                 <a href="{{ route('sablons.create') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                      bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                      bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
                     <i data-lucide="plus" class="size-4"></i>
                     {{ __('crud.add_title', ['model' => __('models.Sablon')]) }}
                 </a>
@@ -54,7 +54,8 @@
 
         <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="48" :lengthOptions="[12, 24, 48]" :filtersInline="false">
             <x-slot:filters>
-                <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('sablon.filter.all_suppliers')" layout="scroll" :multiple="true" />
+                <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('sablon.filter.all_suppliers')" layout="scroll"
+                    :multiple="true" />
             </x-slot:filters>
         </x-cardgrid>
     </div>

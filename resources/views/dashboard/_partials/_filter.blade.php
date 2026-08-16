@@ -4,7 +4,7 @@
             {{ __('dashboard.filter.week_start') }}
         </label>
         <input type="week" id="filter-week-start"
-            class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
+            class="mt-1 px-4 py-2 block w-48 rounded-lg
                 bg-(--color-light) border border-(--color-gray)
                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                 dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
@@ -15,7 +15,7 @@
             {{ __('dashboard.filter.week_end') }}
         </label>
         <input type="week" id="filter-week-end"
-            class="form-input mt-1 px-4 py-2 block w-48 rounded-lg
+            class="mt-1 px-4 py-2 block w-48 rounded-lg
                 bg-(--color-light) border border-(--color-gray)
                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                 dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />

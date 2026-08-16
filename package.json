@@ -36,6 +36,7 @@
         "filepond-plugin-image-preview": "^4.6.12",
         "filepond-plugin-image-resize": "^2.0.10",
         "filepond-plugin-image-transform": "^3.8.7",
+        "flatpickr": "^4.6.13",
         "glob": "^13.0.0",
         "lucide": "^0.562.0",
         "preline": "^3.2.3"

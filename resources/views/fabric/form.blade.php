@@ -74,14 +74,8 @@
         @endisset
 
         <div class="mb-2 space-y-2">
-            <label for="date_coming" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                {{ __('fabric.fields.date_coming') }}
-            </label>
-            <input type="date" id="date_coming" name="date_coming"
-                value="{{ old('date_coming', $fabric?->date_coming?->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
-                class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
-                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+            <x-datepicker id="date_coming" name="date_coming" label="{{ __('fabric.fields.date_coming') }}"
+                :value="old('date_coming', $fabric?->date_coming?->format('Y-m-d') ?? now()->format('Y-m-d'))" />
         </div>
 
         <div class="col-span-1 md:col-span-2">

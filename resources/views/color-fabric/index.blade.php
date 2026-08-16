@@ -15,7 +15,7 @@
             <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-color-fabric-modal"
                 data-hs-overlay="#hs-color-fabric-modal" id="btn-create-color-fabric"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                  bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
                 {{ __('crud.add_title', ['model' => __('models.ColorFabric')]) }}
             </button>

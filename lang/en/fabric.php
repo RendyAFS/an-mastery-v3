@@ -4,8 +4,7 @@ return [
     'create_title' => 'Create Fabric',
     'edit_title'   => 'Edit Fabric',
     'filter'       => [
-        'week_start' => 'From Week',
-        'week_end'   => 'To Week',
+        'date_range' => 'Date Range',
         'reset'      => 'Reset',
     ],
     'fields'             => [
@@ -48,7 +47,6 @@ return [
     'delete_confirm_message'       => 'Are you sure you want to delete this fabric? This action cannot be undone.',
     'restore_confirm_message'      => 'Restore this fabric?',
     'force_delete_confirm_message' => 'This will permanently delete the fabric. Continue?',
-    'fetch_error'                  => 'Failed to fetch fabric data',
     'validation' => [
         'supplier_id' => [
             'required' => 'Konveksi is required.',

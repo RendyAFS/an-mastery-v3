@@ -1,49 +1,43 @@
 import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import trans from "@/utils/trans";
-import { dateToIsoWeek } from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultMonthRange } from "@/utils/week";
 
 const PageScript = (function () {
     let datatable;
     const modelName = window.langModels?.Fabric ?? "Fabric";
 
-    const getMonthWeekRange = () => {
-        const now = new Date();
-        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-        return {
-            start: dateToIsoWeek(firstDay),
-            end: dateToIsoWeek(lastDay),
-        };
-    };
-
     const getUrlParams = () => new URLSearchParams(window.location.search);
+
+    const getDefaultRange = () => getDefaultMonthRange(1);
 
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
-        const monthRange = getMonthWeekRange();
+        const instance = getFlatpickrInstance("filter-date-range");
 
-        $("#filter-week-start").val(
-            params.get("week_start") || monthRange.start,
-        );
-        $("#filter-week-end").val(params.get("week_end") || monthRange.end);
+        const start = params.get("week_start");
+        const end = params.get("week_end");
+
+        if (start && end) {
+            instance.setDate([start, end], true);
+        } else {
+            instance.setDate(getDefaultRange(), true);
+        }
     };
 
     const syncUrl = () => {
         const params = getUrlParams();
-        params.set("week_start", $("#filter-week-start").val());
-        params.set("week_end", $("#filter-week-end").val());
+        params.set("week_start", $("#filter-date-range_start").val());
+        params.set("week_end", $("#filter-date-range_end").val());
 
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
 
-    const setDefaultWeekFilters = () => {
-        const monthRange = getMonthWeekRange();
-        $("#filter-week-start").val(monthRange.start);
-        $("#filter-week-end").val(monthRange.end);
-        syncUrl();
+    const setDefaultRangeFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const reloadDatatable = () => {
@@ -61,8 +55,8 @@ const PageScript = (function () {
                 dataSrc: "data",
                 data: function (d) {
                     d.filter = $("#filter-fabrics").val();
-                    d.week_start = $("#filter-week-start").val();
-                    d.week_end = $("#filter-week-end").val();
+                    d.week_start = $("#filter-date-range_start").val();
+                    d.week_end = $("#filter-date-range_end").val();
                 },
             },
             columns: [
@@ -275,16 +269,17 @@ const PageScript = (function () {
         });
 
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
                 reloadDatatable();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            setDefaultWeekFilters();
+            setDefaultRangeFilters();
             reloadDatatable();
         });
     };

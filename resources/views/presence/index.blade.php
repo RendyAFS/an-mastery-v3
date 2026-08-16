@@ -18,13 +18,13 @@
                         {{ __('presence.filter_week_label') }}
                     </label>
                     <input type="week" id="filter-week" value="2026-W26"
-                        class="form-input mt-1 px-4 py-2 block w-56 rounded-lg
+                        class="mt-1 px-4 py-2 block w-56 rounded-lg
                         bg-(--color-light) border border-(--color-gray)
                         text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                         dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
                 </div>
                 <button type="button" id="btn-bulk-generate"
-                    class="flex items-center gap-2 py-2 px-4 rounded-lg bg-(--color-primary) text-white hover:bg-(--color-primary)/80 cursor-pointer">
+                    class="flex items-center gap-2 py-2 px-4 rounded-lg bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
                     <i data-lucide="calendar-plus" class="size-4"></i>
                     {{ __('presence.generate_button') }}
                 </button>

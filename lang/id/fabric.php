@@ -4,8 +4,7 @@ return [
     'create_title' => 'Tambah Kain',
     'edit_title'   => 'Ubah Kain',
     'filter'       => [
-        'week_start' => 'Dari Minggu',
-        'week_end'   => 'Sampai Minggu',
+        'date_range' => 'Rentang Tanggal',
         'reset'      => 'Reset',
     ],
     'fields'             => [
@@ -48,7 +47,6 @@ return [
     'delete_confirm_message'       => 'Apakah kamu yakin ingin menghapus kain ini? Tindakan ini tidak dapat dibatalkan.',
     'restore_confirm_message'      => 'Pulihkan kain ini?',
     'force_delete_confirm_message' => 'Ini akan menghapus kain secara permanen. Lanjutkan?',
-    'fetch_error'                  => 'Gagal mengambil data kain',
     'validation' => [
         'supplier_id' => [
             'required' => 'Konveksi wajib dipilih.',

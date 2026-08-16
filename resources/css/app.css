@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @import "./loading.css";
 @import "./splash.css";
+@import "flatpickr/dist/flatpickr.css";
 
 /* Toggling Manual Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -19,9 +20,9 @@
 /* Components */
 @import "./components/badge.css";
 @import "./components/checkbox.css";
+@import "./components/flatpickr.css";
 @import "./components/scrollbar.css";
 @import "./components/datatable.css";
-@import "./components/form.css";
 
 html.sidebar-floating-init #hs-sidebar-content-push {
     display: none !important;
