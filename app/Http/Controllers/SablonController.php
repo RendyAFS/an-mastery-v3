@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
 use App\Actions\Sablon\SettleBonAction;
+use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
 use App\Http\Requests\Sablon\SaveSablonRequest;
@@ -19,6 +20,7 @@ class SablonController extends Controller
 {
     public function __construct(
         private SablonRepository $sablonRepository,
+        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
     ) {}
 
     public function index()
@@ -156,6 +158,18 @@ class SablonController extends Controller
         ]);
 
         $settleBonAction->handle($sablon);
+
+        if ($sablon->date_sablon) {
+            $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
+                ->pluck('employee_id')
+                ->unique();
+
+            $weekOf = $sablon->date_sablon->toDateString();
+
+            $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
+                $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+            });
+        }
 
         return response()->json([
             'message' => __('sablon.status_updated_success'),
