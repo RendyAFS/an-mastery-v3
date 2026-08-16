@@ -100,3 +100,15 @@ export const endOfMonth = (offset = 0) => {
 export const getDefaultMonthRange = (spanMonths = 1) => {
     return [startOfMonth(), endOfMonth(spanMonths - 1)];
 };
+
+/**
+ * Get a [start, end] date range spanning `spanMonths` month(s) going backward,
+ * ending at the current month.
+ * e.g. getPastMonthRange(1) -> this month only
+ *      getPastMonthRange(6) -> 5 months ago until this month (6 months total)
+ * @param {number} spanMonths
+ * @returns {[Date, Date]}
+ */
+export const getPastMonthRange = (spanMonths = 1) => {
+    return [startOfMonth(-(spanMonths - 1)), endOfMonth(0)];
+};

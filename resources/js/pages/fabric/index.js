@@ -2,7 +2,7 @@ import ApiProvider from "@/utils/api-provider";
 import initDatatable from "@/utils/datatable";
 import trans from "@/utils/trans";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
-import { getDefaultMonthRange } from "@/utils/week";
+import { getPastMonthRange } from "@/utils/week";
 
 const PageScript = (function () {
     let datatable;
@@ -10,7 +10,7 @@ const PageScript = (function () {
 
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
-    const getDefaultRange = () => getDefaultMonthRange(1);
+    const getDefaultRange = () => getPastMonthRange(6);
 
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
