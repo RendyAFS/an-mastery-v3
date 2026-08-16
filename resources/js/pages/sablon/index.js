@@ -2,7 +2,8 @@ import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
 import trans from "@/utils/trans";
 import filterStorage from "@/utils/filter-storage";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const statusBadgeMap = {
     ON_PROGRESS: "badge-warning",
@@ -11,11 +12,11 @@ const statusBadgeMap = {
     RETURNED: "badge-danger",
 };
 
-const STORAGE_KEY = "sablon-index-filters";
-
 const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.Sablon ?? "Sablon";
+
+    const getDefaultRange = () => getDefaultWeekRange(2);
 
     const applyFiltersFromUrl = () => {
         const params = filterStorage.loadFilterParams();
@@ -27,16 +28,21 @@ const PageScript = (function () {
             );
         }
 
-        $("#filter-week-start").val(
-            params.get("week_start") || currentIsoWeek(),
-        );
-        $("#filter-week-end").val(params.get("week_end") || nextIsoWeek());
+        const instance = getFlatpickrInstance("filter-date-range");
+        const start = params.get("week_start");
+        const end = params.get("week_end");
+
+        if (start && end) {
+            instance.setDate([start, end], true);
+        } else {
+            instance.setDate(getDefaultRange(), true);
+        }
     };
 
     const syncUrl = () => {
         const params = new URLSearchParams();
-        params.set("week_start", $("#filter-week-start").val());
-        params.set("week_end", $("#filter-week-end").val());
+        params.set("week_start", $("#filter-date-range_start").val());
+        params.set("week_end", $("#filter-date-range_end").val());
 
         const supplierValue = $("#filter-supplier").val();
         if (supplierValue) {
@@ -46,10 +52,9 @@ const PageScript = (function () {
         filterStorage.saveFilterParams(params);
     };
 
-    const setDefaultWeekFilters = () => {
-        $("#filter-week-start").val(currentIsoWeek());
-        $("#filter-week-end").val(nextIsoWeek());
-        syncUrl();
+    const setDefaultRangeFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const statusLabel = (status) =>
@@ -270,8 +275,8 @@ const PageScript = (function () {
                 url: route("sablons.index"),
                 data: function () {
                     return {
-                        week_start: $("#filter-week-start").val(),
-                        week_end: $("#filter-week-end").val(),
+                        week_start: $("#filter-date-range_start").val(),
+                        week_end: $("#filter-date-range_end").val(),
                         supplier_id: $("#filter-supplier").val(),
                     };
                 },
@@ -357,16 +362,17 @@ const PageScript = (function () {
         });
 
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
                 cardgrid.reload();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            setDefaultWeekFilters();
+            setDefaultRangeFilters();
             cardgrid.reload();
         });
     };

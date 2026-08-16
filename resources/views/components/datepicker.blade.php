@@ -32,6 +32,7 @@
             'minDate' => $minDate,
             'maxDate' => $maxDate,
             'weekRange' => $weekRange ? true : null,
+            'disableMobile' => true,
         ],
         fn($v) => !is_null($v),
     );

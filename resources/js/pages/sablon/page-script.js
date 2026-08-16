@@ -4,6 +4,7 @@ import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import { initLucide } from "@/utils/lucide";
 import trans from "@/utils/trans";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
 
 const formatSignedRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
@@ -55,8 +56,7 @@ const initSalaryFeeModal = () => {
 
     window.addEventListener("open-sablon-salary-fee-modal", async (e) => {
         const { employeeId, employeeName } = e.detail;
-        const dateSablonEl = document.getElementById("date_sablon");
-        const weekOf = dateSablonEl?.value;
+        const weekOf = $("#date_sablon_value").val();
 
         if (!weekOf) {
             Toast.error(
@@ -198,6 +198,8 @@ const PageScript = (function () {
         }
 
         resetHsSelects(form);
+
+        getFlatpickrInstance("date_sablon")?.setDate(new Date(), true);
 
         data.fabricRows = [];
         data.employeeRows = [];
