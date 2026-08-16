@@ -45,6 +45,15 @@ const bindSignedRupiahInput = (el) => {
     });
 };
 
+const handleQuickAfAmount = (btn) => {
+    const row = btn.closest(".additional-fee-row");
+    const target = row?.querySelector(".af-nominal");
+    if (!target) return;
+
+    target.value = formatSignedRupiah(btn.dataset.quickAfAmount);
+    target.dispatchEvent(new Event("input", { bubbles: true }));
+};
+
 const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.SalaryEmployee ?? "Salary Employee";
@@ -285,6 +294,11 @@ const PageScript = (function () {
 
         $(document).on("click", ".btn-remove-af-row", function () {
             $(this).closest(".additional-fee-row").remove();
+        });
+
+        $(document).on("mousedown", "[data-quick-af-amount]", function (e) {
+            e.preventDefault();
+            handleQuickAfAmount(this);
         });
 
         $(document).on("click", "#btn-save-salary-employee", async function () {

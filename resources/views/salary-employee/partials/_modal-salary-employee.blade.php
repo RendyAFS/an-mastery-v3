@@ -53,7 +53,7 @@
             <i data-lucide="trash-2" class="size-3.5"></i>
         </button>
 
-        <div class="col-span-1">
+        <div class="col-span-1 group relative">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 {{ __('salary-employee.modal.nominal') }}
             </label>
@@ -62,6 +62,19 @@
                     bg-(--color-light-gray) border border-(--color-gray)
                     text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                     dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+
+            <div class="hidden group-focus-within:flex flex-wrap gap-1 mt-1">
+                @foreach ([10000, 15000, 20000, 25000] as $quick)
+                    <button type="button" data-quick-af-amount="{{ $quick }}"
+                        class="btn-quick-af-amount px-2 py-0.5 text-[11px] rounded-md
+                            bg-(--color-light-gray) border border-(--color-gray)
+                            text-(--color-dark) hover:bg-(--color-gray)/40
+                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)
+                            cursor-pointer">
+                        {{ number_format($quick, 0, ',', '.') }}
+                    </button>
+                @endforeach
+            </div>
         </div>
 
         <div class="col-span-1">

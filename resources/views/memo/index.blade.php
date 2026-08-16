@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <x-datatable id="memos-datatable" filterId="filter-memos">
+        <x-datatable id="memos-datatable" filterId="filter-memos" defaultLength="-1">
             <thead class="border-b">
                 <tr>
                     <th
