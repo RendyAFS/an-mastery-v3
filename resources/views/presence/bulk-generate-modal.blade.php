@@ -36,11 +36,7 @@
                             class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                             {{ __('presence.bulk.week_of') }}
                         </label>
-                        <input type="week" id="bulk_week_of" name="week_of"
-                            class="mt-1 px-4 py-2 block w-full rounded-lg
-                                bg-(--color-light-gray) border border-(--color-gray)
-                                text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
+                        <x-datepicker id="bulk_week_of" name="week_of" mode="range" weekRange="true"/>
                     </div>
 
                     <div>
@@ -81,17 +77,19 @@
                         </div>
                         <div class="flex flex-wrap gap-2">
                             @foreach ([
-                                'monday' => __('presence.days.monday'),
-                                'tuesday' => __('presence.days.tuesday'),
-                                'wednesday' => __('presence.days.wednesday'),
-                                'thursday' => __('presence.days.thursday'),
-                                'friday' => __('presence.days.friday'),
-                                'saturday' => __('presence.days.saturday'),
-                                'sunday' => __('presence.days.sunday'),
-                            ] as $key => $label)
-                                <label class="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg
+        'monday' => __('presence.days.monday'),
+        'tuesday' => __('presence.days.tuesday'),
+        'wednesday' => __('presence.days.wednesday'),
+        'thursday' => __('presence.days.thursday'),
+        'friday' => __('presence.days.friday'),
+        'saturday' => __('presence.days.saturday'),
+        'sunday' => __('presence.days.sunday'),
+    ] as $key => $label)
+                                <label
+                                    class="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg
                                     border border-(--color-gray) dark:border-(--color-slate) cursor-pointer">
-                                    <input type="checkbox" class="bulk-day-checkbox checkbox-custom" data-day="{{ $key }}" value="{{ $key }}"
+                                    <input type="checkbox" class="bulk-day-checkbox checkbox-custom"
+                                        data-day="{{ $key }}" value="{{ $key }}"
                                         {{ $key !== 'sunday' ? 'checked' : '' }} />
                                     {{ $label }}
                                 </label>

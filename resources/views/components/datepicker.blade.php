@@ -18,6 +18,7 @@
     'bgClass' => 'bg-(--color-light-gray) dark:bg-(--color-dark-slate)',
     'roundedClass' => 'rounded-md',
     'icon' => 'calendar',
+    'weekRange' => false,
 ])
 
 @php
@@ -30,6 +31,7 @@
             'enableTime' => $enableTime,
             'minDate' => $minDate,
             'maxDate' => $maxDate,
+            'weekRange' => $weekRange ? true : null,
         ],
         fn($v) => !is_null($v),
     );

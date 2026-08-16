@@ -17,11 +17,8 @@
                     <label for="filter-week" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                         {{ __('presence.filter_week_label') }}
                     </label>
-                    <input type="week" id="filter-week" value="2026-W26"
-                        class="mt-1 px-4 py-2 block w-56 rounded-lg
-                        bg-(--color-light) border border-(--color-gray)
-                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                        dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
+                    <x-datepicker id="filter-week" name="week_of" mode="range" weekRange="true"
+                        bgClass="bg-(--color-light) dark:bg-(--color-dark)" />
                 </div>
                 <button type="button" id="btn-bulk-generate"
                     class="flex items-center gap-2 py-2 px-4 rounded-lg bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">

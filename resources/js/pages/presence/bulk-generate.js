@@ -1,7 +1,8 @@
 import ApiProvider from "@/utils/api-provider";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
-import { isoWeekToDateStr, dateToIsoWeek } from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { mondayOfWeek, toDateStr } from "@/utils/week";
 
 const rawNumber = (value) => {
     const num = parseInt(String(value ?? "").replace(/\D/g, ""), 10) || 0;
@@ -46,7 +47,9 @@ const BulkGenerateModal = (function () {
     };
 
     const resetForm = async () => {
-        $("#bulk_week_of").val(dateToIsoWeek(getCurrentWeekOf()));
+        const instance = getFlatpickrInstance("bulk_week_of");
+        instance?.setDate(getCurrentWeekOf(), true);
+
         $("#bulk_amount").val("0");
         RupiahInput.refresh(document.getElementById("bulk_amount"));
         $("#bulk_check_all").prop("checked", false);
@@ -76,7 +79,7 @@ const BulkGenerateModal = (function () {
     };
 
     const submit = async (submitter) => {
-        const weekValue = $("#bulk_week_of").val();
+        const weekValue = $("#bulk_week_of_start").val();
         const amount = rawNumber($("#bulk_amount").val());
         const days = $(".bulk-day-checkbox:checked")
             .map(function () {
@@ -117,7 +120,9 @@ const BulkGenerateModal = (function () {
         }
 
         const payload = {
-            week_of: isoWeekToDateStr(weekValue),
+            week_of: weekValue
+                ? toDateStr(mondayOfWeek(new Date(weekValue)))
+                : "",
             amount,
             days,
             employee_ids: employeeIds,

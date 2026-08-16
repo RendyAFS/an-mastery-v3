@@ -5,8 +5,24 @@ flatpickr.localize(Indonesian);
 
 const instances = new Map();
 
+const mondayOf = (date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    return d;
+};
+
+const sundayOf = (date) => {
+    const monday = mondayOf(date);
+    monday.setDate(monday.getDate() + 6);
+    return monday;
+};
+
 const buildOptions = (el) => {
     const config = JSON.parse(el.dataset.flatpickr || "{}");
+    const weekRange = !!config.weekRange;
+    delete config.weekRange;
 
     return {
         ...config,
@@ -26,6 +42,13 @@ const buildOptions = (el) => {
         },
         onChange(selectedDates, dateStr, instance) {
             if (config.mode === "range") {
+                if (weekRange && selectedDates.length === 1) {
+                    const monday = mondayOf(selectedDates[0]);
+                    const sunday = sundayOf(selectedDates[0]);
+                    instance.setDate([monday, sunday], true);
+                    return;
+                }
+
                 const [start, end] = selectedDates;
                 const startInput = document.getElementById(`${el.id}_start`);
                 const endInput = document.getElementById(`${el.id}_end`);

@@ -47,7 +47,13 @@ class DashboardController extends Controller
     {
         $this->authorize('dashboard.view');
 
-        [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
+        [$dateFrom, $dateTo] = WeekHelper::parseRange(
+            request('week_start'),
+            request('week_end')
+        );
+
+        $dateFrom ??= now()->startOfMonth();
+        $dateTo   ??= now()->endOfMonth();
 
         $sablons = $this->dashboardRepository->getLatestSablonsQuery($dateFrom, $dateTo);
 

@@ -4,13 +4,8 @@ import normalizeFormInputs from "@/utils/normalize-form";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import RupiahInput from "@/utils/rupiah-input";
 import BulkGenerateModal from "./bulk-generate";
-import {
-    isoWeekToMonday,
-    dateToIsoWeek,
-    toDateStr,
-    currentMonday,
-    formatShortDate,
-} from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { toDateStr, currentMonday, formatShortDate } from "@/utils/week";
 
 const DAYS = [
     "monday",
@@ -172,9 +167,7 @@ const PageScript = (function () {
 
         $("#notes").val(data.notes ?? "");
 
-        updateModalDates(
-            isoWeekToMonday(dateToIsoWeek(new Date(currentWeekOf))),
-        );
+        updateModalDates(new Date(currentWeekOf));
 
         const isDeleted = !!data.employee?.deleted_at;
         toggleFormDisabled(isDeleted);
@@ -240,12 +233,10 @@ const PageScript = (function () {
     };
 
     const bindEvents = () => {
-        $("#filter-week").on("change", function () {
-            const value = $(this).val();
-            if (!value) return;
+        $(document).on("flatpickr:range-change", "#filter-week", function (e) {
+            if (!e.detail.start) return;
 
-            const monday = isoWeekToMonday(value);
-            setCurrentWeek(monday);
+            setCurrentWeek(e.detail.start);
             reloadDatatable();
         });
 
@@ -285,7 +276,9 @@ const PageScript = (function () {
 
             const monday = currentMonday();
             setCurrentWeek(monday);
-            $("#filter-week").val(dateToIsoWeek(monday));
+
+            const instance = getFlatpickrInstance("filter-week");
+            instance.setDate(monday, true);
 
             initDataTable();
             bindEvents();

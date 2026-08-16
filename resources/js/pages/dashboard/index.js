@@ -3,34 +3,44 @@ import { renderStats } from "./stats";
 import { initCharts, updateCharts } from "./charts";
 import { renderPresences } from "./presence";
 import { initFabricsTable } from "./fabrics-table";
-import { initLatestSablonsTable, reloadLatestSablonsTable } from "./latest-sablons-table";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+import {
+    initLatestSablonsTable,
+    reloadLatestSablonsTable,
+} from "./latest-sablons-table";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const PageScript = (function () {
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
+    const getDefaultRange = () => getDefaultWeekRange(2);
+
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
+        const instance = getFlatpickrInstance("filter-date-range");
 
-        $("#filter-week-start").val(
-            params.get("week_start") || currentIsoWeek(),
-        );
-        $("#filter-week-end").val(params.get("week_end") || nextIsoWeek());
+        const start = params.get("week_start");
+        const end = params.get("week_end");
+
+        if (start && end) {
+            instance.setDate([start, end], true);
+        } else {
+            instance.setDate(getDefaultRange(), true);
+        }
     };
 
     const syncUrl = () => {
         const params = getUrlParams();
-        params.set("week_start", $("#filter-week-start").val());
-        params.set("week_end", $("#filter-week-end").val());
+        params.set("week_start", $("#filter-date-range_start").val());
+        params.set("week_end", $("#filter-date-range_end").val());
 
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
 
-    const setDefaultWeekFilters = () => {
-        $("#filter-week-start").val(currentIsoWeek());
-        $("#filter-week-end").val(nextIsoWeek());
-        syncUrl();
+    const setDefaultRangeFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const fetchData = () => {
@@ -39,8 +49,8 @@ const PageScript = (function () {
             method: "GET",
             dataType: "json",
             data: {
-                week_start: $("#filter-week-start").val(),
-                week_end: $("#filter-week-end").val(),
+                week_start: $("#filter-date-range_start").val(),
+                week_end: $("#filter-date-range_end").val(),
             },
             success(data) {
                 renderStats(data.stats);
@@ -55,9 +65,10 @@ const PageScript = (function () {
 
     const bindEvents = () => {
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
                 fetchData();
                 reloadLatestSablonsTable();
@@ -65,7 +76,7 @@ const PageScript = (function () {
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            setDefaultWeekFilters();
+            setDefaultRangeFilters();
             fetchData();
             reloadLatestSablonsTable();
         });

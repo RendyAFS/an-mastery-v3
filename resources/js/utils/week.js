@@ -23,17 +23,23 @@ export const formatShortDate = (date) =>
     date.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit" });
 
 /**
+ * Get the Monday of the week containing the given date.
+ * @param {Date} date
+ * @returns {Date}
+ */
+export const mondayOfWeek = (date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    return d;
+};
+
+/**
  * Get the Monday of the current week (local time).
  * @returns {Date}
  */
-export const currentMonday = () => {
-    const today = new Date();
-    const monday = new Date(today);
-    const day = monday.getDay();
-    const diff = day === 0 ? -6 : 1 - day;
-    monday.setDate(monday.getDate() + diff);
-    return monday;
-};
+export const currentMonday = () => mondayOfWeek(new Date());
 
 /**
  * Get the Monday of the week `offsetWeeks` away from the current week.
