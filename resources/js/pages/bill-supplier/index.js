@@ -2,9 +2,8 @@ import initCardgrid from "@/utils/cardgrid";
 import RupiahInput from "@/utils/rupiah-input";
 import ApiProvider from "@/utils/api-provider";
 import filterStorage from "@/utils/filter-storage";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
-
-const STORAGE_KEY = "bill-supplier-index-filters";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const PageScript = (function () {
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
@@ -12,27 +11,33 @@ const PageScript = (function () {
     let palette = [];
     let cardgrid;
 
+    const getDefaultRange = () => getDefaultWeekRange(2);
+
     const applyFiltersFromUrl = () => {
         const params = filterStorage.loadFilterParams();
+        const instance = getFlatpickrInstance("filter-date-range");
 
-        $("#filter-week-start").val(
-            params.get("week_start") || currentIsoWeek(),
-        );
-        $("#filter-week-end").val(params.get("week_end") || nextIsoWeek());
+        const start = params.get("week_start");
+        const end = params.get("week_end");
+
+        if (start && end) {
+            instance.setDate([start, end], true);
+        } else {
+            instance.setDate(getDefaultRange(), true);
+        }
     };
 
     const syncUrl = () => {
         const params = new URLSearchParams();
-        params.set("week_start", $("#filter-week-start").val());
-        params.set("week_end", $("#filter-week-end").val());
+        params.set("week_start", $("#filter-date-range_start").val());
+        params.set("week_end", $("#filter-date-range_end").val());
 
         filterStorage.saveFilterParams(params);
     };
 
-    const setDefaultWeekFilters = () => {
-        $("#filter-week-start").val(currentIsoWeek());
-        $("#filter-week-end").val(nextIsoWeek());
-        syncUrl();
+    const setDefaultRangeFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const patternSvg = (pattern) => {
@@ -289,16 +294,17 @@ const PageScript = (function () {
         });
 
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
                 cardgrid?.reload();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            setDefaultWeekFilters();
+            setDefaultRangeFilters();
             cardgrid?.reload();
         });
     };
@@ -315,8 +321,8 @@ const PageScript = (function () {
                     url: route("bill_suppliers.index"),
                     data: function () {
                         return {
-                            week_start: $("#filter-week-start").val(),
-                            week_end: $("#filter-week-end").val(),
+                            week_start: $("#filter-date-range_start").val(),
+                            week_end: $("#filter-date-range_end").val(),
                         };
                     },
                 },
@@ -324,8 +330,8 @@ const PageScript = (function () {
                 pageLength: 12,
                 cardClickRoute: (row) => {
                     const params = new URLSearchParams({
-                        week_start: $("#filter-week-start").val(),
-                        week_end: $("#filter-week-end").val(),
+                        week_start: $("#filter-date-range_start").val(),
+                        week_end: $("#filter-date-range_end").val(),
                     });
 
                     return `${route("bill_suppliers.by-supplier", row.id)}?${params.toString()}`;

@@ -58,27 +58,11 @@
 
         <div class="flex flex-wrap items-end justify-end gap-3">
             <div>
-                <label for="filter-week-start"
-                    class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    {{ __('bill-supplier.filter.week_start') }}
+                <label for="filter-date-range"
+                    class="block text-sm mb-2 font-medium text-(--color-dark) dark:text-(--color-light)">
+                    {{ __('bill-supplier.filter.date_range') }}
                 </label>
-                <input type="week" id="filter-week-start"
-                    class="mt-1 px-4 py-2 block w-48 rounded-lg
-                bg-(--color-light) border border-(--color-gray)
-                text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
-            </div>
-
-            <div>
-                <label for="filter-week-end"
-                    class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                    {{ __('bill-supplier.filter.week_end') }}
-                </label>
-                <input type="week" id="filter-week-end"
-                    class="mt-1 px-4 py-2 block w-48 rounded-lg
-                bg-(--color-light) border border-(--color-gray)
-                text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
+                <x-datepicker id="filter-date-range" name="date_range" mode="range" clearable="true" />
             </div>
 
             <x-button-loading type="button" id="filter-week-reset" icon="rotate-ccw"

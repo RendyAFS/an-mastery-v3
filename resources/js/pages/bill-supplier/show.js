@@ -2,14 +2,15 @@ import ApiProvider from "@/utils/api-provider";
 import RupiahInput from "@/utils/rupiah-input";
 import trans from "@/utils/trans";
 import filterStorage from "@/utils/filter-storage";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
-
-const STORAGE_KEY = "bill-supplier-show-filters";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const PageScript = (function () {
     let supplierId;
     let weekStart;
     let weekEnd;
+
+    const getDefaultRange = () => getDefaultWeekRange(2);
 
     const formatCurrency = (value) => `Rp${RupiahInput.format(value ?? 0)}`;
 
@@ -196,15 +197,25 @@ const PageScript = (function () {
     };
 
     const initFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+
         if (!weekStart || !weekEnd) {
             const stored = filterStorage.loadFilterParams();
-            weekStart =
-                weekStart || stored.get("week_start") || currentIsoWeek();
-            weekEnd = weekEnd || stored.get("week_end") || nextIsoWeek();
-        }
+            const storedStart = stored.get("week_start");
+            const storedEnd = stored.get("week_end");
 
-        $("#filter-week-start").val(weekStart);
-        $("#filter-week-end").val(weekEnd);
+            if (storedStart && storedEnd) {
+                weekStart = weekStart || storedStart;
+                weekEnd = weekEnd || storedEnd;
+                instance.setDate([weekStart, weekEnd], true);
+            } else {
+                instance.setDate(getDefaultRange(), true);
+                weekStart = $("#filter-date-range_start").val();
+                weekEnd = $("#filter-date-range_end").val();
+            }
+        } else {
+            instance.setDate([weekStart, weekEnd], true);
+        }
 
         syncUrl();
     };
@@ -281,23 +292,20 @@ const PageScript = (function () {
         });
 
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
-                weekStart = $("#filter-week-start").val();
-                weekEnd = $("#filter-week-end").val();
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
+                weekStart = $("#filter-date-range_start").val();
+                weekEnd = $("#filter-date-range_end").val();
                 syncUrl();
                 load();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            weekStart = currentIsoWeek();
-            weekEnd = nextIsoWeek();
-            $("#filter-week-start").val(weekStart);
-            $("#filter-week-end").val(weekEnd);
-            syncUrl();
-            load();
+            const instance = getFlatpickrInstance("filter-date-range");
+            instance.setDate(getDefaultRange(), true);
         });
     };
 
