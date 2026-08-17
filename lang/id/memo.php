@@ -3,8 +3,7 @@
 return [
     'description' => 'Kelola data memo pengeluaran karyawan',
     'filter' => [
-        'week_start' => 'Dari Minggu',
-        'week_end'   => 'Sampai Minggu',
+        'date_range' => 'Rentang Tanggal',
         'reset'      => 'Reset',
     ],
     'fields' => [

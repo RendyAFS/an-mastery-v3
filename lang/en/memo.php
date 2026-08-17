@@ -3,8 +3,7 @@
 return [
     'description' => 'Manage employee memo records',
     'filter' => [
-        'week_start' => 'From Week',
-        'week_end'   => 'To Week',
+        'date_range' => 'Date Range',
         'reset'      => 'Reset',
     ],
     'fields' => [

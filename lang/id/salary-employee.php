@@ -3,8 +3,7 @@
 return [
     'description' => 'Rekap fee karyawan per minggu',
     'filter' => [
-        'week_start' => 'Dari Minggu',
-        'week_end' => 'Sampai Minggu',
+        'date_range' => 'Rentang Tanggal',
         'reset' => 'Reset',
         'all' => 'Semua',
     ],

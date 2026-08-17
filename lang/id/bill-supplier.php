@@ -7,8 +7,7 @@ return [
     'create_heading' => 'Buat Tagihan Konveksi — :supplier',
 
     'filter'        => [
-        'week_start' => 'Dari Minggu',
-        'week_end'   => 'Sampai Minggu',
+        'date_range' => 'Rentang Tanggal',
         'reset'      => 'Reset',
     ],
 

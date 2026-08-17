@@ -3,8 +3,7 @@
 return [
     'description' => 'Weekly employee fee recap',
     'filter' => [
-        'week_start' => 'From Week',
-        'week_end' => 'To Week',
+        'date_range' => 'Date Range',
         'reset' => 'Reset',
         'all' => 'All',
     ],

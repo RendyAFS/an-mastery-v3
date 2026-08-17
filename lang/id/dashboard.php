@@ -4,8 +4,7 @@ return [
     'title'       => 'Dashboard',
     'description' => 'Ringkasan data bisnis kamu',
     'filter'      => [
-        'week_start' => 'Dari Minggu',
-        'week_end'   => 'Sampai Minggu',
+        'date_range' => 'Rentang Tanggal',
         'reset'      => 'Reset',
     ],
     'stats' => [

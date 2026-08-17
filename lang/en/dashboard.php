@@ -4,8 +4,7 @@ return [
     'title'       => 'Dashboard',
     'description' => 'Overview of your business data',
     'filter'      => [
-        'week_start' => 'From Week',
-        'week_end'   => 'To Week',
+        'date_range' => 'Date Range',
         'reset'      => 'Reset',
     ],
     'stats' => [
