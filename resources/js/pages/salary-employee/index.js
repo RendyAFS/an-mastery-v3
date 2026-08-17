@@ -3,7 +3,8 @@ import initCardgrid from "@/utils/cardgrid";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import { initLucide } from "@/utils/lucide";
 import trans from "@/utils/trans";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const formatSignedRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
@@ -60,28 +61,34 @@ const PageScript = (function () {
 
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
+    const getDefaultRange = () => getDefaultWeekRange(2);
+
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
+        const instance = getFlatpickrInstance("filter-date-range");
 
-        $("#filter-week-start").val(
-            params.get("week_start") || currentIsoWeek(),
-        );
-        $("#filter-week-end").val(params.get("week_end") || nextIsoWeek());
+        const start = params.get("week_start");
+        const end = params.get("week_end");
+
+        if (start && end) {
+            instance.setDate([start, end], true);
+        } else {
+            instance.setDate(getDefaultRange(), true);
+        }
     };
 
     const syncUrl = () => {
         const params = getUrlParams();
-        params.set("week_start", $("#filter-week-start").val());
-        params.set("week_end", $("#filter-week-end").val());
+        params.set("week_start", $("#filter-date-range_start").val());
+        params.set("week_end", $("#filter-date-range_end").val());
 
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, "", newUrl);
     };
 
-    const setDefaultWeekFilters = () => {
-        $("#filter-week-start").val(currentIsoWeek());
-        $("#filter-week-end").val(nextIsoWeek());
-        syncUrl();
+    const setDefaultRangeFilters = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const statusBadgeMap = {
@@ -351,8 +358,8 @@ const PageScript = (function () {
                 url: route("salary_employees.index"),
                 data: function () {
                     return {
-                        week_start: $("#filter-week-start").val(),
-                        week_end: $("#filter-week-end").val(),
+                        week_start: $("#filter-date-range_start").val(),
+                        week_end: $("#filter-date-range_end").val(),
                     };
                 },
             },
@@ -363,22 +370,23 @@ const PageScript = (function () {
 
     const bindEvents = () => {
         $(document).on(
-            "change",
-            "#filter-week-start, #filter-week-end",
-            function () {
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
                 cardgrid.reload();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
-            setDefaultWeekFilters();
+            setDefaultRangeFilters();
             cardgrid.reload();
         });
 
         $(document).on("click", "#btn-sync-salary", async function () {
-            const weekStart = $("#filter-week-start").val();
-            const weekEnd = $("#filter-week-end").val();
+            const weekStart = $("#filter-date-range_start").val();
+            const weekEnd = $("#filter-date-range_end").val();
 
             if (!weekStart || !weekEnd) {
                 Toast.error(
