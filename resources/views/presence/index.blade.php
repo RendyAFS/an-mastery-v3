@@ -18,7 +18,7 @@
                         {{ __('presence.filter_week_label') }}
                     </label>
                     <x-datepicker id="filter-week" name="week_of" mode="range" weekRange="true"
-                        bgClass="bg-(--color-light) dark:bg-(--color-dark)" />
+                        bgClass="bg-(--color-light) dark:bg-(--color-dark)" roundedClass="rounded-lg" />
                 </div>
                 <button type="button" id="btn-bulk-generate"
                     class="flex items-center gap-2 py-2 px-4 rounded-lg bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
