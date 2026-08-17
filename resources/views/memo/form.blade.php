@@ -48,14 +48,7 @@
         </div>
 
         <div>
-            <label for="date" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                {{ __('memo.fields.date') }} <span class="text-(--color-red)">*</span>
-            </label>
-            <input type="date" id="date" name="date"
-                class="mt-1 px-4 py-2 block w-full rounded-lg
-                    bg-(--color-light-gray) border border-(--color-gray)
-                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+            <x-datepicker id="date" name="date" label="{{ __('memo.fields.date') }}" />
         </div>
     </div>
 </div>

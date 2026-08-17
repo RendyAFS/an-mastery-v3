@@ -14,31 +14,17 @@
 
             <div class="flex flex-wrap items-end gap-3">
                 <div>
-                    <label for="filter-week-start"
-                        class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        {{ __('memo.filter.week_start') }}
+                    <label for="filter-date-range"
+                        class="block text-sm mb-2 font-medium text-(--color-dark) dark:text-(--color-light)">
+                        {{ __('memo.filter.date_range') }}
                     </label>
-                    <input type="week" id="filter-week-start"
-                        class="mt-1 px-4 py-2 block w-48 rounded-lg
-                            bg-(--color-light) border border-(--color-gray)
-                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                            dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
-                </div>
-
-                <div>
-                    <label for="filter-week-end"
-                        class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        {{ __('memo.filter.week_end') }}
-                    </label>
-                    <input type="week" id="filter-week-end"
-                        class="mt-1 px-4 py-2 block w-48 rounded-lg
-                            bg-(--color-light) border border-(--color-gray)
-                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                            dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)" />
+                    <x-datepicker id="filter-date-range" name="date_range" mode="range" clearable="true"
+                        bgClass="bg-(--color-light) dark:bg-(--color-dark)"
+                        bgClass="bg-(--color-light) dark:bg-(--color-dark)" />
                 </div>
 
                 <button type="button" id="btn-reset-filter"
-                    class="inline-flex items-center gap-2 px-4 py-2 mt-6 rounded-lg cursor-pointer
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
                         bg-(--color-danger) hover:bg-(--color-danger)/70 text-(--color-light)">
                     <i data-lucide="rotate-ccw" class="size-4"></i>
                     {{ __('memo.filter.reset') }}
@@ -46,7 +32,7 @@
 
                 <button type="button" id="btn-create-memo" aria-haspopup="dialog" aria-expanded="false"
                     aria-controls="hs-memo-modal" data-hs-overlay="#hs-memo-modal"
-                    class="inline-flex items-center gap-2 px-4 py-2 mt-6 rounded-lg cursor-pointer
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
                         bg-(--color-primary) hover:bg-(--color-primary)/80 text-white">
                     <i data-lucide="plus" class="size-4"></i>
                     {{ __('crud.add_title', ['model' => __('models.Memo')]) }}

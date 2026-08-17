@@ -3,7 +3,8 @@ import initDatatable from "@/utils/datatable";
 import "@/utils/custom-select";
 import { startLoading, stopLoading } from "@/utils/button-loading";
 import trans from "@/utils/trans";
-import { currentIsoWeek, nextIsoWeek } from "@/utils/week";
+import { getFlatpickrInstance } from "@/utils/flatpickr-init";
+import { getDefaultWeekRange } from "@/utils/week";
 
 const formatRupiah = (value) => {
     const raw = String(value ?? "").replace(/[^0-9-]/g, "");
@@ -58,37 +59,18 @@ const PageScript = (function () {
     let form;
     let nominalEl;
     let nameEl;
-    let dateEl;
     let isPaidEl;
     const modelName = window.langModels?.Memo ?? "Memo";
+
+    const getDefaultRange = () => getDefaultWeekRange(2);
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
     };
 
-    const getISOWeekString = (date) => {
-        const target = new Date(date.valueOf());
-        const dayNr = (date.getDay() + 6) % 7;
-        target.setDate(target.getDate() - dayNr + 3);
-
-        const firstThursday = target.valueOf();
-        target.setMonth(0, 1);
-
-        if (target.getDay() !== 4) {
-            target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-        }
-
-        const week = 1 + Math.round((firstThursday - target) / 604800000);
-
-        return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
-    };
-
-    const setDefaultFilter = () => {
-        const startEl = document.getElementById("filter-week-start");
-        const endEl = document.getElementById("filter-week-end");
-
-        if (startEl && !startEl.value) startEl.value = currentIsoWeek();
-        if (endEl && !endEl.value) endEl.value = nextIsoWeek();
+    const applyDefaultFilter = () => {
+        const instance = getFlatpickrInstance("filter-date-range");
+        instance.setDate(getDefaultRange(), true);
     };
 
     const initDataTable = () => {
@@ -102,8 +84,8 @@ const PageScript = (function () {
                 dataSrc: "data",
                 data: function (d) {
                     d.filter = $("#filter-memos").val() || "active";
-                    d.start_week = $("#filter-week-start").val() || "";
-                    d.end_week = $("#filter-week-end").val() || "";
+                    d.start_week = $("#filter-date-range_start").val() || "";
+                    d.end_week = $("#filter-date-range_end").val() || "";
                 },
             },
             columns: [
@@ -249,13 +231,6 @@ const PageScript = (function () {
         }
     };
 
-    const getTodayDateString = () => {
-        const now = new Date();
-        const offset = now.getTimezoneOffset();
-        const local = new Date(now.getTime() - offset * 60000);
-        return local.toISOString().split("T")[0];
-    };
-
     const resetModal = () => {
         form.reset();
         setFormMode("create");
@@ -269,7 +244,7 @@ const PageScript = (function () {
 
         if (nominalEl) nominalEl.value = "";
         if (nameEl) nameEl.value = "";
-        if (dateEl) dateEl.value = getTodayDateString();
+        getFlatpickrInstance("date")?.setDate(new Date(), true);
         if (isPaidEl) isPaidEl.checked = false;
     };
 
@@ -294,7 +269,7 @@ const PageScript = (function () {
 
         if (nameEl) nameEl.value = data.name ?? "";
         if (nominalEl) nominalEl.value = formatRupiah(data.nominal ?? 0);
-        if (dateEl) dateEl.value = data.date ?? "";
+        getFlatpickrInstance("date")?.setDate(data.date ?? new Date(), true);
         if (isPaidEl) isPaidEl.checked = !!data.is_paid;
     };
 
@@ -392,7 +367,7 @@ const PageScript = (function () {
             employee_id: employeeEl?.value || null,
             name: nameEl?.value || "",
             nominal: unformatRupiah(nominalEl?.value),
-            date: dateEl?.value || "",
+            date: $("#date_value").val() || "",
             is_paid: isPaidEl?.checked ? 1 : 0,
         };
 
@@ -458,14 +433,17 @@ const PageScript = (function () {
                 resetModal();
             });
 
-        $(document).on("change", "#filter-week-start, #filter-week-end", () => {
-            reloadDatatable();
-        });
+        $(document).on(
+            "flatpickr:range-change",
+            "#filter-date-range",
+            function (e) {
+                if (!e.detail.start || !e.detail.end) return;
+                reloadDatatable();
+            },
+        );
 
         $(document).on("click", "#btn-reset-filter", () => {
-            document.getElementById("filter-week-start").value =
-                currentIsoWeek();
-            document.getElementById("filter-week-end").value = nextIsoWeek();
+            applyDefaultFilter();
             reloadDatatable();
         });
 
@@ -480,12 +458,11 @@ const PageScript = (function () {
             form = document.getElementById("memo-form");
             nominalEl = document.getElementById("nominal");
             nameEl = document.getElementById("name");
-            dateEl = document.getElementById("date");
             isPaidEl = document.getElementById("is_paid");
 
             bindRupiahInput(nominalEl);
 
-            setDefaultFilter();
+            applyDefaultFilter();
             initDataTable();
             bindEvents();
         },
