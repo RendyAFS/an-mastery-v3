@@ -44,7 +44,11 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.post(route("profile.update"), formData);
-            flashToast("success", "Success", "Profile successfully updated");
+            flashToast(
+                "success",
+                window.langCustomAlert?.success ?? "Success",
+                window.langMyProfile?.message?.profile_updated ?? "Profile updated successfully.",
+            );
             window.location.reload();
         } catch (error) {
             // error ditangani ApiProvider
@@ -61,7 +65,10 @@ const PageScript = (function () {
 
         try {
             await ApiProvider.put(route("profile.update-password"), payload);
-            Toast.success("Success", "Password successfully updated");
+            Toast.success(
+                window.langCustomAlert?.success ?? "Success",
+                window.langMyProfile?.message?.password_updated ?? "Password updated successfully.",
+            );
             passwordForm.reset();
         } catch (error) {
             // error ditangani ApiProvider
