@@ -91,6 +91,14 @@ class SablonEmployeeDetail extends Model
             });
     }
 
+    public function scopeOpenInProgress(Builder $query): Builder
+    {
+        return $query->whereNull('salary_employee_id')
+            ->where('is_settled', false)
+            ->whereNull('settlement_of_id')
+            ->whereHas('sablon', fn($s) => $s->where('status', StatusSablonEnum::ON_PROGRESS));
+    }
+
     public function isEligibleForSalary(): bool
     {
         if ($this->is_settled) {

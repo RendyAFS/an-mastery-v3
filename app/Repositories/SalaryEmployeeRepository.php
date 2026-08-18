@@ -73,7 +73,13 @@ class SalaryEmployeeRepository
                 return $detail->employee_id . '|' . $weekStart;
             });
 
-        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $allDetails, $pendingMemosByEmployee) {
+        $openInProgressByEmployee = SablonEmployeeDetail::query()
+            ->openInProgress()
+            ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
+            ->get()
+            ->groupBy('employee_id');
+
+        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $allDetails, $pendingMemosByEmployee, $openInProgressByEmployee) {
             $key = $s->employee_id . '|' . Carbon::parse($s->date)->toDateString();
 
             if ($s->status !== StatusSalaryEmployeeEnum::PAID) {
@@ -90,6 +96,19 @@ class SalaryEmployeeRepository
                         $s->memos->concat($pendingMemosByEmployee->get($s->employee_id))
                     );
                 }
+
+                if ($openInProgressByEmployee->has($s->employee_id)) {
+                    $existingIds = $s->sablonEmployeeDetails->pluck('id');
+                    $extra = $openInProgressByEmployee->get($s->employee_id)
+                        ->reject(fn($d) => $existingIds->contains($d->id));
+
+                    if ($extra->isNotEmpty()) {
+                        $s->setRelation(
+                            'sablonEmployeeDetails',
+                            $s->sablonEmployeeDetails->concat($extra)
+                        );
+                    }
+                }
             }
 
             $s->setRelation('presence', $presences->get($key));
@@ -97,7 +116,7 @@ class SalaryEmployeeRepository
 
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
-            ->map(function ($details, $key) use ($presences, $pendingMemosByEmployee, $allDetails) {
+            ->map(function ($details, $key) use ($presences, $pendingMemosByEmployee, $allDetails, $openInProgressByEmployee) {
                 $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => $d->countableAmount());
                 $first    = $details->first();
 
@@ -114,8 +133,17 @@ class SalaryEmployeeRepository
                     'notes'          => null,
                 ]);
 
+                $allForKey = $allDetails->get($key, $details);
+
+                if ($openInProgressByEmployee->has($first->employee_id)) {
+                    $existingIds = $allForKey->pluck('id');
+                    $extra = $openInProgressByEmployee->get($first->employee_id)
+                        ->reject(fn($d) => $existingIds->contains($d->id));
+                    $allForKey = $allForKey->concat($extra);
+                }
+
                 $salary->setRelation('employee', $first->employee);
-                $salary->setRelation('sablonEmployeeDetails', $allDetails->get($key, $details));
+                $salary->setRelation('sablonEmployeeDetails', $allForKey);
                 $salary->setRelation('presence', $presences->get($first->employee_id . '|' . $weekStart));
                 $salary->setRelation('memos', $pendingMemosByEmployee->get($first->employee_id, collect()));
 
@@ -129,7 +157,7 @@ class SalaryEmployeeRepository
 
         $memoOnlyVirtualSalaries = $pendingMemosByEmployee
             ->reject(fn($memos, $employeeId) => $existingEmployeeIds->contains($employeeId))
-            ->map(function ($memos, $employeeId) use ($presences) {
+            ->map(function ($memos, $employeeId) use ($presences, $openInProgressByEmployee) {
                 $first = $memos->first();
 
                 $salary = new SalaryEmployee([
@@ -142,7 +170,7 @@ class SalaryEmployeeRepository
                 ]);
 
                 $salary->setRelation('employee', $first->employee);
-                $salary->setRelation('sablonEmployeeDetails', collect());
+                $salary->setRelation('sablonEmployeeDetails', $openInProgressByEmployee->get($employeeId, collect()));
                 $salary->setRelation('presence', $presences->get(
                     $employeeId . '|' . now()->startOfWeek(Carbon::MONDAY)->toDateString()
                 ));
@@ -152,9 +180,39 @@ class SalaryEmployeeRepository
             })
             ->values();
 
+        $coveredEmployeeIds = $existingEmployeeIds
+            ->merge($memoOnlyVirtualSalaries->pluck('employee_id'))
+            ->unique();
+
+        $openInProgressOnlyVirtualSalaries = $openInProgressByEmployee
+            ->reject(fn($details, $employeeId) => $coveredEmployeeIds->contains($employeeId))
+            ->map(function ($details, $employeeId) use ($presences) {
+                $first = $details->first();
+
+                $salary = new SalaryEmployee([
+                    'employee_id'    => $employeeId,
+                    'fee'            => 0,
+                    'additional_fee' => [],
+                    'status'         => StatusSalaryEmployeeEnum::PENDING,
+                    'date'           => now()->startOfWeek(Carbon::MONDAY)->toDateString(),
+                    'notes'          => null,
+                ]);
+
+                $salary->setRelation('employee', $first->employee);
+                $salary->setRelation('sablonEmployeeDetails', $details);
+                $salary->setRelation('presence', $presences->get(
+                    $employeeId . '|' . now()->startOfWeek(Carbon::MONDAY)->toDateString()
+                ));
+                $salary->setRelation('memos', collect());
+
+                return $salary;
+            })
+            ->values();
+
         $collection = $existingSalaries
             ->concat($virtualSalaries)
-            ->concat($memoOnlyVirtualSalaries);
+            ->concat($memoOnlyVirtualSalaries)
+            ->concat($openInProgressOnlyVirtualSalaries);
 
         if ($filter !== 'all') {
             $collection = $collection->filter(fn($s) => $s->status?->value === $filter);
