@@ -12,6 +12,7 @@
     $employeeDetailsJson = ($sablon->sablonEmployeeDetails ?? collect())
         ->map(
             fn($d) => [
+                'id' => $d->id,
                 'fabric_detail_id' => $d->fabric_detail_id,
                 'employee_id' => $d->employee_id,
                 'layers' => $d->layers,

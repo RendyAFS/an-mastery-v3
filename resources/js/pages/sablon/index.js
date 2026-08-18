@@ -3,7 +3,7 @@ import initCardgrid from "@/utils/cardgrid";
 import trans from "@/utils/trans";
 import filterStorage from "@/utils/filter-storage";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
-import { getDefaultWeekRange } from "@/utils/week";
+import { getCenteredWeekRange } from "@/utils/week";
 
 const statusBadgeMap = {
     ON_PROGRESS: "badge-warning",
@@ -16,7 +16,7 @@ const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.Sablon ?? "Sablon";
 
-    const getDefaultRange = () => getDefaultWeekRange(2);
+    const getDefaultRange = () => getCenteredWeekRange(1, 1);
 
     const applyFiltersFromUrl = () => {
         const params = filterStorage.loadFilterParams();

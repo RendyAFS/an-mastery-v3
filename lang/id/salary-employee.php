@@ -36,5 +36,8 @@ return [
         'presence' => 'Absensi',
         'total' => 'Total',
         'manage' => 'Kelola',
+        'bon_label' => 'Bon',
+        'bon_advance_label' => 'Bon Diambil',
+        'bon_settlement_label' => 'Sisa Bon',
     ],
 ];

@@ -30,6 +30,8 @@ class SalaryEmployeeResource extends JsonResource
                             'fee_formated'      => RupiahHelper::format($detailFee),
                             'is_eligible'       => $isCounted,
                             'is_bon'            => (bool) $detail->is_bon,
+                            'is_bon_settled'    => (bool) $detail->is_settled,
+                            'is_bon_settlement' => (bool) $detail->settlement_of_id,
                             'status'            => $detail->sablon?->status ? __('enums.status_sablon.' . $detail->sablon->status->value) : null,
                         ];
                     })->values(),

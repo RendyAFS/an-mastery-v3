@@ -118,3 +118,16 @@ export const getDefaultMonthRange = (spanMonths = 1) => {
 export const getPastMonthRange = (spanMonths = 1) => {
     return [startOfMonth(-(spanMonths - 1)), endOfMonth(0)];
 };
+
+/**
+ * Get a [start, end] date range centered on the current week, going back
+ * `weeksBefore` week(s) and forward `weeksAfter` week(s).
+ * e.g. getCenteredWeekRange(1, 1) -> last week through next week (3 weeks total)
+ *      getCenteredWeekRange(2, 0) -> 2 weeks ago through this week
+ * @param {number} weeksBefore
+ * @param {number} weeksAfter
+ * @returns {[Date, Date]}
+ */
+export const getCenteredWeekRange = (weeksBefore = 1, weeksAfter = 1) => {
+    return [startOfWeek(-weeksBefore), endOfWeek(weeksAfter)];
+};

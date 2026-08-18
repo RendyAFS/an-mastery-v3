@@ -36,5 +36,8 @@ return [
         'presence' => 'Presence',
         'total' => 'Total',
         'manage' => 'Manage',
+        'bon_label' => 'Bon',
+        'bon_advance_label' => 'Bon Advanced',
+        'bon_settlement_label' => 'Bon Settlement',
     ],
 ];

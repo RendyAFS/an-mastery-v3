@@ -128,7 +128,18 @@ const PageScript = (function () {
                                             (i) => `
                                                 <li class="flex justify-between">
                                                     <span>
-                                                        <span class="${i.is_eligible ? "" : "opacity-40"}">• ${i.image_fabric_name} • ${i.layers ?? 0} Layer ${i.is_bon ? `<span class="text-[10px] text-(--color-danger) font-bold">(Bon)</span>` : ""}</span>
+                                                        <span class="${i.is_eligible ? "" : "opacity-40"}">
+                                                            • ${i.image_fabric_name} • ${i.layers ?? 0} Layer
+                                                            ${i.is_bon ? i.is_bon_settled
+                                                                        ? `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_advance_label})</span>`
+                                                                        : `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_label})</span>`
+                                                                    : ""
+                                                                }
+                                                                ${i.is_bon_settlement
+                                                                    ? `<span class="text-[10px] text-(--color-primary) font-bold">(${window.langSalaryEmployee.card.bon_settlement_label})</span>`
+                                                                    : ""
+                                                                }
+                                                        </span>
                                                         ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
                                                     </span>
                                                     <span class="font-medium ${i.is_eligible ? "" : "opacity-40"}">${i.fee_formated}</span>

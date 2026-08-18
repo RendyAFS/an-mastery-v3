@@ -74,6 +74,15 @@ class SaveSablonAction
             ->delete();
 
         foreach ($employeeDetails as $detail) {
+            $id = $detail['id'] ?? null;
+
+            if ($id && $sablon->sablonEmployeeDetails()->whereKey($id)->exists()) {
+                $sablon->sablonEmployeeDetails()->whereKey($id)->update([
+                    'fee' => $detail['fee'] ?? 0,
+                ]);
+                continue;
+            }
+
             $sablon->sablonEmployeeDetails()->create([
                 'fabric_detail_id'   => $detail['fabric_detail_id'] ?? null,
                 'employee_id'        => $detail['employee_id'],
@@ -88,7 +97,7 @@ class SaveSablonAction
                 'is_change'          => $detail['is_change'] ?? false,
                 'employee_change_id' => $detail['employee_change_id'] ?? null,
                 'is_bon'             => $detail['is_bon'] ?? false,
-                'is_paid'            => false,
+                'is_paid'            => $detail['is_paid'] ?? false,
                 'notes'              => $detail['notes'] ?? null,
             ]);
         }

@@ -305,6 +305,7 @@ export default function sablonForm(
         buildEmployeeRow(row = {}) {
             return {
                 uid: crypto.randomUUID(),
+                id: row.id ?? null,
                 fabric_detail_id: row.fabric_detail_id
                     ? String(row.fabric_detail_id)
                     : "",
@@ -458,7 +459,7 @@ export default function sablonForm(
         },
 
         computeFee(row) {
-            if (row.locked) return row.fee;
+            if ((row.locked || row.is_paid) && row.fee) return row.fee;
             const fee = calc.computeFee(this.ratePerLayer, row.layers);
             row.fee = fee;
             return fee;
