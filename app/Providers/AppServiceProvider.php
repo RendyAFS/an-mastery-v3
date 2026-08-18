@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('id');
 
         Gate::define('viewLogViewer', function (User $user) {
-            return $user->hasRole('Super Admin');
+            return $user->hasRole('Super Admin') || $user->hasPermissionTo('dashboard.log-viewer');
         });
 
         View::composer(['auth.login', 'auth.register', 'layouts.auth'], function ($view) {
