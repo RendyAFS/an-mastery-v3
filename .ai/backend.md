@@ -1,7 +1,7 @@
 # Backend Architecture Guide (backend.md)
 
 ## Tujuan
-Dokumen ini menjelaskan struktur, tanggung jawab, dan standardisasi pengembangan sisi backend (Laravel 12) pada proyek **AN Mastery V3**.
+Dokumen ini menjelaskan struktur, tanggung jawab, dan standardisasi pengembangan sisi backend (Laravel 12) pada proyek berbasis arsitektur ini.
 
 ## Kapan digunakan
 Rujuklah dokumen ini setiap kali Anda merancang struktur logika baru di sisi server, membuat API endpoint, menulis kueri database, atau melakukan penanganan transaksi bisnis di Laravel.
@@ -35,28 +35,28 @@ Berikut adalah diagram dependensi antar-layer backend:
 ```
 
 ### Kapan Menggunakan Kelas Action vs Eloquent Langsung di Controller
-- **Eloquent Langsung di Controller**: Digunakan untuk operasi tulis sederhana pada satu model tunggal yang tidak memiliki efek samping atau relasi berjenjang (misal: `Supplier::create($request->validated())` atau `$supplier->delete()`).
-- **Kelas Action (`SaveAction`)**: Wajib digunakan jika operasi tulis melibatkan transaksi database (`DB::transaction`), sinkronisasi tabel relasi/pivot (misal: detail sablon, detail pekerja), pemrosesan berkas/media statis, atau logika bisnis kompleks lainnya.
+- **Eloquent Langsung di Controller**: Digunakan untuk operasi tulis sederhana pada satu model tunggal yang tidak memiliki efek samping atau relasi berjenjang (misal: `Category::create($request->validated())` atau `$category->delete()`).
+- **Kelas Action (`SaveAction`)**: Wajib digunakan jika operasi tulis melibatkan transaksi database (`DB::transaction`), sinkronisasi tabel relasi/pivot (misal: detail produk, detail item), pemrosesan berkas/media statis, atau logika bisnis kompleks lainnya.
 
 ## Contoh implementasi
-Dalam pembuatan data Sablon, controller mendelegasikan penyimpanan ke kelas Action:
-- Controller: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
-- Action: [SaveSablonAction.php](file:///d:/laragon/www/an-mastery-v3/app/Actions/Sablon/SaveSablonAction.php)
-- Request: [SaveSablonRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Sablon/SaveSablonRequest.php)
+Dalam pembuatan data kompleks (misal Product dengan relasi detail), controller mendelegasikan penyimpanan ke kelas Action:
+- Controller: `app/Http/Controllers/ProductController.php`
+- Action: `app/Actions/Product/SaveProductAction.php`
+- Request: `app/Http/Requests/Product/SaveProductRequest.php`
 
 ## Contoh kode
 Berikut adalah contoh pembagian layer pembacaan data di Repository:
 ```php
-// App\Repositories\SupplierRepository.php
+// app/Repositories/CategoryRepository.php
 namespace App\Repositories;
 
-use App\Models\Supplier;
+use App\Models\Category;
 
-class SupplierRepository
+class CategoryRepository
 {
     public function getAll($filter = 'active')
     {
-        $query = Supplier::query()->orderBy('id', 'desc');
+        $query = Category::query()->orderBy('id', 'desc');
 
         if ($filter === 'deleted') {
             $query->onlyTrashed();
@@ -87,3 +87,4 @@ class SupplierRepository
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menggunakan library **Spatie Laravel Permission** untuk mengontrol izin akses. Setiap method CRUD di controller harus memverifikasi otorisasi terlebih dahulu menggunakan method `$this->authorize('nama_permission')`.
+

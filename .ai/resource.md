@@ -19,9 +19,9 @@ Setiap kelas API Resource berada di bawah folder `app/Http/Resources/` dan diber
 - Method `toArray(Request $request)`: Mengembalikan array asosiatif representasi data JSON.
 
 ## Contoh implementasi
-Referensi API Resource yang sudah ada di proyek ini:
-- Resource sederhana (tanpa relasi): [SupplierResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SupplierResource.php)
-- Resource dengan relasi bersyarat: [SablonResource.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Resources/SablonResource.php)
+Referensi API Resource standar:
+- Resource sederhana (tanpa relasi): `app/Http/Resources/CategoryResource.php`
+- Resource dengan relasi bersyarat: `app/Http/Resources/ProductResource.php`
 
 ## Contoh kode
 Berikut adalah contoh penulisan API Resource terstandar (ganti `{Module}` dengan nama modul Anda):
@@ -68,9 +68,10 @@ class {Module}Resource extends JsonResource
 - [ ] Apakah bidang audit trail (`created_by`, `updated_by`, `deleted_by`) telah dipetakan secara lengkap?
 
 ## Best Practice
-- **Hindari Eager Loading di Resource**: Jangan memanggil properti relasi secara langsung (misal: `$this->supplier->name`). Selalu gunakan `$this->whenLoaded` untuk menjamin efisiensi kueri basis data.
-- **Sediakan Format Tambahan**: Selalu sediakan properti format mentah (misal: `'total_sablon' => $this->total_sablon`) dan properti terformat ramah pengguna (misal: `'total_sablon_formated' => RupiahHelper::format(...)`) secara bersamaan dalam respons.
+- **Hindari Eager Loading di Resource**: Jangan memanggil properti relasi secara langsung (misal: `$this->category->name`). Selalu gunakan `$this->whenLoaded` untuk menjamin efisiensi kueri basis data.
+- **Sediakan Format Tambahan**: Selalu sediakan properti format mentah (misal: `'total'` => `$this->total`) dan properti terformat ramah pengguna (misal: `'total_formated'` => `RupiahHelper::format(...)`) secara bersamaan dalam respons.
 
 ## Catatan penting
 > [!IMPORTANT]
-> Jangan pernah mengembalikan relasi model bertingkat tanpa dibungkus dengan kelas Resource padanannya. Contoh: gunakan `new SupplierResource($this->whenLoaded('supplier'))` alih-alih `new JsonResource($this->supplier)`.
+> Jangan pernah mengembalikan relasi model bertingkat tanpa dibungkus dengan kelas Resource padanannya. Contoh: gunakan `new CategoryResource($this->whenLoaded('category'))` alih-alih `new JsonResource($this->category)`.
+

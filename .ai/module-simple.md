@@ -4,7 +4,7 @@
 Dokumen ini menjelaskan panduan langkah demi langkah untuk membuat **Modul Simple (Modal-based CRUD)** di proyek ini. Dokumen ini memastikan keseragaman interaksi modal pop-up dan reload data.
 
 ## Kapan digunakan
-Gunakan dokumen ini setiap kali Anda membangun modul CRUD dengan input data sederhana yang tidak memiliki banyak relasi dinamis (misal: modul Supplier, Color Fabric, Type Fabric, Type Color).
+Gunakan dokumen ini setiap kali Anda membangun modul CRUD dengan input data sederhana yang tidak memiliki banyak relasi dinamis.
 
 ## Cara kerja
 Modul Simple memusatkan semua aksi CRUD pada satu halaman indeks saja (`index.blade.php`). Proses penambahan dan pengeditan data memanfaatkan modal tunggal (`modal.blade.php`) secara pop-up. JavaScript halaman (`index.js`) menangani pembukaan modal, pengisian nilai form via AJAX request, submit data form, penutupan modal, dan reload dinamis DataTable tanpa memicu refresh halaman browser.
@@ -33,10 +33,10 @@ Jika Anda membuat modul bernama `{Module}`, generator akan menghasilkan berkas-b
   - *Kekurangan*: Sulit dipelihara jika formulir memiliki input bertumpuk dan tabel relasi yang banyak.
 
 ## Contoh implementasi
-Referensi modul simple yang sudah ada di proyek ini:
-- View halaman utama: [supplier/index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
-- Modal pembungkus form: [supplier/modal.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/modal.blade.php)
-- Script CRUD client-side: [supplier/index.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/index.js)
+Referensi modul simple standar:
+- View halaman utama: `resources/views/category/index.blade.php`
+- Modal pembungkus form: `resources/views/category/modal.blade.php`
+- Script CRUD client-side: `resources/js/pages/category/index.js`
 
 ## Contoh kode
 Berikut adalah logika penanganan pembukaan form edit pada modal asinkron di Javascript:
@@ -64,7 +64,7 @@ const handleEdit = async (id) => {
 ## Checklist
 - [ ] Apakah form di dalam modal dibungkus tag `<form>` dengan atribut `data-mode="create"`?
 - [ ] Apakah tombol Close modal memiliki event listener kustom untuk memicu reset form input?
-- [ ] Apakah target elemen input menggunakan ID yang cocok dengan selector manipulasi di `list.js`?
+- [ ] Apakah target elemen input menggunakan ID yang cocok dengan selector manipulasi di `index.js`?
 - [ ] Apakah fungsi `reloadDatatable()` dipanggil pasca suksesnya submit POST/PUT?
 
 ## Best Practice
@@ -74,3 +74,4 @@ const handleEdit = async (id) => {
 ## Catatan penting
 > [!IMPORTANT]
 > Jangan biarkan modal menyimpan data ID sebelumnya. Hapus dataset ID form (`delete form.dataset.id`) setiap kali status form dirubah kembali ke mode `create` untuk mencegah kesalahan rute URL pada proses penyimpanan.
+

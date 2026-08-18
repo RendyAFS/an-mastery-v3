@@ -1,17 +1,18 @@
 # JavaScript Standards (javascript.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standar penulisan kode JavaScript di proyek ini untuk memastikan kebersihan kode, keamanan ruang lingkup (*scope isolation*), standardisasi pemicuan AJAX, dan integrasi komponen interaktif UI.
+Dokumen ini menjelaskan standar penulisan kode JavaScript di proyek ini untuk memastikan kebersihan kode, keamanan ruang lingkup (*scope isolation*), standardisasi pemicuan AJAX, dan integrasi komponen interaktif UI serta pustaka utilitas JavaScript yang tersedia.
 
 ## Kapan digunakan
-Gunakan panduan ini setiap kali Anda membuat file JS baru di folder `resources/js/pages/`, menulis interaksi DOM, memicu AJAX, mengontrol inisialisasi Preline UI, atau memproses input rupiah.
+Gunakan panduan ini setiap kali Anda membuat file JS baru di folder `resources/js/pages/`, menulis interaksi DOM, memicu AJAX, mengontrol inisialisasi Preline UI, mengelola form upload/kamera, atau memproses utilitas input.
 
 ## Cara kerja
 1. **Scope Isolation**: JavaScript per halaman dibungkus dalam modul IIFE kustom (`PageScript`) agar tidak mencemari objek global browser (`window`).
 2. **Pemicu Awal**: Modul dieksekusi di dalam blok pemicu jQuery `$(function() { PageScript.init(); })` setelah dokumen HTML selesai dimuat (*DOM Ready*).
-3. **Event Delegation**: Untuk berinteraksi dengan baris tabel dinamis yang sering berubah, event binding dipasang menggunakan delegasi dokumen `$(document).on(...)`.
+3. **Event Delegation**: Untuk berinteraksi dengan baris tabel/grid dinamis yang sering berubah, event binding dipasang menggunakan delegasi dokumen `$(document).on(...)`.
 4. **AJAX Standard**: Semua request asinkron diproses menggunakan Axios client terstandar `ApiProvider` untuk otomatisasi loader layar dan penanganan error terpusat.
 5. **AlpineJS Bindings**: Modul interaksi baris formulir kompleks menggunakan inisialisasi reaktivitas AlpineJS yang dihubungkan dengan daur hidup PageScript.
+6. **Modular Utilities**: Pustaka utilitas terpusat di `resources/js/utils/` digunakan untuk menangani fungsi spesifik seperti format mata uang, upload file, capture kamera, filter storage, dan inisialisasi komponen UI.
 
 ## Struktur File JS
 
@@ -19,40 +20,44 @@ Gunakan panduan ini setiap kali Anda membuat file JS baru di folder `resources/j
 ```
 resources/
 ├── js/
-│   ├── app.js              # Entry point utama, memuat utils global
+│   ├── app.js              # Entry point utama, memuat utils global & Preline UI
 │   ├── bootstrap.js        # Setup axios & dependensi dasar
 │   ├── pages/
 │   │   └── {module}/
-│   │       ├── index.js           # Logika halaman list/index
-│   │       ├── form.js            # Logika halaman form (create/edit)
-│   │       └── alpine-component.js # Reaktivitas tabel dinamis (opsional)
+│   │       ├── index.js            # Logika halaman list/index
+│   │       ├── form.js             # Logika halaman form (create/edit)
+│   │       └── alpine-component.js  # Reaktivitas tabel dinamis (opsional)
 │   └── utils/
-│       ├── api-provider.js        # HTTP client terpusat (Axios wrapper)
-│       ├── button-loading.js      # Helper loading state pada tombol submit
-│       ├── camera-capture.js      # Utilitas kamera browser
-│       ├── cardgrid.js            # Inisialisasi komponen card grid dinamis
-│       ├── custom-alert.js        # Toast, Alert, Confirm global
-│       ├── custom-select.js       # Inisialisasi select kustom
-│       ├── datatable.js           # Inisialisasi komponen DataTables
-│       ├── disable-number-scroll.js # Mencegah scroll pada input number
-│       ├── filepond.js            # Inisialisasi FilePond upload
-│       ├── fix-textarea-enter.js  # Perbaikan perilaku Enter pada textarea
-│       ├── image-processor.js     # Utilitas kompresi/proses gambar
-│       ├── init-theme.js          # Inisialisasi tema (dark/light)
-│       ├── lang.js                # Helper akses variabel lang dari window
-│       ├── loading.js             # Overlay loading layar penuh (blockUI)
-│       ├── lucide.js              # Inisialisasi ikon Lucide
-│       ├── normalize-form.js      # Normalisasi data FormData sebelum submit
-│       ├── number-input.js        # Format input angka
-│       ├── reinit-ui.js           # Reinisialisasi Preline UI setelah AJAX
-│       ├── rupiah-input.js        # Format input mata uang Rupiah
-│       ├── sidebar-mode.js        # Kontrol mode sidebar
-│       ├── sidebar-state.js       # Persistensi state sidebar
-│       ├── suppress-hsdatatable-warning.js # Suppress console warning HS
-│       ├── toggle-dark-mode.js    # Toggle dark mode manual
-│       ├── trans.js               # Helper terjemahan dari window lang bag
-│       ├── ui-init.js             # Inisialisasi ulang seluruh komponen Preline UI
-│       └── week.js                # Utilitas kalkulasi/tampilan minggu
+│       ├── api-provider.js         # HTTP client terpusat (Axios wrapper)
+│       ├── button-group.js         # Pengelolaan tombol grup (single & multi select)
+│       ├── button-loading.js       # Helper loading state pada tombol submit
+│       ├── camera-capture.js       # Utilitas capture foto via kamera browser
+│       ├── cardgrid.js             # Inisialisasi komponen card grid dinamis
+│       ├── custom-alert.js         # Toast, Alert, Confirm global (window.Toast, dll)
+│       ├── custom-select.js        # Inisialisasi HSSelect dengan clear button
+│       ├── datatable.js            # Inisialisasi komponen DataTables dinamis
+│       ├── disable-number-scroll.js# Mencegah scroll mouse merubah input number
+│       ├── filepond.js             # Integration FilePond upload & preview
+│       ├── filter-storage.js       # Persistensi parameter filter via sessionStorage
+│       ├── fix-textarea-enter.js   # Perbaikan perilaku Enter pada textarea
+│       ├── flatpickr-init.js       # Inisialisasi Flatpickr & date range minggu
+│       ├── image-processor.js      # Utilitas kompresi & resize gambar client-side
+│       ├── init-filter-storage.js  # Auto restore filter dari storage saat load
+│       ├── init-theme.js           # Inisialisasi tema awal (dark/light)
+│       ├── lang.js                 # Helper akses variabel lang dari window
+│       ├── loading.js              # Overlay loading layar penuh (blockUI)
+│       ├── lucide.js               # Inisialisasi ikon Lucide
+│       ├── normalize-form.js       # Normalisasi FormData sebelum submit AJAX
+│       ├── number-input.js         # Helper increment, decrement, & normalize angka
+│       ├── reinit-ui.js            # Reinisialisasi cepat Preline UI setelah AJAX
+│       ├── rupiah-input.js         # Format & unformat input mata uang Rupiah
+│       ├── sidebar-mode.js         # Kontrol mode & perilaku sidebar (compact/full)
+│       ├── splash-screen.js        # Helper animasi / kontrol splash screen
+│       ├── suppress-hsdatatable-warning.js # Suppress warning HSDataTables di console
+│       ├── toggle-dark-mode.js     # Toggle dark mode & switch event listener
+│       ├── trans.js                # Helper terjemahan i18n dari window lang bag
+│       ├── ui-init.js              # Inisialisasi ulang seluruh komponen UI & Lucide
+│       └── week.js                 # Utilitas kalkulasi rentang tanggal minggu
 ```
 
 ### Struktur PageScript
@@ -116,19 +121,17 @@ import normalizeFormInputs from "@/utils/normalize-form";
 const formData = new FormData(form);
 let payload = Object.fromEntries(formData.entries());
 payload = normalizeFormInputs(form, payload);
-// payload siap dikirim ke ApiProvider
 ```
 
 ---
 
 ### `trans` — `@/utils/trans`
-Mengakses string terjemahan yang sudah di-inject ke `window` dari Blade, dengan dukungan placeholder.
+Mengakses string terjemahan yang di-inject ke `window` dari Blade, dengan dukungan placeholder.
 
 ```javascript
 import trans from "@/utils/trans";
 
 // trans(bagName, key, replacements)
-// bagName: nama variabel window yang menyimpan dict bahasa
 const label = trans("langCrud", "add_title", { model: modelName });
 const msg   = trans("langCrud", "deleted", { model: modelName });
 ```
@@ -162,20 +165,41 @@ datatable.ajax.reload(null, false);
 
 ---
 
-### `initUi` — `@/utils/ui-init`
-Menginisialisasi ulang seluruh komponen Preline UI (dropdown, overlay, select, tabs, dll.) beserta Lucide icons dan RupiahInput. Diperlukan setelah konten DOM berubah via AJAX.
+### `initCardGrid` — `@/utils/cardgrid`
+Inisialisasi komponen Grid Kartu Dinamis berbasis AJAX.
+
+```javascript
+import initCardGrid from "@/utils/cardgrid";
+
+const cardGrid = initCardGrid({
+    containerSelector: "#card-grid-container",
+    renderCard: (item) => `<div class="card">${item.name}</div>`,
+    ajax: {
+        url: route("module.index"),
+        data: (d) => ({ search: d.search }),
+    },
+});
+```
+
+---
+
+### `initUi` / `reinitUi` — `@/utils/ui-init` & `@/utils/reinit-ui`
+Menginisialisasi ulang seluruh komponen Preline UI (dropdown, overlay, select, tabs, dll.) beserta Lucide icons dan RupiahInput setelah manipulasi DOM via AJAX.
 
 ```javascript
 import initUi from "@/utils/ui-init";
+import reinitUi from "@/utils/reinit-ui";
 
-// Panggil setelah DOM diperbarui (misal: setelah modal dibuka atau datatable reload)
+// Panggil setelah DOM diperbarui
 initUi();
+// Atau gunakan reinitUi() untuk penyegaran cepat elemen Preline
+reinitUi();
 ```
 
 ---
 
 ### `RupiahInput` — `@/utils/rupiah-input`
-Format input angka ke format mata uang Rupiah (via `Intl.NumberFormat`). Sudah diinisialisasi otomatis via `initUi()`.
+Format input angka ke format mata uang Rupiah (`Intl.NumberFormat`). Sudah diinisialisasi otomatis via `initUi()`.
 
 ```javascript
 import RupiahInput from "@/utils/rupiah-input";
@@ -192,8 +216,130 @@ RupiahInput.unformat("150.000"); // → "150000"
 
 ---
 
-### Global API — `Toast`, `Alert`, `Confirm`
-Tersedia global di `window` (dimuat via `custom-alert.js`). **Tidak perlu di-import.**
+### `NumberInput` — `@/utils/number-input`
+Utilitas pemrosesan dan normalisasi nilai input numerik.
+
+```javascript
+import NumberInput from "@/utils/number-input";
+
+const nextVal = NumberInput.increment(currentVal, step);
+const prevVal = NumberInput.decrement(currentVal, min, step);
+const cleanVal = NumberInput.normalize(inputVal, defaultMin);
+```
+
+---
+
+### `initFlatpickrAll` / `getFlatpickrInstance` — `@/utils/flatpickr-init`
+Inisialisasi input tanggal Flatpickr dengan lokalisasi Bahasa Indonesia dan dukungan date range minggu.
+
+```javascript
+import { initFlatpickrAll, getFlatpickrInstance } from "@/utils/flatpickr-init";
+
+// Inisialisasi elemen [data-flatpickr]
+initFlatpickrAll();
+
+// Ambil instance spesifik via ID
+const picker = getFlatpickrInstance("date-picker-id");
+```
+
+---
+
+### `FilePondHelper` — `@/utils/filepond`
+Inisialisasi komponen upload gambar/file berbasis FilePond dengan integrasi kompresi otomatis.
+
+```javascript
+import FilePondHelper from "@/utils/filepond";
+
+const pond = FilePondHelper.init({
+    selector: "#avatar-upload",
+    uploadUrl: route("upload.temp"),
+    deleteUrl: route("upload.revert"),
+    acceptedFileTypes: ["image/png", "image/jpeg"],
+    isCircle: true,
+    maxSize: 2048, // KB
+});
+```
+
+---
+
+### `processImageFile` — `@/utils/image-processor`
+Kompresi dan penyesuaian ukuran gambar di browser sebelum dikirim ke server.
+
+```javascript
+import processImageFile from "@/utils/image-processor";
+
+const compressedBlob = await processImageFile(file, {
+    maxSizeBytes: 1024 * 1024,
+    mimeType: "image/png",
+});
+```
+
+---
+
+### `CameraCapture` — `@/utils/camera-capture`
+Utilitas pengambil foto menggunakan webcam/kamera perangkat browser.
+
+```javascript
+import CameraCapture from "@/utils/camera-capture";
+
+CameraCapture.start("#video-preview", { width: 1280, height: 720 });
+const imageBlob = await CameraCapture.takePhoto();
+CameraCapture.stop();
+```
+
+---
+
+### `FilterStorage` — `@/utils/filter-storage` & `@/utils/init-filter-storage`
+Helper menyimpan dan mengembalikan state filter URL menggunakan `sessionStorage` per halaman.
+
+```javascript
+import FilterStorage from "@/utils/filter-storage";
+
+// Load filter tersimpan
+const params = FilterStorage.loadFilterParams();
+
+// Simpan state filter baru ke URL & sessionStorage
+FilterStorage.saveFilterParams(params);
+```
+
+---
+
+### `ButtonGroup` / `setButtonGroupValue` — `@/utils/button-group`
+Mengelola state aktif/inaktif tombol pilihan grup (single select atau multi select).
+
+```javascript
+// Atur nilai grup tombol secara programatis via ID input & container
+window.setButtonGroupValue("status-input-id", "active");
+```
+> HTML elemen wajib menggunakan atribut `data-button-group`, `data-target="input_id"`, dan elemen tombol `.btn-group-item[data-value="..."]`.
+
+---
+
+### `CustomSelect` — `@/utils/custom-select`
+Inisialisasi komponen `select[data-hs-select]` dengan tombol reset (`data-clear-select`).
+
+```html
+<!-- HTML structure -->
+<select id="category_select" data-hs-select>...</select>
+<button type="button" data-clear-select="category_select">Clear</button>
+```
+
+---
+
+### `Week` / `WeekUtils` — `@/utils/week`
+Helper untuk kalkulasi minggu dan format rentang tanggal minggu.
+
+```javascript
+import Week from "@/utils/week";
+
+const currentWeek = Week.getCurrentWeek();
+const dateRange = Week.getWeekDateRange(year, weekNumber);
+```
+
+---
+
+### Global API Alert & Toast — `Toast`, `Alert`, `Confirm`, `flashToast`
+Tersedia secara global di window (dimuat via `custom-alert.js`). **Tidak perlu di-import.**
 
 ```javascript
 // Toast Notification
@@ -208,8 +354,6 @@ Alert.error(message, title?, confirmText?);
 
 // Modal Konfirmasi (Promise-based)
 const confirmed = await Confirm.show(message, title?, confirmText?, cancelText?);
-
-// Konfirmasi hapus (teks bawaan)
 const confirmed = await Confirm.delete(message?);
 
 // Flash toast — tampil setelah redirect/reload
@@ -219,7 +363,7 @@ window.flashToast(type, title, message, timeout?);
 ---
 
 ### `Loading` — `@/utils/loading`
-Overlay loading layar penuh menggunakan jQuery BlockUI. Dipanggil otomatis oleh `ApiProvider`. Gunakan hanya jika perlu kontrol manual.
+Overlay loading layar penuh menggunakan jQuery BlockUI. Dipanggil otomatis oleh `ApiProvider`.
 
 ```javascript
 import Loading from "@/utils/loading";
@@ -229,12 +373,21 @@ Loading.stop();
 Loading.forceStop(); // Reset counter dan paksa tutup
 ```
 
+---
+
+### Utilitas Tema & UI Lainnya
+- **`toggle-dark-mode.js` / `init-theme.js`**: Mengelola perpindahan tema gelap/terang.
+- **`sidebar-mode.js`**: Mengontrol status lipatan (*collapse*) sidebar admin.
+- **`disable-number-scroll.js`**: Mencegah perubahan nilai input number secara tidak sengaja saat mouse scroll.
+- **`fix-textarea-enter.js`**: Menangani penekanan tombol Enter pada textarea dalam form.
+- **`splash-screen.js`**: Mengontrol visibilitas splash screen awal aplikasi.
+
 ## Contoh implementasi
-Implementasi referensi JavaScript untuk modul CRUD modal-based:
-- Contoh `index.js` lengkap: [supplier/index.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/index.js)
-- Pustaka AJAX Provider: [api-provider.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/api-provider.js)
-- Normalisasi Form: [normalize-form.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/normalize-form.js)
-- Terjemahan: [trans.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/trans.js)
+Implementasi referensi JavaScript standar untuk modul CRUD modal-based:
+- Script Utama: `resources/js/pages/{module}/index.js`
+- HTTP Client: `resources/js/utils/api-provider.js`
+- Form Normalizer: `resources/js/utils/normalize-form.js`
+- Translation Helper: `resources/js/utils/trans.js`
 
 ## Contoh kode
 Pola standar PageScript untuk `index.js` modul CRUD dengan modal:
@@ -249,7 +402,7 @@ import trans from "@/utils/trans";
 const PageScript = (function () {
     let datatable;
     let form;
-    const modelName = window.langModels?.ModelName ?? "Model";
+    const modelName = window.langModels?.ModelName ?? "Item";
 
     const reloadDatatable = () => {
         datatable.ajax.reload(null, false);
@@ -275,7 +428,7 @@ const PageScript = (function () {
             closeModal();
             reloadDatatable();
         } catch (error) {
-            // error sudah ditangani ApiProvider
+            // error sudah ditangani otomatis oleh ApiProvider
         } finally {
             stopLoading(submitter);
         }
@@ -331,18 +484,19 @@ $(function () {
 - [ ] Apakah seluruh kode Javascript ditaruh di dalam struktur modular IIFE `PageScript`?
 - [ ] Apakah event handler untuk aksi dalam tabel/grid menggunakan delegasi dokumen `$(document).on(...)`?
 - [ ] Apakah fungsi `submitForm` Anda telah dibungkus blok `try-catch-finally` yang menghentikan loading tombol (`stopLoading`)?
-- [ ] Apakah format rupiah pada formulir telah dinormalisasi menggunakan `normalizeFormInputs()` sebelum data dikirim ke API?
+- [ ] Apakah data formulir telah dinormalisasi menggunakan `normalizeFormInputs()` sebelum data dikirim ke API?
 - [ ] Apakah pesan CRUD menggunakan `trans()` bukan string hardcode?
 
 ## Best Practice
 - **Gunakan Global Toast/Confirm**: Manfaatkan API global yang sudah terintegrasi seperti `Toast.success(title, msg)`, `Toast.error(title, msg)`, `Confirm.show(msg, title)`, dan `Confirm.delete(msg)`.
 - **Loading UI Indicator**: Selalu manfaatkan helper loading dinamis `startLoading(button)` dan `stopLoading(button)` pada tombol kirim form untuk mencegah double click submit.
 - **Gunakan `trans()` untuk Pesan**: Jangan hardcode string pesan CRUD. Gunakan `trans("langCrud", "key", { model: modelName })` agar mendukung i18n.
-- **Reinit UI setelah AJAX**: Panggil `initUi()` setelah konten DOM diperbarui secara dinamis agar komponen Preline UI (dropdown, tooltip, dll.) berfungsi kembali.
+- **Reinit UI setelah AJAX**: Panggil `initUi()` atau `reinitUi()` setelah konten DOM diperbarui secara dinamis agar komponen Preline UI (dropdown, tooltip, dll.) berfungsi kembali.
 
 ## Catatan penting
 > [!IMPORTANT]
 > Jangan pernah menggunakan fungsi `alert()` bawaan browser atau pustaka modal luar. Semua dialog konfirmasi penghapusan wajib menggunakan promise `Confirm.delete()` atau `Confirm.show()` yang terintegrasi dengan desain sistem proyek ini.
 
 > [!NOTE]
-> Variabel `modelName` selalu diambil dari `window.langModels?.{ModelName}` agar terjemahan nama model konsisten di semua bahasa. Sediakan fallback string Indonesia sebagai nilai default.
+> Variabel `modelName` selalu diambil dari `window.langModels?.{ModelName}` agar terjemahan nama model konsisten di semua bahasa. Sediakan fallback string sebagai nilai default.
+

@@ -1,7 +1,7 @@
 # Project Best Practices (best-practice.md)
 
 ## Tujuan
-Dokumen ini merangkum kumpulan aturan main, pola pemrograman wajib, hal yang dilarang keras, kesalahan yang sering terjadi (*common errors*), serta panduan penyelesaian masalah khusus di proyek **AN Mastery V3**.
+Dokumen ini merangkum kumpulan aturan main, pola pemrograman wajib, hal yang dilarang keras, kesalahan yang sering terjadi (*common errors*), serta panduan penyelesaian masalah khusus di proyek berbasis arsitektur ini.
 
 ## Kapan digunakan
 Tinjau dokumen ini setiap kali Anda memulai pengerjaan fitur baru, sebelum mengajukan Pull Request, atau saat melakukan debugging kegagalan validasi / manipulasi DOM.
@@ -18,36 +18,36 @@ Dokumen ini mencakup:
 
 ## Contoh implementasi
 Pola best practice penanganan error validasi asinkron dapat dipelajari di:
-- AJAX Response Handler: [api-provider.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/api-provider.js) pada switch case `422` yang otomatis memunculkan toast message untuk setiap kegagalan input.
+- AJAX Response Handler: `resources/js/utils/api-provider.js` pada switch case `422` yang otomatis memunculkan toast message untuk setiap kegagalan input.
 
 ## Contoh kode
 Berikut adalah contoh penulisan transaksi database yang aman dan terstandar di proyek ini (kelas Action):
 ```php
 // CONTOH YANG WAJIB DIIKUTI
-namespace App\Actions\Sablon;
+namespace App\Actions\Product;
 
-use App\Models\Sablon;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
-class SaveSablonAction
+class SaveProductAction
 {
-    public function handle($request, ?Sablon $sablon = null): Sablon
+    public function handle($request, ?Product $product = null): Product
     {
         $data = $request->validated();
-        $details = $data['fabric_details'] ?? [];
-        unset($data['fabric_details']);
+        $details = $data['item_details'] ?? [];
+        unset($data['item_details']);
 
-        return DB::transaction(function () use ($data, $details, $sablon) {
-            $sablon = $sablon 
-                ? tap($sablon)->update($data)
-                : Sablon::create($data);
+        return DB::transaction(function () use ($data, $details, $product) {
+            $product = $product 
+                ? tap($product)->update($data)
+                : Product::create($data);
 
-            $sablon->sablonDetails()->delete();
+            $product->productDetails()->delete();
             foreach ($details as $detail) {
-                $sablon->sablonDetails()->create($detail);
+                $product->productDetails()->create($detail);
             }
 
-            return $sablon->load('sablonDetails');
+            return $product->load('productDetails');
         });
     }
 }
@@ -79,7 +79,8 @@ class SaveSablonAction
 ### Masalah yang Sering Terjadi & Solusinya:
 - **Masalah: Elemen dropdown Preline tidak merespon/terbuka setelah tabel di-reload.**
   - *Penyebab*: DOM telah berubah, namun Preline belum mendeteksi ulang elemen baru.
-  - *Solusi*: Panggil helper `reInitUi()` atau `window.HSStaticMethods.autoInit()` di dalam callback `drawCallback()` tabel atau setelah memodifikasi DOM halaman via JS.
+  - *Solusi*: Panggil helper `ui-init` / `reinit-ui` (`initUi()` atau `reinitUi()`) atau `window.HSStaticMethods.autoInit()` di dalam callback `drawCallback()` tabel atau setelah memodifikasi DOM halaman via JS.
 - **Masalah: Error "419 Page Expired" saat submit form via AJAX.**
   - *Penyebab*: CSRF token pada meta tag kadaluarsa atau tidak terpasang.
   - *Solusi*: Pastikan layout `main.blade.php` memuat `<meta name="csrf-token" content="{{ csrf_token() }}">` dan `ApiProvider.js` membaca meta tag tersebut.
+

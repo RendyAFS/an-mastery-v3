@@ -23,9 +23,9 @@ Setiap halaman Blade standard terstruktur sebagai berikut:
 - **Penutup Konten**: `@endsection`
 
 ## Contoh implementasi
-Referensi berkas Blade yang sudah ada di proyek ini:
-- View index modul simple: [supplier/index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
-- Layout utama admin: [layouts/main.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/layouts/main.blade.php)
+Referensi berkas Blade terstandar:
+- View index modul simple: `resources/views/{module}/index.blade.php`
+- Layout utama admin: `resources/views/layouts/main.blade.php`
 
 ## Contoh kode
 Berikut adalah kerangka penulisan halaman view terstandar (ganti `{module}` dan `{Module}` dengan nama modul Anda):
@@ -87,3 +87,4 @@ Berikut adalah kerangka penulisan halaman view terstandar (ganti `{module}` dan 
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menggunakan **Lucide Icons**. Pastikan Anda menulis elemen ikon menggunakan format `<i data-lucide="nama-ikon" class="size-4"></i>` dan memicu `initLucide()` dari skrip Javascript jika merender HTML baru secara dinamis.
+

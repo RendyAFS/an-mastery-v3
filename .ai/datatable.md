@@ -1,7 +1,7 @@
 # Datatable Integration Guide (datatable.md)
 
 ## Tujuan
-Dokumen ini menjelaskan panduan lengkap penggunaan komponen tabel dinamis **Datatable** di proyek **AN Mastery V3**. Panduan ini mencakup penggunaan Blade component, inisialisasi Javascript, konfigurasi opsi, dan format respons backend.
+Dokumen ini menjelaskan panduan lengkap penggunaan komponen tabel dinamis **Datatable** di proyek ini. Panduan ini mencakup penggunaan Blade component, inisialisasi Javascript, konfigurasi opsi, dan format respons backend.
 
 ## Kapan digunakan
 Gunakan komponen DataTable setiap kali Anda ingin menyusun halaman list data berbasis tabel yang membutuhkan pencarian client-side, pengubahan jumlah halaman, pagination tersemat, filter status, dan penanganan aksi CRUD.
@@ -23,8 +23,8 @@ Gunakan komponen DataTable setiap kali Anda ingin menyusun halaman list data ber
 - `defaultLength`: Jumlah baris default (default: `10`).
 
 ### Parameter Inisialisasi Javascript (`initDatatable()`)
-- `table`: CSS Selector tabel (contoh: `"#suppliers-datatable"`).
-- `filterSelector`: CSS Selector dropdown filter (contoh: `"#filter-suppliers"`).
+- `table`: CSS Selector tabel (contoh: `"#items-datatable"`).
+- `filterSelector`: CSS Selector dropdown filter (contoh: `"#filter-items"`).
 - `onRowClick`: Callback function saat baris diklik (menerima object `row` dan element `this`).
 - `rowClickRoute`: Callback function penentu navigasi URL halaman saat baris diklik.
 - `ajax`: Object konfigurasi request (`url`, `method`, `data`).
@@ -32,10 +32,10 @@ Gunakan komponen DataTable setiap kali Anda ingin menyusun halaman list data ber
 
 ## Contoh implementasi
 Penerapan lengkap dapat dipelajari pada berkas:
-- View Blade: [index.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/supplier/index.blade.php)
-- Javascript Halaman: [list.js](file:///d:/laragon/www/an-mastery-v3/resources/js/pages/supplier/list.js)
-- Pembungkus Inisialisasi: [datatable.js](file:///d:/laragon/www/an-mastery-v3/resources/js/utils/datatable.js)
-- Komponen Blade: [datatable.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/components/datatable.blade.php)
+- View Blade: `resources/views/{module}/index.blade.php`
+- Javascript Halaman: `resources/js/pages/{module}/index.js`
+- Pembungkus Inisialisasi: `resources/js/utils/datatable.js`
+- Komponen Blade: `resources/views/components/datatable.blade.php`
 
 ## Contoh kode
 ### 1. Inisialisasi DataTable di Javascript:
@@ -43,20 +43,20 @@ Penerapan lengkap dapat dipelajari pada berkas:
 import initDatatable from "@/utils/datatable";
 
 let datatable = initDatatable({
-    table: "#suppliers-datatable",
-    filterSelector: "#filter-suppliers",
+    table: "#categories-datatable",
+    filterSelector: "#filter-categories",
     onRowClick: (row) => handleEdit(row.id),
     ajax: {
-        url: route("suppliers.index"),
+        url: route("categories.index"),
         method: "GET",
         dataSrc: "data",
         data: function (d) {
-            d.filter = $("#filter-suppliers").val();
+            d.filter = $("#filter-categories").val();
         },
     },
     columns: [
         { data: "name", width: "30%" },
-        { data: "contact", width: "30%" },
+        { data: "code", width: "30%" },
         {
             data: "id",
             width: "10%",
@@ -75,8 +75,8 @@ let datatable = initDatatable({
   "data": [
     {
       "id": 1,
-      "name": "Supplier A",
-      "contact": "0812345678",
+      "name": "Category A",
+      "code": "CAT-01",
       "is_active": true,
       "deleted_at": null
     }
@@ -101,3 +101,4 @@ let datatable = initDatatable({
 ## Catatan penting
 > [!IMPORTANT]
 > Jangan pernah menggunakan plugin inisialisasi DataTable mentah milik jQuery (`$(...).DataTable()`). Selalu gunakan wrapper `initDatatable(...)` dari `resources/js/utils/datatable.js` agar gaya pagination Tailwind CSS v4, input search clear, dan ikon Lucide tetap ter-render secara konsisten.
+

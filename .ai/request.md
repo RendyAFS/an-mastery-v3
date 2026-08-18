@@ -20,9 +20,9 @@ Setiap kelas Form Request kustom berada di folder `app/Http/Requests/{ModuleName
 - Method `messages()`: Mengembalikan kustomisasi pesan kesalahan validasi field.
 
 ## Contoh implementasi
-Referensi Form Request yang sudah ada di proyek ini:
-- Request modul simple: [SaveSupplierRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Supplier/SaveSupplierRequest.php)
-- Request modul dengan array dinamis: [SaveSablonRequest.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Requests/Sablon/SaveSablonRequest.php)
+Referensi struktur Form Request standar:
+- Request modul simple: `app/Http/Requests/Category/SaveCategoryRequest.php`
+- Request modul dengan array dinamis: `app/Http/Requests/Product/SaveProductRequest.php`
 
 ## Contoh kode
 Berikut adalah contoh standard implementasi Form Request (ganti `{Module}` dengan nama modul Anda):
@@ -56,7 +56,7 @@ class Save{Module}Request extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required'         => 'Name is required.',
+            'name.required'              => 'Name is required.',
             'details.*.item_id.required' => 'Item on row :index is required.',
         ];
     }
@@ -75,8 +75,9 @@ class Save{Module}Request extends FormRequest
 
 ## Best Practice
 - **Satu Request untuk Aksi CRUD**: Gunakan berkas `Save{ModuleName}Request` tunggal untuk aksi tambah (Store) dan edit (Update) demi efisiensi kode, kecuali jika ada perbedaan aturan validasi yang sangat besar.
-- **Validasi Array Dinamis**: Jika form memiliki baris dinamis (seperti Sablon), gunakan validasi array dot-notation (misal: `'fabric_details.*.fabric_detail_id' => 'required|exists:fabric_details,id'`).
+- **Validasi Array Dinamis**: Jika form memiliki baris dinamis, gunakan validasi array dot-notation (misal: `'item_details.*.item_id' => 'required|exists:items,id'`).
 
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menampilkan pesan kesalahan validasi secara dinamis melalui toast alert. Tulis pesan kesalahan yang jelas dan langsung pada intinya di dalam method `messages()` agar pengguna dapat langsung memahami input yang salah.
+

@@ -1,7 +1,7 @@
 # Project Architecture Guide (project-architecture.md)
 
 ## Tujuan
-Dokumen ini menjelaskan arsitektur sistem proyek **AN Mastery V3**, termasuk struktur direktori, ketergantungan pustaka (*dependencies*), hubungan antara backend dan frontend, serta alur penanganan request dan response.
+Dokumen ini menjelaskan arsitektur sistem proyek berbasis arsitektur ini, termasuk struktur direktori, ketergantungan pustaka (*dependencies*), hubungan antara backend dan frontend, serta alur penanganan request dan response.
 
 ## Kapan digunakan
 Gunakan dokumen ini untuk memahami bagaimana komponen-komponen utama aplikasi saling berinteraksi, dan bagaimana struktur folder dipetakan secara keseluruhan.
@@ -14,7 +14,7 @@ Proyek ini mengadopsi arsitektur Laravel monolitis hibrida dengan pemisahan tang
 ## Struktur
 ### 1. Struktur Direktori Utama
 ```text
-an-mastery-v3/
+project-root/
 ├── .ai/                       # AI Agent Knowledge Base
 ├── app/
 │   ├── Actions/               # Kelas Domain / Logika Bisnis Penulisan (Store/Update)
@@ -37,13 +37,13 @@ an-mastery-v3/
 │   │   ├── app.css            # Entrypoint Tailwind CSS v4
 │   │   └── theme.css          # Variabel CSS :root
 │   ├── js/
-│   │   ├── pages/             # JS Spesifik Modul (misal: supplier/list.js, sablon/list.js)
-│   │   ├── utils/             # JS Helper / Utility global (api-provider.js, datatable.js)
+│   │   ├── pages/             # JS Spesifik Modul (misal: category/index.js, product/index.js)
+│   │   ├── utils/             # JS Helper / Utility global (api-provider.js, datatable.js, dll)
 │   │   └── app.js             # Entrypoint JS Utama
 │   └── views/
 │       ├── components/        # Komponen Blade reusable (datatable, cardgrid)
 │       ├── layouts/           # Master layouts (main.blade.php, auth.blade.php)
-│       └── [module]/          # Folder view per modul (misal: supplier/, sablon/)
+│       └── [module]/          # Folder view per modul (misal: category/, product/)
 ├── routes/
 │   └── web.php                # Rute HTTP & API utama
 └── package.json & composer.json
@@ -65,35 +65,35 @@ sequenceDiagram
     participant Repository
     participant Resource (JSON) / View (HTML)
 
-    Browser->>Routing (web.php): HTTP GET /suppliers (Request Halaman)
+    Browser->>Routing (web.php): HTTP GET /categories (Request Halaman)
     Routing (web.php)->>Controller: index()
-    Controller->>View (HTML): return view('supplier.index')
-    View (HTML)-->>Browser: Render HTML & Load list.js
+    Controller->>View (HTML): return view('category.index')
+    View (HTML)-->>Browser: Render HTML & Load index.js
 
-    Note over Browser, list.js: list.js memanggil API via AJAX
-    Browser->>Routing (web.php): AJAX GET /suppliers (expects JSON)
+    Note over Browser, index.js: index.js memanggil API via AJAX
+    Browser->>Routing (web.php): AJAX GET /categories (expects JSON)
     Routing (web.php)->>Controller: index()
     Controller->>Repository: getAll($filter)
     Repository->>Controller: Kumpulan Data Eloquent
-    Controller->>Resource (JSON): SupplierResource::collection($data)
+    Controller->>Resource (JSON): CategoryResource::collection($data)
     Resource (JSON)-->>Browser: 200 OK JSON Data
 ```
 
 ## Contoh kode
 Berikut adalah penggambaran alur data backend yang bersih (tanpa campur aduk logika database dan controller):
 ```php
-// App\Http\Controllers\SupplierController.php
+// App\Http\Controllers\CategoryController.php
 public function index()
 {
-    $this->authorize('suppliers.view');
+    $this->authorize('categories.view');
 
     if (request()->expectsJson()) {
         $filter = request('filter', 'active');
-        $suppliers = $this->supplierRepository->getAll($filter);
-        return SupplierResource::collection($suppliers);
+        $categories = $this->categoryRepository->getAll($filter);
+        return CategoryResource::collection($categories);
     }
 
-    return view('supplier.index');
+    return view('category.index');
 }
 ```
 
@@ -114,3 +114,4 @@ public function index()
 ## Catatan penting
 > [!IMPORTANT]
 > Aplikasi ini tidak menggunakan pemrosesan server-side Yajra DataTables di sisi backend. Semua pemrosesan filter, pencarian, dan pagination data tabel/grid ditangani di sisi client-side oleh `datatable.js` atau `cardgrid.js` menggunakan payload JSON dari Laravel API Resource.
+

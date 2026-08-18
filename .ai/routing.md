@@ -13,15 +13,15 @@ Gunakan panduan ini setiap kali Anda menambahkan endpoint baru, mendefinisikan r
 
 ## Struktur
 Berikut adalah aturan penamaan URL dan penamaan rute (*named routes*):
-- **URL Multi-Kata**: Harus menggunakan format **kebab-case** (huruf kecil dipisahkan tanda hubung). Contoh: `/image-fabrics`, `/price-suppliers`.
-- **Nama Rute (as)**: Harus menggunakan format **snake_case** (huruf kecil dipisahkan underscore). Contoh: `image_fabrics`, `price_suppliers`.
+- **URL Multi-Kata**: Harus menggunakan format **kebab-case** (huruf kecil dipisahkan tanda hubung). Contoh: `/product-categories`, `/user-roles`.
+- **Nama Rute (as)**: Harus menggunakan format **snake_case** (huruf kecil dipisahkan underscore). Contoh: `product_categories`, `user_roles`.
 - **Pengelompokan Rute**: Aksi tambahan untuk resource (seperti `restore`, `force-delete`, `toggle-active`, `select`) wajib dimasukkan di dalam blok `Route::prefix('...')->as('...')->group(...)` sebelum pendaftaran `Route::resource('...')`.
 
 ## Contoh implementasi
-Penerapan rute yang konsisten dalam file [web.php](file:///d:/laragon/www/an-mastery-v3/routes/web.php):
+Penerapan rute yang konsisten dalam file `routes/web.php`:
 ```php
 // Rute Tambahan (dikelompokkan terlebih dahulu)
-Route::prefix('{modules}')->as('{modules}.')-group(function () {
+Route::prefix('{modules}')->as('{modules}.')->group(function () {
     Route::put('{model}/toggle-active', [{Module}Controller::class, 'toggleActive'])->name('toggle-active');
     Route::put('{model}/restore', [{Module}Controller::class, 'restore'])->name('restore');
     Route::delete('{model}/force-delete', [{Module}Controller::class, 'forceDelete'])->name('force-delete');
@@ -36,11 +36,11 @@ Route::resource('{modules}', {Module}Controller::class)->names('{modules}');
 ```php
 Route::middleware(['auth', 'check.active'])->group(function () {
     // Contoh modul multi-kata (kebab-case URL, snake_case route name)
-    Route::prefix('color-fabrics')->as('color_fabrics.')->group(function () {
-        Route::put('{colorFabric}/restore', [App\Http\Controllers\ColorFabricController::class, 'restore'])->name('restore');
-        Route::delete('{colorFabric}/force-delete', [App\Http\Controllers\ColorFabricController::class, 'forceDelete'])->name('force-delete');
+    Route::prefix('product-categories')->as('product_categories.')->group(function () {
+        Route::put('{productCategory}/restore', [App\Http\Controllers\ProductCategoryController::class, 'restore'])->name('restore');
+        Route::delete('{productCategory}/force-delete', [App\Http\Controllers\ProductCategoryController::class, 'forceDelete'])->name('force-delete');
     });
-    Route::resource('color-fabrics', App\Http\Controllers\ColorFabricController::class)->names('color_fabrics');
+    Route::resource('product-categories', App\Http\Controllers\ProductCategoryController::class)->names('product_categories');
 });
 ```
 
@@ -54,18 +54,19 @@ const urlDelete = route("{modules}.destroy", id);
 
 ## Hubungan dengan file lain
 - Rute-rute ini didelegasikan langsung ke controller yang standarnya diatur di `controller.md`.
-- Variabel parameter rute (seperti `{supplier}`) dicocokkan otomatis menggunakan model binding yang penamaannya disesuaikan di `naming-convention.md`.
+- Variabel parameter rute (seperti `{category}`) dicocokkan otomatis menggunakan model binding yang penamaannya disesuaikan di `naming-convention.md`.
 
 ## Checklist
-- [ ] Apakah URL rute baru yang terdiri dari beberapa kata menggunakan format kebab-case (misal `bill-suppliers`)?
-- [ ] Apakah nama rute kustom Anda menggunakan format snake_case (misal `bill_suppliers.restore`)?
+- [ ] Apakah URL rute baru yang terdiri dari beberapa kata menggunakan format kebab-case (misal `product-categories`)?
+- [ ] Apakah nama rute kustom Anda menggunakan format snake_case (misal `product_categories.restore`)?
 - [ ] Apakah rute tambahan resource sudah ditulis di atas pendaftaran `Route::resource` agar tidak tertimpa?
 - [ ] Apakah rute baru sudah dibungkus middleware `auth` dan `check.active`?
 
 ## Best Practice
-- **Model Binding**: Selalu gunakan parameter singular pencocokan model (misal `{supplier}` untuk model `Supplier`) agar Laravel secara otomatis menyuntikkan model (*Route Model Binding*).
-- **Hindari Hardcode URL**: Jangan menulis URL mentah seperti `/suppliers/store` di file Javascript. Selalu gunakan `route('suppliers.store')` untuk menjaga konsistensi rute.
+- **Model Binding**: Selalu gunakan parameter singular pencocokan model (misal `{category}` untuk model `Category`) agar Laravel secara otomatis menyuntikkan model (*Route Model Binding*).
+- **Hindari Hardcode URL**: Jangan menulis URL mentah seperti `/categories/store` di file Javascript. Selalu gunakan `route('categories.store')` untuk menjaga konsistensi rute.
 
 ## Catatan penting
 > [!IMPORTANT]
 > Jangan pernah mencampuradukkan penamaan nama rute menggunakan kebab-case. Perbedaan penulisan (URL kebab-case vs Nama rute snake_case) adalah aturan mutlak di proyek ini untuk kompatibilitas data binding.
+

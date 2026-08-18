@@ -14,8 +14,8 @@ Controller bertindak sebagai pengontrol alur (*flow coordinator*):
    - Jika request meminta JSON (`expectsJson()`), controller mengembalikan `JsonResource` untuk dikonsumsi AJAX client-side.
    - Jika rute diakses langsung dari browser, controller mengembalikan view Blade.
 4. **Pembagian Proses Penulisan**:
-   - Operasi penulisan sederhana langsung menggunakan kueri Eloquent (misal: `Supplier::create(...)`).
-   - Operasi penulisan kompleks didelegasikan ke kelas Action (misal: `SaveSablonAction`).
+   - Operasi penulisan sederhana langsung menggunakan kueri Eloquent (misal: `Category::create(...)`).
+   - Operasi penulisan kompleks didelegasikan ke kelas Action (misal: `SaveProductAction`).
 
 ## Struktur
 Berikut adalah susunan method yang terstandarisasi dalam controller resource:
@@ -31,9 +31,9 @@ Berikut adalah susunan method yang terstandarisasi dalam controller resource:
 - `forceDelete()`: Menghapus data secara permanen dari database.
 
 ## Contoh implementasi
-Referensi controller yang sudah ada di proyek ini:
-- Controller Simple CRUD (modal): [SupplierController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SupplierController.php)
-- Controller Full Page CRUD: [SablonController.php](file:///d:/laragon/www/an-mastery-v3/app/Http/Controllers/SablonController.php)
+Referensi struktur controller standar:
+- Controller Simple CRUD (modal): `app/Http/Controllers/CategoryController.php`
+- Controller Full Page CRUD: `app/Http/Controllers/ProductController.php`
 
 ## Contoh kode
 Berikut adalah contoh struktur penulisan controller yang direkomendasikan (ganti `{Module}` dengan nama modul Anda):
@@ -128,3 +128,4 @@ class {Module}Controller extends Controller
 ## Catatan penting
 > [!IMPORTANT]
 > Aksi pemulihan (`restore`) dan penghapusan permanen (`forceDelete`) harus mencari data menggunakan `onlyTrashed()` agar data yang berstatus terhapus secara soft-delete dapat terdeteksi: `{Module}::onlyTrashed()->findOrFail($id)`.
+

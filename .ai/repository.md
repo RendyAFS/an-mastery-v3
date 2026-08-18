@@ -18,9 +18,9 @@ Setiap kelas Repository terletak di bawah folder `app/Repositories/` dan dinamai
 - `findWithDetails(Model $model)`: Memuat kembali instansi model beserta seluruh eager-loaded relasinya untuk halaman detail atau form edit.
 
 ## Contoh implementasi
-Referensi repository yang sudah ada di proyek ini:
-- Repository Simple (tanpa relasi): [SupplierRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SupplierRepository.php)
-- Repository Kompleks (dengan relasi): [SablonRepository.php](file:///d:/laragon/www/an-mastery-v3/app/Repositories/SablonRepository.php)
+Referensi struktur repository standar:
+- Repository Simple (tanpa relasi): `app/Repositories/CategoryRepository.php`
+- Repository Kompleks (dengan relasi): `app/Repositories/ProductRepository.php`
 
 ## Contoh kode
 Berikut adalah contoh implementasi pencarian dan data select dinamis di Repository (ganti `{Module}` dengan nama modul Anda):
@@ -69,7 +69,7 @@ class {Module}Repository
 - [ ] Apakah kueri pembacaan data Anda sudah dipindahkan ke kelas Repository baru?
 - [ ] Apakah kueri relational tabel Anda sudah ditangani menggunakan `with(...)` (Eager Loading)?
 - [ ] Apakah filter `active`, `deleted` (soft-deleted), dan `all` sudah ditangani di method `getAll`?
-- [ ] Apakah nama berkas menggunakan akhiran `Repository.php` (misal: `FabricRepository.php`)?
+- [ ] Apakah nama berkas menggunakan akhiran `Repository.php` (misal: `ProductRepository.php`)?
 
 ## Best Practice
 - **Separation of Concerns**: Jangan menulis logika penyimpanan (`save`, `update`, `delete`, `DB::transaction`) di dalam Repository. Logika tersebut ditangani oleh Controller (jika sederhana) atau Action Class (jika kompleks).
@@ -78,3 +78,4 @@ class {Module}Repository
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menerapkan fitur **Soft Deletes**. Pastikan Anda selalu menangani filter penanganan data yang terhapus dengan memanfaatkan method Eloquent `onlyTrashed()` dan `withTrashed()` di dalam method query `getAll()`.
+

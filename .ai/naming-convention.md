@@ -1,7 +1,7 @@
 # Naming Conventions (naming-convention.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standardisasi penamaan seluruh berkas, kelas, rute, variabel, dan metode pada proyek **AN Mastery V3**. Standardisasi ini menjaga kerapian kode dan mencegah bentrokan referensi.
+Dokumen ini menjelaskan standardisasi penamaan seluruh berkas, kelas, rute, variabel, dan metode pada proyek ini. Standardisasi ini menjaga kerapian kode dan mencegah bentrokan referensi.
 
 ## Kapan digunakan
 Rujuklah panduan ini setiap kali Anda membuat berkas baru, mendefinisikan rute di `web.php`, menulis variabel baru di JS/PHP, membuat metode controller, atau menyusun elemen Blade baru.
@@ -18,36 +18,36 @@ Berikut adalah kamus standar konvensi penamaan proyek:
 
 | Komponen | Pola Penamaan | Contoh |
 | :--- | :--- | :--- |
-| **Model** | Singular, PascalCase | `Supplier`, `ColorFabric` |
-| **Controller** | PascalCase, akhiran `Controller` | `SupplierController`, `ColorFabricController` |
-| **Repository** | PascalCase, akhiran `Repository` | `SupplierRepository`, `ColorFabricRepository` |
-| **Form Request** | PascalCase, awalan `Save`, akhiran `Request` | `SaveSupplierRequest`, `SaveColorFabricRequest` |
-| **API Resource** | PascalCase, akhiran `Resource` | `SupplierResource`, `ColorFabricResource` |
-| **Action Class** | PascalCase, awalan `Save`, akhiran `Action` | `SaveSablonAction` |
-| **Migration** | snake_case, jamak, deskriptif | `2026_07_23_create_suppliers_table` |
-| **Rute URL** | kebab-case, jamak untuk resource | `/suppliers`, `/color-fabrics` |
-| **Nama Rute (as)** | snake_case, jamak | `suppliers.index`, `color_fabrics.index` |
-| **Folder View & JS**| kebab-case | `views/color-fabric/`, `js/pages/color-fabric/` |
-| **Variabel PHP** | snake_case | `$supplier_id`, `$fabric_details` |
-| **Variabel JS** | camelCase | `supplierId`, `fabricDetails` |
-| **Database Column**| snake_case | `is_active`, `deleted_at`, `color_fabric_id` |
+| **Model** | Singular, PascalCase | `Category`, `ProductCategory` |
+| **Controller** | PascalCase, akhiran `Controller` | `CategoryController`, `ProductCategoryController` |
+| **Repository** | PascalCase, akhiran `Repository` | `CategoryRepository`, `ProductCategoryRepository` |
+| **Form Request** | PascalCase, awalan `Save`, akhiran `Request` | `SaveCategoryRequest`, `SaveProductCategoryRequest` |
+| **API Resource** | PascalCase, akhiran `Resource` | `CategoryResource`, `ProductCategoryResource` |
+| **Action Class** | PascalCase, awalan `Save`, akhiran `Action` | `SaveProductAction` |
+| **Migration** | snake_case, jamak, deskriptif | `2026_07_23_create_categories_table` |
+| **Rute URL** | kebab-case, jamak untuk resource | `/categories`, `/product-categories` |
+| **Nama Rute (as)** | snake_case, jamak | `categories.index`, `product_categories.index` |
+| **Folder View & JS**| kebab-case | `views/product-category/`, `js/pages/product-category/` |
+| **Variabel PHP** | snake_case | `$category_id`, `$product_details` |
+| **Variabel JS** | camelCase | `categoryId`, `productDetails` |
+| **Database Column**| snake_case | `is_active`, `deleted_at`, `category_id` |
 
 ## Contoh implementasi
 Pola penamaan dapat dilihat pada struktur pembuatan modul kustom:
-- Perintah Artisan: [MakeModuleCommand.php](file:///d:/laragon/www/an-mastery-v3/app/Console/Commands/MakeModuleCommand.php) yang memproses variabel `$studly = Str::studly($name)` dan `$kebab = Str::kebab($name)`.
+- Perintah Artisan: `app/Console/Commands/MakeModuleCommand.php` yang memproses variabel `$studly = Str::studly($name)` dan `$kebab = Str::kebab($name)`.
 
 ## Contoh kode
 Berikut adalah contoh implementasi penamaan kelas dan rute dalam satu modul:
 ```php
-// File: app/Http/Controllers/ColorFabricController.php
-class ColorFabricController extends Controller { ... }
+// File: app/Http/Controllers/ProductCategoryController.php
+class ProductCategoryController extends Controller { ... }
 
-// File: app/Repositories/ColorFabricRepository.php
-class ColorFabricRepository { ... }
+// File: app/Repositories/ProductCategoryRepository.php
+class ProductCategoryRepository { ... }
 
 // File: routes/web.php
-Route::resource('color-fabrics', ColorFabricController::class)->names('color_fabrics');
-// Menghasilkan rute bernama: color_fabrics.index, color_fabrics.store, dll.
+Route::resource('product-categories', ProductCategoryController::class)->names('product_categories');
+// Menghasilkan rute bernama: product_categories.index, product_categories.store, dll.
 ```
 
 ## Hubungan dengan file lain
@@ -61,9 +61,10 @@ Route::resource('color-fabrics', ColorFabricController::class)->names('color_fab
 - [ ] Apakah nama kelas Form Request Anda menggunakan format `Save{ModuleName}Request`?
 
 ## Best Practice
-- **Consisten Singular/Plural**: Gunakan nama tunggal (singular) untuk model/kelas PHP (misal `Fabric`), tetapi gunakan kata jamak (plural) untuk rute URL (misal `fabrics`) demi mematuhi RESTful API standard.
+- **Consisten Singular/Plural**: Gunakan nama tunggal (singular) untuk model/kelas PHP (misal `Category`), tetapi gunakan kata jamak (plural) untuk rute URL (misal `categories`) demi mematuhi RESTful API standard.
 - **Konsistensi Variabel Kontrak**: Pastikan penamaan key properti JSON dari API Resource (`camelCase` atau `snake_case` kustom) sudah cocok dengan parsing key di dalam berkas Javascript halaman.
 
 ## Catatan penting
 > [!WARNING]
-> Jangan pernah mencampuradukkan penulisan underscore dan hyphen pada URL. `/color_fabrics` adalah kesalahan fatal. URL wajib menggunakan `/color-fabrics` dan nama rute wajib menggunakan `color_fabrics.*`.
+> Jangan pernah mencampuradukkan penulisan underscore dan hyphen pada URL. `/product_categories` adalah kesalahan fatal. URL wajib menggunakan `/product-categories` dan nama rute wajib menggunakan `product_categories.*`.
+

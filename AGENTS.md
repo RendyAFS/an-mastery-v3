@@ -1,7 +1,7 @@
 # AI Agent Entry Point Guide (AGENTS.md)
 
 ## Tujuan
-Dokumen ini berfungsi sebagai panduan utama dan gerbang masuk (*entry point*) bagi AI Agent saat mengembangkan, melakukan pemeliharaan, atau memodifikasi fitur pada proyek **AN Mastery V3**. Dokumen ini memastikan AI memahami pola arsitektur proyek, aturan kepatuhan, serta cara membaca berkas dokumentasi penunjang lainnya.
+Dokumen ini berfungsi sebagai panduan utama dan gerbang masuk (*entry point*) bagi AI Agent saat mengembangkan, melakukan pemeliharaan, atau memodifikasi fitur pada proyek berbasis arsitektur ini. Dokumen ini memastikan AI memahami pola arsitektur proyek, aturan kepatuhan, serta cara membaca berkas dokumentasi penunjang lainnya.
 
 ## Kapan digunakan
 AI Agent wajib membaca dokumen ini terlebih dahulu di awal sesi sebelum mulai menganalisis kode atau melakukan modifikasi apa pun dalam proyek ini. 
@@ -23,7 +23,7 @@ Berikut adalah daftar seluruh file Knowledge Base yang tersedia di dalam folder 
 - **`request.md`**: Pola validasi input menggunakan Form Request.
 - **`repository.md`**: Aturan penulisan query database dan pemisahan logika data.
 - **`resource.md`**: Standardisasi format JSON response menggunakan API Resources.
-- **`javascript.md`**: Pola interaksi client-side menggunakan PageScript (IIFE) dan AlpineJS.
+- **`javascript.md`**: Pola interaksi client-side menggunakan PageScript (IIFE), AlpineJS, dan pustaka utilitas JS.
 - **`blade.md`**: Aturan layouting, komponen UI reusable, dan rendering views.
 - **`css.md`**: Desain sistem styling dengan Tailwind CSS v4.
 - **`datatable.md`**: Panduan integrasi tabel dinamis menggunakan komponen `x-datatable`.
@@ -66,3 +66,4 @@ Dokumen `AGENTS.md` terhubung langsung dengan semua berkas di dalam folder `.ai/
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menggunakan **Tailwind CSS v4** dengan variabel CSS `:root` langsung pada utilitas kelas, serta **Preline UI v3** untuk interaksi JavaScript komponennya. Jangan mengimpor library UI lain tanpa izin tertulis dari user.
+

@@ -1,7 +1,7 @@
 # CSS Standards (css.md)
 
 ## Tujuan
-Dokumen ini menjelaskan standardisasi styling menggunakan **Tailwind CSS v4** dan variabel warna tema kustom di proyek **AN Mastery V3**. Dokumen ini menjamin kebersihan kelas utilitas dan keseragaman skema warna tema (termasuk mode gelap/dark mode).
+Dokumen ini menjelaskan standardisasi styling menggunakan **Tailwind CSS v4** dan variabel warna tema kustom di proyek ini. Dokumen ini menjamin kebersihan kelas utilitas dan keseragaman skema warna tema (termasuk mode gelap/dark mode).
 
 ## Kapan digunakan
 Gunakan dokumen ini setiap kali Anda merancang antarmuka UI baru, mengkustomisasi warna teks/latar belakang, memodifikasi elemen badge, mengontrol spacing, atau mengedit berkas css komponen di proyek ini.
@@ -27,9 +27,9 @@ Berkas-berkas CSS proyek berada di bawah folder `resources/css/` dengan struktur
 
 ## Contoh implementasi
 Pola berkas CSS dan tema dapat dipelajari pada berkas:
-- Berkas Utama: [app.css](file:///d:/laragon/www/an-mastery-v3/resources/css/app.css)
-- Variabel Tema: [theme.css](file:///d:/laragon/www/an-mastery-v3/resources/css/theme.css)
-- Gaya Lencana: [badge.css](file:///d:/laragon/www/an-mastery-v3/resources/css/components/badge.css)
+- Berkas Utama: `resources/css/app.css`
+- Variabel Tema: `resources/css/theme.css`
+- Gaya Lencana: `resources/css/components/badge.css`
 
 ## Contoh kode
 ### 1. Deklarasi Tema (`theme.css`):
@@ -55,7 +55,7 @@ Pola berkas CSS dan tema dapat dipelajari pada berkas:
 ```
 
 ## Hubungan dengan file lain
-- Gaya CSS ini dimuat di layout utama [main.blade.php](file:///d:/laragon/www/an-mastery-v3/resources/views/layouts/main.blade.php) menggunakan tag `@vite(['resources/css/app.css'])`.
+- Gaya CSS ini dimuat di layout utama `resources/views/layouts/main.blade.php` menggunakan tag `@vite(['resources/css/app.css'])`.
 - Kelas utilitas CSS ini digunakan di semua view halaman Blade (`blade.md`) dan tag string HTML dinamis di JavaScript (`javascript.md`).
 
 ## Checklist
@@ -71,3 +71,4 @@ Pola berkas CSS dan tema dapat dipelajari pada berkas:
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menggunakan **Tailwind CSS v4**. Jangan menulis sintaks konfigurasi warna di dalam berkas Javascript `tailwind.config.js` karena berkas tersebut sudah tidak digunakan lagi di versi Tailwind terbaru ini.
+
