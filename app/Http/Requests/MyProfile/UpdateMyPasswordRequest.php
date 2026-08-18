@@ -30,9 +30,19 @@ class UpdateMyPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required'  => 'Password is required.',
-            'password.string'    => 'Password must be a string.',
-            'password.confirmed' => 'Password confirmation does not match.',
+            'password.required'  => __('my-profile.validation.password.required'),
+            'password.string'    => __('my-profile.validation.password.string'),
+            'password.confirmed' => __('my-profile.validation.password.confirmed'),
+            'password.min'       => __('my-profile.validation.password.min'),
+            'password.letters'   => __('my-profile.validation.password.letters'),
+            'password.numbers'   => __('my-profile.validation.password.numbers'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'password' => __('my-profile.form.password'),
         ];
     }
 }

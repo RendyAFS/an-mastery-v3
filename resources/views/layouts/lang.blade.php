@@ -47,6 +47,7 @@
     $langBillSupplier = collect(trans('bill-supplier'))->toArray();
     $langSalaryEmployee = collect(trans('salary-employee'))->toArray();
     $langMemo = collect(trans('memo'))->toArray();
+    $langMyProfile = collect(trans('my-profile'))->toArray();
     // END CRUD
 @endphp
 
@@ -77,5 +78,6 @@
     window.langBillSupplier = @json($langBillSupplier);
     window.langSalaryEmployee = @json($langSalaryEmployee);
     window.langMemo = @json($langMemo);
+    window.langMyProfile = @json($langMyProfile);
     // END CRUD
 </script>

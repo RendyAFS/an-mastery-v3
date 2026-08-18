@@ -45,6 +45,15 @@ return [
             'email'    => 'Please enter a valid email address.',
             'unique'   => 'This email has already been taken.',
         ],
+
+        'password' => [
+            'required'  => 'Password is required.',
+            'string'    => 'Password must be a string.',
+            'confirmed' => 'Password confirmation does not match.',
+            'min'       => 'Password must be at least 8 characters.',
+            'letters'   => 'Password must contain at least one letter.',
+            'numbers'   => 'Password must contain at least one number.',
+        ],
     ],
 
 ];

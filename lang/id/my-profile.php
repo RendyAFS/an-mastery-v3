@@ -45,6 +45,15 @@ return [
             'email'    => 'Format email tidak valid.',
             'unique'   => 'Email sudah digunakan.',
         ],
+
+        'password' => [
+            'required'  => 'Password wajib diisi.',
+            'string'    => 'Password harus berupa teks.',
+            'confirmed' => 'Konfirmasi password tidak cocok.',
+            'min'       => 'Password minimal 8 karakter.',
+            'letters'   => 'Password harus mengandung setidaknya satu huruf.',
+            'numbers'   => 'Password harus mengandung setidaknya satu angka.',
+        ],
     ],
 
 ];
