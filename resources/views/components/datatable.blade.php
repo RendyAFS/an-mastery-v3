@@ -14,8 +14,8 @@
     'defaultLength' => 10,
 ])
 
-<div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center">
-    <div class="flex items-center gap-3 w-full sm:w-auto">
+<div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center" data-dt-controls="{{ $id }}">
+    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
 
         @if ($search)
             <div class="relative w-full sm:w-64">
@@ -61,6 +61,12 @@
                 @endforeach
             </select>
         @endif
+
+        @isset($filters)
+            <div class="w-full sm:flex-1 sm:min-w-0">
+                {{ $filters }}
+            </div>
+        @endisset
     </div>
 
     @if ($length)

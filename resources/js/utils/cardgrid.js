@@ -22,7 +22,69 @@ export default function initCardgrid({
         lastPage: 1,
     };
 
+    let isLoading = false;
     let searchTimeout = null;
+
+    const toggleControlsDisabled = (disabled) => {
+        const controlsWrapper = document.querySelector(`[data-cg-controls="${gridId}"]`);
+        if (controlsWrapper) {
+            controlsWrapper.classList.toggle("pointer-events-none", disabled);
+            controlsWrapper.classList.toggle("opacity-50", disabled);
+
+            controlsWrapper.querySelectorAll("input, select, button, .btn-group-item").forEach((el) => {
+                el.disabled = disabled;
+            });
+
+            controlsWrapper.querySelectorAll(".hs-select").forEach((el) => {
+                el.classList.toggle("pointer-events-none", disabled);
+                el.classList.toggle("opacity-50", disabled);
+            });
+        }
+
+        // Fallback for individual elements
+        const searchEl = document.getElementById("cg-search");
+        const clearEl = document.getElementById("cg-search-clear");
+        if (searchEl) {
+            searchEl.disabled = disabled;
+            searchEl.classList.toggle("pointer-events-none", disabled);
+            searchEl.classList.toggle("opacity-50", disabled);
+        }
+        if (clearEl) {
+            clearEl.disabled = disabled;
+            clearEl.classList.toggle("pointer-events-none", disabled);
+            clearEl.classList.toggle("opacity-50", disabled);
+        }
+
+        const lengthEl = document.getElementById("cg-length");
+        if (lengthEl) {
+            lengthEl.disabled = disabled;
+            const hsWrapper = lengthEl.closest(".hs-select");
+            if (hsWrapper) {
+                hsWrapper.classList.toggle("pointer-events-none", disabled);
+                hsWrapper.classList.toggle("opacity-50", disabled);
+            }
+        }
+
+        if (filterSelector) {
+            document.querySelectorAll(filterSelector).forEach((filterDom) => {
+                filterDom.disabled = disabled;
+                const hsWrapper = filterDom.closest(".hs-select");
+                if (hsWrapper) {
+                    hsWrapper.classList.toggle("pointer-events-none", disabled);
+                    hsWrapper.classList.toggle("opacity-50", disabled);
+                }
+            });
+        }
+
+        const pagEl = document.getElementById("cg-pagination");
+        if (pagEl) {
+            pagEl.classList.toggle("pointer-events-none", disabled);
+            pagEl.classList.toggle("opacity-50", disabled);
+            pagEl.querySelectorAll("button").forEach((btn) => {
+                btn.disabled = disabled;
+            });
+        }
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -111,6 +173,7 @@ export default function initCardgrid({
     };
 
     const setLoading = (loading) => {
+        isLoading = loading;
         const loadingEl = document.getElementById(`${gridId}-loading`);
 
         if (loading) {
@@ -130,6 +193,8 @@ export default function initCardgrid({
                 "scale-[0.99]",
             );
         }
+
+        toggleControlsDisabled(loading);
     };
 
     const renderInfo = () => {
@@ -234,6 +299,8 @@ export default function initCardgrid({
     const clearBtn = document.getElementById("cg-search-clear");
 
     searchInput?.addEventListener("input", function () {
+        if (isLoading) return;
+
         const value = this.value;
 
         // toggle clear button
@@ -256,6 +323,8 @@ export default function initCardgrid({
 
     // clear search
     clearBtn?.addEventListener("click", () => {
+        if (isLoading) return;
+
         searchInput.value = "";
 
         clearBtn.classList.remove("flex");
@@ -272,6 +341,7 @@ export default function initCardgrid({
     document
         .getElementById("cg-length")
         ?.addEventListener("change", function () {
+            if (isLoading) return;
             state.perPage = parseInt(this.value);
             state.page = 1;
             fetchData();
@@ -279,6 +349,7 @@ export default function initCardgrid({
 
     if (filterSelector) {
         document.addEventListener("change", (e) => {
+            if (isLoading) return;
             if (e.target.matches(filterSelector)) {
                 state.filter = e.target.value;
                 state.page = 1;
@@ -288,6 +359,7 @@ export default function initCardgrid({
     }
 
     document.addEventListener("click", (e) => {
+        if (isLoading) return;
         const btn = e.target.closest("#cg-pagination button[data-page]");
         if (!btn) return;
         const page = parseInt(btn.dataset.page);
@@ -303,3 +375,4 @@ export default function initCardgrid({
 
     return { reload };
 }
+

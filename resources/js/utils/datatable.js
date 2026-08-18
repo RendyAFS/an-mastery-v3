@@ -20,7 +20,11 @@ export default function initDatatable({
             10;
     }
 
-    const filterId = filterSelector ? `${filterSelector}-${tableId}` : null;
+    const filterId = filterSelector
+        ? filterSelector.startsWith("#") || filterSelector.startsWith(".")
+            ? filterSelector
+            : `#${filterSelector}-${tableId}`
+        : null;
     const filterEl = filterId ? $(filterId) : null;
 
     const ajaxOptions = typeof ajax === "string" ? { url: ajax } : { ...ajax };
@@ -38,6 +42,70 @@ export default function initDatatable({
         }
 
         return d;
+    };
+
+    let isProcessing = false;
+
+    const toggleControlsDisabled = (disabled) => {
+        const controlsWrapper = document.querySelector(`[data-dt-controls="${tableId}"]`);
+        if (controlsWrapper) {
+            controlsWrapper.classList.toggle("pointer-events-none", disabled);
+            controlsWrapper.classList.toggle("opacity-50", disabled);
+
+            controlsWrapper.querySelectorAll("input, select, button, .btn-group-item").forEach((el) => {
+                el.disabled = disabled;
+            });
+
+            controlsWrapper.querySelectorAll(".hs-select").forEach((el) => {
+                el.classList.toggle("pointer-events-none", disabled);
+                el.classList.toggle("opacity-50", disabled);
+            });
+        }
+
+        // Fallback for individual elements
+        const searchEl = document.getElementById(`dt-search-${tableId}`);
+        const clearEl = document.getElementById(`dt-search-clear-${tableId}`);
+        if (searchEl) {
+            searchEl.disabled = disabled;
+            searchEl.classList.toggle("pointer-events-none", disabled);
+            searchEl.classList.toggle("opacity-50", disabled);
+        }
+        if (clearEl) {
+            clearEl.disabled = disabled;
+            clearEl.classList.toggle("pointer-events-none", disabled);
+            clearEl.classList.toggle("opacity-50", disabled);
+        }
+
+        const lengthEl = document.getElementById(`dt-length-${tableId}`);
+        if (lengthEl) {
+            lengthEl.disabled = disabled;
+            const hsWrapper = lengthEl.closest(".hs-select");
+            if (hsWrapper) {
+                hsWrapper.classList.toggle("pointer-events-none", disabled);
+                hsWrapper.classList.toggle("opacity-50", disabled);
+            }
+        }
+
+        if (filterId) {
+            const filterDom = document.querySelector(filterId);
+            if (filterDom) {
+                filterDom.disabled = disabled;
+                const hsWrapper = filterDom.closest(".hs-select");
+                if (hsWrapper) {
+                    hsWrapper.classList.toggle("pointer-events-none", disabled);
+                    hsWrapper.classList.toggle("opacity-50", disabled);
+                }
+            }
+        }
+
+        const pagEl = document.getElementById(`dt-pagination-${tableId}`);
+        if (pagEl) {
+            pagEl.classList.toggle("pointer-events-none", disabled);
+            pagEl.classList.toggle("opacity-50", disabled);
+            pagEl.querySelectorAll("button").forEach((btn) => {
+                btn.disabled = disabled;
+            });
+        }
     };
 
     const datatable = $(table).DataTable({
@@ -114,6 +182,11 @@ export default function initDatatable({
         },
     });
 
+    datatable.on("processing.dt", function (e, settings, processing) {
+        isProcessing = processing;
+        toggleControlsDisabled(processing);
+    });
+
     let searchTimeout = null;
 
     const searchInput = $(`#dt-search-${tableId}`);
@@ -122,7 +195,9 @@ export default function initDatatable({
     const paginationContainer = $(`#dt-pagination-${tableId}`);
     const infoContainer = $(`#dt-info-${tableId}`);
 
-    searchInput.on("keyup", function () {
+    searchInput.on("keyup input", function () {
+        if (isProcessing) return;
+
         const value = this.value;
 
         if (value.length > 0) {
@@ -139,6 +214,8 @@ export default function initDatatable({
     });
 
     clearBtn.on("click", function () {
+        if (isProcessing) return;
+
         searchInput.val("");
 
         clearBtn.removeClass("flex").addClass("hidden");
@@ -149,16 +226,19 @@ export default function initDatatable({
     });
 
     lengthSelect.on("change", function () {
+        if (isProcessing) return;
         datatable.page.len(this.value).draw();
     });
 
     if (filterId) {
         $(document).on("change", filterId, function () {
+            if (isProcessing) return;
             datatable.ajax.reload(null, false);
         });
     }
 
     paginationContainer.on("click", "button[data-page]", function () {
+        if (isProcessing) return;
         datatable.page($(this).data("page")).draw("page");
     });
 
@@ -284,3 +364,4 @@ export default function initDatatable({
 
     return datatable;
 }
+

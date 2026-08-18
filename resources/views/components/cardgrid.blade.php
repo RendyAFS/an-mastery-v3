@@ -16,7 +16,7 @@
 ])
 
 {{-- Top Bar --}}
-<div class="flex flex-col gap-3 mb-4">
+<div class="flex flex-col gap-3 mb-4" data-cg-controls="{{ $id }}">
     <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
         {{-- LEFT SIDE --}}
         <div class="flex flex-wrap items-center gap-3 w-full sm:flex-1 sm:min-w-0">
