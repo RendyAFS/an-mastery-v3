@@ -56,9 +56,9 @@ const initSalaryFeeModal = () => {
 
     window.addEventListener("open-sablon-salary-fee-modal", async (e) => {
         const { employeeId, employeeName } = e.detail;
-        const weekOf = $("#date_sablon_value").val();
+        const dateSablon = $("#date_sablon_value").val();
 
-        if (!weekOf) {
+        if (!dateSablon) {
             Toast.error(
                 window.langCustomAlert.warning,
                 window.langSablon?.employee_detail?.pick_date_first ??
@@ -66,6 +66,8 @@ const initSalaryFeeModal = () => {
             );
             return;
         }
+
+        const weekOf = new Date().toLocaleDateString("en-CA");
 
         $("#sablon-salary-fee-employee-id").val(employeeId);
         $("#sablon-salary-fee-week-of").val(weekOf);
@@ -158,7 +160,11 @@ const PageScript = (function () {
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const submitter = e.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+            const submitter =
+                e.submitter ||
+                form.querySelector(
+                    'button[type="submit"], input[type="submit"]',
+                );
             const action = submitter?.dataset?.action ?? "save";
 
             if (submitter?.hasAttribute("data-button-loading"))

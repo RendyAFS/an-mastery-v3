@@ -168,7 +168,6 @@
 
                     <div class="flex items-center pt-5" x-show="row.employee_id" x-cloak>
                         <button type="button" @click="openSalaryFeeModal(row)"
-                            :disabled="row.is_paid || row.isSettlementRow"
                             class="flex items-center rounded-lg gap-1
                             bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
                             text-[15px] text-(--color-light) hover:text-(--color-light)
