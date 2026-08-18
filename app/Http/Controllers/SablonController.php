@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
 use App\Actions\Sablon\SettleBonAction;
+use App\Actions\Sablon\SettleLateCompletionAction;
 use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
@@ -82,13 +83,11 @@ class SablonController extends Controller
         return view('sablon.edit', array_merge(['sablon' => $sablon], $formData));
     }
 
-    public function update(SaveSablonRequest $request, Sablon $sablon, SaveSablonAction $action, SettleBonAction $settleBonAction)
+    public function update(SaveSablonRequest $request, Sablon $sablon, SaveSablonAction $action)
     {
         $this->authorize('sablons.update');
 
         $sablon = $action->handle($request, $sablon);
-
-        $settleBonAction->handle($sablon);
 
         return new SablonResource($sablon);
     }
@@ -147,8 +146,12 @@ class SablonController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Sablon $sablon, SettleBonAction $settleBonAction)
-    {
+    public function updateStatus(
+        Request $request,
+        Sablon $sablon,
+        SettleBonAction $settleBonAction,
+        SettleLateCompletionAction $settleLateCompletionAction
+    ) {
         $validated = $request->validate([
             'status' => ['required', new Enum(StatusSablonEnum::class)],
         ]);
@@ -158,16 +161,22 @@ class SablonController extends Controller
         ]);
 
         $settleBonAction->handle($sablon);
+        $settleLateCompletionAction->handle($sablon);
 
         if ($sablon->date_sablon) {
             $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
                 ->pluck('employee_id')
                 ->unique();
 
-            $weekOf = $sablon->date_sablon->toDateString();
+            $weeksToProcess = collect([
+                $sablon->date_sablon->toDateString(),
+                now()->toDateString(),
+            ])->unique();
 
-            $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
-                $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+            $affectedEmployeeIds->each(function ($employeeId) use ($weeksToProcess) {
+                $weeksToProcess->each(function ($weekOf) use ($employeeId) {
+                    $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+                });
             });
         }
 

@@ -24,16 +24,18 @@ class SablonEmployeeDetail extends Model
         'is_settled',
         'settled_at',
         'settlement_of_id',
+        'late_eligible_at',
         'notes'
     ];
 
     protected $casts = [
-        'additional_fee' => 'array',
-        'is_change'      => 'boolean',
-        'is_bon'         => 'boolean',
-        'is_paid'        => 'boolean',
-        'is_settled'     => 'boolean',
-        'settled_at'     => 'date'
+        'additional_fee'   => 'array',
+        'is_change'        => 'boolean',
+        'is_bon'           => 'boolean',
+        'is_paid'          => 'boolean',
+        'is_settled'       => 'boolean',
+        'settled_at'       => 'date',
+        'late_eligible_at' => 'date',
     ];
 
     public function sablon(): BelongsTo
@@ -135,10 +137,15 @@ class SablonEmployeeDetail extends Model
         return $query->where(function (Builder $q) use ($start, $end) {
             $q->where(function (Builder $q1) use ($start, $end) {
                 $q1->whereNull('settlement_of_id')
+                    ->whereNull('late_eligible_at')
                     ->whereHas('sablon', fn($s) => $s->whereBetween('date_sablon', [$start, $end]));
             })->orWhere(function (Builder $q1) use ($start, $end) {
                 $q1->whereNotNull('settlement_of_id')
                     ->whereBetween('settled_at', [$start, $end]);
+            })->orWhere(function (Builder $q1) use ($start, $end) {
+                $q1->whereNull('settlement_of_id')
+                    ->whereNotNull('late_eligible_at')
+                    ->whereBetween('late_eligible_at', [$start, $end]);
             });
         });
     }
@@ -147,6 +154,10 @@ class SablonEmployeeDetail extends Model
     {
         if ($this->settlement_of_id) {
             return $this->settled_at?->toDateString();
+        }
+
+        if ($this->late_eligible_at) {
+            return $this->late_eligible_at->toDateString();
         }
 
         return $this->sablon?->date_sablon?->toDateString();

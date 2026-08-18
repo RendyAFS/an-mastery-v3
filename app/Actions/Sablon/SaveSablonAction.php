@@ -6,11 +6,14 @@ use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Http\Requests\Sablon\SaveSablonRequest;
 use App\Models\Sablon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class SaveSablonAction
 {
     public function __construct(
-        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
+        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction,
+        private SettleBonAction $settleBonAction,
+        private SettleLateCompletionAction $settleLateCompletionAction
     ) {}
 
     public function handle(SaveSablonRequest $request, ?Sablon $sablon = null): Sablon
@@ -28,7 +31,12 @@ class SaveSablonAction
                 : Sablon::create($data);
 
             $this->syncFabricDetails($sablon, $fabricDetails);
-            $this->syncEmployeeDetails($sablon, $employeeDetails);
+            $affectedEmployeeIds = $this->syncEmployeeDetails($sablon, $employeeDetails);
+
+            $this->settleBonAction->handle($sablon);
+            $this->settleLateCompletionAction->handle($sablon);
+
+            $this->upsertSalaryForAffectedEmployees($sablon, $affectedEmployeeIds);
 
             return $sablon->load(['sablonDetails', 'sablonEmployeeDetails']);
         });
@@ -47,7 +55,7 @@ class SaveSablonAction
         }
     }
 
-    private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): void
+    private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): Collection
     {
         $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
             ->pluck('employee_id')
@@ -62,6 +70,7 @@ class SaveSablonAction
             })
             ->where('is_settled', false)
             ->whereNull('settlement_of_id')
+            ->whereNull('late_eligible_at')
             ->delete();
 
         foreach ($employeeDetails as $detail) {
@@ -84,14 +93,24 @@ class SaveSablonAction
             ]);
         }
 
+        return $affectedEmployeeIds;
+    }
+
+    private function upsertSalaryForAffectedEmployees(Sablon $sablon, Collection $affectedEmployeeIds): void
+    {
         if (! $sablon->date_sablon || $affectedEmployeeIds->isEmpty()) {
             return;
         }
 
-        $weekOf = $sablon->date_sablon->toDateString();
+        $weeksToProcess = collect([
+            $sablon->date_sablon->toDateString(),
+            now()->toDateString(),
+        ])->unique();
 
-        $affectedEmployeeIds->each(function ($employeeId) use ($weekOf) {
-            $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+        $affectedEmployeeIds->each(function ($employeeId) use ($weeksToProcess) {
+            $weeksToProcess->each(function ($weekOf) use ($employeeId) {
+                $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
+            });
         });
     }
 }
