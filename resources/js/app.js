@@ -9,7 +9,6 @@ window.FloatingUIDOM = FloatingUIDOM;
 import "./utils/sidebar-mode";
 import "./utils/toggle-dark-mode";
 import "./utils/custom-alert";
-import "./utils/sidebar-state";
 import "./utils/custom-select";
 import "./utils/button-group";
 import "./utils/number-input";

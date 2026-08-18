@@ -19,15 +19,6 @@
                     AN Mastery
                 </span>
             </a>
-
-            <div class="hidden lg:block">
-                <button type="button"
-                    class="flex items-center justify-center size-8 rounded-full text-(--color-dark-gray) hover:bg-(--color-gray)/20 cursor-pointer"
-                    aria-label="Minify sidebar" data-hs-overlay-minifier="#hs-sidebar-content-push">
-                    <i data-lucide="panel-left-close" class="size-4 hs-overlay-minified:hidden"></i>
-                    <i data-lucide="panel-left-open" class="size-4 hidden hs-overlay-minified:block"></i>
-                </button>
-            </div>
         </header>
 
         <div class="px-3 pb-3">
