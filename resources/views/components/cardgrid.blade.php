@@ -103,23 +103,24 @@
     @endisset
 </div>
 
-{{-- Loading Overlay --}}
+{{-- Loading Overlay + Card Grid Container --}}
 <div class="relative min-h-40">
-    {{-- Loading Overlay --}}
-    <div id="{{ $id }}-loading"
-        class="hidden absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
-        <div class="flex flex-col items-center gap-4">
-            <div class="relative">
-                <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
+    {{-- Loading Overlay: toggled via JS (removes 'hidden', inner has flex for centering) --}}
+    <div id="{{ $id }}-loading" class="hidden">
+        <div class="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
+            <div class="flex flex-col items-center gap-4">
+                <div class="relative">
+                    <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
 
-                <div
-                    class="absolute inset-0 size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin">
+                    <div
+                        class="absolute inset-0 size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin">
+                    </div>
                 </div>
-            </div>
 
-            <span class="text-sm text-(--color-dark) dark:text-(--color-light)">
-                {{ __('cardgrid.Loading data...') }}
-            </span>
+                <span class="text-sm text-(--color-dark) dark:text-(--color-light)">
+                    {{ __('cardgrid.Loading data...') }}
+                </span>
+            </div>
         </div>
     </div>
 
@@ -130,11 +131,6 @@
     </div>
 </div>
 
-{{-- Card Grid Container --}}
-<div id="{{ $id }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    {{-- Cards injected by JS --}}
-</div>
-
 {{-- Empty State --}}
 <div id="{{ $id }}-empty" class="hidden">
     <div class="flex flex-col items-center justify-center py-20 text-(--color-gray)">
@@ -142,6 +138,7 @@
         <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('cardgrid.No data found') }}</p>
     </div>
 </div>
+
 
 {{-- Footer --}}
 <div class="flex flex-col gap-3 mt-4 sm:flex-row sm:justify-between sm:items-center">
