@@ -2,7 +2,7 @@ import "./utils/suppress-hsdatatable-warning";
 import "./bootstrap";
 import "preline";
 import * as FloatingUIDOM from "@floating-ui/dom";
-import fixTextareaEnter from "./utils/fix-textarea-enter";
+import initFormEnterSubmit from "./utils/form-enter-submit";
 window.FloatingUIDOM = FloatingUIDOM;
 
 // utils
@@ -23,6 +23,6 @@ initSplashScreen();
 document.addEventListener("DOMContentLoaded", () => {
     initUi();
     disableNumberScroll();
-    fixTextareaEnter();
+    initFormEnterSubmit();
     window.Alpine.start();
 });

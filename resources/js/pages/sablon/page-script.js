@@ -158,8 +158,8 @@ const PageScript = (function () {
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const submitter = e.submitter;
-            const action = submitter?.dataset.action ?? "save";
+            const submitter = e.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+            const action = submitter?.dataset?.action ?? "save";
 
             if (submitter?.hasAttribute("data-button-loading"))
                 startLoading(submitter);

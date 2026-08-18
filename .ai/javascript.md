@@ -39,7 +39,7 @@ resources/
 │       ├── disable-number-scroll.js# Mencegah scroll mouse merubah input number
 │       ├── filepond.js             # Integration FilePond upload & preview
 │       ├── filter-storage.js       # Persistensi parameter filter via sessionStorage
-│       ├── fix-textarea-enter.js   # Perbaikan perilaku Enter pada textarea
+│       ├── form-enter-submit.js    # Pengelolaan submit otomatis tombol Enter pada form
 │       ├── flatpickr-init.js       # Inisialisasi Flatpickr & date range minggu
 │       ├── image-processor.js      # Utilitas kompresi & resize gambar client-side
 │       ├── init-filter-storage.js  # Auto restore filter dari storage saat load
@@ -379,7 +379,7 @@ Loading.forceStop(); // Reset counter dan paksa tutup
 - **`toggle-dark-mode.js` / `init-theme.js`**: Mengelola perpindahan tema gelap/terang.
 - **`sidebar-mode.js`**: Mengontrol status lipatan (*collapse*) sidebar admin.
 - **`disable-number-scroll.js`**: Mencegah perubahan nilai input number secara tidak sengaja saat mouse scroll.
-- **`fix-textarea-enter.js`**: Menangani penekanan tombol Enter pada textarea dalam form.
+- **`form-enter-submit.js`**: Menangani penekanan tombol Enter pada form (submit otomatis via HTML5 `requestSubmit` untuk input/select & membuat baris baru pada textarea).
 - **`splash-screen.js`**: Mengontrol visibilitas splash screen awal aplikasi.
 
 ## Contoh implementasi
