@@ -459,7 +459,6 @@ export default function sablonForm(
         },
 
         computeFee(row) {
-            if ((row.locked || row.is_paid) && row.fee) return row.fee;
             const fee = calc.computeFee(this.ratePerLayer, row.layers);
             row.fee = fee;
             return fee;

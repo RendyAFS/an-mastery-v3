@@ -82,9 +82,7 @@
                         <label class="text-xs font-medium text-(--color-dark-gray)">
                             {{ __('sablon.employee_detail.layers') }}
                         </label>
-
-                        <x-input-number model="row.layers" :min="1"
-                            x-bind:disabled="row.locked || row.is_paid" />
+                        <x-input-number model="row.layers" :min="1" />
                     </div>
 
                     <div class="space-y-1">
