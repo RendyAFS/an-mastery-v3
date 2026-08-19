@@ -21,12 +21,8 @@
     <title>{{ $title ?? 'AN Mastery' }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
-    <script src="{{ asset('js/luicide-latest.js') }}" defer></script>
-
     <script src="{{ Vite::asset('resources/js/utils/init-filter-storage.js') }}"></script>
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>
-
-    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
 
     @vite(['resources/css/app.css'])
 
@@ -53,10 +49,6 @@
 
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('js/blockUi.js') }}"></script>
-    <script src="{{ asset('js/dataTables.min.js') }}"></script>
-    <script>
-        window.DataTable = window.jQuery.fn.dataTable;
-    </script>
 
     @include('layouts.lang')
 

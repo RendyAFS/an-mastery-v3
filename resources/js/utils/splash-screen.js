@@ -1,4 +1,4 @@
-export default function initSplashScreen(minDuration = 3500) {
+export default function initSplashScreen(minDuration = 1200) {
     const splash = document.getElementById("splash-screen");
     if (!splash) return;
 

@@ -9,8 +9,6 @@
     <title>{{ $title }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/Logo-AnMastery.ico') }}">
 
-    {{-- Scripts --}}
-    <script src="{{ asset('js/luicide-latest.js') }}"></script>
 
     {{-- Init Theme --}}
     <script src="{{ Vite::asset('resources/js/utils/init-theme.js') }}"></script>

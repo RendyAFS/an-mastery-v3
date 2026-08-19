@@ -14,6 +14,18 @@
     'defaultLength' => 10,
 ])
 
+@pushOnce('styles')
+    <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
+@endPushOnce
+
+@pushOnce('scripts')
+    <script src="{{ asset('js/dataTables.min.js') }}"></script>
+    <script>
+        window.DataTable = window.jQuery.fn.dataTable;
+    </script>
+@endPushOnce
+
+
 <div class="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-center" data-dt-controls="{{ $id }}">
     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
 
