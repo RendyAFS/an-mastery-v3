@@ -789,6 +789,7 @@
                     style="color: var(--color-dark-gray);">
                     <div class="flex items-center gap-2">
                         <span class="font-semibold text-(--color-dark) dark:text-(--color-light)">AN Mastery</span>
+                        <span class="text-xs text-(--color-dark-gray) dark:text-(--color-gray)">v{{ config('app.version', '1.0.0') }}</span>
                         <span>·</span>
                         <span>{{ __('welcome.footer.tagline') }}</span>
                     </div>
