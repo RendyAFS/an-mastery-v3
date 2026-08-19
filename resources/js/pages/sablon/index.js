@@ -1,5 +1,6 @@
 import ApiProvider from "@/utils/api-provider";
 import initCardgrid from "@/utils/cardgrid";
+import initBulkSelectCardgrid from "@/utils/bulk-select-cardgrid";
 import trans from "@/utils/trans";
 import filterStorage from "@/utils/filter-storage";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
@@ -12,11 +13,9 @@ const statusBadgeMap = {
     RETURNED: "badge-danger",
 };
 
-const LONG_PRESS_MS = 500;
-const MOVE_THRESHOLD = 10;
-
 const PageScript = (function () {
     let cardgrid;
+    let bulkSelect;
     const modelName = window.langModels?.Sablon ?? "Sablon";
 
     const getDefaultRange = () => getCenteredWeekRange(1, 1);
@@ -383,141 +382,23 @@ const PageScript = (function () {
         });
     };
 
-    let selectMode = false;
-    let selectedIds = new Set();
-    let longPressTimer = null;
-    let longPressFired = false;
-    let pressStartX = 0;
-    let pressStartY = 0;
-
-    const gridEl = document.getElementById("sablon-cardgrid");
-
-    const clearSelectionUI = () => {
-        document
-            .querySelectorAll("#sablon-cardgrid .sablon-select-checkbox")
-            .forEach((cb) => (cb.checked = false));
-        document
-            .querySelectorAll("#sablon-cardgrid .cg-card-wrapper.selected")
-            .forEach((el) => el.classList.remove("selected"));
-    };
-
-    const updateBulkBar = () => {
-        const bar = document.getElementById("bulk-action-bar");
-        const count = selectedIds.size;
-
-        document.getElementById("bulk-selected-count").textContent =
-            window.langSablon.bulk.selected_count.replace(":count", count);
-
-        bar.classList.toggle("hidden", count === 0);
-        document.body.classList.toggle("bulk-bar-active", count > 0);
-
-        if (count === 0 && selectMode) {
-            selectMode = false;
-            gridEl.classList.remove("select-mode");
-        }
-    };
-
-    const toggleSelection = (wrapper, checked, id) => {
-        if (checked) {
-            selectedIds.add(id);
-            wrapper.classList.add("selected");
-        } else {
-            selectedIds.delete(id);
-            wrapper.classList.remove("selected");
-        }
-        updateBulkBar();
-    };
-
-    const cancelLongPress = () => {
-        clearTimeout(longPressTimer);
-        longPressTimer = null;
-    };
-
-    const startLongPress = (wrapper) => {
-        longPressFired = false;
-        longPressTimer = setTimeout(() => {
-            longPressFired = true;
-            selectMode = true;
-            gridEl.classList.add("select-mode");
-
-            const checkbox = wrapper.querySelector(".sablon-select-checkbox");
-            if (checkbox && !checkbox.disabled) {
-                checkbox.checked = true;
-                toggleSelection(wrapper, true, checkbox.dataset.id);
-            }
-
-            if (navigator.vibrate) navigator.vibrate(20);
-        }, LONG_PRESS_MS);
+    const BulkSelect = () => {
+        bulkSelect = initBulkSelectCardgrid({
+            gridId: "sablon-cardgrid",
+            barId: "bulk-action-bar",
+            countId: "bulk-selected-count",
+            checkboxSelector: ".sablon-select-checkbox",
+            countText: (count) =>
+                window.langSablon.bulk.selected_count.replace(":count", count),
+            onSelectionChange: (ids, count) => {
+                document.body.classList.toggle("bulk-bar-active", count > 0);
+            },
+        });
     };
 
     const bindBulkSelectEvents = () => {
-        gridEl.addEventListener("pointerdown", function (e) {
-            if (e.target.closest("button, a, [data-no-card-click]")) return;
-
-            const wrapper = e.target.closest(".cg-card-wrapper");
-            if (!wrapper) return;
-
-            pressStartX = e.clientX;
-            pressStartY = e.clientY;
-
-            startLongPress(wrapper);
-        });
-
-        gridEl.addEventListener("pointermove", function (e) {
-            if (!longPressTimer) return;
-
-            const dx = Math.abs(e.clientX - pressStartX);
-            const dy = Math.abs(e.clientY - pressStartY);
-
-            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
-                cancelLongPress();
-            }
-        });
-
-        gridEl.addEventListener("pointerup", cancelLongPress);
-        gridEl.addEventListener("pointerleave", cancelLongPress);
-        gridEl.addEventListener("pointercancel", cancelLongPress);
-
-        gridEl.addEventListener(
-            "click",
-            function (e) {
-                if (longPressFired) {
-                    longPressFired = false;
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return;
-                }
-
-                if (!selectMode) return;
-
-                const wrapper = e.target.closest(".cg-card-wrapper");
-                if (!wrapper) return;
-
-                e.preventDefault();
-                e.stopImmediatePropagation();
-
-                const checkbox = wrapper.querySelector(
-                    ".sablon-select-checkbox",
-                );
-                if (!checkbox || checkbox.disabled) return;
-
-                checkbox.checked = !checkbox.checked;
-                toggleSelection(wrapper, checkbox.checked, checkbox.dataset.id);
-            },
-            true,
-        );
-
-        new MutationObserver(() => {
-            if (selectMode) {
-                selectedIds.clear();
-                updateBulkBar();
-            }
-        }).observe(gridEl, { childList: true });
-
         $(document).on("click", "#btn-bulk-cancel", function () {
-            selectedIds.clear();
-            clearSelectionUI();
-            updateBulkBar();
+            bulkSelect.reset();
         });
 
         $(document).on("click", "#btn-bulk-apply", async function () {
@@ -531,9 +412,11 @@ const PageScript = (function () {
                 return;
             }
 
+            const selectedIds = bulkSelect.getSelectedIds();
+
             const confirmed = await Confirm.show(
                 window.langSablon.bulk.confirm_message
-                    .replace(":count", selectedIds.size)
+                    .replace(":count", selectedIds.length)
                     .replace(":status", statusLabel(status)),
                 window.langSablon.bulk.confirm_title,
             );
@@ -544,16 +427,14 @@ const PageScript = (function () {
                 const res = await ApiProvider.put(
                     route("sablons.bulk-status"),
                     {
-                        sablon_ids: Array.from(selectedIds),
+                        sablon_ids: selectedIds,
                         status,
                     },
                 );
 
                 Toast.success(window.langCustomAlert.success, res.message);
 
-                selectedIds.clear();
-                clearSelectionUI();
-                updateBulkBar();
+                bulkSelect.reset();
                 cardgrid.reload();
             } catch (e) {
                 console.error(e);
@@ -568,6 +449,7 @@ const PageScript = (function () {
 
             CardGrid();
             bindEvents();
+            BulkSelect();
             bindBulkSelectEvents();
             initStatusModal();
         },
