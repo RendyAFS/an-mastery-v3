@@ -10,6 +10,7 @@
 
   <br>
 
+  [![Version](https://img.shields.io/badge/App_Version-v1.0.9-6d9886?style=for-the-badge)](config/app.php)
   [![Laravel 12](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
   [![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
   [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -205,6 +206,32 @@ an-mastery-v3/
    php artisan serve
    ```
    Aplikasi dapat diakses melalui browser di `http://127.0.0.1:8000`.
+
+---
+
+## 🏷️ Pengaturan & Pengecekan Versi Aplikasi (App Version & PWA)
+
+Versi aplikasi dikelola secara terpusat dan otomatis tersinkronisasi ke seluruh komponen antarmuka pengguna serta Service Worker PWA.
+
+### 1. Cara Mengatur / Mengubah Versi
+Set variabel versi di file `.env` (atau di [`config/app.php`](file:///D:/laragon/www/an-mastery-v3/config/app.php)):
+```env
+APP_VERSION=1.0.9
+```
+
+### 2. Lokasi Tampilan Versi di Aplikasi
+Nilai versi aplikasi secara otomatis muncul di:
+- **Navbar Header** (di bawah logo *AN Mastery*)
+- **Sidebar Navigation** (di bawah logo *AN Mastery*)
+- **Splash Screen Loader** (saat pemuatan aplikasi)
+- **Footer Landing Page**
+- **Dynamic PWA Service Worker** (`/sw.js` -> `CACHE_NAME = "an-mastery-v1.0.9"`)
+
+### 3. Cara Mengecek Versi via Terminal / CLI
+Anda dapat memeriksa versi aplikasi yang sedang aktif dari terminal menggunakan perintah Artisan:
+```bash
+php artisan config:show app.version
+```
 
 ---
 
