@@ -28,15 +28,9 @@
                     textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
                     rounded="rounded-lg" class="cursor-pointer" />
 
-                <x-button-loading type="button" id="btn-toggle-select" icon="check-square"
-                    text="{{ __('sablon.bulk.select_mode') }}" loadingText="{{ __('button-loading.Saving...') }}"
-                    color="bg-(--color-warning) hover:bg-(--color-warning)/80"
-                    textColor="text-(--color-light) hover:text-(--color-light)" size="py-2 px-4 text-[15px]"
-                    rounded="rounded-lg" class="cursor-pointer" />
-
                 <a href="{{ route('sablons.create') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                      bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
+                    bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
                     <i data-lucide="plus" class="size-4"></i>
                     {{ __('crud.add_title', ['model' => __('models.Sablon')]) }}
                 </a>

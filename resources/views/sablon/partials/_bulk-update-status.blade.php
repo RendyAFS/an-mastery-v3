@@ -52,6 +52,12 @@
     }
 
     body.bulk-bar-active #sidebar-floating-trigger {
-        bottom: 6.5rem;
+        bottom: 5.5rem;
+    }
+
+    #sablon-cardgrid .cg-card-wrapper {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
     }
 </style>

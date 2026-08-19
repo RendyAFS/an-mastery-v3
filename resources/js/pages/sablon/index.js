@@ -12,6 +12,9 @@ const statusBadgeMap = {
     RETURNED: "badge-danger",
 };
 
+const LONG_PRESS_MS = 500;
+const MOVE_THRESHOLD = 10;
+
 const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.Sablon ?? "Sablon";
@@ -382,6 +385,10 @@ const PageScript = (function () {
 
     let selectMode = false;
     let selectedIds = new Set();
+    let longPressTimer = null;
+    let longPressFired = false;
+    let pressStartX = 0;
+    let pressStartY = 0;
 
     const gridEl = document.getElementById("sablon-cardgrid");
 
@@ -403,25 +410,11 @@ const PageScript = (function () {
 
         bar.classList.toggle("hidden", count === 0);
         document.body.classList.toggle("bulk-bar-active", count > 0);
-    };
 
-    const setSelectMode = (active) => {
-        selectMode = active;
-        gridEl.classList.toggle("select-mode", active);
-
-        if (!active) {
-            selectedIds.clear();
-            clearSelectionUI();
-            updateBulkBar();
+        if (count === 0 && selectMode) {
+            selectMode = false;
+            gridEl.classList.remove("select-mode");
         }
-
-        $("#btn-toggle-select")
-            .find("span")
-            .text(
-                active
-                    ? window.langSablon.bulk.cancel_select
-                    : window.langSablon.bulk.select_mode,
-            );
     };
 
     const toggleSelection = (wrapper, checked, id) => {
@@ -435,14 +428,66 @@ const PageScript = (function () {
         updateBulkBar();
     };
 
+    const cancelLongPress = () => {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+    };
+
+    const startLongPress = (wrapper) => {
+        longPressFired = false;
+        longPressTimer = setTimeout(() => {
+            longPressFired = true;
+            selectMode = true;
+            gridEl.classList.add("select-mode");
+
+            const checkbox = wrapper.querySelector(".sablon-select-checkbox");
+            if (checkbox && !checkbox.disabled) {
+                checkbox.checked = true;
+                toggleSelection(wrapper, true, checkbox.dataset.id);
+            }
+
+            if (navigator.vibrate) navigator.vibrate(20);
+        }, LONG_PRESS_MS);
+    };
+
     const bindBulkSelectEvents = () => {
-        $(document).on("click", "#btn-toggle-select", function () {
-            setSelectMode(!selectMode);
+        gridEl.addEventListener("pointerdown", function (e) {
+            if (e.target.closest("button, a, [data-no-card-click]")) return;
+
+            const wrapper = e.target.closest(".cg-card-wrapper");
+            if (!wrapper) return;
+
+            pressStartX = e.clientX;
+            pressStartY = e.clientY;
+
+            startLongPress(wrapper);
         });
+
+        gridEl.addEventListener("pointermove", function (e) {
+            if (!longPressTimer) return;
+
+            const dx = Math.abs(e.clientX - pressStartX);
+            const dy = Math.abs(e.clientY - pressStartY);
+
+            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
+                cancelLongPress();
+            }
+        });
+
+        gridEl.addEventListener("pointerup", cancelLongPress);
+        gridEl.addEventListener("pointerleave", cancelLongPress);
+        gridEl.addEventListener("pointercancel", cancelLongPress);
 
         gridEl.addEventListener(
             "click",
             function (e) {
+                if (longPressFired) {
+                    longPressFired = false;
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return;
+                }
+
                 if (!selectMode) return;
 
                 const wrapper = e.target.closest(".cg-card-wrapper");
@@ -470,7 +515,9 @@ const PageScript = (function () {
         }).observe(gridEl, { childList: true });
 
         $(document).on("click", "#btn-bulk-cancel", function () {
-            setSelectMode(false);
+            selectedIds.clear();
+            clearSelectionUI();
+            updateBulkBar();
         });
 
         $(document).on("click", "#btn-bulk-apply", async function () {
@@ -504,7 +551,9 @@ const PageScript = (function () {
 
                 Toast.success(window.langCustomAlert.success, res.message);
 
-                setSelectMode(false);
+                selectedIds.clear();
+                clearSelectionUI();
+                updateBulkBar();
                 cardgrid.reload();
             } catch (e) {
                 console.error(e);
