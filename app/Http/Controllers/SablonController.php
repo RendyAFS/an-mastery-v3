@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
 use App\Actions\Sablon\UpdateSablonStatusAction;
-use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
 use App\Http\Requests\Sablon\SaveSablonRequest;
@@ -21,7 +20,6 @@ class SablonController extends Controller
 {
     public function __construct(
         private SablonRepository $sablonRepository,
-        private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction
     ) {}
 
     public function index()
