@@ -231,4 +231,17 @@ return [
         ],
     ],
     'settlement_notes' => 'Settlement bon dari detail #:id',
+
+    'bulk' => [
+        'select_mode' => 'Pilih',
+        'cancel_select' => 'Batal Pilih',
+        'selected_count' => ':count dipilih',
+        'select_status' => 'Pilih status baru',
+        'apply' => 'Terapkan',
+        'cancel' => 'Batal',
+        'status_required' => 'Pilih status terlebih dahulu',
+        'confirm_title' => 'Ubah Status Massal',
+        'confirm_message' => 'Ubah status :count sablon terpilih menjadi ":status"?',
+    ],
+    'bulk_status_updated_success' => ':count sablon berhasil diperbarui statusnya',
 ];

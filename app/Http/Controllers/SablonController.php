@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Sablon\SaveSablonAction;
 use App\Actions\Sablon\SettleBonAction;
 use App\Actions\Sablon\SettleLateCompletionAction;
+use App\Actions\Sablon\UpdateSablonStatusAction;
 use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
@@ -15,6 +16,7 @@ use App\Models\Sablon;
 use App\Models\Supplier;
 use App\Repositories\SablonRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Enum;
 
 class SablonController extends Controller
@@ -146,42 +148,48 @@ class SablonController extends Controller
         ]);
     }
 
-    public function updateStatus(
-        Request $request,
-        Sablon $sablon,
-        SettleBonAction $settleBonAction,
-        SettleLateCompletionAction $settleLateCompletionAction
-    ) {
+    public function updateStatus(Request $request, Sablon $sablon, UpdateSablonStatusAction $action)
+    {
+        $this->authorize('sablons.update');
+
         $validated = $request->validate([
             'status' => ['required', new Enum(StatusSablonEnum::class)],
         ]);
 
-        $sablon->update([
-            'status' => $validated['status'],
-        ]);
-
-        $settleBonAction->handle($sablon);
-        $settleLateCompletionAction->handle($sablon);
-
-        if ($sablon->date_sablon) {
-            $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
-                ->pluck('employee_id')
-                ->unique();
-
-            $weeksToProcess = collect([
-                $sablon->date_sablon->toDateString(),
-                now()->toDateString(),
-            ])->unique();
-
-            $affectedEmployeeIds->each(function ($employeeId) use ($weeksToProcess) {
-                $weeksToProcess->each(function ($weekOf) use ($employeeId) {
-                    $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekOf);
-                });
-            });
-        }
+        $action->handle($sablon, $validated['status']);
 
         return response()->json([
             'message' => __('sablon.status_updated_success'),
+        ]);
+    }
+
+    public function bulkUpdateStatus(Request $request, UpdateSablonStatusAction $action)
+    {
+        $this->authorize('sablons.update');
+
+        $validated = $request->validate([
+            'sablon_ids'   => ['required', 'array', 'min:1'],
+            'sablon_ids.*' => ['integer', 'exists:sablons,id'],
+            'status'       => ['required', new Enum(StatusSablonEnum::class)],
+        ]);
+
+        $sablons = Sablon::whereIn('id', $validated['sablon_ids'])
+            ->where('status', '!=', $validated['status'])
+            ->get();
+
+        $updated = 0;
+
+        DB::transaction(function () use ($sablons, $validated, $action, &$updated) {
+            foreach ($sablons as $sablon) {
+                $action->handle($sablon, $validated['status']);
+                $updated++;
+            }
+        });
+
+        return response()->json([
+            'message' => __('sablon.bulk_status_updated_success', ['count' => $updated]),
+            'updated' => $updated,
+            'skipped' => count($validated['sablon_ids']) - $updated,
         ]);
     }
 }

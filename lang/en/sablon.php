@@ -232,4 +232,17 @@ return [
         ],
     ],
     'settlement_notes' => 'Bon settlement from detail #:id',
+
+    'bulk' => [
+        'select_mode' => 'Choose',
+        'cancel_select' => 'Cancel Selection',
+        'selected_count' => ':count selected',
+        'select_status' => 'Select new status',
+        'apply' => 'Apply',
+        'cancel' => 'Cancel',
+        'status_required' => 'Please select a status first',
+        'confirm_title' => 'Bulk Status Update',
+        'confirm_message' => 'Change the status of :count selected screen prints to ":status"?',
+    ],
+    'bulk_status_updated_success' => ':count screen prints successfully updated',
 ];

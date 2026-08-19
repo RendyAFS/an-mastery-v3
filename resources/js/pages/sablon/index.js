@@ -178,13 +178,16 @@ const PageScript = (function () {
             : "";
 
         return `
-        <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
-            ${sablonHeaderHtml}
-            ${sablonSumaryHtml}
-            ${fabricDetailsHtml}
-            ${employeeDetailsHtml}
-            ${item.notes ? `<p class="text-xs text-(--color-dark-gray) line-clamp-2">${item.notes}</p>` : ""}
-            <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
+            <div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
+                <div class="cg-select-checkbox absolute top-3 left-3 z-10" data-no-card-click>
+                    <input type="checkbox" id="select-sablon-${item.id}" class="sablon-select-checkbox checkbox-custom" data-id="${item.id}" ${isDeleted ? "disabled" : ""}>
+                </div>
+                ${sablonHeaderHtml}
+                ${sablonSumaryHtml}
+                ${fabricDetailsHtml}
+                ${employeeDetailsHtml}
+                ${item.notes ? `<p class="text-xs text-(--color-dark-gray) line-clamp-2">${item.notes}</p>` : ""}
+                <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 ${
                     isDeleted
                         ? `
@@ -377,6 +380,138 @@ const PageScript = (function () {
         });
     };
 
+    let selectMode = false;
+    let selectedIds = new Set();
+
+    const gridEl = document.getElementById("sablon-cardgrid");
+
+    const clearSelectionUI = () => {
+        document
+            .querySelectorAll("#sablon-cardgrid .sablon-select-checkbox")
+            .forEach((cb) => (cb.checked = false));
+        document
+            .querySelectorAll("#sablon-cardgrid .cg-card-wrapper.selected")
+            .forEach((el) => el.classList.remove("selected"));
+    };
+
+    const updateBulkBar = () => {
+        const bar = document.getElementById("bulk-action-bar");
+        const count = selectedIds.size;
+
+        document.getElementById("bulk-selected-count").textContent =
+            window.langSablon.bulk.selected_count.replace(":count", count);
+
+        bar.classList.toggle("hidden", count === 0);
+        document.body.classList.toggle("bulk-bar-active", count > 0);
+    };
+
+    const setSelectMode = (active) => {
+        selectMode = active;
+        gridEl.classList.toggle("select-mode", active);
+
+        if (!active) {
+            selectedIds.clear();
+            clearSelectionUI();
+            updateBulkBar();
+        }
+
+        $("#btn-toggle-select")
+            .find("span")
+            .text(
+                active
+                    ? window.langSablon.bulk.cancel_select
+                    : window.langSablon.bulk.select_mode,
+            );
+    };
+
+    const toggleSelection = (wrapper, checked, id) => {
+        if (checked) {
+            selectedIds.add(id);
+            wrapper.classList.add("selected");
+        } else {
+            selectedIds.delete(id);
+            wrapper.classList.remove("selected");
+        }
+        updateBulkBar();
+    };
+
+    const bindBulkSelectEvents = () => {
+        $(document).on("click", "#btn-toggle-select", function () {
+            setSelectMode(!selectMode);
+        });
+
+        gridEl.addEventListener(
+            "click",
+            function (e) {
+                if (!selectMode) return;
+
+                const wrapper = e.target.closest(".cg-card-wrapper");
+                if (!wrapper) return;
+
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                const checkbox = wrapper.querySelector(
+                    ".sablon-select-checkbox",
+                );
+                if (!checkbox || checkbox.disabled) return;
+
+                checkbox.checked = !checkbox.checked;
+                toggleSelection(wrapper, checkbox.checked, checkbox.dataset.id);
+            },
+            true,
+        );
+
+        new MutationObserver(() => {
+            if (selectMode) {
+                selectedIds.clear();
+                updateBulkBar();
+            }
+        }).observe(gridEl, { childList: true });
+
+        $(document).on("click", "#btn-bulk-cancel", function () {
+            setSelectMode(false);
+        });
+
+        $(document).on("click", "#btn-bulk-apply", async function () {
+            const status = $("#bulk-status-select").val();
+
+            if (!status) {
+                Toast.error(
+                    window.langCustomAlert.error,
+                    window.langSablon.bulk.status_required,
+                );
+                return;
+            }
+
+            const confirmed = await Confirm.show(
+                window.langSablon.bulk.confirm_message
+                    .replace(":count", selectedIds.size)
+                    .replace(":status", statusLabel(status)),
+                window.langSablon.bulk.confirm_title,
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const res = await ApiProvider.put(
+                    route("sablons.bulk-status"),
+                    {
+                        sablon_ids: Array.from(selectedIds),
+                        status,
+                    },
+                );
+
+                Toast.success(window.langCustomAlert.success, res.message);
+
+                setSelectMode(false);
+                cardgrid.reload();
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    };
+
     return {
         init() {
             applyFiltersFromUrl();
@@ -384,6 +519,7 @@ const PageScript = (function () {
 
             CardGrid();
             bindEvents();
+            bindBulkSelectEvents();
             initStatusModal();
         },
     };
