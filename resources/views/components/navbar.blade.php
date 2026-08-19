@@ -6,9 +6,14 @@
             <a href="{{ route('dashboard') }}" id="navbar-logo" class="hidden items-center gap-2 overflow-hidden">
                 <img src="{{ asset('assets/Logo-AnMastery.webp') }}" alt="AN Mastery Logo"
                     class="h-8 w-auto object-contain shrink-0">
-                <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
-                    AN Mastery
-                </span>
+                <div class="flex flex-col leading-tight">
+                    <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
+                        AN Mastery
+                    </span>
+                    <span class="text-[10px] text-(--color-dark-gray) dark:text-(--color-gray) truncate">
+                        v{{ config('app.version', '1.0.0') }}
+                    </span>
+                </div>
             </a>
         </div>
 

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Dynamic Service Worker (PWA)
+Route::get('/sw.js', function () {return response()->view('sw')->header('Content-Type', 'application/javascript');});
+
 // Landing Page
 Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->name('landing_page');
 

@@ -15,9 +15,14 @@
                 href="{{ route('dashboard') }}">
                 <img src="{{ asset('assets/Logo-AnMastery.webp') }}" alt="AN Mastery Logo"
                     class="h-9 w-auto object-contain shrink-0">
-                <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
-                    AN Mastery
-                </span>
+                <div class="flex flex-col leading-tight">
+                    <span class="font-semibold text-base text-(--color-primary) dark:text-(--color-secondary) truncate">
+                        AN Mastery
+                    </span>
+                    <span class="text-[10px] text-(--color-dark-gray) dark:text-(--color-gray) truncate">
+                        v{{ config('app.version', '1.0.0') }}
+                    </span>
+                </div>
             </a>
         </header>
 

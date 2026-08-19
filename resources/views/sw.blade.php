@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "an-mastery";
+const CACHE_NAME = "an-mastery-v{{ config('app.version', '1.0.0') }}";
 const OFFLINE_URL = '/offline.html';
 
 const filesToCache = [
