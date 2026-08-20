@@ -114,77 +114,73 @@ export default function initDatatable({
         pageLength,
         lengthChange: false,
         info: false,
-        processing: true,
-        language: {
-            processing: `
-            <div class="dt-overlay-loader">
-                <div class="flex flex-col items-center gap-4">
-                    <div class="relative">
-                        <div class="size-12 rounded-full border-4 border-(--color-primary)/20"></div>
-                        <div class="size-12 rounded-full border-4 border-transparent border-t-(--color-primary) animate-spin absolute inset-0"></div>
-                    </div>
+        processing: false,
 
-                    <div class="text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
-                        ${window.langDatatable?.[tableId]?.loading ?? "Loading data..."}
-                    </div>
-                </div>
-            </div>
-        `,
-        },
         serverSide: false,
         ajax: ajaxOptions,
         columns,
         order,
         drawCallback() {
             initLucide();
+            const skeletonEl = document.getElementById(`dt-skeleton-${tableId}`);
+            const wrapperEl = document.getElementById(`dt-wrapper-${tableId}`);
+            if (skeletonEl) skeletonEl.classList.add("hidden");
+            if (wrapperEl) wrapperEl.classList.remove("hidden");
+
             const rows = $(`${table} tbody tr`);
             rows.addClass(
                 "hover:!bg-(--color-light-gray) dark:hover:!bg-(--color-dark-slate) cursor-pointer transition",
             );
 
-            rows.off("click");
-
-            if (rowClickRoute || onRowClick) {
-                rows.on("click", function (e) {
-                    if (
-                        $(e.target).closest(
-                            "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label",
-                        ).length
-                    ) {
-                        return;
-                    }
-
-                    const rowData = datatable.row(this).data();
-
-                    if (!rowData?.id) return;
-
-                    if (onRowClick) {
-                        onRowClick(rowData, this);
-                        return;
-                    }
-
-                    if (rowClickRoute) {
-                        window.location.href = rowClickRoute(rowData);
-                    }
-                });
-            }
-
-            if (window.HSStaticMethods) {
-                window.HSStaticMethods.autoInit([
-                    "dropdown",
-                    "tooltip",
-                    "overlay",
-                    "select",
-                    "copy-markup",
-                    "remove-element",
-                ]);
-            }
+            if (window.HSStaticMethods) window.HSStaticMethods.autoInit();
         },
     });
+
+    // Delegated Row Click Event Listener (attached once)
+    if (rowClickRoute || onRowClick) {
+        $(table).off("click.rowClick", "tbody tr").on("click.rowClick", "tbody tr", function (e) {
+            if (
+                $(e.target).closest(
+                    "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label, input, [data-no-row-click]",
+                ).length
+            ) {
+                return;
+            }
+
+            const rowData = datatable.row(this).data();
+            if (!rowData) return;
+
+            if (onRowClick) {
+                onRowClick(rowData, this);
+                return;
+            }
+
+            if (rowClickRoute) {
+                window.location.href = rowClickRoute(rowData);
+            }
+        });
+    }
+
+    // Skeleton & Processing Overlay Event Handler
+    const skeletonEl = document.getElementById(`dt-skeleton-${tableId}`);
+    const wrapperEl = document.getElementById(`dt-wrapper-${tableId}`);
 
     datatable.on("processing.dt", function (e, settings, processing) {
         isProcessing = processing;
         toggleControlsDisabled(processing);
+
+        if (!skeletonEl || !wrapperEl) return;
+
+        if (processing) {
+            const hasRows = $(table).find("tbody tr").length > 0 && !$(table).find("tbody tr td.dataTables_empty").length;
+            if (!hasRows) {
+                skeletonEl.classList.remove("hidden");
+                wrapperEl.classList.add("hidden");
+            }
+        } else {
+            skeletonEl.classList.add("hidden");
+            wrapperEl.classList.remove("hidden");
+        }
     });
 
     let searchTimeout = null;

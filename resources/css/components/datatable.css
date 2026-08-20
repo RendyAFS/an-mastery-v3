@@ -29,8 +29,4 @@ div.dataTables_processing {
     background: rgba(15, 23, 42, 0.7) !important;
 }
 
-.dt-overlay-loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+

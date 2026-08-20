@@ -106,8 +106,23 @@
 </div>
 
 <div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 md:p-10">
-    <div
-        class="border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
+    {{-- Skeleton Table: visible by default on first load --}}
+    <div id="dt-skeleton-{{ $id }}" class="animate-pulse space-y-3">
+        <div class="h-9 bg-(--color-gray)/20 rounded-md w-full mb-3"></div>
+        @for ($i = 0; $i < ($defaultLength > 10 ? 10 : $defaultLength); $i++)
+            <div class="flex items-center justify-between gap-4 py-3 border-b border-(--color-gray)/10">
+                <div class="h-4 bg-(--color-gray)/20 rounded w-1/6"></div>
+                <div class="h-4 bg-(--color-gray)/20 rounded w-1/4"></div>
+                <div class="h-4 bg-(--color-gray)/20 rounded w-1/3"></div>
+                <div class="h-4 bg-(--color-gray)/15 rounded w-1/8"></div>
+                <div class="h-4 bg-(--color-gray)/20 rounded w-1/12"></div>
+            </div>
+        @endfor
+    </div>
+
+    {{-- Real Table Wrapper: hidden until data is ready --}}
+    <div id="dt-wrapper-{{ $id }}" class="hidden
+        border border-(--color-gray) dark:border-(--color-dark-gray) border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thum">
         <table id="{{ $id }}" class="min-w-full text-sm divide-y divide-table-line">
             {{ $slot }}
         </table>
