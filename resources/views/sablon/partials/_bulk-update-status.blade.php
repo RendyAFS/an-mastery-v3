@@ -4,20 +4,9 @@
         <span id="bulk-selected-count" class="text-sm font-medium"></span>
 
         <div class="flex items-center gap-2">
-            <select id="bulk-status-select" class="hidden w-32"
-                data-hs-select='{
-                    "placeholder": "{{ __('sablon.bulk.select_status') }}",
-                    "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-                    "toggleClasses": "relative py-1.5 ps-3 pe-8 flex gap-x-2 w-full cursor-pointer bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-(--color-gray)",
-                    "dropdownClasses": "mt-2 z-50 w-32 max-h-72 p-1 space-y-0.5 bg-(--color-light) dark:bg-(--color-dark-slate) border border-(--color-gray) dark:border-(--color-dark-gray) rounded-lg overflow-y-auto",
-                    "optionClasses": "ps-3 py-2 px-4 w-auto text-sm text-(--color-dark) dark:text-(--color-light) cursor-pointer hover:bg-(--color-dark-gray)/50 rounded-lg",
-                    "optionTemplate": "<div class=\"flex justify-between items-center w-auto\"><span data-title></span><span class=\"hidden hs-selected:block\"><i data-lucide=\"check\" class=\"size-4\"></i></span></div>",
-                    "extraMarkup": "<div class=\"absolute top-1/2 inset-e-3 -translate-y-1/2\"><i data-lucide=\"chevrons-up-down\" class=\"size-4\"></i></div>"
-                }'>
-                @foreach (\App\Enums\StatusSablonEnum::cases() as $status)
-                    <option value="{{ $status->value }}">{{ __('sablon.statuses.' . $status->value) }}</option>
-                @endforeach
-            </select>
+            <x-select id="bulk-status-select" name="bulk-status-select" placeholder="{{ __('sablon.bulk.select_status') }}"
+                :options="__('sablon.statuses')" dropdown-scope="window" :search="false" wrapperClass="w-36"
+                bgClass="bg-(--color-light) dark:bg-(--color-dark-slate)" />
 
             <button type="button" id="btn-bulk-apply"
                 class="px-4 py-2 rounded-lg bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">

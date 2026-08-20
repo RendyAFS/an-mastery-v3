@@ -44,3 +44,18 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.style.display = "none";
     });
 });
+
+window.setSelectValue = (target, value) => {
+    const el = typeof target === "string" ? document.getElementById(target) : target;
+    if (!el) return;
+
+    el.value = value ?? "";
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+
+    if (window.HSSelect) {
+        const instance = HSSelect.getInstance(el);
+        if (instance) {
+            instance.setValue(value ?? "");
+        }
+    }
+};

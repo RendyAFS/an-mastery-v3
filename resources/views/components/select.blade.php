@@ -8,8 +8,12 @@
     'id' => $name,
     'clearable' => false,
     'multiple' => false,
+    'search' => true,
     'bgClass' => 'bg-(--color-light-gray) dark:bg-(--color-dark-slate)',
+    'wrapperClass' => 'w-full',
     'dropdownZIndex' => null,
+    'toggleClasses' => null,
+    'dropdownClasses' => null,
 
     // khusus mode API (opsional)
     'apiUrl' => null,
@@ -26,15 +30,33 @@
 
 @php
     $isApi = !empty($apiUrl);
+
+    $normalizedOptions = [];
+    if (is_iterable($options)) {
+        foreach ($options as $key => $val) {
+            if ($val instanceof \UnitEnum) {
+                $enumVal = property_exists($val, 'value') ? $val->value : $val->name;
+                $enumLabel = method_exists($val, 'label') ? $val->label() : $enumVal;
+                $normalizedOptions[$enumVal] = $enumLabel;
+            } elseif (is_numeric($key) && is_string($val)) {
+                $normalizedOptions[$val] = $val;
+            } else {
+                $normalizedOptions[$key] = (string) $val;
+            }
+        }
+    }
+
+    $defaultToggleClasses = "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2.5 ps-4 " . ($clearable ? 'pe-16' : 'pe-9') . " flex w-full cursor-pointer {$bgClass} border border-(--color-gray) rounded-lg text-start text-sm text-(--color-dark) focus:outline-hidden focus:ring-2 focus:ring-(--color-primary)/30 dark:border-(--color-slate) dark:text-(--color-light)";
+    $defaultDropdownClasses = "mt-2 max-h-60 p-1 " . ($dropdownZIndex ?? ($dropdownScope ? 'z-90' : ($isApi ? 'z-80' : 'z-50'))) . " w-full bg-(--color-light-gray) dark:bg-(--color-dark-slate) border border-(--color-gray) rounded-lg overflow-y-auto dark:border-(--color-slate)";
 @endphp
 
 @if ($label)
-    <label for="{{ $id }}" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
+    <label for="{{ $id }}" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light) mb-1">
         {{ $label }}
     </label>
 @endif
 
-<div class="relative">
+<div class="relative {{ $wrapperClass }}">
     <select name="{{ $name }}" id="{{ $id }}" {{ $multiple ? 'multiple' : '' }}
         @if ($isApi && $value) data-default-value="{{ $value }}" @endif
         data-hs-select='{
@@ -52,11 +74,11 @@
                 },
                 "apiSearchQueryKey": "{{ $searchQueryKey }}", @endif
             {{ $dropdownScope ? '"dropdownScope": "' . $dropdownScope . '",' : '' }}
-            "hasSearch": true,
+            "hasSearch": {{ $search ? 'true' : 'false' }},
             "searchPlaceholder": "{{ $searchPlaceholder }}",
             "placeholder": "{{ $placeholder }}",
-            "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2.5 ps-4 {{ $clearable ? 'pe-16' : 'pe-9' }} flex w-full cursor-pointer {{ $bgClass }} border border-(--color-gray) rounded-lg text-start text-sm text-(--color-dark) focus:outline-hidden focus:ring-2 focus:ring-(--color-primary)/30 dark:border-(--color-slate) dark:text-(--color-light)",
-            "dropdownClasses": "mt-2 max-h-60 p-1 {{ $dropdownZIndex ?? ($dropdownScope ? 'z-90' : ($isApi ? 'z-80' : 'z-50')) }} w-full bg-(--color-light-gray) dark:bg-(--color-dark-slate) border border-(--color-gray) rounded-lg overflow-y-auto dark:border-(--color-slate)",
+            "toggleClasses": "{{ $toggleClasses ?? $defaultToggleClasses }}",
+            "dropdownClasses": "{{ $dropdownClasses ?? $defaultDropdownClasses }}",
             "searchWrapperClasses": "sticky top-0 z-10 p-2 bg-(--color-light-gray) dark:bg-(--color-dark-slate)",
             "searchClasses": "px-4 py-2 block w-full text-sm rounded-md border border-(--color-gray) bg-(--color-light-gray) text-(--color-dark) placeholder:text-(--color-dark)/60 dark:placeholder:text-(--color-light)/60 focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)",
             "optionClasses": "py-2 px-4 w-full text-sm text-black dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg",
@@ -68,9 +90,9 @@
         <option value=""></option>
 
         @if (!$isApi)
-            @foreach ($options as $key => $text)
-                <option value="{{ $key }}" {{ (string) old($name, $value) === (string) $key ? 'selected' : '' }}>
-                    {{ $text }}
+            @foreach ($normalizedOptions as $optValue => $optLabel)
+                <option value="{{ $optValue }}" {{ (string) old($name, $value) === (string) $optValue ? 'selected' : '' }}>
+                    {{ $optLabel }}
                 </option>
             @endforeach
         @endif

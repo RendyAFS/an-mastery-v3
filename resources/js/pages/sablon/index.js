@@ -241,10 +241,8 @@ const PageScript = (function () {
 
             $("#status-sablon-id").val(id);
 
-            const instance = HSSelect.getInstance("#modal-status");
-            instance.setValue(status);
-
-            window.HSStaticMethods.autoInit();
+            window.setSelectValue?.("#modal-status", status);
+            window.HSStaticMethods?.autoInit();
 
             HSOverlay.open("#modal-update-status");
         });
@@ -398,6 +396,7 @@ const PageScript = (function () {
 
     const bindBulkSelectEvents = () => {
         $(document).on("click", "#btn-bulk-cancel", function () {
+            window.setSelectValue?.("#bulk-status-select", "");
             bulkSelect.reset();
         });
 
@@ -434,6 +433,7 @@ const PageScript = (function () {
 
                 Toast.success(window.langCustomAlert.success, res.message);
 
+                window.setSelectValue?.("#bulk-status-select", "");
                 bulkSelect.reset();
                 cardgrid.reload();
             } catch (e) {
