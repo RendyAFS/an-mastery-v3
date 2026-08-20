@@ -2,7 +2,7 @@
     <input type="hidden" id="status-sablon-id">
 
     <x-select id="modal-status" name="modal-status" label="{{ __('sablon.main_info.fields.status') }}"
-        placeholder="{{ __('sablon.main_info.placeholders.status') }}" :options="__('sablon.statuses')" dropdown-scope="window" :search="false" />
+        placeholder="{{ __('sablon.main_info.placeholders.status') }}" all :options="__('sablon.statuses')" dropdown-scope="window" />
 
     <x-slot:footer>
         <button type="button" data-hs-overlay="#modal-update-status"

@@ -6,7 +6,9 @@ document.addEventListener("hsSelect.afterInit", (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const toggleClearButton = (select) => {
-        const btn = document.querySelector(`[data-clear-select="${select.id}"]`);
+        const btn = document.querySelector(
+            `[data-clear-select="${select.id}"]`,
+        );
         if (!btn) return;
 
         if (select.value && select.value !== "") {
@@ -44,18 +46,3 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.style.display = "none";
     });
 });
-
-window.setSelectValue = (target, value) => {
-    const el = typeof target === "string" ? document.getElementById(target) : target;
-    if (!el) return;
-
-    el.value = value ?? "";
-    el.dispatchEvent(new Event("change", { bubbles: true }));
-
-    if (window.HSSelect) {
-        const instance = HSSelect.getInstance(el);
-        if (instance) {
-            instance.setValue(value ?? "");
-        }
-    }
-};
