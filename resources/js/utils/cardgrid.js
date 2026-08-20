@@ -84,6 +84,18 @@ export default function initCardgrid({
                 btn.disabled = disabled;
             });
         }
+
+        // Filter di luar component — tandai wrapper-nya dengan: data-cg-page-filters="<gridId>"
+        document.querySelectorAll(`[data-cg-page-filters="${gridId}"]`).forEach((wrapper) => {
+            wrapper.classList.toggle("pointer-events-none", disabled);
+            wrapper.classList.toggle("opacity-50", disabled);
+            wrapper.querySelectorAll("input, select, button, textarea").forEach((el) => {
+                el.disabled = disabled;
+            });
+            wrapper.querySelectorAll(".hs-select, .flatpickr-input").forEach((el) => {
+                el.classList.toggle("pointer-events-none", disabled);
+            });
+        });
     };
 
     const fetchData = async () => {

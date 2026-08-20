@@ -12,7 +12,7 @@
                 <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('salary-employee.description') }}</p>
             </div>
 
-            <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-wrap items-end gap-3" data-cg-page-filters="salary-employee-cardgrid">
                 <div>
                     <label for="filter-date-range"
                         class="block text-sm mb-2 font-medium text-(--color-dark) dark:text-(--color-light)">

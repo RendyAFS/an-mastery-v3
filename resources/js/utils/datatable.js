@@ -106,7 +106,24 @@ export default function initDatatable({
                 btn.disabled = disabled;
             });
         }
+
+        // Filter di luar component — tandai wrapper-nya dengan: data-dt-page-filters="<tableId>"
+        document.querySelectorAll(`[data-dt-page-filters="${tableId}"]`).forEach((wrapper) => {
+            wrapper.classList.toggle("pointer-events-none", disabled);
+            wrapper.classList.toggle("opacity-50", disabled);
+            wrapper.querySelectorAll("input, select, button, textarea").forEach((el) => {
+                el.disabled = disabled;
+            });
+            wrapper.querySelectorAll(".hs-select, .flatpickr-input").forEach((el) => {
+                el.classList.toggle("pointer-events-none", disabled);
+            });
+        });
     };
+
+    // Disable semua kontrol sampai data pertama berhasil dimuat
+    toggleControlsDisabled(true);
+
+    let firstDraw = true;
 
     const datatable = $(table).DataTable({
         dom: "t",
@@ -124,8 +141,14 @@ export default function initDatatable({
             initLucide();
             const skeletonEl = document.getElementById(`dt-skeleton-${tableId}`);
             const wrapperEl = document.getElementById(`dt-wrapper-${tableId}`);
-            if (skeletonEl) skeletonEl.classList.add("hidden");
-            if (wrapperEl) wrapperEl.classList.remove("hidden");
+
+            // Hanya saat draw pertama: sembunyikan skeleton & aktifkan kembali semua kontrol
+            if (firstDraw) {
+                firstDraw = false;
+                if (skeletonEl) skeletonEl.classList.add("hidden");
+                if (wrapperEl) wrapperEl.classList.remove("hidden");
+                toggleControlsDisabled(false);
+            }
 
             const rows = $(`${table} tbody tr`);
             rows.addClass(
