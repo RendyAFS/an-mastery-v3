@@ -105,7 +105,56 @@
 
 {{-- Loading Overlay + Card Grid Container --}}
 <div class="relative min-h-40">
-    {{-- Loading Overlay: toggled via JS (removes 'hidden', inner has flex for centering) --}}
+    {{-- Skeleton Loading Grid --}}
+    <div id="{{ $id }}-skeleton" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        @for ($i = 0; $i < ($defaultLength ?? 8); $i++)
+            <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl p-4 shadow flex flex-col gap-3 animate-pulse border border-(--color-gray)/10">
+                <div class="flex items-start justify-between">
+                    <div class="space-y-1.5 flex-1">
+                        <div class="h-4 bg-(--color-gray)/20 rounded-md w-3/4"></div>
+                        <div class="h-3 bg-(--color-gray)/15 rounded-md w-1/3"></div>
+                    </div>
+                    <div class="h-5 bg-(--color-gray)/20 rounded-full w-16"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-(--color-gray)/10 rounded-lg p-2.5 space-y-1">
+                        <div class="h-2.5 bg-(--color-gray)/20 rounded w-1/2"></div>
+                        <div class="h-3.5 bg-(--color-gray)/25 rounded w-3/4"></div>
+                    </div>
+                    <div class="bg-(--color-gray)/10 rounded-lg p-2.5 space-y-1">
+                        <div class="h-2.5 bg-(--color-gray)/20 rounded w-1/2"></div>
+                        <div class="h-3.5 bg-(--color-gray)/25 rounded w-3/4"></div>
+                    </div>
+                    <div class="bg-(--color-gray)/10 rounded-lg p-2.5 space-y-1">
+                        <div class="h-2.5 bg-(--color-gray)/20 rounded w-1/2"></div>
+                        <div class="h-3.5 bg-(--color-gray)/25 rounded w-3/4"></div>
+                    </div>
+                    <div class="bg-(--color-gray)/10 rounded-lg p-2.5 space-y-1">
+                        <div class="h-2.5 bg-(--color-gray)/20 rounded w-1/2"></div>
+                        <div class="h-3.5 bg-(--color-gray)/25 rounded w-3/4"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5 pt-1">
+                    <div class="h-3 bg-(--color-gray)/20 rounded w-1/3"></div>
+                    <div class="h-2.5 bg-(--color-gray)/15 rounded w-4/5"></div>
+                    <div class="h-2.5 bg-(--color-gray)/15 rounded w-2/3"></div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
+                    <div class="h-3 bg-(--color-gray)/20 rounded w-1/4"></div>
+                    <div class="flex items-center gap-1.5">
+                        <div class="size-6 bg-(--color-gray)/20 rounded-lg"></div>
+                        <div class="size-6 bg-(--color-gray)/20 rounded-lg"></div>
+                        <div class="size-6 bg-(--color-gray)/20 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        @endfor
+    </div>
+
+    {{-- Loading Overlay: toggled via JS for subsequent loads when container already has cards --}}
     <div id="{{ $id }}-loading" class="hidden">
         <div class="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-[2px]">
             <div class="flex flex-col items-center gap-4">

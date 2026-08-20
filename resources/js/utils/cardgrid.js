@@ -124,10 +124,34 @@ export default function initCardgrid({
         }
     };
 
+    // Card Click Delegated Event Listener (attached once)
+    if (cardClickRoute) {
+        container.addEventListener("click", function (e) {
+            const cardEl = e.target.closest(".cg-card-wrapper");
+            if (!cardEl) return;
+            if (
+                e.target.closest(
+                    "button, a, .btn-delete, .btn-restore, .btn-force-delete, [data-no-card-click]",
+                )
+            ) {
+                return;
+            }
+
+            const id = cardEl.dataset.id;
+            if (!id) return;
+
+            window.location.href = cardClickRoute({ id });
+        });
+    }
+
     const render = (items) => {
         container.innerHTML = "";
 
         const emptyEl = document.getElementById(`${gridId}-empty`);
+        const skeletonEl = document.getElementById(`${gridId}-skeleton`);
+
+        skeletonEl?.classList.add("hidden");
+
         if (!items.length) {
             emptyEl?.classList.remove("hidden");
             container.classList.add("hidden");
@@ -147,44 +171,35 @@ export default function initCardgrid({
             .join("");
 
         initLucide();
-
-        if (cardClickRoute) {
-            container.querySelectorAll(".cg-card-wrapper").forEach((cardEl) => {
-                cardEl.addEventListener("click", function (e) {
-                    if (
-                        e.target.closest(
-                            "button, a, .btn-delete, .btn-restore, .btn-force-delete, [data-no-card-click]",
-                        )
-                    ) {
-                        return;
-                    }
-
-                    const id = this.dataset.id;
-
-                    if (!id) return;
-
-                    window.location.href = cardClickRoute({
-                        id,
-                    });
-                });
-            });
-        }
         if (window.HSStaticMethods) window.HSStaticMethods.autoInit();
     };
 
     const setLoading = (loading) => {
         isLoading = loading;
         const loadingEl = document.getElementById(`${gridId}-loading`);
+        const skeletonEl = document.getElementById(`${gridId}-skeleton`);
+        const emptyEl = document.getElementById(`${gridId}-empty`);
 
         if (loading) {
-            loadingEl?.classList.remove("hidden");
+            emptyEl?.classList.add("hidden");
+            const hasExistingCards = container.querySelectorAll(".cg-card-wrapper").length > 0 && !container.classList.contains("hidden");
 
-            container.classList.add(
-                "pointer-events-none",
-                "opacity-40",
-                "scale-[0.99]",
-            );
+            if (!hasExistingCards && skeletonEl) {
+                skeletonEl.classList.remove("hidden");
+                container.classList.add("hidden");
+                loadingEl?.classList.add("hidden");
+            } else {
+                skeletonEl?.classList.add("hidden");
+                loadingEl?.classList.remove("hidden");
+
+                container.classList.add(
+                    "pointer-events-none",
+                    "opacity-40",
+                    "scale-[0.99]",
+                );
+            }
         } else {
+            skeletonEl?.classList.add("hidden");
             loadingEl?.classList.add("hidden");
 
             container.classList.remove(
