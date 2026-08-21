@@ -43,6 +43,13 @@ const bindSignedRupiahInput = (el) => {
         if (cursorAtEnd) {
             el.setSelectionRange(el.value.length, el.value.length);
         }
+
+        const row = el.closest(".additional-fee-row");
+        const notesEl = row?.querySelector(".af-notes");
+        if (notesEl?.dataset.autoFilled === "true" && el.value.trim() === "") {
+            notesEl.value = "";
+            delete notesEl.dataset.autoFilled;
+        }
     });
 };
 
@@ -53,6 +60,18 @@ const handleQuickAfAmount = (btn) => {
 
     target.value = formatSignedRupiah(btn.dataset.quickAfAmount);
     target.dispatchEvent(new Event("input", { bubbles: true }));
+
+    const notesEl = row.querySelector(".af-notes");
+    if (notesEl && !notesEl.value.trim()) {
+        notesEl.value = "Bonus";
+        notesEl.dataset.autoFilled = "true";
+    }
+};
+
+const bindNotesManualEdit = (el) => {
+    el.addEventListener("input", () => {
+        delete el.dataset.autoFilled;
+    });
 };
 
 const PageScript = (function () {
@@ -130,14 +149,17 @@ const PageScript = (function () {
                                                     <span>
                                                         <span class="${i.is_eligible ? "" : "opacity-40"}">
                                                             • ${i.image_fabric_name} • ${i.layers ?? 0} Layer
-                                                            ${i.is_bon ? i.is_bon_settled
+                                                            ${
+                                                                i.is_bon
+                                                                    ? i.is_bon_settled
                                                                         ? `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_advance_label})</span>`
                                                                         : `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_label})</span>`
                                                                     : ""
-                                                                }
-                                                                ${i.is_bon_settlement
-                                                                    ? `<span class="text-[10px] text-(--color-primary) font-bold">(${window.langSalaryEmployee.card.bon_settlement_label})</span>`
-                                                                    : ""
+                                                            }
+                                                                ${
+                                                                    i.is_bon_settlement
+                                                                        ? `<span class="text-[10px] text-(--color-primary) font-bold">(${window.langSalaryEmployee.card.bon_settlement_label})</span>`
+                                                                        : ""
                                                                 }
                                                         </span>
                                                         ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
@@ -246,12 +268,14 @@ const PageScript = (function () {
         const nominalInput = row.querySelector(".af-nominal");
         nominalInput.value = nominal !== "" ? formatSignedRupiah(nominal) : "";
 
-        row.querySelector(".af-notes").value = notes;
+        const notesInput = row.querySelector(".af-notes");
+        notesInput.value = notes;
 
         document.getElementById("additional-fee-rows").append(row);
 
         initLucide();
         bindSignedRupiahInput(nominalInput);
+        bindNotesManualEdit(notesInput);
         applyModalLockState();
     };
 

@@ -12,6 +12,8 @@ export default function sablonForm(
     initialSupplierId = null,
     initialFabricOptions = {},
     priceEmployeeMap = {},
+    initialImageFabricOptions = {},
+    initialImageFabricId = null,
 ) {
     return {
         fabricRows: [],
@@ -19,6 +21,9 @@ export default function sablonForm(
         fabricRawData: {},
         fabricDetailOptions: fabricDetails,
         fabricOptions: Object.entries(initialFabricOptions).map(
+            ([id, label]) => ({ id, label }),
+        ),
+        imageFabricOptions: Object.entries(initialImageFabricOptions).map(
             ([id, label]) => ({ id, label }),
         ),
         employeeOptions: Object.entries(employees).map(([id, name]) => ({
@@ -29,6 +34,9 @@ export default function sablonForm(
         typeColorsRaw,
         priceEmployeeMap,
         selectedFabricId: initialFabricId ? String(initialFabricId) : null,
+        selectedImageFabricId: initialImageFabricId
+            ? String(initialImageFabricId)
+            : null,
         selectedSupplierId: initialSupplierId
             ? String(initialSupplierId)
             : null,
@@ -75,6 +83,10 @@ export default function sablonForm(
                     }
 
                     this._autoPopulateFabricRows();
+                });
+
+                this._bindNativeSelectChange("image_fabric_id", (val) => {
+                    this.selectedImageFabricId = val || null;
                 });
 
                 this._bindNativeSelectChange("price_employee_id", (val) => {
@@ -367,7 +379,15 @@ export default function sablonForm(
         },
 
         addAdditionalFeeRow(row) {
-            row.additionalFees.push(this.buildAdditionalFeeRow());
+            const imageFabricName =
+                this.imageFabricOptions.find(
+                    (f) => String(f.id) === String(this.selectedImageFabricId),
+                )?.label ?? "";
+
+            const newRow = this.buildAdditionalFeeRow();
+            newRow.notes = imageFabricName ? `Bon Kain ${imageFabricName}` : "";
+
+            row.additionalFees.push(newRow);
             this.$nextTick(() => reInitUi());
         },
 
