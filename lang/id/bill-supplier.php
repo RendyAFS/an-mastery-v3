@@ -57,7 +57,7 @@ return [
         'calc_count'             => 'Jumlah Sablon',
         'calc_count_suffix'      => 'sablon',
         'calc_total_long_fabric' => 'Total Panjang Kain',
-        'calc_total_fee'         => 'Total Fee',
+        'calc_total_fee'         => 'Total Tagihan',
         'billed_in_advance'      => 'Ditagih Awal',
         'only_done_disabled'     => 'Hanya sablon berstatus Done yang bisa ditagih',
         'select_min_error'       => 'Pilih minimal 1 sablon terlebih dahulu',
@@ -96,7 +96,7 @@ return [
         'long_fabric'      => 'Panjang Kain',
         'type_color'       => 'Jenis Warna',
         'type_color_suffix' => 'Warna',
-        'total_fee'        => 'Total Fee',
+        'total_fee'        => 'Total Tagihan',
         'fabric_details'   => 'Detail Kain',
     ],
 

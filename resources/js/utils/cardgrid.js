@@ -26,14 +26,16 @@ export default function initCardgrid({
     let searchTimeout = null;
 
     const toggleControlsDisabled = (disabled) => {
-        const controlsWrapper = document.querySelector(`[data-cg-controls="${gridId}"]`);
+        const controlsWrapper = document.querySelector(
+            `[data-cg-controls="${gridId}"]`,
+        );
         if (controlsWrapper) {
-            controlsWrapper.classList.toggle("pointer-events-none", disabled);
-            controlsWrapper.classList.toggle("opacity-50", disabled);
-
-            controlsWrapper.querySelectorAll("input, select, button, .btn-group-item").forEach((el) => {
-                el.disabled = disabled;
-            });
+            controlsWrapper
+                .querySelectorAll("input, select, button, .btn-group-item")
+                .forEach((el) => {
+                    if (el.id === "cg-search") return;
+                    el.disabled = disabled;
+                });
 
             controlsWrapper.querySelectorAll(".hs-select").forEach((el) => {
                 el.classList.toggle("pointer-events-none", disabled);
@@ -42,19 +44,6 @@ export default function initCardgrid({
         }
 
         // Fallback for individual elements
-        const searchEl = document.getElementById("cg-search");
-        const clearEl = document.getElementById("cg-search-clear");
-        if (searchEl) {
-            searchEl.disabled = disabled;
-            searchEl.classList.toggle("pointer-events-none", disabled);
-            searchEl.classList.toggle("opacity-50", disabled);
-        }
-        if (clearEl) {
-            clearEl.disabled = disabled;
-            clearEl.classList.toggle("pointer-events-none", disabled);
-            clearEl.classList.toggle("opacity-50", disabled);
-        }
-
         const lengthEl = document.getElementById("cg-length");
         if (lengthEl) {
             lengthEl.disabled = disabled;
@@ -86,16 +75,22 @@ export default function initCardgrid({
         }
 
         // Filter di luar component — tandai wrapper-nya dengan: data-cg-page-filters="<gridId>"
-        document.querySelectorAll(`[data-cg-page-filters="${gridId}"]`).forEach((wrapper) => {
-            wrapper.classList.toggle("pointer-events-none", disabled);
-            wrapper.classList.toggle("opacity-50", disabled);
-            wrapper.querySelectorAll("input, select, button, textarea").forEach((el) => {
-                el.disabled = disabled;
+        document
+            .querySelectorAll(`[data-cg-page-filters="${gridId}"]`)
+            .forEach((wrapper) => {
+                wrapper.classList.toggle("pointer-events-none", disabled);
+                wrapper.classList.toggle("opacity-50", disabled);
+                wrapper
+                    .querySelectorAll("input, select, button, textarea")
+                    .forEach((el) => {
+                        el.disabled = disabled;
+                    });
+                wrapper
+                    .querySelectorAll(".hs-select, .flatpickr-input")
+                    .forEach((el) => {
+                        el.classList.toggle("pointer-events-none", disabled);
+                    });
             });
-            wrapper.querySelectorAll(".hs-select, .flatpickr-input").forEach((el) => {
-                el.classList.toggle("pointer-events-none", disabled);
-            });
-        });
     };
 
     const fetchData = async () => {
@@ -194,7 +189,9 @@ export default function initCardgrid({
 
         if (loading) {
             emptyEl?.classList.add("hidden");
-            const hasExistingCards = container.querySelectorAll(".cg-card-wrapper").length > 0 && !container.classList.contains("hidden");
+            const hasExistingCards =
+                container.querySelectorAll(".cg-card-wrapper").length > 0 &&
+                !container.classList.contains("hidden");
 
             if (!hasExistingCards && skeletonEl) {
                 skeletonEl.classList.remove("hidden");
@@ -345,7 +342,7 @@ export default function initCardgrid({
             state.search = value;
             state.page = 1;
             fetchData();
-        }, 1500);
+        }, 500);
     });
 
     // clear search
@@ -402,4 +399,3 @@ export default function initCardgrid({
 
     return { reload };
 }
-

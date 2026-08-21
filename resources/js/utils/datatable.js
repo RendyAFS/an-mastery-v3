@@ -47,14 +47,16 @@ export default function initDatatable({
     let isProcessing = false;
 
     const toggleControlsDisabled = (disabled) => {
-        const controlsWrapper = document.querySelector(`[data-dt-controls="${tableId}"]`);
+        const controlsWrapper = document.querySelector(
+            `[data-dt-controls="${tableId}"]`,
+        );
         if (controlsWrapper) {
-            controlsWrapper.classList.toggle("pointer-events-none", disabled);
-            controlsWrapper.classList.toggle("opacity-50", disabled);
-
-            controlsWrapper.querySelectorAll("input, select, button, .btn-group-item").forEach((el) => {
-                el.disabled = disabled;
-            });
+            controlsWrapper
+                .querySelectorAll("input, select, button, .btn-group-item")
+                .forEach((el) => {
+                    if (el.id === `dt-search-${tableId}`) return;
+                    el.disabled = disabled;
+                });
 
             controlsWrapper.querySelectorAll(".hs-select").forEach((el) => {
                 el.classList.toggle("pointer-events-none", disabled);
@@ -63,19 +65,6 @@ export default function initDatatable({
         }
 
         // Fallback for individual elements
-        const searchEl = document.getElementById(`dt-search-${tableId}`);
-        const clearEl = document.getElementById(`dt-search-clear-${tableId}`);
-        if (searchEl) {
-            searchEl.disabled = disabled;
-            searchEl.classList.toggle("pointer-events-none", disabled);
-            searchEl.classList.toggle("opacity-50", disabled);
-        }
-        if (clearEl) {
-            clearEl.disabled = disabled;
-            clearEl.classList.toggle("pointer-events-none", disabled);
-            clearEl.classList.toggle("opacity-50", disabled);
-        }
-
         const lengthEl = document.getElementById(`dt-length-${tableId}`);
         if (lengthEl) {
             lengthEl.disabled = disabled;
@@ -108,16 +97,22 @@ export default function initDatatable({
         }
 
         // Filter di luar component — tandai wrapper-nya dengan: data-dt-page-filters="<tableId>"
-        document.querySelectorAll(`[data-dt-page-filters="${tableId}"]`).forEach((wrapper) => {
-            wrapper.classList.toggle("pointer-events-none", disabled);
-            wrapper.classList.toggle("opacity-50", disabled);
-            wrapper.querySelectorAll("input, select, button, textarea").forEach((el) => {
-                el.disabled = disabled;
+        document
+            .querySelectorAll(`[data-dt-page-filters="${tableId}"]`)
+            .forEach((wrapper) => {
+                wrapper.classList.toggle("pointer-events-none", disabled);
+                wrapper.classList.toggle("opacity-50", disabled);
+                wrapper
+                    .querySelectorAll("input, select, button, textarea")
+                    .forEach((el) => {
+                        el.disabled = disabled;
+                    });
+                wrapper
+                    .querySelectorAll(".hs-select, .flatpickr-input")
+                    .forEach((el) => {
+                        el.classList.toggle("pointer-events-none", disabled);
+                    });
             });
-            wrapper.querySelectorAll(".hs-select, .flatpickr-input").forEach((el) => {
-                el.classList.toggle("pointer-events-none", disabled);
-            });
-        });
     };
 
     // Disable semua kontrol sampai data pertama berhasil dimuat
@@ -139,7 +134,9 @@ export default function initDatatable({
         order,
         drawCallback() {
             initLucide();
-            const skeletonEl = document.getElementById(`dt-skeleton-${tableId}`);
+            const skeletonEl = document.getElementById(
+                `dt-skeleton-${tableId}`,
+            );
             const wrapperEl = document.getElementById(`dt-wrapper-${tableId}`);
 
             // Hanya saat draw pertama: sembunyikan skeleton & aktifkan kembali semua kontrol
@@ -161,27 +158,29 @@ export default function initDatatable({
 
     // Delegated Row Click Event Listener (attached once)
     if (rowClickRoute || onRowClick) {
-        $(table).off("click.rowClick", "tbody tr").on("click.rowClick", "tbody tr", function (e) {
-            if (
-                $(e.target).closest(
-                    "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label, input, [data-no-row-click]",
-                ).length
-            ) {
-                return;
-            }
+        $(table)
+            .off("click.rowClick", "tbody tr")
+            .on("click.rowClick", "tbody tr", function (e) {
+                if (
+                    $(e.target).closest(
+                        "button, a, .hs-dropdown, .hs-dropdown-menu, .toggle-active, label, input, [data-no-row-click]",
+                    ).length
+                ) {
+                    return;
+                }
 
-            const rowData = datatable.row(this).data();
-            if (!rowData) return;
+                const rowData = datatable.row(this).data();
+                if (!rowData) return;
 
-            if (onRowClick) {
-                onRowClick(rowData, this);
-                return;
-            }
+                if (onRowClick) {
+                    onRowClick(rowData, this);
+                    return;
+                }
 
-            if (rowClickRoute) {
-                window.location.href = rowClickRoute(rowData);
-            }
-        });
+                if (rowClickRoute) {
+                    window.location.href = rowClickRoute(rowData);
+                }
+            });
     }
 
     // Skeleton & Processing Overlay Event Handler
@@ -195,7 +194,9 @@ export default function initDatatable({
         if (!skeletonEl || !wrapperEl) return;
 
         if (processing) {
-            const hasRows = $(table).find("tbody tr").length > 0 && !$(table).find("tbody tr td.dataTables_empty").length;
+            const hasRows =
+                $(table).find("tbody tr").length > 0 &&
+                !$(table).find("tbody tr td.dataTables_empty").length;
             if (!hasRows) {
                 skeletonEl.classList.remove("hidden");
                 wrapperEl.classList.add("hidden");
@@ -229,7 +230,7 @@ export default function initDatatable({
 
         searchTimeout = setTimeout(() => {
             datatable.search(value).draw();
-        }, 1500);
+        }, 500);
     });
 
     clearBtn.on("click", function () {
@@ -383,4 +384,3 @@ export default function initDatatable({
 
     return datatable;
 }
-
