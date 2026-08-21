@@ -229,7 +229,7 @@ export default function initDatatable({
 
         searchTimeout = setTimeout(() => {
             datatable.search(value).draw();
-        }, 500);
+        }, 1500);
     });
 
     clearBtn.on("click", function () {

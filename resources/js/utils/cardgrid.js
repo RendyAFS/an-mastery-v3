@@ -345,7 +345,7 @@ export default function initCardgrid({
             state.search = value;
             state.page = 1;
             fetchData();
-        }, 500);
+        }, 1500);
     });
 
     // clear search
