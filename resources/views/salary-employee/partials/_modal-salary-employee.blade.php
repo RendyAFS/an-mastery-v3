@@ -15,6 +15,13 @@
         {{ __('salary-employee.modal.locked_hint') }}
     </p>
 
+    <div id="previous-week-fee-section" class="hidden mt-4">
+        <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light) mb-2">
+            {{ __('salary-employee.modal.previous_week_fee_title') }}
+        </label>
+        <div id="previous-week-fee-rows" class="space-y-2"></div>
+    </div>
+
     <div class="mt-4">
         <div class="flex items-center justify-between">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
@@ -22,7 +29,7 @@
             </label>
             <button type="button" id="btn-add-additional-fee-row"
                 class="inline-flex items-center gap-2 text-sm font-medium
-                    text-(--color-primary) hover:opacity-80 cursor-pointer">
+                text-(--color-primary) hover:opacity-80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i> {{ __('salary-employee.modal.add_fee') }}
             </button>
         </div>

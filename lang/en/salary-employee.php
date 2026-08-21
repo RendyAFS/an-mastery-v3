@@ -29,6 +29,7 @@ return [
         'notes' => 'Notes',
         'notes_placeholder' => 'Notes',
         'locked_hint' => 'Cannot edit paid salary locked change to Unpaid first',
+        'previous_week_fee_title' => 'Previous Unpaid Salary',
     ],
     'card' => [
         'no_sablon_data' => 'No sablon data yet',
@@ -39,5 +40,6 @@ return [
         'bon_label' => 'Bon',
         'bon_advance_label' => 'Bon Advanced',
         'bon_settlement_label' => 'Bon Settlement',
+        'previous_week_fee' => 'Salary :date',
     ],
 ];

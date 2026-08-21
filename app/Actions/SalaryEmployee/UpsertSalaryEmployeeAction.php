@@ -111,6 +111,8 @@ class UpsertSalaryEmployeeAction
 
                 Memo::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => true]);
+
+                $this->cascadePreviousPendingToPaid($salary);
             } else {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => false]);
@@ -163,12 +165,32 @@ class UpsertSalaryEmployeeAction
                 return $detail->employee_id . '|' . $weekStart;
             })
             ->unique();
-            
+
         foreach ($pairs as $pair) {
             [$employeeId, $weekStart] = explode('|', $pair);
             $this->handleForEmployee((int) $employeeId, $weekStart);
         }
 
         return $pairs->count();
+    }
+
+    private function cascadePreviousPendingToPaid(SalaryEmployee $salary): void
+    {
+        $previousPending = SalaryEmployee::query()
+            ->where('employee_id', $salary->employee_id)
+            ->where('status', StatusSalaryEmployeeEnum::PENDING)
+            ->where('date', '<', $salary->date)
+            ->get();
+
+        foreach ($previousPending as $prev) {
+            $prev->status = StatusSalaryEmployeeEnum::PAID;
+            $prev->save();
+
+            SablonEmployeeDetail::where('salary_employee_id', $prev->id)
+                ->update(['is_paid' => true]);
+
+            Memo::where('salary_employee_id', $prev->id)
+                ->update(['is_paid' => true]);
+        }
     }
 }

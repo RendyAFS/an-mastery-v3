@@ -214,6 +214,42 @@ class SalaryEmployeeRepository
             ->concat($memoOnlyVirtualSalaries)
             ->concat($openInProgressOnlyVirtualSalaries);
 
+        $employeeIds = $collection->pluck('employee_id')->unique()->values();
+
+        $pendingSalaries = SalaryEmployee::query()
+            ->where('status', StatusSalaryEmployeeEnum::PENDING)
+            ->whereIn('employee_id', $employeeIds)
+            ->with(['sablonEmployeeDetails', 'memos'])
+            ->get();
+
+        $pendingPresences = Presence::query()
+            ->whereIn('employee_id', $pendingSalaries->pluck('employee_id')->unique())
+            ->get()
+            ->keyBy(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)->toDateString());
+
+        $pendingSalaries->each(function ($p) use ($pendingPresences) {
+            $key = $p->employee_id . '|' . Carbon::parse($p->date)->toDateString();
+            $p->setRelation('presence', $pendingPresences->get($key));
+        });
+
+        $pendingByEmployee = $pendingSalaries->groupBy('employee_id');
+
+        $collection->each(function ($s) use ($pendingByEmployee) {
+            $currentDate = Carbon::parse($s->date)->toDateString();
+            $currentId   = $s->exists ? $s->id : null;
+
+            $previous = ($pendingByEmployee->get($s->employee_id) ?? collect())
+                ->filter(function ($p) use ($currentDate, $currentId) {
+                    if ($currentId && $p->id === $currentId) {
+                        return false;
+                    }
+                    return Carbon::parse($p->date)->toDateString() < $currentDate;
+                })
+                ->values();
+
+            $s->setRelation('previousPendingSalaries', $previous);
+        });
+
         if ($filter !== 'all') {
             $collection = $collection->filter(fn($s) => $s->status?->value === $filter);
         }

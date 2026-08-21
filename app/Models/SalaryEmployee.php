@@ -49,4 +49,17 @@ class SalaryEmployee extends Model
     {
         return $this->hasMany(Memo::class, 'salary_employee_id');
     }
+
+    public function computedTotal(): float
+    {
+        $sablonFeeTotal = $this->sablonEmployeeDetails
+            ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
+            ->sum(fn($detail) => $detail->countableAmount());
+
+        $presenceTotal = (float) ($this->presence?->total ?? 0);
+        $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+        $memoTotal = $this->memos->sum('nominal');
+
+        return $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal;
+    }
 }

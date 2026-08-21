@@ -182,6 +182,30 @@ const PageScript = (function () {
             ? item.additional_fee
             : [];
 
+        const previousWeekFees = Array.isArray(item.previous_week_fees)
+            ? item.previous_week_fees
+            : [];
+
+        const previousWeekFeeHtml = previousWeekFees.length
+            ? `
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-(--color-warning)">${window.langSalaryEmployee.card.previous_week_fee_title ?? "Gaji Sebelumnya"}</p>
+                    <ul class="space-y-1 text-xs">
+                        ${previousWeekFees
+                            .map(
+                                (pf) => `
+                            <li class="flex justify-between text-(--color-warning)">
+                                <span>↳ ${pf.notes}</span>
+                                <span class="font-medium">+ Rp ${Number(pf.nominal || 0).toLocaleString("id-ID")}</span>
+                            </li>
+                        `,
+                            )
+                            .join("")}
+                    </ul>
+                </div>
+            `
+            : "";
+
         const additionalFeeHtml = additionalFees.length
             ? `
                 <div class="space-y-1">
@@ -238,12 +262,13 @@ const PageScript = (function () {
             : "";
 
         return `
-        <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
-            ${headerHtml}
-            ${groupsHtml}
-            ${additionalFeeHtml}
-            ${memoHtml}
-            ${presenceHtml}
+            <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
+                ${headerHtml}
+                ${groupsHtml}
+                ${previousWeekFeeHtml}
+                ${additionalFeeHtml}
+                ${memoHtml}
+                ${presenceHtml}
 
             <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
                 <span class="text-sm font-semibold">${window.langSalaryEmployee.card.total}</span>
@@ -254,6 +279,7 @@ const PageScript = (function () {
                 <button data-employee-id="${item.employee_id}" data-employee-name="${item.employee?.name ?? "-"}" data-status="${item.status}"
                     data-date="${item.date ?? ""}"
                     data-additional-fee='${JSON.stringify(additionalFees)}'
+                    data-previous-fee='${JSON.stringify(previousWeekFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
                     <i data-lucide="wallet" class="size-3.5"></i> ${window.langSalaryEmployee.card.manage}
                 </button>
@@ -303,11 +329,27 @@ const PageScript = (function () {
             const status = $(this).data("status");
             const date = $(this).data("date");
             const existing = $(this).data("additional-fee") || [];
+            const existingPreviousFee = $(this).data("previous-fee") || [];
 
             $("#salary-employee-id").val(employeeId);
             $("#salary-week-of").val(date);
             $("#salary-employee-name").text(employeeName || "-");
             $("#additional-fee-rows").empty();
+
+            $("#previous-week-fee-rows").empty();
+            if (existingPreviousFee.length) {
+                $("#previous-week-fee-section").removeClass("hidden");
+                existingPreviousFee.forEach((pf) => {
+                    $("#previous-week-fee-rows").append(`
+                            <div class="flex items-center justify-between p-3 rounded-lg border border-(--color-warning)/40 bg-(--color-warning)/5">
+                                <span class="text-sm">${pf.notes}</span>
+                                <span class="text-sm font-semibold">Rp ${Number(pf.nominal || 0).toLocaleString("id-ID")}</span>
+                            </div>
+                        `);
+                });
+            } else {
+                $("#previous-week-fee-section").addClass("hidden");
+            }
 
             const instance = HSSelect.getInstance("#modal-salary-status");
             instance.setValue(status);

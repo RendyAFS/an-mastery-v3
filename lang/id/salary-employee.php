@@ -29,6 +29,7 @@ return [
         'notes' => 'Catatan',
         'notes_placeholder' => 'Masukkan Catatan',
         'locked_hint' => 'Tidak dapat mengedit gaji  yang sudah dibayar ubah ke Belum Dibayar terlebih dahulu',
+        'previous_week_fee_title' => 'Gaji Sebelumnya (Belum Dibayar)',
     ],
     'card' => [
         'no_sablon_data' => 'Belum ada data sablon',
@@ -39,5 +40,6 @@ return [
         'bon_label' => 'Bon',
         'bon_advance_label' => 'Bon Diambil',
         'bon_settlement_label' => 'Sisa Bon',
+        'previous_week_fee' => 'Gaji :date',
     ],
 ];

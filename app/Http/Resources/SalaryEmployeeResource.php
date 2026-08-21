@@ -10,6 +10,18 @@ class SalaryEmployeeResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $previousWeekFees = collect($this->relationLoaded('previousPendingSalaries') ? $this->previousPendingSalaries : [])
+            ->map(fn($prev) => [
+                'salary_employee_id' => $prev->id,
+                'date'                => $prev->date?->format('Y-m-d'),
+                'nominal'             => $prev->computedTotal(),
+                'nominal_formated'    => RupiahHelper::format($prev->computedTotal()),
+                'notes'               => __('salary-employee.card.previous_week_fee', ['date' => $prev->date?->translatedFormat('d F Y')]),
+            ])
+            ->values();
+
+        $previousWeekFeesTotal = $previousWeekFees->sum('nominal');
+
         $sablonFeeTotal = $this->sablonEmployeeDetails
             ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
             ->sum(fn($detail) => $detail->countableAmount());
@@ -42,7 +54,7 @@ class SalaryEmployeeResource extends JsonResource
         $presenceTotal      = (float) ($this->presence?->total ?? 0);
         $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
         $memoTotal          = $this->memos->sum('nominal');
-        $total              = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal;
+        $total              = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal + $previousWeekFeesTotal;
 
         return [
             'id'                            => $this->id,
@@ -55,6 +67,8 @@ class SalaryEmployeeResource extends JsonResource
             'additional_fee_total_formated' => RupiahHelper::format($additionalFeeTotal),
             'presence_total'                => $presenceTotal,
             'presence_total_formated'       => RupiahHelper::format($presenceTotal),
+            'previous_week_fees'            => $previousWeekFees,
+            'previous_week_fees_total'      => $previousWeekFeesTotal,
             'total'                         => $total,
             'total_formated'                => RupiahHelper::format($total),
             'status'                        => $this->status,
@@ -63,7 +77,7 @@ class SalaryEmployeeResource extends JsonResource
             'created_at'                    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'                    => $this->updated_at?->format('Y-m-d H:i:s'),
             'sablon_groups'                 => $sablonGroups,
-            'memos' => $this->memos->map(fn($m) => [
+            'memos'                         => $this->memos->map(fn($m) => [
                 'id'               => $m->id,
                 'name'             => $m->name,
                 'nominal'          => $m->nominal,
