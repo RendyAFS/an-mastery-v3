@@ -75,6 +75,15 @@ class UpsertSalaryEmployeeAction
 
             $requestedStatus = $status !== null ? StatusSalaryEmployeeEnum::from($status) : null;
 
+            $additionalFeeSum = collect($additionalFee ?? ($salary->additional_fee ?? []))
+                ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+
+            $computedTotal = $totalFee + $presenceTotal + $memoTotal + $additionalFeeSum;
+
+            if (! $salary->exists && $requestedStatus === null && $computedTotal == 0) {
+                return $salary;
+            }
+
             if ($wasPaid && $hasNewData && $requestedStatus !== StatusSalaryEmployeeEnum::PAID) {
                 $salary->status = StatusSalaryEmployeeEnum::PENDING;
             } elseif ($requestedStatus !== null) {
