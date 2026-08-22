@@ -112,7 +112,9 @@ class UpsertSalaryEmployeeAction
                 Memo::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => true]);
 
-                $this->cascadePreviousPendingToPaid($salary);
+                if ($requestedStatus === StatusSalaryEmployeeEnum::PAID) {
+                    $this->cascadePreviousPendingToPaid($salary);
+                }
             } else {
                 SablonEmployeeDetail::where('salary_employee_id', $salary->id)
                     ->update(['is_paid' => false]);
