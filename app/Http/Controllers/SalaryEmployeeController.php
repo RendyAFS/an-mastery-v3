@@ -59,46 +59,44 @@ class SalaryEmployeeController extends Controller
         $start = $dateFrom->copy()->startOfWeek(Carbon::MONDAY);
         $end   = $dateTo->copy()->endOfWeek(Carbon::SUNDAY);
 
-        $employeeIds = collect()
+        $pairs = collect()
             ->merge(
                 SablonEmployeeDetail::query()
-                    ->whereHas('sablon', function ($query) use ($start, $end) {
-                        $query->whereBetween('date_sablon', [
-                            $start->toDateString(),
-                            $end->toDateString(),
-                        ]);
-                    })
-                    ->pluck('employee_id')
+                    ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [
+                        $start->toDateString(),
+                        $end->toDateString(),
+                    ]))
+                    ->with('sablon')
+                    ->get()
+                    ->map(fn(SablonEmployeeDetail $d) => $d->employee_id . '|' . Carbon::parse(
+                        $d->weekAnchorDate() ?? $d->sablon?->date_sablon
+                    )->startOfWeek(Carbon::MONDAY)->toDateString())
             )
             ->merge(
                 Memo::query()
-                    ->whereBetween('created_at', [
-                        $start->copy()->startOfDay(),
-                        $end->copy()->endOfDay(),
-                    ])
-                    ->pluck('employee_id')
+                    ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+                    ->get()
+                    ->map(fn(Memo $m) => $m->employee_id . '|' . Carbon::parse($m->date)
+                        ->startOfWeek(Carbon::MONDAY)->toDateString())
             )
             ->merge(
                 Presence::query()
-                    ->whereBetween('week_of', [
-                        $start->toDateString(),
-                        $end->toDateString(),
-                    ])
-                    ->pluck('employee_id')
+                    ->whereBetween('week_of', [$start->toDateString(), $end->toDateString()])
+                    ->get()
+                    ->map(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)
+                        ->startOfWeek(Carbon::MONDAY)->toDateString())
             )
             ->unique()
             ->values();
 
-        foreach ($employeeIds as $employeeId) {
-            $this->upsertSalaryEmployeeAction->handleForEmployee(
-                (int) $employeeId,
-                $start->toDateString()
-            );
+        foreach ($pairs as $pair) {
+            [$employeeId, $weekStart] = explode('|', $pair);
+            $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekStart);
         }
 
         return response()->json([
             'message' => __('salary-employee.sync.synced_success', [
-                'count' => $employeeIds->count(),
+                'count' => $pairs->count(),
             ]),
         ]);
     }

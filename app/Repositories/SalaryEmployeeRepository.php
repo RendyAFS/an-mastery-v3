@@ -49,11 +49,17 @@ class SalaryEmployeeRepository
                 return $detail->employee_id . '|' . $weekStart;
             });
 
-        $pendingMemosByEmployee = Memo::query()
+        $pendingMemosByWeek = Memo::query()
             ->eligibleForSalary()
             ->whereNull('salary_employee_id')
             ->get()
-            ->groupBy('employee_id');
+            ->groupBy(function (Memo $memo) {
+                $weekStart = Carbon::parse($memo->date)
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->toDateString();
+
+                return $memo->employee_id . '|' . $weekStart;
+            });
 
         $presences = Presence::query()
             ->whereBetween('week_of', [$start, $end])
@@ -79,7 +85,7 @@ class SalaryEmployeeRepository
             ->get()
             ->groupBy('employee_id');
 
-        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $allDetails, $pendingMemosByEmployee, $openInProgressByEmployee) {
+        $existingSalaries->each(function (SalaryEmployee $s) use ($presences, $allDetails, $pendingMemosByWeek, $openInProgressByEmployee) {
             $key = $s->employee_id . '|' . Carbon::parse($s->date)->toDateString();
 
             if ($s->status !== StatusSalaryEmployeeEnum::PAID) {
@@ -90,10 +96,10 @@ class SalaryEmployeeRepository
                     );
                 }
 
-                if ($pendingMemosByEmployee->has($s->employee_id)) {
+                if ($pendingMemosByWeek->has($key)) {
                     $s->setRelation(
                         'memos',
-                        $s->memos->concat($pendingMemosByEmployee->get($s->employee_id))
+                        $s->memos->concat($pendingMemosByWeek->get($key))
                     );
                 }
 
@@ -116,7 +122,7 @@ class SalaryEmployeeRepository
 
         $virtualSalaries = $eligibleDetails
             ->reject(fn($details, $key) => in_array($key, $existingKeys))
-            ->map(function ($details, $key) use ($presences, $pendingMemosByEmployee, $allDetails, $openInProgressByEmployee) {
+            ->map(function ($details, $key) use ($presences, $pendingMemosByWeek, $allDetails, $openInProgressByEmployee) {
                 $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => $d->countableAmount());
                 $first    = $details->first();
 
@@ -145,19 +151,28 @@ class SalaryEmployeeRepository
                 $salary->setRelation('employee', $first->employee);
                 $salary->setRelation('sablonEmployeeDetails', $allForKey);
                 $salary->setRelation('presence', $presences->get($first->employee_id . '|' . $weekStart));
-                $salary->setRelation('memos', $pendingMemosByEmployee->get($first->employee_id, collect()));
+                $salary->setRelation('memos', $pendingMemosByWeek->get($key, collect()));
 
                 return $salary;
             })
             ->values();
 
+        $virtualKeys = $virtualSalaries
+            ->map(fn($s) => $s->employee_id . '|' . Carbon::parse($s->date)->toDateString())
+            ->all();
+
+        $coveredWeekKeys = array_merge($existingKeys, $virtualKeys);
+
         $existingEmployeeIds = $existingSalaries->pluck('employee_id')
             ->merge($virtualSalaries->pluck('employee_id'))
             ->unique();
 
-        $memoOnlyVirtualSalaries = $pendingMemosByEmployee
-            ->reject(fn($memos, $employeeId) => $existingEmployeeIds->contains($employeeId))
-            ->map(function ($memos, $employeeId) use ($presences, $openInProgressByEmployee) {
+        $memoOnlyVirtualSalaries = $pendingMemosByWeek
+            ->reject(fn($memos, $key) => in_array($key, $coveredWeekKeys))
+            ->map(function ($memos, $key) use ($presences, $openInProgressByEmployee) {
+                [$employeeId, $weekStart] = explode('|', $key);
+                $employeeId = (int) $employeeId;
+
                 $first = $memos->first();
 
                 $salary = new SalaryEmployee([
@@ -165,15 +180,13 @@ class SalaryEmployeeRepository
                     'fee'            => 0,
                     'additional_fee' => [],
                     'status'         => StatusSalaryEmployeeEnum::PENDING,
-                    'date'           => now()->startOfWeek(Carbon::MONDAY)->toDateString(),
+                    'date'           => $weekStart,
                     'notes'          => null,
                 ]);
 
                 $salary->setRelation('employee', $first->employee);
                 $salary->setRelation('sablonEmployeeDetails', $openInProgressByEmployee->get($employeeId, collect()));
-                $salary->setRelation('presence', $presences->get(
-                    $employeeId . '|' . now()->startOfWeek(Carbon::MONDAY)->toDateString()
-                ));
+                $salary->setRelation('presence', $presences->get($employeeId . '|' . $weekStart));
                 $salary->setRelation('memos', $memos);
 
                 return $salary;

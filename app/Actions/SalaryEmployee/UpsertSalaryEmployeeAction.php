@@ -58,6 +58,7 @@ class UpsertSalaryEmployeeAction
                 ->where('employee_id', $employeeId)
                 ->whereNull('salary_employee_id')
                 ->eligibleForSalary()
+                ->whereBetween('date', [$start, $end])
                 ->get();
 
             $hasNewData = $newEligibleDetails->isNotEmpty() || $newEligibleMemos->isNotEmpty();
