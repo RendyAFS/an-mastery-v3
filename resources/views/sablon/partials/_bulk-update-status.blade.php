@@ -4,7 +4,7 @@
         <span id="bulk-selected-count" class="text-sm font-medium"></span>
 
         <div class="flex items-center gap-2">
-            <select id="bulk-status-select" class="hidden w-32"
+           <select id="bulk-status-select" class="hidden w-32"
                 data-hs-select='{
                     "placeholder": "{{ __('sablon.bulk.select_status') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
@@ -14,6 +14,7 @@
                     "optionTemplate": "<div class=\"flex justify-between items-center w-auto\"><span data-title></span><span class=\"hidden hs-selected:block\"><i data-lucide=\"check\" class=\"size-4\"></i></span></div>",
                     "extraMarkup": "<div class=\"absolute top-1/2 inset-e-3 -translate-y-1/2\"><i data-lucide=\"chevrons-up-down\" class=\"size-4\"></i></div>"
                 }'>
+                <option value=""></option>
                 @foreach (\App\Enums\StatusSablonEnum::cases() as $status)
                     <option value="{{ $status->value }}">{{ __('sablon.statuses.' . $status->value) }}</option>
                 @endforeach

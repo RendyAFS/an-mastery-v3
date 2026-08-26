@@ -77,7 +77,9 @@ export default function initBulkSelectCardgrid({
                 toggleSelection(wrapper, true, checkbox.dataset.id);
             }
 
-            if (navigator.vibrate) navigator.vibrate(20);
+            try {
+                navigator.vibrate?.(20);
+            } catch (e) {}
         }, longPressMs);
     };
 
