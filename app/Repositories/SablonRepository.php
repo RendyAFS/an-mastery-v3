@@ -27,7 +27,8 @@ class SablonRepository
         $query = Sablon::query()
             ->with([
                 'supplier',
-                'fabric',
+                'fabric.fabricDetails.colorFabric',
+                'fabric.fabricDetails.sablonDetails.sablon',
                 'imageFabric',
                 'typeColor',
                 'typeFabric',
@@ -73,7 +74,8 @@ class SablonRepository
     {
         return $sablon->load([
             'supplier',
-            'fabric',
+            'fabric.fabricDetails.colorFabric',
+            'fabric.fabricDetails.sablonDetails.sablon',
             'imageFabric',
             'typeColor',
             'typeFabric',

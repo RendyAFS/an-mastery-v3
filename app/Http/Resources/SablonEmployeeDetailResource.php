@@ -26,6 +26,11 @@ class SablonEmployeeDetailResource extends JsonResource
             'is_change'          => $this->is_change,
             'employee_change_id' => $this->employee_change_id,
             'is_bon'             => $this->is_bon,
+            'additional_fee' => collect($this->additional_fee ?? [])->map(fn($af) => [
+                'notes'           => $af['notes'] ?? '',
+                'nominal'         => $af['nominal'] ?? 0,
+                'nominal_formated' => RupiahHelper::format($af['nominal'] ?? 0),
+            ])->values(),
             'is_paid'            => $this->is_paid,
             'is_settled'         => $this->is_settled,
             'settlement_of_id'   => $this->settlement_of_id,

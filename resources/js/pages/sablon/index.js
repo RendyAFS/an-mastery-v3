@@ -164,6 +164,25 @@ const PageScript = (function () {
                                                             : ""
                                                     }
                                                 </p>
+
+                                                ${
+                                                    detail.is_bon && detail.additional_fee?.length
+                                                        ? `
+                                                            <div class="mt-1 space-y-0.5">
+                                                                ${detail.additional_fee
+                                                                    .map(
+                                                                        (af) => `
+                                                                            <div class="flex justify-between text-[11px] text-(--color-red)">
+                                                                                <span class="mr-1 font-semibold">${af.notes || "-"}:</span>
+                                                                                <span class="font-semibold">${af.nominal_formated}</span>
+                                                                            </div>
+                                                                        `,
+                                                                    )
+                                                                    .join("")}
+                                                            </div>
+                                                        `
+                                                        : ""
+                                                }
                                             </div>
 
                                             <span class="text-xs font-semibold">
