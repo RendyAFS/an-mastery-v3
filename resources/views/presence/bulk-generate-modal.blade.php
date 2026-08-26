@@ -45,13 +45,13 @@
                             {{ __('presence.bulk.nominal_per_day') }}
                         </label>
                         <input type="text" inputmode="numeric" id="bulk_amount" name="amount" data-rupiah
-                            value="0"
+                            value="0" readonly
                             class="mt-1 px-4 py-2 block w-full rounded-lg
                                 bg-(--color-light-gray) border border-(--color-gray)
                                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
                         <div class="flex flex-wrap gap-2 mt-2">
-                            @foreach ([5000, 8000, 10000, 12000] as $quick)
+                            @foreach ([0, 5000, 8000, 10000, 12000] as $quick)
                                 <button type="button" data-quick-amount="{{ $quick }}"
                                     data-target="#bulk_amount"
                                     class="btn-quick-amount px-3 py-1 text-xs rounded-lg
@@ -77,16 +77,16 @@
                         </div>
                         <div class="flex flex-wrap gap-2">
                             @foreach ([
-        'monday' => __('presence.days.monday'),
-        'tuesday' => __('presence.days.tuesday'),
-        'wednesday' => __('presence.days.wednesday'),
-        'thursday' => __('presence.days.thursday'),
-        'friday' => __('presence.days.friday'),
-        'saturday' => __('presence.days.saturday'),
-        'sunday' => __('presence.days.sunday'),
-    ] as $key => $label)
+                                            'monday' => __('presence.days.monday'),
+                                            'tuesday' => __('presence.days.tuesday'),
+                                            'wednesday' => __('presence.days.wednesday'),
+                                            'thursday' => __('presence.days.thursday'),
+                                            'friday' => __('presence.days.friday'),
+                                            'saturday' => __('presence.days.saturday'),
+                                            'sunday' => __('presence.days.sunday'),
+                                        ] as $key => $label)
                                 <label
-                                    class="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg
+                                    class="flex items-center gap-1.5 px-3 py-1 text-xs rounded-lg
                                     border border-(--color-gray) dark:border-(--color-slate) cursor-pointer">
                                     <input type="checkbox" class="bulk-day-checkbox checkbox-custom"
                                         data-day="{{ $key }}" value="{{ $key }}"

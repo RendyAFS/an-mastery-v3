@@ -12,14 +12,14 @@
                         <span id="{{ $day }}-date" class="text-xs font-normal text-(--color-gray)"></span>
                     </label>
                     <input type="text" inputmode="numeric" id="{{ $day }}" name="{{ $day }}"
-                        data-rupiah
+                        data-rupiah readonly
                         class="day-input mt-1 px-4 py-2 block w-full rounded-lg
                             bg-(--color-light-gray) border border-(--color-gray)
                             text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                             dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)" />
 
                     <div class="hidden group-focus-within:flex flex-wrap gap-1 mt-1">
-                        @foreach ([5000, 8000, 10000, 12000] as $quick)
+                        @foreach ([0, 5000, 8000, 10000, 12000] as $quick)
                             <button type="button" data-quick-amount="{{ $quick }}"
                                 data-target="#{{ $day }}"
                                 class="btn-quick-amount px-2 py-0.5 text-[11px] rounded-md
