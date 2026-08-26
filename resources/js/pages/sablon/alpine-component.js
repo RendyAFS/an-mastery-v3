@@ -479,6 +479,10 @@ export default function sablonForm(
         },
 
         computeFee(row) {
+            if (row.isSettlementRow) {
+                return row.fee;
+            }
+
             const fee = calc.computeFee(this.ratePerLayer, row.layers);
             row.fee = fee;
             return fee;
