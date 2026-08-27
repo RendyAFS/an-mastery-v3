@@ -13,6 +13,7 @@ class FabricRepository
                 'supplier',
                 'typeFabric',
                 'fabricDetails.colorFabric',
+                'fabricDetails.sablonDetails.sablon',
             ])
             ->orderBy('id', 'desc');
 

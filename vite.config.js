@@ -10,7 +10,6 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 ...glob.sync([
-                    "resources/js/utils/**/*.js",
                     "resources/js/pages/**/*.js",
                 ]),
             ],

@@ -27,8 +27,7 @@ class SablonRepository
         $query = Sablon::query()
             ->with([
                 'supplier',
-                'fabric.fabricDetails.colorFabric',
-                'fabric.fabricDetails.sablonDetails.sablon',
+                'fabric.typeFabric',
                 'imageFabric',
                 'typeColor',
                 'typeFabric',
@@ -93,6 +92,8 @@ class SablonRepository
      */
     public function getFormData(): array
     {
+        $priceEmployeesColl = PriceEmployee::with(['typeFabric', 'typeColor'])->orderBy('id')->get();
+
         return [
             'suppliers'         => Supplier::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id'),
             'fabrics'           => [],
@@ -100,17 +101,17 @@ class SablonRepository
             'typeColors'        => TypeColor::orderBy('name')->pluck('name', 'id')->map(fn($name) => $name . ' Warna')->toArray(),
             'typeColorsRaw'     => TypeColor::orderBy('name')->get(['id', 'name'])->mapWithKeys(fn($t) => [$t->id => (float) $t->name])->toArray(),
             'typeFabrics'       => TypeFabric::orderBy('name')->pluck('name', 'id'),
-            'priceEmployees'    => PriceEmployee::with('typeColor')->orderBy('id')->get()->mapWithKeys(fn($item) => [$item->id => $item->typeFabric?->name . ' - ' . RupiahHelper::format($item->price) . ' - ' . $item->typeColor?->name . ' Warna'])->toArray(),
-            'priceEmployeesRaw' => PriceEmployee::orderBy('id')->pluck('price', 'id')->toArray(),
-            'priceEmployeeMap'  => PriceEmployee::orderBy('id')->get()->mapWithKeys(fn($p) => [$p->type_fabric_id . '_' . $p->type_color_id => $p->id])->toArray(),
+            'priceEmployees'    => $priceEmployeesColl->mapWithKeys(fn($item) => [$item->id => $item->typeFabric?->name . ' - ' . RupiahHelper::format($item->price) . ' - ' . $item->typeColor?->name . ' Warna'])->toArray(),
+            'priceEmployeesRaw' => $priceEmployeesColl->pluck('price', 'id')->toArray(),
+            'priceEmployeeMap'  => $priceEmployeesColl->mapWithKeys(fn($p) => [$p->type_fabric_id . '_' . $p->type_color_id => $p->id])->toArray(),
             'employees'         => Employee::orderBy('name')->pluck('name', 'id'),
             'fabricDetails'     => FabricDetail::with([
                 'colorFabric',
                 'sablonDetails.sablon',
             ])
+                ->where('stock', '>', 0)
                 ->get()
                 ->map(function ($d) {
-
                     $usedStock = $d->sablonDetails
                         ->filter(function ($detail) {
                             return $detail->sablon
@@ -126,6 +127,7 @@ class SablonRepository
                         'stock'           => max(0, $d->stock - $usedStock),
                     ];
                 })
+                ->filter(fn($item) => $item['stock'] > 0)
                 ->values(),
         ];
     }

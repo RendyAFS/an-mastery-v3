@@ -42,29 +42,36 @@ class Fabric extends Model
             ];
         }
 
-        $stocks = $details->map(function ($detail) {
-
-            $used = $detail->sablonDetails()
-                ->whereHas('sablon', function ($q) {
-                    $q->where('status', '!=', 'RETURNED');
-                })
-                ->count();
-
-            return max($detail->stock - $used, 0);
-        });
-
-        $seri = $stocks->min();
-        $totalPcs = $stocks->sum();
-
-        $colors = $details->map(function ($detail) use ($seri) {
-
-            $used = $detail->sablonDetails()
-                ->whereHas('sablon', function ($q) {
-                    $q->where('status', '!=', 'RETURNED');
-                })
-                ->count();
+        $colorsData = $details->map(function ($detail) {
+            if ($detail->relationLoaded('sablonDetails')) {
+                $used = $detail->sablonDetails->filter(function ($sd) {
+                    $sablonStatus = $sd->sablon?->status;
+                    $val = is_object($sablonStatus) && isset($sablonStatus->value) ? $sablonStatus->value : $sablonStatus;
+                    return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';
+                })->count();
+            } else {
+                $used = $detail->sablonDetails()
+                    ->whereHas('sablon', function ($q) {
+                        $q->where('status', '!=', 'RETURNED');
+                    })
+                    ->count();
+            }
 
             $available = max($detail->stock - $used, 0);
+
+            return [
+                'name'      => $detail->colorFabric?->name,
+                'color'     => $detail->colorFabric?->code_color,
+                'available' => $available,
+            ];
+        });
+
+        $stocks   = $colorsData->pluck('available');
+        $seri     = $stocks->min() ?? 0;
+        $totalPcs = $stocks->sum();
+
+        $colors = $details->map(function ($detail, $index) use ($colorsData, $seri) {
+            $available = $colorsData[$index]['available'];
 
             return [
                 'name'   => $detail->colorFabric?->name,
@@ -100,14 +107,21 @@ class Fabric extends Model
         $seri = $details->min('stock');
 
         $colors = $details->map(function ($detail) use ($seri) {
+            if ($detail->relationLoaded('sablonDetails')) {
+                $grouped = $detail->sablonDetails->groupBy(function ($sd) {
+                    $status = $sd->sablon?->status;
+                    return is_object($status) && isset($status->value) ? $status->value : (string) $status;
+                })->map->count();
+            } else {
+                $grouped = $detail->sablonDetails()
+                    ->join('sablons', 'sablon_details.sablon_id', '=', 'sablons.id')
+                    ->selectRaw('sablons.status, count(*) as total')
+                    ->groupBy('sablons.status')
+                    ->pluck('total', 'status');
+            }
 
-            $statuses = collect(StatusSablonEnum::cases())->map(function (StatusSablonEnum $status) use ($detail) {
-
-                $count = $detail->sablonDetails()
-                    ->whereHas('sablon', function ($q) use ($status) {
-                        $q->where('status', $status->value);
-                    })
-                    ->count();
+            $statuses = collect(StatusSablonEnum::cases())->map(function (StatusSablonEnum $status) use ($grouped) {
+                $count = (int) ($grouped[$status->value] ?? 0);
 
                 return [
                     'status' => $status->value,
