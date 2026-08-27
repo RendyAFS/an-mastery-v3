@@ -183,7 +183,9 @@ const PageScript = (function () {
             : [];
 
         const previousWeekFees = Array.isArray(item.previous_week_fees)
-            ? item.previous_week_fees
+            ? item.previous_week_fees.filter(
+                (pf) => Number(pf.nominal || 0) > 0,
+            )
             : [];
 
         const previousWeekFeeHtml = previousWeekFees.length
