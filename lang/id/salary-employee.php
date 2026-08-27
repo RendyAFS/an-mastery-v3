@@ -40,6 +40,7 @@ return [
         'bon_label' => 'Bon',
         'bon_advance_label' => 'Bon Diambil',
         'bon_settlement_label' => 'Sisa Bon',
-        'previous_week_fee' => 'Gaji :date',
+        'previous_week_fee'       => 'Gaji :date',
+        'previous_week_fee_title' => 'Gaji Sebelumnya (Belum Dibayar)',
     ],
 ];

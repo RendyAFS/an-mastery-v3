@@ -191,7 +191,7 @@ const PageScript = (function () {
         const previousWeekFeeHtml = previousWeekFees.length
             ? `
                 <div class="space-y-1">
-                    <p class="text-xs font-semibold text-(--color-warning)">${window.langSalaryEmployee.card.previous_week_fee_title ?? "Gaji Sebelumnya"}</p>
+                    <p class="text-xs font-semibold text-(--color-warning)">${window.langSalaryEmployee.card.previous_week_fee_title}</p>
                     <ul class="space-y-1 text-xs">
                         ${previousWeekFees
                             .map(

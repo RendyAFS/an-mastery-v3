@@ -40,6 +40,7 @@ return [
         'bon_label' => 'Bon',
         'bon_advance_label' => 'Bon Advanced',
         'bon_settlement_label' => 'Bon Settlement',
-        'previous_week_fee' => 'Salary :date',
+        'previous_week_fee'       => 'Salary :date',
+        'previous_week_fee_title' => 'Previous Unpaid Salary',
     ],
 ];
