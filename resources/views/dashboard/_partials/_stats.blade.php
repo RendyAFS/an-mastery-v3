@@ -1,4 +1,4 @@
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <x-stat-card id="stat-employees" icon="users" color="primary" label="{{ __('dashboard.stats.employees') }}"
         value="0" />
 

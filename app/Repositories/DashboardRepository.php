@@ -100,24 +100,39 @@ class DashboardRepository
 
     public function getPresenceThisWeek(): array
     {
-        $weekOf = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $weekOf  = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $weekEnd = $weekOf->copy()->endOfWeek(Carbon::SUNDAY);
 
-        return Employee::query()
+        $dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        $employees = Employee::query()
             ->where('is_active', true)
             ->with(['presences' => fn($q) => $q->where('week_of', $weekOf->toDateString())])
             ->orderBy('name')
             ->get()
-            ->map(function ($employee) {
+            ->map(function ($employee) use ($dayKeys) {
                 $presence = $employee->presences->first();
+
+                $days = collect($dayKeys)
+                    ->filter(fn($day) => $presence && (int) $presence->{$day} > 0)
+                    ->values()
+                    ->toArray();
 
                 return [
                     'employee_id' => $employee->id,
                     'name'        => $employee->name,
                     'total'       => $presence->total ?? 0,
+                    'days'        => $days,
                 ];
             })
             ->values()
             ->toArray();
+
+        return [
+            'week_start' => $weekOf->toDateString(),
+            'week_end'   => $weekEnd->toDateString(),
+            'employees'  => $employees,
+        ];
     }
 
     public function getLatestSablons(Carbon $dateFrom, Carbon $dateTo, int $limit = 10): array

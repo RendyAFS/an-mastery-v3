@@ -23,6 +23,15 @@ return [
     'presence' => [
         'title'       => 'Absensi Karyawan Minggu Ini',
         'no_presence' => 'Belum ada data absensi',
+        'days'        => [
+            'monday'    => 'Senin',
+            'tuesday'   => 'Selasa',
+            'wednesday' => 'Rabu',
+            'thursday'  => 'Kamis',
+            'friday'    => 'Jum\'at',
+            'saturday'  => 'Sabtu',
+            'sunday'    => 'Minggu',
+        ],
     ],
     'table' => [
         'title'        => 'Sablon Terbaru',

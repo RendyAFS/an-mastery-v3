@@ -23,6 +23,15 @@ return [
     'presence' => [
         'title'       => 'Employee Presence This Week',
         'no_presence' => 'No presence data',
+        'days'        => [
+            'monday'    => 'Mon',
+            'tuesday'   => 'Tue',
+            'wednesday' => 'Wed',
+            'thursday'  => 'Thu',
+            'friday'    => 'Fri',
+            'saturday'  => 'Sat',
+            'sunday'    => 'Sun',
+        ],
     ],
     'table' => [
         'title'        => 'Latest Sablon',

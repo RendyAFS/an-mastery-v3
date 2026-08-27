@@ -8,12 +8,12 @@ import {
     reloadLatestSablonsTable,
 } from "./latest-sablons-table";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
-import { getDefaultWeekRange } from "@/utils/week";
+import { getCenteredWeekRange } from "@/utils/week";
 
 const PageScript = (function () {
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
-    const getDefaultRange = () => getDefaultWeekRange(2);
+    const getDefaultRange = () => getCenteredWeekRange(1, 1);
 
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
