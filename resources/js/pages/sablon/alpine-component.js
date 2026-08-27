@@ -28,10 +28,14 @@ export default function sablonForm(
         imageFabricOptions: Object.entries(initialImageFabricOptions).map(
             ([id, label]) => ({ id, label }),
         ),
-        employeeOptions: Object.entries(employees).map(([id, name]) => ({
-            id,
-            name,
-        })),
+        employeeOptions: Object.entries(employees)
+            .map(([id, name]) => ({
+                id,
+                name,
+            }))
+            .sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+            ),
         priceEmployeesRaw,
         typeColorsRaw,
         priceEmployeeMap,
