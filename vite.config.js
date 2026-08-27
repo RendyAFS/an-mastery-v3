@@ -11,6 +11,7 @@ export default defineConfig({
                 "resources/js/app.js",
                 ...glob.sync([
                     "resources/js/pages/**/*.js",
+                    "resources/js/utils/*.js",
                 ]),
             ],
             refresh: true,
