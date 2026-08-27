@@ -115,58 +115,61 @@
                             class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.is_paid') }}</label>
                     </div>
 
-                    <div class="space-y-1 md:col-span-1" x-show="row.is_change">
-                        <label
-                            class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.employee_change') }}</label>
-                        <div class="relative" @click.outside="row.openEmpChange = false">
-                            <button type="button" @click="row.openEmpChange = !row.openEmpChange"
-                                :disabled="row.locked || row.is_paid"
-                                class="flex items-center justify-between w-full px-4 py-2 rounded-lg
-                                bg-(--color-light-gray) border border-(--color-gray)
-                                text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer
-                                disabled:opacity-60 disabled:cursor-not-allowed">
-                                <span
-                                    x-text="employeeLabel(row.employee_change_id) || '{{ __('sablon.employee_detail.choose_employee') }}'"
-                                    :class="!row.employee_change_id && 'text-(--color-dark-gray)'"></span>
+                    <div class="contents" x-show="row.is_change">
+                        <div class="space-y-1 md:col-span-1">
+                            <label
+                                class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.employee_change') }}</label>
+                            <div class="relative" @click.outside="row.openEmpChange = false">
+                                <button type="button" @click="row.openEmpChange = !row.openEmpChange"
+                                    :disabled="row.locked || row.is_paid"
+                                    class="flex items-center justify-between w-full px-4 py-2 rounded-lg
+                                    bg-(--color-light-gray) border border-(--color-gray)
+                                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer
+                                    disabled:opacity-60 disabled:cursor-not-allowed">
+                                    <span
+                                        x-text="employeeLabel(row.employee_change_id) || '{{ __('sablon.employee_detail.choose_employee') }}'"
+                                        :class="!row.employee_change_id && 'text-(--color-dark-gray)'"></span>
 
-                                <div class="flex items-center gap-2">
-                                    <span x-show="row.employee_change_id && !row.locked && !row.is_paid"
-                                        @click.stop="row.employee_change_id = ''"
-                                        class="text-(--color-dark-gray) hover:text-(--color-danger) cursor-pointer transition">
-                                        <i data-lucide="x" class="size-4"></i>
-                                    </span>
-                                    <i data-lucide="chevron-down" class="size-4 text-(--color-dark-gray)"></i>
+                                    <div class="flex items-center gap-2">
+                                        <span x-show="row.employee_change_id && !row.locked && !row.is_paid"
+                                            @click.stop="row.employee_change_id = ''"
+                                            class="text-(--color-dark-gray) hover:text-(--color-danger) cursor-pointer transition">
+                                            <i data-lucide="x" class="size-4"></i>
+                                        </span>
+                                        <i data-lucide="chevron-down" class="size-4 text-(--color-dark-gray)"></i>
+                                    </div>
+                                </button>
+                                <div x-show="row.openEmpChange && !row.locked && !row.is_paid" x-cloak
+                                    class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
+                                    shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
+                                    <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
+                                        <input type="text" x-model="row.searchEmpChange"
+                                            placeholder="{{ __('sablon.employee_detail.search_employee_placeholder') }}"
+                                            class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
+                                            text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                            dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                                    </div>
+                                    <ul class="max-h-48 overflow-y-auto py-1">
+                                        <template x-for="emp in filteredEmployees(row.searchEmpChange)"
+                                            :key="emp.id">
+                                            <li @click="row.employee_change_id = emp.id; row.openEmpChange = false; row.searchEmpChange = ''"
+                                                class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
+                                                hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
+                                                x-text="emp.name"></li>
+                                        </template>
+                                        <template x-if="filteredEmployees(row.searchEmpChange).length === 0">
+                                            <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
+                                                {{ __('sablon.employee_detail.no_employee_found') }}</li>
+                                        </template>
+                                    </ul>
                                 </div>
-                            </button>
-                            <div x-show="row.openEmpChange && !row.locked && !row.is_paid" x-cloak
-                                class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
-                                shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
-                                <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
-                                    <input type="text" x-model="row.searchEmpChange"
-                                        placeholder="{{ __('sablon.employee_detail.search_employee_placeholder') }}"
-                                        class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
-                                        text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
-                                        dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
-                                </div>
-                                <ul class="max-h-48 overflow-y-auto py-1">
-                                    <template x-for="emp in filteredEmployees(row.searchEmpChange)"
-                                        :key="emp.id">
-                                        <li @click="row.employee_change_id = emp.id; row.openEmpChange = false; row.searchEmpChange = ''"
-                                            class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
-                                            hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
-                                            x-text="emp.name"></li>
-                                    </template>
-                                    <template x-if="filteredEmployees(row.searchEmpChange).length === 0">
-                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
-                                            {{ __('sablon.employee_detail.no_employee_found') }}</li>
-                                    </template>
-                                </ul>
                             </div>
                         </div>
-                        <div class="pt-2" x-show="row.employee_change_id" x-cloak>
-                            <button type="button" @click="openSalaryFeeModal(row, 'change')"
-                                class="flex items-center rounded-lg gap-1
+
+                        <div class="md:col-span-1 flex flex-col items-start justify-end" x-show="row.employee_id" x-cloak>
+                            <button type="button" @click="openSalaryFeeModal(row, 'main')"
+                                class="inline-flex items-center rounded-lg gap-1
                                 bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
                                 text-[15px] text-(--color-light) hover:text-(--color-light)
                                 transition-all duration-200 cursor-pointer
@@ -175,11 +178,27 @@
                                 {{ __('sablon.employee_detail.manage_salary_fee') }}
                             </button>
                         </div>
+
+                        <div class="hidden md:block md:col-span-1"></div>
+
+                        <div class="md:col-span-1 pt-1" x-show="row.employee_change_id" x-cloak>
+                            <button type="button" @click="openSalaryFeeModal(row, 'change')"
+                                class="inline-flex items-center rounded-lg gap-1
+                                bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
+                                text-[15px] text-(--color-light) hover:text-(--color-light)
+                                transition-all duration-200 cursor-pointer
+                                disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
+                                <i data-lucide="wallet" class="size-3.5"></i>
+                                {{ __('sablon.employee_detail.manage_salary_fee') }}
+                            </button>
+                        </div>
+
+                        <div class="hidden md:block md:col-span-2"></div>
                     </div>
 
-                    <div class="flex items-center pt-5" x-show="row.employee_id" x-cloak>
+                    <div class="md:col-span-1 pt-2" x-show="!row.is_change && row.employee_id" x-cloak>
                         <button type="button" @click="openSalaryFeeModal(row, 'main')"
-                            class="flex items-center rounded-lg gap-1
+                            class="inline-flex items-center rounded-lg gap-1
                             bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
                             text-[15px] text-(--color-light) hover:text-(--color-light)
                             transition-all duration-200 cursor-pointer
