@@ -230,19 +230,9 @@ const PageScript = (function () {
         }
     };
 
-    const fillForm = async (data) => {
-        await Promise.all([
-            setSelectValue(
-                "#type_fabric_id",
-                data.type_fabric_id,
-                route("type_fabrics.select"),
-            ),
-            setSelectValue(
-                "#type_color_id",
-                data.type_color_id,
-                route("type_colors.select"),
-            ),
-        ]);
+    const fillForm = (data) => {
+        setSelectValue("#type_fabric_id", data.type_fabric_id);
+        setSelectValue("#type_color_id", data.type_color_id);
 
         const priceInput = document.getElementById("price");
         priceInput.value = data.price ?? "";
@@ -308,7 +298,7 @@ const PageScript = (function () {
             const response = await ApiProvider.get(
                 route("price_employees.show", id),
             );
-            await fillForm(response.data);
+            fillForm(response.data);
             openModal();
         } catch (error) {
             console.error("Fetch price employee error:", error);
