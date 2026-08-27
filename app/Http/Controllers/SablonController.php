@@ -72,10 +72,10 @@ class SablonController extends Controller
         $this->authorize('sablons.edit');
 
         $sablon = $this->sablonRepository->findWithDetails($sablon);
-        $formData = $this->sablonRepository->getFormData();
+        $formData = $this->sablonRepository->getFormData($sablon->id);
 
         if ($sablon->supplier_id) {
-            $formData['fabrics'] = $this->sablonRepository->getBySupplierAsOptions($sablon->supplier_id);
+            $formData['fabrics'] = $this->sablonRepository->getBySupplierAsOptions($sablon->supplier_id, $sablon->id);
         }
 
         return view('sablon.edit', array_merge(['sablon' => $sablon], $formData));
@@ -129,7 +129,9 @@ class SablonController extends Controller
     {
         $this->authorize('sablons.create');
 
-        $options = $this->sablonRepository->getBySupplierAsOptions($supplier->id);
+        $exceptSablonId = request('except_sablon_id') ? (int) request('except_sablon_id') : null;
+
+        $options = $this->sablonRepository->getBySupplierAsOptions($supplier->id, $exceptSablonId);
 
         return response()->json($options);
     }

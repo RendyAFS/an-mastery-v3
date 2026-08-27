@@ -14,8 +14,10 @@ export default function sablonForm(
     priceEmployeeMap = {},
     initialImageFabricOptions = {},
     initialImageFabricId = null,
+    sablonId = null,
 ) {
     return {
+        sablonId: sablonId ? String(sablonId) : null,
         fabricRows: [],
         employeeRows: [],
         fabricRawData: {},
@@ -185,12 +187,18 @@ export default function sablonForm(
             if (!this.selectedSupplierId) return;
 
             try {
-                const res = await fetch(
+                const url = new URL(
                     route(
                         "sablons.fabrics-by-supplier",
                         this.selectedSupplierId,
                     ),
+                    window.location.origin,
                 );
+                if (this.sablonId) {
+                    url.searchParams.append("except_sablon_id", this.sablonId);
+                }
+
+                const res = await fetch(url);
                 const options = await res.json();
 
                 this.fabricRawData = options;

@@ -90,7 +90,7 @@ class SablonRepository
     /**
      * Data pendukung untuk form create/edit.
      */
-    public function getFormData(): array
+    public function getFormData(?int $exceptSablonId = null): array
     {
         $priceEmployeesColl = PriceEmployee::with(['typeFabric', 'typeColor'])->orderBy('id')->get();
 
@@ -111,9 +111,12 @@ class SablonRepository
             ])
                 ->where('stock', '>', 0)
                 ->get()
-                ->map(function ($d) {
+                ->map(function ($d) use ($exceptSablonId) {
                     $usedStock = $d->sablonDetails
-                        ->filter(function ($detail) {
+                        ->filter(function ($detail) use ($exceptSablonId) {
+                            if ($exceptSablonId && $detail->sablon_id == $exceptSablonId) {
+                                return false;
+                            }
                             return $detail->sablon
                                 && $detail->sablon->status !== StatusSablonEnum::RETURNED;
                         })
@@ -132,7 +135,7 @@ class SablonRepository
         ];
     }
 
-    public function getBySupplierAsOptions(int $supplierId): array
+    public function getBySupplierAsOptions(int $supplierId, ?int $exceptSablonId = null): array
     {
         return Fabric::with([
             'fabricDetails.colorFabric',
@@ -142,9 +145,9 @@ class SablonRepository
             ->where('supplier_id', $supplierId)
             ->orderBy('code')
             ->get()
-            ->mapWithKeys(function ($fabric) {
+            ->mapWithKeys(function ($fabric) use ($exceptSablonId) {
 
-                $summary = $fabric->available_stock_summary;
+                $summary = $fabric->getAvailableStockSummary($exceptSablonId);
 
                 $excessParts = collect($summary['colors'])
                     ->filter(fn($color) => $color['excess'] > 0)

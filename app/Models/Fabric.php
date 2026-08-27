@@ -30,6 +30,11 @@ class Fabric extends Model
 
     public function getAvailableStockSummaryAttribute(): array
     {
+        return $this->getAvailableStockSummary();
+    }
+
+    public function getAvailableStockSummary(?int $exceptSablonId = null): array
+    {
         $details = $this->fabricDetails;
 
         if ($details->isEmpty()) {
@@ -42,15 +47,21 @@ class Fabric extends Model
             ];
         }
 
-        $colorsData = $details->map(function ($detail) {
+        $colorsData = $details->map(function ($detail) use ($exceptSablonId) {
             if ($detail->relationLoaded('sablonDetails')) {
-                $used = $detail->sablonDetails->filter(function ($sd) {
+                $used = $detail->sablonDetails->filter(function ($sd) use ($exceptSablonId) {
+                    if ($exceptSablonId && $sd->sablon_id == $exceptSablonId) {
+                        return false;
+                    }
                     $sablonStatus = $sd->sablon?->status;
                     $val = is_object($sablonStatus) && isset($sablonStatus->value) ? $sablonStatus->value : $sablonStatus;
                     return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';
                 })->count();
             } else {
                 $used = $detail->sablonDetails()
+                    ->when($exceptSablonId, function ($q) use ($exceptSablonId) {
+                        $q->where('sablon_id', '!=', $exceptSablonId);
+                    })
                     ->whereHas('sablon', function ($q) {
                         $q->where('status', '!=', 'RETURNED');
                     })
