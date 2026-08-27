@@ -59,7 +59,9 @@ class SaveSablonAction
     {
         $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
             ->pluck('employee_id')
+            ->merge($sablon->sablonEmployeeDetails()->pluck('employee_change_id'))
             ->merge(collect($employeeDetails)->pluck('employee_id'))
+            ->merge(collect($employeeDetails)->pluck('employee_change_id'))
             ->filter()
             ->unique()
             ->values();

@@ -496,14 +496,15 @@ export default function sablonForm(
             return fee;
         },
 
-        openSalaryFeeModal(row) {
-            if (!row.employee_id) return;
+        openSalaryFeeModal(row, type = 'main') {
+            const empId = type === 'change' ? row.employee_change_id : row.employee_id;
+            if (!empId) return;
 
             window.dispatchEvent(
                 new CustomEvent("open-sablon-salary-fee-modal", {
                     detail: {
-                        employeeId: row.employee_id,
-                        employeeName: this.employeeLabel(row.employee_id),
+                        employeeId: empId,
+                        employeeName: this.employeeLabel(empId),
                     },
                 }),
             );
