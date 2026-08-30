@@ -80,7 +80,7 @@ const PageScript = (function () {
 
     const getUrlParams = () => new URLSearchParams(window.location.search);
 
-    const getDefaultRange = () => getDefaultWeekRange(2);
+    const getDefaultRange = () => getDefaultWeekRange(1);
 
     const applyFiltersFromUrl = () => {
         const params = getUrlParams();
