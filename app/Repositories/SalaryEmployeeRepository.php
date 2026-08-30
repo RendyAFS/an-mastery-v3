@@ -26,6 +26,7 @@ class SalaryEmployeeRepository
                 'employee',
                 'sablonEmployeeDetails.sablon.supplier',
                 'sablonEmployeeDetails.sablon.imageFabric',
+                'sablonEmployeeDetails.settlementOf',
                 'memos',
             ])
             ->whereBetween('date', [$start, $end])

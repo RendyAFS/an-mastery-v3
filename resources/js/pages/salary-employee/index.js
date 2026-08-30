@@ -126,7 +126,10 @@ const PageScript = (function () {
             <div class="flex items-start justify-between">
                 <div>
                     <p class="font-bold text-sm">${item.employee?.name ?? "-"}</p>
-                    <p class="text-sm text-(--color-dark-gray)">${item.date ?? "-"}</p>
+                    <p class="text-sm text-(--color-dark-gray)">
+                        ${item.date ?? "-"}
+                        ${item.week_number ? `<span class="text-(--color-dark-gray)">(W-${item.week_number})</span>` : ""}
+                    </p>
                 </div>
                 <span class="badge ${badge}">
                     ${statusLabel}
@@ -164,7 +167,15 @@ const PageScript = (function () {
                                                         </span>
                                                         ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
                                                     </span>
-                                                    <span class="font-medium ${i.is_eligible ? "" : "opacity-40"}">${i.fee_formated}</span>
+                                                    <span class="flex flex-col items-end ${i.is_eligible ? "" : "opacity-40"}">
+                                                        ${
+                                                            i.is_bon_settlement &&
+                                                            i.deduction_fee != 0
+                                                                ? `<span class="text-[12px] text-(--color-red)">${i.original_fee_formated} - ${i.deduction_fee_formated}</span>`
+                                                                : ""
+                                                        }
+                                                        <span class="font-medium">${i.fee_formated}</span>
+                                                    </span>
                                                 </li>
                                             `,
                                         )
@@ -178,14 +189,23 @@ const PageScript = (function () {
             `
             : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`;
 
+        const sablonSubtotalHtml = item.sablon_groups?.length
+            ? `
+                <div class="flex items-center justify-between text-xs py-2 mt-1 border-y border-(--color-gray)/20">
+                    <span class="font-bold">${window.langSalaryEmployee.card.sablon_total ?? "Total Sablon"}</span>
+                    <span class="font-bold">${item.fee_formated ?? "Rp 0"}</span>
+                </div>
+            `
+            : "";
+
         const additionalFees = Array.isArray(item.additional_fee)
             ? item.additional_fee
             : [];
 
         const previousWeekFees = Array.isArray(item.previous_week_fees)
             ? item.previous_week_fees.filter(
-                (pf) => Number(pf.nominal || 0) > 0,
-            )
+                  (pf) => Number(pf.nominal || 0) > 0,
+              )
             : [];
 
         const previousWeekFeeHtml = previousWeekFees.length
@@ -267,6 +287,7 @@ const PageScript = (function () {
             <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col gap-3">
                 ${headerHtml}
                 ${groupsHtml}
+                ${sablonSubtotalHtml}
                 ${previousWeekFeeHtml}
                 ${additionalFeeHtml}
                 ${memoHtml}

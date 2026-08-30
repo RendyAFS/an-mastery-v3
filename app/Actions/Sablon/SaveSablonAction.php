@@ -16,53 +16,21 @@ class SaveSablonAction
         private SettleLateCompletionAction $settleLateCompletionAction
     ) {}
 
-    public function handle(SaveSablonRequest $request, ?Sablon $sablon = null): Sablon
+    private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): array
     {
-        $data = $request->validated();
+        $existingDetails = $sablon->sablonEmployeeDetails()->with('salaryEmployee')->get();
 
-        $fabricDetails   = $data['fabric_details'] ?? [];
-        $employeeDetails = $data['employee_details'] ?? [];
-
-        unset($data['fabric_details'], $data['employee_details']);
-
-        return DB::transaction(function () use ($data, $fabricDetails, $employeeDetails, $sablon) {
-            $sablon = $sablon
-                ? tap($sablon)->update($data)
-                : Sablon::create($data);
-
-            $this->syncFabricDetails($sablon, $fabricDetails);
-            $affectedEmployeeIds = $this->syncEmployeeDetails($sablon, $employeeDetails);
-
-            $this->settleBonAction->handle($sablon);
-            $this->settleLateCompletionAction->handle($sablon);
-
-            $this->upsertSalaryForAffectedEmployees($sablon, $affectedEmployeeIds);
-
-            return $sablon->load(['sablonDetails', 'sablonEmployeeDetails']);
-        });
-    }
-
-    private function syncFabricDetails(Sablon $sablon, array $fabricDetails): void
-    {
-        $sablon->sablonDetails()->delete();
-
-        foreach ($fabricDetails as $detail) {
-            $sablon->sablonDetails()->create([
-                'fabric_detail_id' => $detail['fabric_detail_id'],
-                'color_fabric_id'  => $detail['color_fabric_id'],
-                'long_fabric'      => $detail['long_fabric'],
-            ]);
-        }
-    }
-
-    private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): Collection
-    {
-        $affectedEmployeeIds = $sablon->sablonEmployeeDetails()
-            ->pluck('employee_id')
-            ->merge($sablon->sablonEmployeeDetails()->pluck('employee_change_id'))
+        $affectedEmployeeIds = $existingDetails->pluck('employee_id')
+            ->merge($existingDetails->pluck('employee_change_id'))
             ->merge(collect($employeeDetails)->pluck('employee_id'))
             ->merge(collect($employeeDetails)->pluck('employee_change_id'))
             ->filter()
+            ->unique()
+            ->values();
+
+        $staleWeekPairs = $existingDetails
+            ->filter(fn($d) => $d->salaryEmployee)
+            ->map(fn($d) => $d->employee_id . '|' . \Carbon\Carbon::parse($d->salaryEmployee->date)->toDateString())
             ->unique()
             ->values();
 
@@ -115,7 +83,54 @@ class SaveSablonAction
             ]);
         }
 
-        return $affectedEmployeeIds;
+        return [
+            'affected_employee_ids' => $affectedEmployeeIds,
+            'stale_week_pairs'      => $staleWeekPairs,
+        ];
+    }
+
+    public function handle(SaveSablonRequest $request, ?Sablon $sablon = null): Sablon
+    {
+        $data = $request->validated();
+
+        $fabricDetails   = $data['fabric_details'] ?? [];
+        $employeeDetails = $data['employee_details'] ?? [];
+
+        unset($data['fabric_details'], $data['employee_details']);
+
+        return DB::transaction(function () use ($data, $fabricDetails, $employeeDetails, $sablon) {
+            $sablon = $sablon
+                ? tap($sablon)->update($data)
+                : Sablon::create($data);
+
+            $this->syncFabricDetails($sablon, $fabricDetails);
+            $syncResult = $this->syncEmployeeDetails($sablon, $employeeDetails);
+
+            $this->settleBonAction->handle($sablon);
+            $this->settleLateCompletionAction->handle($sablon);
+
+            $this->upsertSalaryEmployeeAction->syncSablonEmployeeDetails($sablon);
+
+            foreach ($syncResult['stale_week_pairs'] as $pair) {
+                [$employeeId, $weekStart] = explode('|', $pair);
+                $this->upsertSalaryEmployeeAction->handleForEmployee((int) $employeeId, $weekStart);
+            }
+
+            return $sablon->load(['sablonDetails', 'sablonEmployeeDetails']);
+        });
+    }
+
+    private function syncFabricDetails(Sablon $sablon, array $fabricDetails): void
+    {
+        $sablon->sablonDetails()->delete();
+
+        foreach ($fabricDetails as $detail) {
+            $sablon->sablonDetails()->create([
+                'fabric_detail_id' => $detail['fabric_detail_id'],
+                'color_fabric_id'  => $detail['color_fabric_id'],
+                'long_fabric'      => $detail['long_fabric'],
+            ]);
+        }
     }
 
     private function upsertSalaryForAffectedEmployees(Sablon $sablon, Collection $affectedEmployeeIds): void

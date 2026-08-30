@@ -59,6 +59,8 @@ class SalaryEmployeeController extends Controller
         $start = $dateFrom->copy()->startOfWeek(Carbon::MONDAY);
         $end   = $dateTo->copy()->endOfWeek(Carbon::SUNDAY);
 
+        $realignedPairs = $this->upsertSalaryEmployeeAction->realignMisplacedDetails();
+
         $pairs = collect()
             ->merge(
                 SablonEmployeeDetail::query()
@@ -86,6 +88,7 @@ class SalaryEmployeeController extends Controller
                     ->map(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)
                         ->startOfWeek(Carbon::MONDAY)->toDateString())
             )
+            ->merge($realignedPairs)
             ->unique()
             ->values();
 

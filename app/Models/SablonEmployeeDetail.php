@@ -146,7 +146,13 @@ class SablonEmployeeDetail extends Model
             $q->where(function (Builder $q1) use ($start, $end) {
                 $q1->whereNull('settlement_of_id')
                     ->whereNull('late_eligible_at')
+                    ->where('is_bon', false)
                     ->whereHas('sablon', fn($s) => $s->whereBetween('date_sablon', [$start, $end]));
+            })->orWhere(function (Builder $q1) use ($start, $end) {
+                $q1->whereNull('settlement_of_id')
+                    ->whereNull('late_eligible_at')
+                    ->where('is_bon', true)
+                    ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
             })->orWhere(function (Builder $q1) use ($start, $end) {
                 $q1->whereNotNull('settlement_of_id')
                     ->whereBetween('settled_at', [$start, $end]);
@@ -166,6 +172,10 @@ class SablonEmployeeDetail extends Model
 
         if ($this->late_eligible_at) {
             return $this->late_eligible_at->toDateString();
+        }
+
+        if ($this->is_bon) {
+            return $this->created_at?->toDateString();
         }
 
         return $this->sablon?->date_sablon?->toDateString();

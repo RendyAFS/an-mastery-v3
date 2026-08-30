@@ -5,9 +5,11 @@ namespace App\Actions\SalaryEmployee;
 use App\Enums\StatusSalaryEmployeeEnum;
 use App\Models\Memo;
 use App\Models\Presence;
+use App\Models\Sablon;
 use App\Models\SablonEmployeeDetail;
 use App\Models\SalaryEmployee;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class UpsertSalaryEmployeeAction
@@ -204,5 +206,84 @@ class UpsertSalaryEmployeeAction
             Memo::where('salary_employee_id', $prev->id)
                 ->update(['is_paid' => true]);
         }
+    }
+
+    public function syncSablonEmployeeDetails(Sablon $sablon): void
+    {
+        $details = $sablon->sablonEmployeeDetails()->with('salaryEmployee')->get();
+
+        if ($details->isEmpty()) {
+            return;
+        }
+
+        $pairs = collect();
+
+        foreach ($details as $detail) {
+            $anchor = $detail->weekAnchorDate();
+
+            if (! $anchor) {
+                continue;
+            }
+
+            $correctWeekStart = Carbon::parse($anchor)->startOfWeek(Carbon::MONDAY)->toDateString();
+
+            if ($detail->salary_employee_id && $detail->salaryEmployee) {
+                $currentWeekStart = Carbon::parse($detail->salaryEmployee->date)->toDateString();
+
+                if ($currentWeekStart !== $correctWeekStart) {
+                    if ($detail->salaryEmployee->status === StatusSalaryEmployeeEnum::PAID) {
+                        continue;
+                    }
+
+                    $pairs->push($detail->employee_id . '|' . $currentWeekStart);
+                    $detail->update(['salary_employee_id' => null]);
+                }
+            }
+
+            $pairs->push($detail->employee_id . '|' . $correctWeekStart);
+        }
+
+        $pairs->unique()->each(function ($pair) {
+            [$employeeId, $weekStart] = explode('|', $pair);
+            $this->handleForEmployee((int) $employeeId, $weekStart);
+        });
+    }
+
+    public function realignMisplacedDetails(): Collection
+    {
+        $misplaced = SablonEmployeeDetail::query()
+            ->whereNotNull('salary_employee_id')
+            ->with('salaryEmployee')
+            ->get()
+            ->filter(fn(SablonEmployeeDetail $detail) => $detail->salaryEmployee
+                && $detail->salaryEmployee->status !== StatusSalaryEmployeeEnum::PAID)
+            ->filter(function (SablonEmployeeDetail $detail) {
+                $anchor = $detail->weekAnchorDate();
+
+                if (! $anchor) {
+                    return false;
+                }
+
+                $correctWeekStart = Carbon::parse($anchor)->startOfWeek(Carbon::MONDAY)->toDateString();
+                $currentWeekStart = Carbon::parse($detail->salaryEmployee->date)->toDateString();
+
+                return $correctWeekStart !== $currentWeekStart;
+            });
+
+        $pairs = collect();
+
+        foreach ($misplaced as $detail) {
+            $currentWeekStart = Carbon::parse($detail->salaryEmployee->date)->toDateString();
+            $correctWeekStart = Carbon::parse($detail->weekAnchorDate())
+                ->startOfWeek(Carbon::MONDAY)
+                ->toDateString();
+
+            $pairs->push($detail->employee_id . '|' . $currentWeekStart);
+            $pairs->push($detail->employee_id . '|' . $correctWeekStart);
+
+            $detail->update(['salary_employee_id' => null]);
+        }
+
+        return $pairs->unique()->values();
     }
 }
