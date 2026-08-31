@@ -48,11 +48,15 @@ class SaveSablonAction
 
             if ($id && $sablon->sablonEmployeeDetails()->whereKey($id)->exists()) {
                 $sablon->sablonEmployeeDetails()->whereKey($id)->update([
-                    'layers'         => $detail['layers'] ?? 0,
-                    'fee'            => $detail['fee'] ?? 0,
-                    'is_bon'         => $detail['is_bon'] ?? false,
-                    'notes'          => $detail['notes'] ?? null,
-                    'additional_fee' => $detail['is_bon'] ?? false
+                    'employee_id'        => $detail['employee_id'] ?? $sablon->sablonEmployeeDetails()->whereKey($id)->value('employee_id'),
+                    'layers'             => $detail['layers'] ?? 0,
+                    'fee'                => $detail['fee'] ?? 0,
+                    'is_change'          => $detail['is_change'] ?? false,
+                    'employee_change_id' => $detail['employee_change_id'] ?? null,
+                    'is_bon'             => $detail['is_bon'] ?? false,
+                    'is_paid'            => $detail['is_paid'] ?? false,
+                    'notes'              => $detail['notes'] ?? null,
+                    'additional_fee'     => $detail['is_bon'] ?? false
                         ? array_values(
                             array_map(fn($af) => [
                                 'nominal' => (float) ($af['nominal'] ?? 0),

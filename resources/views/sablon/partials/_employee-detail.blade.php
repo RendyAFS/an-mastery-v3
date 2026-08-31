@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 pt-5">
-                        <input type="checkbox" x-model="row.is_change" :disabled="row.locked || row.is_paid"
+                        <input type="checkbox" x-model="row.is_change" :disabled="row.isSettlementRow"
                             class="checkbox-custom" :id="'change_' + row.uid">
                         <label :for="'change_' + row.uid"
                             class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.change_employee') }}</label>
@@ -121,7 +121,7 @@
                                 class="text-xs font-medium text-(--color-dark-gray)">{{ __('sablon.employee_detail.employee_change') }}</label>
                             <div class="relative" @click.outside="row.openEmpChange = false">
                                 <button type="button" @click="row.openEmpChange = !row.openEmpChange"
-                                    :disabled="row.locked || row.is_paid"
+                                    :disabled="row.isSettlementRow"
                                     class="flex items-center justify-between w-full px-4 py-2 rounded-lg
                                     bg-(--color-light-gray) border border-(--color-gray)
                                     text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
@@ -132,7 +132,7 @@
                                         :class="!row.employee_change_id && 'text-(--color-dark-gray)'"></span>
 
                                     <div class="flex items-center gap-2">
-                                        <span x-show="row.employee_change_id && !row.locked && !row.is_paid"
+                                        <span x-show="row.employee_change_id && !row.isSettlementRow"
                                             @click.stop="row.employee_change_id = ''"
                                             class="text-(--color-dark-gray) hover:text-(--color-danger) cursor-pointer transition">
                                             <i data-lucide="x" class="size-4"></i>
@@ -140,7 +140,7 @@
                                         <i data-lucide="chevron-down" class="size-4 text-(--color-dark-gray)"></i>
                                     </div>
                                 </button>
-                                <div x-show="row.openEmpChange && !row.locked && !row.is_paid" x-cloak
+                                <div x-show="row.openEmpChange && !row.isSettlementRow" x-cloak
                                     class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
                                     shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
                                     <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
@@ -167,7 +167,8 @@
                             </div>
                         </div>
 
-                        <div class="md:col-span-1 flex flex-col items-start justify-end" x-show="row.employee_id" x-cloak>
+                        <div class="md:col-span-1 flex flex-col items-start justify-end" x-show="row.employee_id"
+                            x-cloak>
                             <button type="button" @click="openSalaryFeeModal(row, 'main')"
                                 class="inline-flex items-center rounded-lg gap-1
                                 bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
