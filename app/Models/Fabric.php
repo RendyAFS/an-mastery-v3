@@ -41,11 +41,14 @@ class Fabric extends Model
             return [
                 'total_pcs'   => 0,
                 'seri'        => 0,
+                'seri_total'  => 0,
                 'type_fabric' => $this->typeFabric?->name,
                 'date_coming' => $this->date_coming?->format('Y-m-d'),
                 'colors'      => [],
             ];
         }
+
+        $seriTotal = $details->min('stock') ?? 0;
 
         $colorsData = $details->map(function ($detail) use ($exceptSablonId) {
             if ($detail->relationLoaded('sablonDetails')) {
@@ -95,6 +98,7 @@ class Fabric extends Model
         return [
             'total_pcs'   => $totalPcs,
             'seri'        => $seri,
+            'seri_total'  => $seriTotal,
             'type_fabric' => $this->typeFabric?->name,
             'date_coming' => $this->date_coming?->format('Y-m-d'),
             'colors'      => $colors,

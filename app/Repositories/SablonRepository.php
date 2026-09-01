@@ -145,6 +145,32 @@ class SablonRepository
             ->where('supplier_id', $supplierId)
             ->orderBy('code')
             ->get()
+            ->reject(function ($fabric) use ($exceptSablonId) {
+                $relevantSablonDetails = $fabric->fabricDetails
+                    ->flatMap->sablonDetails
+                    ->filter(function ($sd) use ($exceptSablonId) {
+                        if ($exceptSablonId && $sd->sablon_id == $exceptSablonId) {
+                            return false;
+                        }
+                        $status = $sd->sablon?->status;
+                        $val = is_object($status) && isset($status->value) ? $status->value : $status;
+                        return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';
+                    });
+
+                if ($relevantSablonDetails->isEmpty()) {
+                    return false;
+                }
+
+                $allDelivered = $relevantSablonDetails->every(function ($sd) {
+                    $status = $sd->sablon?->status;
+                    $val = is_object($status) && isset($status->value) ? $status->value : $status;
+                    return $val === StatusSablonEnum::DELIVERED->value || $val === 'DELIVERED';
+                });
+
+                $summary = $fabric->getAvailableStockSummary($exceptSablonId);
+
+                return $allDelivered && $summary['total_pcs'] == 0;
+            })
             ->mapWithKeys(function ($fabric) use ($exceptSablonId) {
 
                 $summary = $fabric->getAvailableStockSummary($exceptSablonId);
@@ -155,9 +181,9 @@ class SablonRepository
                     ->implode(' ');
 
                 $label = sprintf(
-                    '(%d Seri / %d Pcs) - %s (%s)',
+                    '(%d/%d Seri) - %s (%s)',
                     $summary['seri'],
-                    $summary['total_pcs'],
+                    $summary['seri_total'],
                     $fabric->typeFabric?->name ?? '-',
                     $fabric->date_coming?->translatedFormat('d F Y') ?? '-'
                 );
