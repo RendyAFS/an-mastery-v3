@@ -1,10 +1,11 @@
 <div x-data="fabricForm({{ ($fabric->fabricDetails ?? collect())->map(
         fn($d) => [
+            'id' => $d->id,
             'color_fabric_id' => $d->color_fabric_id,
             'stock' => $d->stock,
             'notes' => $d->notes,
         ],
-    )->values()->toJson() }}, {{ Js::from($colorFabrics) }})" x-init="init()">
+    )->values()->toJson() }}, {{ Js::from($colorFabrics) }})">
 
     {{-- Fabric Info --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -165,10 +166,20 @@
 
                                             <template x-for="option in filteredColors(row.search)"
                                                 :key="option.id">
-                                                <li @click="row.color_fabric_id = option.id; row.open = false; row.search = ''"
-                                                    class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
-                                                       hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
-                                                    x-text="option.name"></li>
+                                                <div>
+                                                    <template x-if="isColorSelectedInOtherRow(option.id, row.uid)">
+                                                        <li class="flex items-center justify-between px-4 py-2 text-sm text-(--color-dark-gray) bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 opacity-40 cursor-not-allowed select-none">
+                                                            <span x-text="option.name"></span>
+                                                            <span class="text-xs text-(--color-danger)">{{ __('fabric.color_already_selected') }}</span>
+                                                        </li>
+                                                    </template>
+                                                    <template x-if="!isColorSelectedInOtherRow(option.id, row.uid)">
+                                                        <li @click="selectColor(row, option.id)"
+                                                            class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
+                                                                hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
+                                                            x-text="option.name"></li>
+                                                    </template>
+                                                </div>
                                             </template>
 
                                             <template x-if="filteredColors(row.search).length === 0">

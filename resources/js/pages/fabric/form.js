@@ -23,6 +23,7 @@ document.addEventListener("alpine:init", () => {
         buildRow(row = {}) {
             return {
                 uid: crypto.randomUUID(),
+                id: row.id ?? null,
                 color_fabric_id: row.color_fabric_id
                     ? String(row.color_fabric_id)
                     : "",
@@ -41,6 +42,24 @@ document.addEventListener("alpine:init", () => {
         removeRow(index) {
             this.rows.splice(index, 1);
             this.$nextTick(() => window.lucide?.createIcons());
+        },
+
+        isColorSelectedInOtherRow(colorId, currentRowUid) {
+            if (!colorId) return false;
+            return this.rows.some(
+                (r) =>
+                    r.uid !== currentRowUid &&
+                    String(r.color_fabric_id) === String(colorId),
+            );
+        },
+
+        selectColor(row, colorId) {
+            if (this.isColorSelectedInOtherRow(colorId, row.uid)) {
+                return;
+            }
+            row.color_fabric_id = String(colorId);
+            row.open = false;
+            row.search = "";
         },
 
         colorName(id) {
@@ -114,6 +133,7 @@ const PageScript = (function () {
         const data = getAlpineData();
 
         return data.rows.map((row) => ({
+            id: row.id ?? null,
             color_fabric_id: row.color_fabric_id,
             stock: row.stock,
             notes: row.notes,
@@ -125,7 +145,27 @@ const PageScript = (function () {
         let payload = Object.fromEntries(formData.entries());
 
         payload = normalizeFormInputs(form, payload);
-        payload.fabric_details = getFabricDetails();
+        const details = getFabricDetails();
+
+        const colorIds = details
+            .map((d) => d.color_fabric_id)
+            .filter((id) => id !== "" && id != null);
+        const hasDuplicate = colorIds.some(
+            (val, i) => colorIds.indexOf(val) !== i,
+        );
+
+        if (hasDuplicate) {
+            Toast.error(
+                window.langCustomAlert?.error ?? "Error",
+                trans(
+                    "langFabric",
+                    "validation.fabric_details.color_fabric_id.distinct",
+                ),
+            );
+            return;
+        }
+
+        payload.fabric_details = details;
 
         try {
             if (mode === "create") {

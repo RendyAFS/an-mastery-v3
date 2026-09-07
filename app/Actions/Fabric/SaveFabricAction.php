@@ -49,35 +49,26 @@ class SaveFabricAction
             'notes'          => $data['notes'] ?? null,
         ]);
 
-        $existingColorIds = $fabric->fabricDetails()->pluck('color_fabric_id')->all();
-        $incomingColorIds  = array_column($data['fabric_details'], 'color_fabric_id');
+        $incomingIds = collect($data['fabric_details'])
+            ->pluck('id')
+            ->filter()
+            ->all();
 
         $fabric->fabricDetails()
-            ->whereNotIn('color_fabric_id', $incomingColorIds)
+            ->whereNotIn('id', $incomingIds)
             ->delete();
 
         foreach ($data['fabric_details'] as $detail) {
-            $isNewColor = ! in_array($detail['color_fabric_id'], $existingColorIds);
+            $id = $detail['id'] ?? null;
 
-            if ($isNewColor) {
-                $this->createDetail($fabric, $detail);
-                continue;
-            }
-
-            foreach ($data['fabric_details'] as $detail) {
-                $fabricDetail = $fabric->fabricDetails()
-                    ->where('color_fabric_id', $detail['color_fabric_id'])
-                    ->first();
-
-                if (! $fabricDetail) {
-                    $this->createDetail($fabric, $detail);
-                    continue;
-                }
-
+            if ($id && $fabricDetail = $fabric->fabricDetails()->whereKey($id)->first()) {
                 $fabricDetail->update([
-                    'stock' => (int) $detail['stock'],
-                    'notes' => $detail['notes'] ?? null,
+                    'color_fabric_id' => $detail['color_fabric_id'],
+                    'stock'           => (int) $detail['stock'],
+                    'notes'           => $detail['notes'] ?? null,
                 ]);
+            } else {
+                $this->createDetail($fabric, $detail);
             }
         }
 

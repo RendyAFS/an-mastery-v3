@@ -25,7 +25,8 @@ class SaveFabricRequest extends FormRequest
             'notes'                            => ['nullable', 'string', 'max:255'],
             // Fabric Detail
             'fabric_details'                   => ['required', 'array', 'min:1'],
-            'fabric_details.*.color_fabric_id' => ['required', 'exists:color_fabrics,id'],
+            'fabric_details.*.id'              => ['nullable', 'integer', 'exists:fabric_details,id'],
+            'fabric_details.*.color_fabric_id' => ['required', 'distinct', 'exists:color_fabrics,id'],
             'fabric_details.*.stock'           => ['required', 'numeric', 'min:0'],
             'fabric_details.*.notes'           => ['nullable', 'string', 'max:255'],
         ];
@@ -47,6 +48,7 @@ class SaveFabricRequest extends FormRequest
             // Fabric Detail
             'fabric_details.required'                   => __('fabric.validation.fabric_details.required'),
             'fabric_details.*.color_fabric_id.required' => __('fabric.validation.fabric_details.color_fabric_id.required'),
+            'fabric_details.*.color_fabric_id.distinct' => __('fabric.validation.fabric_details.color_fabric_id.distinct'),
             'fabric_details.*.color_fabric_id.exists'   => __('fabric.validation.fabric_details.color_fabric_id.exists'),
             'fabric_details.*.stock.required'           => __('fabric.validation.fabric_details.stock.required'),
             'fabric_details.*.stock.numeric'            => __('fabric.validation.fabric_details.stock.numeric'),

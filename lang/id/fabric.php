@@ -31,8 +31,9 @@ return [
         'total_stock' => 'Otomatis terhitung dari total stock Fabric Detail',
         'code'        => 'Code dibuat otomatis dari Konveksi dan timestamp',
     ],
-    'clear_selection'    => 'Hapus pilihan',
-    'no_color_found'     => 'Warna tidak ditemukan',
+    'clear_selection'        => 'Hapus pilihan',
+    'color_already_selected' => 'Warna sudah dipilih',
+    'no_color_found'         => 'Warna tidak ditemukan',
     'detail'             => [
         'title'       => 'Detail Kain (Warna & Stok)',
         'add'         => 'Tambah Detail',
@@ -79,6 +80,7 @@ return [
             'color_fabric_id' => [
                 'required' => 'Warna kain wajib dipilih.',
                 'exists'   => 'Warna kain tidak ditemukan.',
+                'distinct' => 'Warna kain tidak boleh sama antar detail.',
             ],
 
             'stock' => [

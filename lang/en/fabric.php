@@ -31,8 +31,9 @@ return [
         'total_stock' => 'Automatically calculated from Fabric Detail total stock',
         'code'        => 'Code is automatically generated from Konveksi and timestamp',
     ],
-    'clear_selection'    => 'Clear selection',
-    'no_color_found'     => 'No color found',
+    'clear_selection'        => 'Clear selection',
+    'color_already_selected' => 'Color already selected',
+    'no_color_found'         => 'No color found',
     'detail'             => [
         'title'       => 'Fabric Detail (Color & Stock)',
         'add'         => 'Add Detail',
@@ -79,6 +80,7 @@ return [
             'color_fabric_id' => [
                 'required' => 'Color is required.',
                 'exists'   => 'Selected color does not exist.',
+                'distinct' => 'Color cannot be duplicated across details.',
             ],
 
             'stock' => [
