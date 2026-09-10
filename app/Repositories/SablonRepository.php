@@ -152,6 +152,9 @@ class SablonRepository
                         if ($exceptSablonId && $sd->sablon_id == $exceptSablonId) {
                             return false;
                         }
+                        if (!$sd->sablon || $sd->sablon->deleted_at !== null) {
+                            return false;
+                        }
                         $status = $sd->sablon?->status;
                         $val = is_object($status) && isset($status->value) ? $status->value : $status;
                         return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';

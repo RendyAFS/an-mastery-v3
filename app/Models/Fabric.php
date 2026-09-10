@@ -56,6 +56,9 @@ class Fabric extends Model
                     if ($exceptSablonId && $sd->sablon_id == $exceptSablonId) {
                         return false;
                     }
+                    if (!$sd->sablon || $sd->sablon->deleted_at !== null) {
+                        return false;
+                    }
                     $sablonStatus = $sd->sablon?->status;
                     $val = is_object($sablonStatus) && isset($sablonStatus->value) ? $sablonStatus->value : $sablonStatus;
                     return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';
@@ -66,7 +69,8 @@ class Fabric extends Model
                         $q->where('sablon_id', '!=', $exceptSablonId);
                     })
                     ->whereHas('sablon', function ($q) {
-                        $q->where('status', '!=', 'RETURNED');
+                        $q->whereNull('deleted_at')
+                            ->where('status', '!=', 'RETURNED');
                     })
                     ->count();
             }
