@@ -245,4 +245,8 @@ return [
         'confirm_message' => 'Change the status of :count selected screen prints to ":status"?',
     ],
     'bulk_status_updated_success' => ':count screen prints successfully updated',
+    'restore_failed_fabric_deleted' => 'Cannot restore screen print because the related fabric was not found or has been deleted.',
+    'restore_failed_stock_empty' => 'Cannot restore screen print because fabric (:fabric) stock is empty.',
+    'restore_failed_detail_not_found' => 'Cannot restore screen print because fabric color detail was not found.',
+    'restore_failed_insufficient_stock' => 'Cannot restore screen print because fabric (:fabric) stock for color :color is insufficient (available: :available, needed: :needed).',
 ];

@@ -103,7 +103,14 @@ class SablonController extends Controller
     {
         $this->authorize('sablons.restore');
 
-        $sablon = Sablon::onlyTrashed()->findOrFail($id);
+        $sablon = Sablon::onlyTrashed()->with(['fabric', 'sablonDetails'])->findOrFail($id);
+
+        $check = $this->sablonRepository->canRestore($sablon);
+        if (! $check['allowed']) {
+            return response()->json([
+                'message' => $check['message'],
+            ], 422);
+        }
 
         $sablon->restore();
 

@@ -244,4 +244,8 @@ return [
         'confirm_message' => 'Ubah status :count sablon terpilih menjadi ":status"?',
     ],
     'bulk_status_updated_success' => ':count sablon berhasil diperbarui statusnya',
+    'restore_failed_fabric_deleted' => 'Tidak dapat memulihkan sablon karena data kain terkait tidak ditemukan atau telah dihapus.',
+    'restore_failed_stock_empty' => 'Tidak dapat memulihkan sablon karena stok kain (:fabric) sudah habis.',
+    'restore_failed_detail_not_found' => 'Tidak dapat memulihkan sablon karena detail warna kain tidak ditemukan.',
+    'restore_failed_insufficient_stock' => 'Tidak dapat memulihkan sablon karena stok kain (:fabric) untuk warna :color tidak mencukupi (tersedia: :available, dibutuhkan: :needed).',
 ];

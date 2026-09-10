@@ -201,4 +201,86 @@ class SablonRepository
             })
             ->toArray();
     }
+
+    public function canRestore(Sablon $sablon): array
+    {
+        if ($sablon->status === StatusSablonEnum::RETURNED) {
+            return ['allowed' => true];
+        }
+
+        $fabric = $sablon->fabric;
+        if (! $fabric) {
+            $fabric = Fabric::withTrashed()->find($sablon->fabric_id);
+            if (! $fabric || $fabric->trashed()) {
+                return [
+                    'allowed' => false,
+                    'message' => __('sablon.restore_failed_fabric_deleted'),
+                ];
+            }
+        }
+
+        $fabric->loadMissing([
+            'fabricDetails.colorFabric',
+            'fabricDetails.sablonDetails.sablon',
+            'typeFabric',
+        ]);
+
+        $neededDetails = $sablon->sablonDetails;
+
+        if ($neededDetails->isEmpty()) {
+            $summary = $fabric->getAvailableStockSummary();
+            if ($summary['seri'] <= 0 && $summary['total_pcs'] <= 0) {
+                return [
+                    'allowed' => false,
+                    'message' => __('sablon.restore_failed_stock_empty', ['fabric' => $fabric->code]),
+                ];
+            }
+            return ['allowed' => true];
+        }
+
+        $neededPerDetail = $neededDetails->groupBy('fabric_detail_id')->map->count();
+
+        foreach ($neededPerDetail as $fabricDetailId => $neededCount) {
+            $detail = $fabric->fabricDetails->firstWhere('id', $fabricDetailId);
+
+            if (! $detail) {
+                return [
+                    'allowed' => false,
+                    'message' => __('sablon.restore_failed_detail_not_found'),
+                ];
+            }
+
+            $used = $detail->sablonDetails
+                ->filter(function ($sd) use ($sablon) {
+                    if ($sd->sablon_id === $sablon->id) {
+                        return false;
+                    }
+                    if (! $sd->sablon || $sd->sablon->deleted_at !== null) {
+                        return false;
+                    }
+                    $status = $sd->sablon->status;
+                    $val = is_object($status) && isset($status->value) ? $status->value : $status;
+                    return $val !== StatusSablonEnum::RETURNED->value && $val !== 'RETURNED';
+                })
+                ->count();
+
+            $available = max(0, $detail->stock - $used);
+
+            if ($neededCount > $available) {
+                $colorName = $detail->colorFabric?->name ?? '-';
+                return [
+                    'allowed' => false,
+                    'message' => __('sablon.restore_failed_insufficient_stock', [
+                        'fabric'    => $fabric->code,
+                        'color'     => $colorName,
+                        'available' => $available,
+                        'needed'    => $neededCount,
+                    ]),
+                ];
+            }
+        }
+
+        return ['allowed' => true];
+    }
 }
+
