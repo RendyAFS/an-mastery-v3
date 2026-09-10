@@ -107,8 +107,11 @@ const PageScript = (function () {
                     data: "nominal",
                     width: "15%",
                     className: "text-center",
-                    render(data) {
-                        return `<span>Rp ${Number(data ?? 0).toLocaleString("id-ID")}</span>`;
+                    type: "num",
+                    render(data, type) {
+                        const num = Number(data ?? 0);
+                        if (type === "sort" || type === "filter") return num;
+                        return `<span>Rp ${num.toLocaleString("id-ID")}</span>`;
                     },
                 },
                 {

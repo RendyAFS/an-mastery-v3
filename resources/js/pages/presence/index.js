@@ -23,8 +23,11 @@ const PageScript = (function () {
     let currentWeekOf;
     let currentEmployeeId;
 
-    const formatRupiah = (value) =>
-        "Rp" + Number(value || 0).toLocaleString("id-ID");
+    const formatRupiah = (value, type) => {
+        const num = Number(value || 0);
+        if (type === "sort" || type === "filter") return num;
+        return "Rp" + num.toLocaleString("id-ID");
+    };
 
     const rawNumber = (value) => {
         const num = parseInt(String(value ?? "").replace(/\D/g, ""), 10) || 0;
@@ -87,48 +90,56 @@ const PageScript = (function () {
                     width: "10%",
                     data: "monday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "tuesday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "wednesday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "thursday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "friday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "saturday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "sunday",
                     className: "text-center",
+                    type: "num",
                     render: formatRupiah,
                 },
                 {
                     width: "10%",
                     data: "total",
                     className: "text-center font-semibold",
+                    type: "num",
                     render: formatRupiah,
                 },
             ],

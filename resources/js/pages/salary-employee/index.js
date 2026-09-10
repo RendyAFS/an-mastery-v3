@@ -270,7 +270,10 @@ const PageScript = (function () {
                             .map(
                                 (m) => `
                             <li class="flex justify-between text-(--color-dark-gray)">
-                                <span>↳ ${m.name || "-"}</span>
+                                <span class="flex flex-col">
+                                    <span>↳ ${m.name || "-"}</span>
+                                    ${m.date ? `<span class="text-[10px] text-(--color-dark-gray)/70">${m.date}</span>` : ""}
+                                </span>
                                 <span class="${Number(m.nominal) < 0 ? "text-(--color-red)" : "text-(--color-success)"}">
                                     ${Number(m.nominal) < 0 ? "-" : "+"} Rp ${Math.abs(m.nominal || 0).toLocaleString("id-ID")}
                                 </span>
