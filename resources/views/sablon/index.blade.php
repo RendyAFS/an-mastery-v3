@@ -39,8 +39,12 @@
 
         <x-cardgrid id="sablon-cardgrid" filterId="filter-sablon" :defaultLength="48" :lengthOptions="[12, 24, 48]" :filtersInline="false">
             <x-slot:filters>
-                <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('sablon.filter.all_suppliers')" layout="scroll"
-                    :multiple="true" />
+                <div class="space-y-2">
+                    <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('sablon.filter.all_suppliers')" layout="scroll"
+                        :multiple="true" />
+                    <x-button-group id="filter-type-fabric" name="type_fabric_id" :options="$typeFabrics" :all-label="__('sablon.filter.all_type_fabrics')" layout="scroll"
+                        :multiple="true" />
+                </div>
             </x-slot:filters>
         </x-cardgrid>
     </div>

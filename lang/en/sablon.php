@@ -9,10 +9,12 @@ return [
     'force_delete_confirm_message' => 'This will permanently delete the Sablon. Continue?',
 
     'filter'        => [
-        'supplier'      => 'Supplier',
-        'all_suppliers' => 'All Suppliers',
-        'date_range'    => 'Date Range',
-        'reset'         => 'Reset',
+        'supplier'         => 'Supplier',
+        'all_suppliers'    => 'All Suppliers',
+        'type_fabric'      => 'Fabric Type',
+        'all_type_fabrics' => 'All Fabric Types',
+        'date_range'       => 'Date Range',
+        'reset'            => 'Reset',
     ],
 
     'statuses'      => [

@@ -30,6 +30,13 @@ const PageScript = (function () {
             );
         }
 
+        if (params.get("type_fabric_id")) {
+            window.setButtonGroupValue(
+                "filter-type-fabric",
+                params.get("type_fabric_id"),
+            );
+        }
+
         const instance = getFlatpickrInstance("filter-date-range");
         const start = params.get("week_start");
         const end = params.get("week_end");
@@ -49,6 +56,11 @@ const PageScript = (function () {
         const supplierValue = $("#filter-supplier").val();
         if (supplierValue) {
             params.set("supplier_id", supplierValue);
+        }
+
+        const typeFabricValue = $("#filter-type-fabric").val();
+        if (typeFabricValue) {
+            params.set("type_fabric_id", typeFabricValue);
         }
 
         filterStorage.saveFilterParams(params);
@@ -300,6 +312,7 @@ const PageScript = (function () {
                         week_start: $("#filter-date-range_start").val(),
                         week_end: $("#filter-date-range_end").val(),
                         supplier_id: $("#filter-supplier").val(),
+                        type_fabric_id: $("#filter-type-fabric").val(),
                     };
                 },
             },
@@ -378,7 +391,7 @@ const PageScript = (function () {
             }
         });
 
-        $(document).on("change", "#filter-supplier", function () {
+        $(document).on("change", "#filter-supplier, #filter-type-fabric", function () {
             syncUrl();
             cardgrid.reload();
         });

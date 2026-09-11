@@ -11,6 +11,7 @@ use App\Http\Resources\SablonResource;
 use App\Models\Fabric;
 use App\Models\Sablon;
 use App\Models\Supplier;
+use App\Models\TypeFabric;
 use App\Repositories\SablonRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,15 +36,20 @@ class SablonController extends Controller
                 ? array_filter(array_map('intval', explode(',', request('supplier_id'))))
                 : null;
 
+            $typeFabricIds = request('type_fabric_id')
+                ? array_filter(array_map('intval', explode(',', request('type_fabric_id'))))
+                : null;
+
             [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
-            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo, $supplierIds);
+            $sablons = $this->sablonRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo, $supplierIds, $typeFabricIds);
 
             return SablonResource::collection($sablons);
         }
-        $suppliers  = Supplier::query()->where('is_active', true)->orderBy('name', 'asc')->pluck('name', 'id');
+        $suppliers   = Supplier::query()->where('is_active', true)->orderBy('name', 'asc')->pluck('name', 'id');
+        $typeFabrics = TypeFabric::query()->orderBy('name', 'asc')->pluck('name', 'id');
 
-        return view('sablon.index', compact('suppliers'));
+        return view('sablon.index', compact('suppliers', 'typeFabrics'));
     }
 
     public function create()

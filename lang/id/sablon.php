@@ -9,10 +9,12 @@ return [
     'force_delete_confirm_message' => 'Ini akan menghapus Sablon secara permanen. Lanjutkan?',
 
     'filter'        => [
-        'supplier'      => 'Supplier',
-        'all_suppliers' => 'Semua Konveksi',
-        'date_range'    => 'Rentang Tanggal',
-        'reset'         => 'Reset',
+        'supplier'         => 'Supplier',
+        'all_suppliers'    => 'Semua Konveksi',
+        'type_fabric'      => 'Jenis Kain',
+        'all_type_fabrics' => 'Semua Jenis Kain',
+        'date_range'       => 'Rentang Tanggal',
+        'reset'            => 'Reset',
     ],
 
     'statuses'      => [

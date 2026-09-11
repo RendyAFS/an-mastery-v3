@@ -22,7 +22,8 @@ class SablonRepository
         int $perPage = 12,
         ?\Carbon\Carbon $dateFrom = null,
         ?\Carbon\Carbon $dateTo = null,
-        ?array $supplierIds = null
+        ?array $supplierIds = null,
+        ?array $typeFabricIds = null
     ) {
         $query = Sablon::query()
             ->with([
@@ -57,6 +58,10 @@ class SablonRepository
 
         if (!empty($supplierIds)) {
             $query->whereIn('supplier_id', $supplierIds);
+        }
+
+        if (!empty($typeFabricIds)) {
+            $query->whereIn('type_fabric_id', $typeFabricIds);
         }
 
         if ($dateFrom && $dateTo) {
