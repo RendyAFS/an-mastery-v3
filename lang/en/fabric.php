@@ -4,8 +4,19 @@ return [
     'create_title' => 'Create Fabric',
     'edit_title'   => 'Edit Fabric',
     'filter'       => [
-        'date_range' => 'Date Range',
-        'reset'      => 'Reset',
+        'supplier'         => 'Supplier',
+        'all_suppliers'    => 'All Suppliers',
+        'type_fabric'      => 'Fabric Type',
+        'all_type_fabrics' => 'All Fabric Types',
+        'date_range'       => 'Date Range',
+        'reset'            => 'Reset',
+    ],
+    'card'         => [
+        'incoming' => 'Incoming',
+        'deleted'  => 'Deleted',
+        'restore'  => 'Restore',
+        'delete'   => 'Delete',
+        'edit'     => 'Edit',
     ],
     'fields'             => [
         'supplier'    => 'Konveksi',

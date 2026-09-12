@@ -25,16 +25,29 @@ class FabricController extends Controller
         $this->authorize('fabrics.view');
 
         if (request()->expectsJson()) {
-            $filter = request('filter', 'active');
+            $filter        = request('filter', 'active');
+            $search        = request('search');
+            $perPage       = min((int) request('per_page', 12), 100);
+
+            $supplierIds   = request('supplier_id')
+                ? array_filter(array_map('intval', explode(',', request('supplier_id'))))
+                : null;
+
+            $typeFabricIds = request('type_fabric_id')
+                ? array_filter(array_map('intval', explode(',', request('type_fabric_id'))))
+                : null;
 
             [$dateFrom, $dateTo] = WeekHelper::parseRange(request('week_start'), request('week_end'));
 
-            $fabrics = $this->fabricRepository->getAll($filter, $dateFrom, $dateTo);
+            $fabrics = $this->fabricRepository->getAll($filter, $search, $perPage, $dateFrom, $dateTo, $supplierIds, $typeFabricIds);
 
             return FabricResource::collection($fabrics);
         }
 
-        return view('fabric.index');
+        $suppliers   = Supplier::query()->where('is_active', true)->orderBy('name', 'asc')->pluck('name', 'id');
+        $typeFabrics = TypeFabric::query()->orderBy('name', 'asc')->pluck('name', 'id');
+
+        return view('fabric.index', compact('suppliers', 'typeFabrics'));
     }
 
     public function create()

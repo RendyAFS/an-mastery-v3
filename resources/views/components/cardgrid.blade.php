@@ -13,6 +13,7 @@
     'lengthOptions' => [12, 24, 48],
     'defaultLength' => 12,
     'filtersInline' => false,
+    'gridCols' => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 ])
 
 {{-- Top Bar --}}
@@ -106,7 +107,7 @@
 {{-- Loading Overlay + Card Grid Container --}}
 <div class="relative min-h-40">
     {{-- Skeleton Loading Grid --}}
-    <div id="{{ $id }}-skeleton" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div id="{{ $id }}-skeleton" class="hidden grid {{ $gridCols }} gap-4">
         @for ($i = 0; $i < ($defaultLength ?? 8); $i++)
             <div class="bg-(--color-light) dark:bg-(--color-dark) rounded-xl p-4 shadow flex flex-col gap-3 animate-pulse border border-(--color-gray)/10">
                 <div class="flex items-start justify-between">
@@ -175,7 +176,7 @@
 
     {{-- Card Grid Container --}}
     <div id="{{ $id }}"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 transition duration-200">
+        class="grid {{ $gridCols }} gap-4 transition duration-200">
         {{-- Cards injected by JS --}}
     </div>
 </div>

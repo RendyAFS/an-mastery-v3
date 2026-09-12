@@ -12,7 +12,7 @@
                 <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('fabric.description') }}</p>
             </div>
 
-            <div class="flex flex-wrap items-end gap-3" data-dt-page-filters="fabrics-datatable">
+            <div class="flex flex-wrap items-end gap-3" data-cg-page-filters="fabric-cardgrid">
                 <div>
                     <label for="filter-date-range"
                         class="block text-sm mb-2 font-medium text-(--color-dark) dark:text-(--color-light)">
@@ -37,32 +37,16 @@
             </div>
         </div>
 
-        <x-datatable id="fabrics-datatable" filterId="filter-fabrics">
-            <thead class="border-b">
-                <tr>
-                    <th
-                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        {{ __('fabric.fields.supplier') }}
-                    </th>
-                    <th
-                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        <div class="flex justify-center items-center w-full">
-                            {{ __('fabric.fields.stock_total') }}
-                        </div>
-                    </th>
-                    <th
-                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        {{ __('fabric.fields.notes') }}
-                    </th>
-                    <th
-                        class="bg-(--color-light-gray) dark:bg-(--color-dark-slate) px-6 py-3 text-xs font-medium text-muted-foreground-1 uppercase">
-                        <div class="flex justify-center items-center w-full">
-                            <i data-lucide="settings" class="size-4"></i>
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-(--color-gray) dark:divide-(--color-dark-gray)"></tbody>
-        </x-datatable>
+        <x-cardgrid id="fabric-cardgrid" filterId="filter-fabric" :defaultLength="48" :lengthOptions="[12, 24, 48]" :filtersInline="false"
+            gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <x-slot:filters>
+                <div class="space-y-2">
+                    <x-button-group id="filter-supplier" name="supplier_id" :options="$suppliers" :all-label="__('fabric.filter.all_suppliers')" layout="scroll"
+                        :multiple="true" />
+                    <x-button-group id="filter-type-fabric" name="type_fabric_id" :options="$typeFabrics" :all-label="__('fabric.filter.all_type_fabrics')" layout="scroll"
+                        :multiple="true" />
+                </div>
+            </x-slot:filters>
+        </x-cardgrid>
     </div>
 @endsection

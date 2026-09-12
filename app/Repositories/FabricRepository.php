@@ -6,8 +6,15 @@ use App\Models\Fabric;
 
 class FabricRepository
 {
-    public function getAll($filter = 'active', ?\Carbon\Carbon $dateFrom = null, ?\Carbon\Carbon $dateTo = null)
-    {
+    public function getAll(
+        string $filter = 'active',
+        ?string $search = null,
+        int $perPage = 12,
+        ?\Carbon\Carbon $dateFrom = null,
+        ?\Carbon\Carbon $dateTo = null,
+        ?array $supplierIds = null,
+        ?array $typeFabricIds = null
+    ) {
         $query = Fabric::query()
             ->with([
                 'supplier',
@@ -23,11 +30,29 @@ class FabricRepository
             $query->withTrashed();
         }
 
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%")
+                    ->orWhereHas('supplier', fn($s) => $s->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('typeFabric', fn($t) => $t->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('fabricDetails.colorFabric', fn($c) => $c->where('name', 'like', "%{$search}%"));
+            });
+        }
+
+        if (!empty($supplierIds)) {
+            $query->whereIn('supplier_id', $supplierIds);
+        }
+
+        if (!empty($typeFabricIds)) {
+            $query->whereIn('type_fabric_id', $typeFabricIds);
+        }
+
         if ($dateFrom && $dateTo) {
             $query->whereBetween('date_coming', [$dateFrom, $dateTo]);
         }
 
-        return $query->get();
+        return $query->paginate($perPage);
     }
 
     public function getDataSelect(

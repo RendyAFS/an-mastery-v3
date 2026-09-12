@@ -1,21 +1,34 @@
 import ApiProvider from "@/utils/api-provider";
-import initDatatable from "@/utils/datatable";
+import initCardgrid from "@/utils/cardgrid";
 import trans from "@/utils/trans";
+import filterStorage from "@/utils/filter-storage";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
 import { getPastMonthRange } from "@/utils/week";
 
 const PageScript = (function () {
-    let datatable;
+    let cardgrid;
     const modelName = window.langModels?.Fabric ?? "Fabric";
-
-    const getUrlParams = () => new URLSearchParams(window.location.search);
 
     const getDefaultRange = () => getPastMonthRange(6);
 
     const applyFiltersFromUrl = () => {
-        const params = getUrlParams();
-        const instance = getFlatpickrInstance("filter-date-range");
+        const params = filterStorage.loadFilterParams();
 
+        if (params.get("supplier_id")) {
+            window.setButtonGroupValue(
+                "filter-supplier",
+                params.get("supplier_id"),
+            );
+        }
+
+        if (params.get("type_fabric_id")) {
+            window.setButtonGroupValue(
+                "filter-type-fabric",
+                params.get("type_fabric_id"),
+            );
+        }
+
+        const instance = getFlatpickrInstance("filter-date-range");
         const start = params.get("week_start");
         const end = params.get("week_end");
 
@@ -27,12 +40,21 @@ const PageScript = (function () {
     };
 
     const syncUrl = () => {
-        const params = getUrlParams();
+        const params = new URLSearchParams();
         params.set("week_start", $("#filter-date-range_start").val());
         params.set("week_end", $("#filter-date-range_end").val());
 
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, "", newUrl);
+        const supplierValue = $("#filter-supplier").val();
+        if (supplierValue) {
+            params.set("supplier_id", supplierValue);
+        }
+
+        const typeFabricValue = $("#filter-type-fabric").val();
+        if (typeFabricValue) {
+            params.set("type_fabric_id", typeFabricValue);
+        }
+
+        filterStorage.saveFilterParams(params);
     };
 
     const setDefaultRangeFilters = () => {
@@ -40,214 +62,162 @@ const PageScript = (function () {
         instance.setDate(getDefaultRange(), true);
     };
 
-    const reloadDatatable = () => {
-        datatable.ajax.reload(null, false);
-    };
+    const renderCard = (item) => {
+        const isDeleted = item.deleted_at !== null;
+        const data = item.total_inventory_fabric || {};
 
-    const DataTable = () => {
-        datatable = initDatatable({
-            table: "#fabrics-datatable",
-            filterSelector: "#filter-fabrics",
-            rowClickRoute: (row) => route("fabrics.edit", row.id),
-            ajax: {
-                url: route("fabrics.index"),
-                method: "GET",
-                dataSrc: "data",
-                data: function (d) {
-                    d.filter = $("#filter-fabrics").val();
-                    d.week_start = $("#filter-date-range_start").val();
-                    d.week_end = $("#filter-date-range_end").val();
-                },
-            },
-            columns: [
-                {
-                    data: "supplier.name",
-                    width: "20%",
-                },
-                {
-                    data: "total_inventory_fabric",
-                    width: "50%",
-                    className: "dt-body-center",
-                    render(data) {
-                        if (!data || !data.colors || data.colors.length === 0) {
-                            return `<span class="text-gray-400 text-sm">-</span>`;
-                        }
+        const statusBadgeMap = {
+            ON_PROGRESS: "badge-warning",
+            DONE: "badge-info",
+            DELIVERED: "badge-success",
+            RETURNED: "badge-danger",
+        };
 
-                        const statusBadgeMap = {
-                            ON_PROGRESS: "badge-warning",
-                            DONE: "badge-info",
-                            DELIVERED: "badge-success",
-                            RETURNED: "badge-danger",
-                        };
+        const excessParts = (data.colors || [])
+            .filter((c) => c.excess > 0)
+            .map((c) => `+ ${c.excess} ${c.name}`)
+            .join(" ");
 
-                        const excessParts = data.colors
-                            .filter((c) => c.excess > 0)
-                            .map((c) => `+ ${c.excess} ${c.name}`)
-                            .join(" ");
+        const seriText = excessParts
+            ? `<span class="font-semibold">${data.total_pcs ?? 0} pcs</span> / <strong class="font-bold text-(--color-primary)">${data.seri ?? 0} seri</strong> (${excessParts})`
+            : `<span class="font-semibold">${data.total_pcs ?? 0} pcs</span> total / <strong class="font-bold text-(--color-primary) dark:text-(--color-light-primary)">${data.seri ?? 0} seri</strong>`;
 
-                        const seriText = excessParts
-                            ? `${data.total_pcs} pcs / ${data.seri} seri (${excessParts})`
-                            : `${data.total_pcs} pcs total / ${data.seri} seri`;
+        let rows = (data.colors || [])
+            .map((color) => {
+                const dotColor = color.color || "#9ca3af";
 
-                        let rows = data.colors
-                            .map((color) => {
-                                const dotColor = color.color || "#9ca3af";
-
-                                let badges = (color.statuses || [])
-                                    .filter((s) => s.count > 0)
-                                    .map((s) => {
-                                        const cls =
-                                            statusBadgeMap[s.status] ||
-                                            "badge-primary";
-                                        return `
-                                        <span class="badge ${cls}">
-                                            ${s.label}: ${s.count}
-                                        </span>
-                                    `;
-                                    })
-                                    .join("");
-
-                                if (!badges) {
-                                    badges = `<span class="text-[11px] text-gray-400">${window.langFabric?.no_sablon_yet ?? ""}</span>`;
-                                }
-
-                                return `
-                                <div class="flex items-center justify-between px-3 py-1.5 gap-2">
-                                    <div class="flex items-center gap-2">
-                                        <span class="size-2.5 rounded-full shrink-0" style="background-color: ${dotColor}"></span>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">${color.name ?? "-"}</span>
-                                        <span class="text-xs text-gray-400">(${color.stock} pcs)</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center gap-1 justify-end">
-                                        ${badges}
-                                    </div>
-                                </div>
-                            `;
-                            })
-                            .join("");
-
+                let badges = (color.statuses || [])
+                    .filter((s) => s.count > 0)
+                    .map((s) => {
+                        const cls =
+                            statusBadgeMap[s.status] || "badge-primary";
                         return `
-                            <div class="rounded-xl border border-(--color-gray)/20
-                                dark:border-(--color-dark-gray)/30 overflow-hidden text-left">
+                        <span class="badge ${cls} px-2! py-0.5! text-xs font-semibold rounded-md whitespace-nowrap">
+                            ${s.label}: <strong class="font-bold ml-0.5">${s.count}</strong>
+                        </span>
+                    `;
+                    })
+                    .join("");
 
-                                <div class="px-3 py-2.5 bg-(--color-gray)/10
-                                    dark:bg-(--color-dark-gray)/20">
-                                    <div class="flex justify-between items-center gap-2 mb-1">
-                                        <div class="flex items-center gap-2">
-                                            <span class="flex items-center justify-center size-7 rounded-lg
-                                                bg-(--color-primary)/20
-                                                dark:bg-(--color-primary)/10
-                                                text-(--color-primary)">
-                                                <i data-lucide="layers" class="size-4"></i>
-                                            </span>
+                if (!badges) {
+                    badges = `<span class="text-[11px] text-gray-400 dark:text-gray-500 italic">${window.langFabric?.no_sablon_yet ?? ""}</span>`;
+                }
 
-                                            <div>
-                                                <div class="font-semibold text-sm">
-                                                    ${seriText}
-                                                </div>
+                return `
+                <div class="px-3 py-2 space-y-1.5 hover:bg-(--color-gray)/5 dark:hover:bg-(--color-dark-gray)/10 transition">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="size-2.5 rounded-full shrink-0 ring-1 ring-black/10 dark:ring-white/20" style="background-color: ${dotColor}"></span>
+                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">${color.name ?? "-"}</span>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-600 dark:text-gray-300 bg-(--color-gray)/15 dark:bg-(--color-dark-gray)/30 px-2 py-0.5 rounded-md shrink-0">
+                            ${color.stock} pcs
+                        </span>
+                    </div>
 
-                                                <div class="text-xs text-(--color-dark-gray) dark:text-(--color-light-gray)">
-                                                    ${data.type_fabric ?? "-"}
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        ${badges}
+                    </div>
+                </div>
+            `;
+            })
+            .join("");
 
-                                        <div class="text-[11px] text-(--color-dark) dark:text-(--color-light) font-semibold">
-                                            ${window.langFabric?.incoming_label ?? "Incoming"} : ${data.date_coming ?? "-"}
-                                        </div>
-                                    </div>
-                                </div>
+        return `
+            <div class="relative bg-(--color-light) dark:bg-(--color-dark) rounded-xl shadow p-4 flex flex-col justify-between gap-3 cursor-pointer ${isDeleted ? "opacity-60 border border-dashed border-(--color-red)/40" : ""}">
+                <div class="space-y-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <h3 class="font-bold text-sm text-(--color-dark) dark:text-(--color-light)">
+                                ${item.supplier?.name ?? "-"}
+                            </h3>
+                            <p class="text-xs text-(--color-dark-gray) dark:text-(--color-light-gray)">
+                                ${item.type_fabric?.name ?? data.type_fabric ?? "-"}
+                            </p>
+                        </div>
 
-                                <div class="divide-y divide-(--color-gray)/10
-                                    dark:divide-(--color-dark-gray)/20">
-                                    ${rows}
-                                </div>
-                            </div>
-                        `;
-                    },
-                },
-                {
-                    data: "notes",
-                    width: "25%",
-                    render(data) {
-                        return `
-                            <div class="whitespace-pre-line">
-                                ${data ?? "-"}
-                            </div>
-                        `;
-                    },
-                },
-                {
-                    data: "id",
-                    width: "5%",
-                    orderable: false,
-                    searchable: false,
-                    className: "px-4 py-3 text-center",
-                    render(id, type, row) {
-                        const isDeleted = row.deleted_at !== null;
+                        <div class="text-[11px] font-medium text-(--color-dark-gray) dark:text-(--color-light-gray) shrink-0">
+                            ${window.langFabric?.incoming_label ?? "Incoming"}: ${item.date_coming ?? data.date_coming ?? "-"}
+                        </div>
+                    </div>
 
-                        return `
-                        <div class="hs-dropdown [--auto-close:inside] relative inline-flex">
-                            <button type="button" class="hs-dropdown-toggle inline-flex items-center gap-x-3 px-3 py-2
-                                text-sm font-medium rounded-lg
-                                bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
-                                hover:bg-(--color-gray)/40
-                                cursor-pointer">
-                                <i data-lucide="ellipsis-vertical" class="size-4"></i>
-                            </button>
+                    <div class="rounded-xl border border-(--color-gray)/20 dark:border-(--color-dark-gray)/30 overflow-hidden text-left">
+                        <div class="px-3 py-2 bg-(--color-gray)/10 dark:bg-(--color-dark-gray)/20 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="flex items-center justify-center size-7 rounded-lg
+                                    bg-(--color-primary)/20
+                                    dark:bg-(--color-primary)/10
+                                    text-(--color-primary)">
+                                    <i data-lucide="layers" class="size-4"></i>
+                                </span>
 
-                            <div class="hs-dropdown-menu hs-dropdown-open:opacity-100 mt-2 hidden z-10
-                                transition-[margin,opacity] opacity-0 duration-300
-                                w-auto bg-(--color-light) dark:bg-(--color-dark) dark:border dark:border-(--color-gray)/30
-                                shadow-md rounded-lg p-2"
-                                role="menu" aria-orientation="vertical">
-
-                                <div class="p-1 space-y-0.5">
-
-                                ${
-                                    !isDeleted
-                                        ? `
-                                        <a href="${route("fabrics.edit", id)}"
-                                            class="flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-dark) dark:text-(--color-light) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
-                                            <i data-lucide="square-pen" class="size-4"></i>
-                                            ${window.langUi?.Edit ?? "Edit"}
-                                        </a>
-
-                                        <button type="button" data-fabric-id="${id}"
-                                            class="btn-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
-                                            <i data-lucide="trash-2" class="size-4"></i>
-                                            ${window.langUi?.Delete ?? "Delete"}
-                                        </button>
-                                        `
-                                        : `
-                                        <button type="button" data-fabric-id="${id}"
-                                            class="btn-restore w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-success) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
-                                            <i data-lucide="rotate-ccw" class="size-4"></i>
-                                            ${window.langUi?.Restore ?? "Restore"}
-                                        </button>
-
-                                        <button type="button" data-fabric-id="${id}"
-                                            class="btn-force-delete w-full flex items-center gap-x-2 py-2 px-2 rounded-lg text-sm
-                                            text-(--color-red) hover:bg-(--color-gray)/20
-                                            focus:outline-hidden focus:bg-dropdown-item-focus cursor-pointer">
-                                            <i data-lucide="trash" class="size-4"></i>
-                                            ${window.langUi?.["Force Delete"] ?? "Force Delete"}
-                                        </button>
-                                        `
-                                }
+                                <div class="font-semibold text-sm text-(--color-dark) dark:text-(--color-light)">
+                                    ${seriText}
                                 </div>
                             </div>
                         </div>
-                        `;
-                    },
+
+                        <div class="divide-y divide-(--color-gray)/10 dark:divide-(--color-dark-gray)/20">
+                            ${rows || `<div class="p-3 text-xs text-gray-400 text-center">-</div>`}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-(--color-gray)/20">
+                    <span class="text-xs text-(--color-dark-gray)">
+                        ${item.created_at ?? ""}
+                    </span>
+
+                    <div class="flex items-center gap-1">
+                    ${
+                        !isDeleted
+                            ? `
+                            <a href="${route("fabrics.edit", item.id)}"
+                                class="p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-dark) dark:text-(--color-light) cursor-pointer">
+                                <i data-lucide="square-pen" class="size-4"></i>
+                            </a>
+
+                            <button type="button" data-fabric-id="${item.id}"
+                                class="btn-delete p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
+                                <i data-lucide="trash-2" class="size-4"></i>
+                            </button>
+                        `
+                            : `
+                            <button type="button" data-fabric-id="${item.id}"
+                                class="btn-restore p-1.5 rounded-lg text-xs text-(--color-success) hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
+                                <i data-lucide="rotate-ccw" class="size-3.5"></i> ${window.langFabric?.card?.restore ?? "Restore"}
+                            </button>
+
+                            <button type="button" data-fabric-id="${item.id}"
+                                class="btn-force-delete p-1.5 rounded-lg text-xs text-(--color-red) hover:bg-(--color-gray)/20 flex items-center gap-1 cursor-pointer">
+                                <i data-lucide="trash" class="size-3.5"></i> ${window.langFabric?.card?.delete ?? "Delete"}
+                            </button>
+                        `
+                    }
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    const CardGrid = () => {
+        cardgrid = initCardgrid({
+            containerId: "#fabric-cardgrid",
+            filterSelector: "#filter-fabric",
+            ajax: {
+                url: route("fabrics.index"),
+                data: function () {
+                    return {
+                        week_start: $("#filter-date-range_start").val(),
+                        week_end: $("#filter-date-range_end").val(),
+                        supplier_id: $("#filter-supplier").val(),
+                        type_fabric_id: $("#filter-type-fabric").val(),
+                    };
                 },
-            ],
+            },
+            renderCard,
+            pageLength: 48,
+            cardClickRoute: (row) => route("fabrics.edit", row.id),
         });
     };
 
@@ -268,19 +238,24 @@ const PageScript = (function () {
             handleForceDelete(id);
         });
 
+        $(document).on("change", "#filter-supplier, #filter-type-fabric", function () {
+            syncUrl();
+            cardgrid.reload();
+        });
+
         $(document).on(
             "flatpickr:range-change",
             "#filter-date-range",
             function (e) {
                 if (!e.detail.start || !e.detail.end) return;
                 syncUrl();
-                reloadDatatable();
+                cardgrid.reload();
             },
         );
 
         $(document).on("click", "#filter-week-reset", function () {
             setDefaultRangeFilters();
-            reloadDatatable();
+            cardgrid.reload();
         });
     };
 
@@ -303,7 +278,7 @@ const PageScript = (function () {
                 trans("langCrud", "deleted", { model: modelName }),
             );
 
-            reloadDatatable();
+            cardgrid.reload();
         } catch (error) {
             console.error("Delete fabric error:", error);
         }
@@ -324,7 +299,7 @@ const PageScript = (function () {
                 window.langCustomAlert.success,
                 trans("langCrud", "restored", { model: modelName }),
             );
-            reloadDatatable();
+            cardgrid.reload();
         } catch (error) {
             console.error("Restore fabric error:", error);
         }
@@ -347,7 +322,7 @@ const PageScript = (function () {
                 window.langCustomAlert.success,
                 trans("langCrud", "force_deleted", { model: modelName }),
             );
-            reloadDatatable();
+            cardgrid.reload();
         } catch (error) {
             console.error("Force delete fabric error:", error);
         }
@@ -358,7 +333,7 @@ const PageScript = (function () {
             applyFiltersFromUrl();
             syncUrl();
 
-            DataTable();
+            CardGrid();
             bindEvents();
         },
     };

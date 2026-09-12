@@ -1,11 +1,22 @@
 <?php
 return [
-    'description'  => 'Kelola data kain',
-    'create_title' => 'Tambah Kain',
-    'edit_title'   => 'Ubah Kain',
+    'description'  => 'Kelola inventaris Kain',
+    'create_title' => 'Tambah inventaris Kain',
+    'edit_title'   => 'Ubah inventaris Kain',
     'filter'       => [
-        'date_range' => 'Rentang Tanggal',
-        'reset'      => 'Reset',
+        'supplier'         => 'Konveksi',
+        'all_suppliers'    => 'Semua Konveksi',
+        'type_fabric'      => 'Jenis Kain',
+        'all_type_fabrics' => 'Semua Jenis Kain',
+        'date_range'       => 'Rentang Tanggal',
+        'reset'            => 'Reset',
+    ],
+    'card'         => [
+        'incoming' => 'Masuk',
+        'deleted'  => 'Terhapus',
+        'restore'  => 'Pulihkan',
+        'delete'   => 'Hapus',
+        'edit'     => 'Ubah',
     ],
     'fields'             => [
         'supplier'    => 'Konveksi',

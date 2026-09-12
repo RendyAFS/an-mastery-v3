@@ -4,7 +4,7 @@ return [
     'BillSupplier'         => 'Tagihan Konveksi',
     'ColorFabric'          => 'Warna Kain',
     'Employee'             => 'Karyawan',
-    'Fabric'               => 'Kain',
+    'Fabric'               => 'Inventaris Kain',
     'FabricDetail'         => 'Detail Kain',
     'Gallery'              => 'Galeri',
     'ImageFabric'          => 'Gambar Kain',
