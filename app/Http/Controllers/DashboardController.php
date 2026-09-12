@@ -38,7 +38,10 @@ class DashboardController extends Controller
     {
         $this->authorize('dashboard.view');
 
-        $fabrics = $this->dashboardRepository->getFabricsQuery();
+        $search  = request('search');
+        $perPage = min((int) request('per_page', 6), 50);
+
+        $fabrics = $this->dashboardRepository->getFabricsQuery($search, $perPage);
 
         return FabricResource::collection($fabrics);
     }

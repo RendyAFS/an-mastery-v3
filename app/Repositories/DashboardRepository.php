@@ -166,16 +166,25 @@ class DashboardRepository
             ->get();
     }
 
-    public function getFabricsQuery(int $limit = 20)
+    public function getFabricsQuery(?string $search = null, int $perPage = 6)
     {
         return Fabric::query()
             ->with([
                 'supplier',
                 'typeFabric',
                 'fabricDetails.colorFabric',
+                'fabricDetails.sablonDetails.sablon',
             ])
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('code', 'like', "%{$search}%")
+                        ->orWhere('notes', 'like', "%{$search}%")
+                        ->orWhereHas('supplier', fn($s) => $s->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('typeFabric', fn($t) => $t->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('fabricDetails.colorFabric', fn($c) => $c->where('name', 'like', "%{$search}%"));
+                });
+            })
             ->orderBy('id', 'desc')
-            ->limit($limit)
-            ->get();
+            ->paginate($perPage);
     }
 }
