@@ -107,7 +107,8 @@
             </button>
         </div>
 
-        <div class="relative overflow-visible rounded-lg border border-(--color-gray) dark:border-(--color-slate)">
+        {{-- Desktop Table View (>= md) --}}
+        <div class="hidden md:block relative overflow-visible rounded-lg border border-(--color-gray) dark:border-(--color-slate)">
             <table class="w-full text-sm">
                 <thead>
                     <tr
@@ -125,12 +126,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template x-for="(row, index) in rows" :key="row.uid">
+                    <template x-for="(row, index) in rows" :key="'d-' + row.uid">
                         <tr class="border-t border-(--color-gray) dark:border-(--color-slate)">
                             <td class="px-4 py-3 text-center text-(--color-dark) dark:text-(--color-light)"
                                 x-text="index + 1 + '.'"></td>
 
-                            {{-- Color select, styled like x-select supplier --}}
+                            {{-- Color select --}}
                             <td class="px-4 py-3">
                                 <div class="relative" @click.outside="row.open = false">
                                     <button type="button" @click="row.open = !row.open"
@@ -145,7 +146,7 @@
                                     </button>
 
                                     <div x-show="row.open" x-cloak
-                                        class="absolute z-10 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
+                                        class="absolute z-20 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
                                            shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
                                         <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
                                             <input type="text" x-model="row.search"
@@ -216,6 +217,112 @@
                     </template>
                 </tbody>
             </table>
+        </div>
+
+        {{-- Mobile Cards View (< md) --}}
+        <div class="block md:hidden space-y-3">
+            <template x-for="(row, index) in rows" :key="'m-' + row.uid">
+                <div class="bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 border border-(--color-gray) dark:border-(--color-slate) rounded-xl p-4 space-y-3 relative">
+                    <div class="flex items-center justify-between border-b border-(--color-gray)/40 dark:border-(--color-slate)/40 pb-2">
+                        <span class="text-xs font-bold text-(--color-primary)" x-text="'#' + (index + 1) + ' {{ __('fabric.detail.color') }}'"></span>
+                        <button type="button" x-show="rows.length > 1" @click="removeRow(index)"
+                            class="text-(--color-danger) hover:opacity-80 p-1 cursor-pointer flex items-center gap-1 text-xs">
+                            <i data-lucide="trash-2" class="size-4"></i>
+                            <span>{{ __('fabric.detail.action') }}</span>
+                        </button>
+                    </div>
+
+                    {{-- Color select --}}
+                    <div class="space-y-1">
+                        <label class="block text-xs font-medium text-(--color-dark) dark:text-(--color-light)">
+                            {{ __('fabric.detail.color') }}
+                        </label>
+                        <div class="relative" @click.outside="row.open = false">
+                            <button type="button" @click="row.open = !row.open"
+                                class="flex items-center justify-between w-full px-4 py-2 rounded-lg
+                                   bg-(--color-light) border border-(--color-gray)
+                                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                   dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light) cursor-pointer text-sm">
+                                <span
+                                    x-text="colorName(row.color_fabric_id) || '{{ __('fabric.placeholders.color') }}'"
+                                    :class="!row.color_fabric_id && 'text-(--color-dark-gray)'"></span>
+                                <i data-lucide="chevron-down" class="size-4 text-(--color-dark-gray)"></i>
+                            </button>
+
+                            <div x-show="row.open" x-cloak
+                                class="absolute z-20 mt-1 w-full rounded-lg bg-(--color-light) border border-(--color-gray)
+                                   shadow-lg dark:bg-(--color-dark) dark:border-(--color-slate)">
+                                <div class="p-2 border-b border-(--color-gray) dark:border-(--color-slate)">
+                                    <input type="text" x-model="row.search"
+                                        placeholder="{{ __('fabric.search_placeholders.color') }}"
+                                        class="w-full px-3 py-1.5 text-sm rounded-md bg-(--color-light-gray) border border-(--color-gray)
+                                           text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                           dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
+                                </div>
+
+                                <ul class="max-h-48 overflow-y-auto py-1">
+                                    <template x-if="row.color_fabric_id">
+                                        <li @click="row.color_fabric_id = ''; row.open = false"
+                                            class="px-4 py-2 text-sm text-(--color-danger) hover:bg-(--color-light-gray)
+                                               dark:hover:bg-(--color-dark-slate) cursor-pointer">
+                                            {{ __('fabric.clear_selection') }}
+                                        </li>
+                                    </template>
+
+                                    <template x-for="option in filteredColors(row.search)"
+                                        :key="option.id">
+                                        <div>
+                                            <template x-if="isColorSelectedInOtherRow(option.id, row.uid)">
+                                                <li class="flex items-center justify-between px-4 py-2 text-sm text-(--color-dark-gray) bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 opacity-40 cursor-not-allowed select-none">
+                                                    <span x-text="option.name"></span>
+                                                    <span class="text-xs text-(--color-danger)">{{ __('fabric.color_already_selected') }}</span>
+                                                </li>
+                                            </template>
+                                            <template x-if="!isColorSelectedInOtherRow(option.id, row.uid)">
+                                                <li @click="selectColor(row, option.id)"
+                                                    class="px-4 py-2 text-sm text-(--color-dark) dark:text-(--color-light)
+                                                        hover:bg-(--color-light-gray) dark:hover:bg-(--color-dark-slate) cursor-pointer"
+                                                    x-text="option.name"></li>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <template x-if="filteredColors(row.search).length === 0">
+                                        <li class="px-4 py-2 text-sm text-(--color-dark-gray)">
+                                            {{ __('fabric.no_color_found') }}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Stock & Notes Grid --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-medium text-(--color-dark) dark:text-(--color-light)">
+                                {{ __('fabric.detail.stock') }}
+                            </label>
+                            <input type="number" min="0" x-model="row.stock"
+                                placeholder="{{ __('fabric.detail.stock') }}"
+                                class="px-3 py-2 block w-full text-sm rounded-lg bg-(--color-light) border border-(--color-gray)
+                                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                   dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-medium text-(--color-dark) dark:text-(--color-light)">
+                                {{ __('fabric.detail.notes') }}
+                            </label>
+                            <input type="text" maxlength="255" x-model="row.notes"
+                                placeholder="{{ __('fabric.detail.notes') }}"
+                                class="px-3 py-2 block w-full text-sm rounded-lg bg-(--color-light) border border-(--color-gray)
+                                   text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
+                                   dark:bg-(--color-dark) dark:border-(--color-slate) dark:text-(--color-light)">
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </div>

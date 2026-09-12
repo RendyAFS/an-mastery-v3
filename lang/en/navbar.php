@@ -5,6 +5,7 @@ return [
     'Theme'             => 'Theme',
     'Light'             => 'Light',
     'Dark'              => 'Dark',
+    'Auto'              => 'Auto',
     'Auto (System)'     => 'Auto (System)',
     'Toggle Navigation' => 'Toggle Navigation',
     'Unknown'           => 'Unknown',
