@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'AN Mastery'),
 
-    'version' => env('APP_VERSION', '1.1.7'),
+    'version' => env('APP_VERSION', '1.1.8'),
 
     /*
     |--------------------------------------------------------------------------
