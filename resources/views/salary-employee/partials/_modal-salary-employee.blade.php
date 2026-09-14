@@ -55,11 +55,6 @@
 <template id="additional-fee-row-template">
     <div
         class="additional-fee-row relative grid grid-cols-2 gap-3 p-3 rounded-lg border border-(--color-gray)/40 dark:border-(--color-dark-gray)">
-        <button type="button"
-            class="btn-remove-af-row absolute top-2 inset-e-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
-            <i data-lucide="trash-2" class="size-3.5"></i>
-        </button>
-
         <div class="col-span-1 group relative">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 {{ __('salary-employee.modal.nominal') }}
@@ -94,5 +89,10 @@
                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)"></textarea>
         </div>
+
+        <button type="button"
+            class="btn-remove-af-row absolute top-2 inset-e-2 z-10 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
+            <i data-lucide="trash-2" class="size-3.5 pointer-events-none"></i>
+        </button>
     </div>
 </template>

@@ -93,10 +93,17 @@ class UpsertSalaryEmployeeAction
             }
 
             if ($additionalFee !== null) {
-                $normalized = array_map(fn($af) => [
-                    'nominal' => (float) ($af['nominal'] ?? 0),
-                    'notes'   => (string) ($af['notes'] ?? ''),
-                ], $additionalFee);
+                $normalized = array_map(function ($af) {
+                    $item = [
+                        'nominal' => (float) ($af['nominal'] ?? 0),
+                        'notes'   => (string) ($af['notes'] ?? ''),
+                    ];
+                    if (! empty($af['type'])) {
+                        $item['type'] = (string) $af['type'];
+                    }
+
+                    return $item;
+                }, $additionalFee);
 
                 $salary->additional_fee = $appendAdditionalFee
                     ? array_values(array_merge($salary->additional_fee ?? [], $normalized))

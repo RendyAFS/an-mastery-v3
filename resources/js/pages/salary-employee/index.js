@@ -136,6 +136,12 @@ const PageScript = (function () {
                 </span>
             </div>`;
 
+        const fabricAdjustments = Array.isArray(item.fabric_adjustments)
+            ? item.fabric_adjustments
+            : [];
+
+        const hasSablonData = item.sablon_groups?.length || fabricAdjustments.length;
+
         const groupsHtml = item.sablon_groups?.length
             ? `
                 <div class="space-y-3">
@@ -187,10 +193,32 @@ const PageScript = (function () {
                         .join("")}
                 </div>
             `
-            : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`;
+            : (hasSablonData ? "" : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`);
 
-        const sablonSubtotalHtml = item.sablon_groups?.length
+        const fabricAdjustmentHtml = fabricAdjustments.length
             ? `
+                <div class="space-y-1 my-1">
+                    <ul class="space-y-1 text-xs">
+                        ${fabricAdjustments
+                            .map(
+                                (fa) => `
+                            <li class="flex justify-between text-(--color-dark-gray)">
+                                <span>↳ ${fa.notes || "Penyesuaian Kain"}</span>
+                                <span class="${Number(fa.nominal) < 0 ? "text-(--color-red)" : "text-(--color-success)"}">
+                                    ${Number(fa.nominal) < 0 ? "-" : "+"} Rp ${Math.abs(fa.nominal || 0).toLocaleString("id-ID")}
+                                </span>
+                            </li>
+                        `,
+                            )
+                            .join("")}
+                    </ul>
+                </div>
+            `
+            : "";
+
+        const sablonSubtotalHtml = hasSablonData
+            ? `
+                ${fabricAdjustmentHtml}
                 <div class="flex items-center justify-between text-xs py-2 mt-1 border-y border-(--color-gray)/20">
                     <span class="font-bold">${window.langSalaryEmployee.card.sablon_total ?? "Total Sablon"}</span>
                     <span class="font-bold">${item.fee_formated ?? "Rp 0"}</span>
@@ -304,7 +332,7 @@ const PageScript = (function () {
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
                 <button data-employee-id="${item.employee_id}" data-employee-name="${item.employee?.name ?? "-"}" data-status="${item.status}"
                     data-date="${item.date ?? ""}"
-                    data-additional-fee='${JSON.stringify(additionalFees)}'
+                    data-additional-fee='${JSON.stringify(item.all_additional_fee ?? additionalFees)}'
                     data-previous-fee='${JSON.stringify(previousWeekFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
                     <i data-lucide="wallet" class="size-3.5"></i> ${window.langSalaryEmployee.card.manage}
@@ -313,7 +341,7 @@ const PageScript = (function () {
         </div>`;
     };
 
-    const addAdditionalFeeRow = (nominal = "", notes = "") => {
+    const addAdditionalFeeRow = (nominal = "", notes = "", type = "") => {
         const tpl = document.getElementById("additional-fee-row-template");
         const row = tpl.content.cloneNode(true);
 
@@ -322,6 +350,11 @@ const PageScript = (function () {
 
         const notesInput = row.querySelector(".af-notes");
         notesInput.value = notes;
+
+        const rowEl = row.querySelector(".additional-fee-row");
+        if (rowEl && type) {
+            rowEl.dataset.type = type;
+        }
 
         document.getElementById("additional-fee-rows").append(row);
 
@@ -382,7 +415,7 @@ const PageScript = (function () {
 
             if (existing.length) {
                 existing.forEach((af) =>
-                    addAdditionalFeeRow(af.nominal, af.notes),
+                    addAdditionalFeeRow(af.nominal, af.notes, af.type),
                 );
             } else {
                 addAdditionalFeeRow();
@@ -421,10 +454,18 @@ const PageScript = (function () {
                     const nominalEl = $(this).find(".af-nominal")[0];
                     const nominal = unformatSignedRupiah(nominalEl);
                     const notes = $(this).find(".af-notes").val();
-                    return {
+                    const notesLower = (notes || "").trim().toLowerCase();
+                    const isFabric =
+                        notesLower.startsWith("plus kain") ||
+                        notesLower.startsWith("minus kain");
+                    const item = {
                         nominal,
                         notes: notes || "",
                     };
+                    if (isFabric) {
+                        item.type = "fabric_adjustment";
+                    }
+                    return item;
                 })
                 .get()
                 .filter((af) => af.nominal !== 0 || af.notes !== "");

@@ -64,8 +64,22 @@ class SalaryEmployeeResource extends JsonResource
             })
             ->values();
 
+        $allAdditionalFees = collect($this->additional_fee ?? []);
+
+        $isFabricAdjustment = function ($af) {
+            $notes = mb_strtolower(trim($af['notes'] ?? ''));
+            return str_starts_with($notes, 'plus kain') || str_starts_with($notes, 'minus kain');
+        };
+
+        $fabricAdjustments       = $allAdditionalFees->filter($isFabricAdjustment)->values();
+        $otherAdditionalFees     = $allAdditionalFees->reject($isFabricAdjustment)->values();
+        $fabricAdjustmentTotal   = $fabricAdjustments->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+        $otherAdditionalFeeTotal = $otherAdditionalFees->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+        $additionalFeeTotal      = $allAdditionalFees->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+
+        $totalSablonFee = $sablonFeeTotal + $fabricAdjustmentTotal;
+
         $presenceTotal      = (float) ($this->presence?->total ?? 0);
-        $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
         $memoTotal          = $this->memos->sum('nominal');
         $total              = $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal + $previousWeekFeesTotal;
 
@@ -73,11 +87,22 @@ class SalaryEmployeeResource extends JsonResource
             'id'                            => $this->id,
             'employee_id'                   => $this->employee_id,
             'employee'                      => new EmployeeResource($this->whenLoaded('employee')),
-            'fee'                           => $sablonFeeTotal,
-            'fee_formated'                  => RupiahHelper::format($sablonFeeTotal),
-            'additional_fee'                => $this->additional_fee,
-            'additional_fee_total'          => $additionalFeeTotal,
-            'additional_fee_total_formated' => RupiahHelper::format($additionalFeeTotal),
+            'fee'                           => $totalSablonFee,
+            'fee_formated'                  => RupiahHelper::format($totalSablonFee),
+            'base_sablon_fee'               => $sablonFeeTotal,
+            'base_sablon_fee_formated'      => RupiahHelper::format($sablonFeeTotal),
+            'fabric_adjustments'            => $fabricAdjustments->map(fn($af) => [
+                'nominal'          => (float) ($af['nominal'] ?? 0),
+                'nominal_formated' => ($af['nominal'] < 0 ? '-' : '+') . ' Rp ' . number_format(abs($af['nominal']), 0, ',', '.'),
+                'notes'            => $af['notes'] ?? '',
+                'type'             => $af['type'] ?? 'fabric_adjustment',
+            ])->values(),
+            'fabric_adjustments_total'          => $fabricAdjustmentTotal,
+            'fabric_adjustments_total_formated' => RupiahHelper::format($fabricAdjustmentTotal),
+            'additional_fee'                => $otherAdditionalFees,
+            'additional_fee_total'          => $otherAdditionalFeeTotal,
+            'additional_fee_total_formated' => RupiahHelper::format($otherAdditionalFeeTotal),
+            'all_additional_fee'            => $this->additional_fee ?? [],
             'presence_total'                => $presenceTotal,
             'presence_total_formated'       => RupiahHelper::format($presenceTotal),
             'previous_week_fees'            => $previousWeekFees,

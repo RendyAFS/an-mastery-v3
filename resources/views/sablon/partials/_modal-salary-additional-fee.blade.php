@@ -41,11 +41,6 @@
 <template id="sablon-salary-fee-row-template">
     <div
         class="sablon-salary-fee-row relative grid grid-cols-2 gap-3 p-3 rounded-lg border border-(--color-gray)/40 dark:border-(--color-dark-gray)">
-        <button type="button"
-            class="btn-remove-sablon-salary-fee-row absolute top-2 inset-e-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
-            <i data-lucide="trash-2" class="size-3.5"></i>
-        </button>
-
         <div class="col-span-1">
             <label class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 {{ __('salary-employee.modal.nominal') }}
@@ -80,5 +75,10 @@
                 @endforeach
             </div>
         </div>
+
+        <button type="button"
+            class="btn-remove-sablon-salary-fee-row absolute top-2 inset-e-2 z-10 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-red) cursor-pointer">
+            <i data-lucide="trash-2" class="size-3.5 pointer-events-none"></i>
+        </button>
     </div>
 </template>

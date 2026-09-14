@@ -211,12 +211,6 @@
                         <template x-for="(af, afIndex) in row.additionalFees" :key="af.uid">
                             <div
                                 class="relative grid grid-cols-2 gap-3 p-3 rounded-lg border border-(--color-gray)/40 dark:border-(--color-dark-gray)">
-                                <button type="button" @click="removeAdditionalFeeRow(row, afIndex)"
-                                    x-show="!row.locked && !row.is_paid"
-                                    class="absolute top-2 inset-e-2 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-danger) cursor-pointer">
-                                    <i data-lucide="trash-2" class="size-3.5"></i>
-                                </button>
-
                                 <div class="col-span-1">
                                     <label class="text-xs font-medium text-(--color-dark-gray)">
                                         {{ __('sablon.employee_detail.nominal') }}
@@ -257,6 +251,12 @@
                                         @endforeach
                                     </div>
                                 </div>
+
+                                <button type="button" @click="removeAdditionalFeeRow(row, afIndex)"
+                                    x-show="!row.locked && !row.is_paid"
+                                    class="absolute top-2 inset-e-2 z-10 p-1 rounded-lg hover:bg-(--color-gray)/20 text-(--color-danger) cursor-pointer">
+                                    <i data-lucide="trash-2" class="size-3.5 pointer-events-none"></i>
+                                </button>
                             </div>
                         </template>
 

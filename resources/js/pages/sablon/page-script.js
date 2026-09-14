@@ -37,13 +37,18 @@ const bindSignedRupiahInput = (el) => {
     });
 };
 
-const addSalaryFeeRow = (nominal = "", notes = "") => {
+const addSalaryFeeRow = (nominal = "", notes = "", type = "") => {
     const tpl = document.getElementById("sablon-salary-fee-row-template");
     const row = tpl.content.cloneNode(true);
 
     const nominalInput = row.querySelector(".sf-nominal");
     nominalInput.value = nominal !== "" ? formatSignedRupiah(nominal) : "";
     row.querySelector(".sf-notes").value = notes;
+
+    const rowEl = row.querySelector(".sablon-salary-fee-row");
+    if (rowEl && type) {
+        rowEl.dataset.type = type;
+    }
 
     document.getElementById("sablon-salary-fee-rows").append(row);
 
@@ -77,7 +82,7 @@ const initSalaryFeeModal = () => {
             return;
         }
 
-        const weekOf = new Date().toLocaleDateString("en-CA");
+        const weekOf = dateSablon;
 
         $("#sablon-salary-fee-employee-id").val(employeeId);
         $("#sablon-salary-fee-week-of").val(weekOf);
@@ -96,7 +101,7 @@ const initSalaryFeeModal = () => {
 
             if (data.additional_fee?.length) {
                 data.additional_fee.forEach((af) =>
-                    addSalaryFeeRow(af.nominal, af.notes),
+                    addSalaryFeeRow(af.nominal, af.notes, af.type || ""),
                 );
             } else {
                 addSalaryFeeRow();
@@ -135,7 +140,15 @@ const initSalaryFeeModal = () => {
                 const nominalEl = $(this).find(".sf-nominal")[0];
                 const nominal = unformatSignedRupiah(nominalEl);
                 const notes = $(this).find(".sf-notes").val();
-                return { nominal, notes: notes || "" };
+                const notesLower = (notes || "").trim().toLowerCase();
+                const isFabric =
+                    notesLower.startsWith("plus kain") ||
+                    notesLower.startsWith("minus kain");
+                const item = { nominal, notes: notes || "" };
+                if (isFabric) {
+                    item.type = "fabric_adjustment";
+                }
+                return item;
             })
             .get()
             .filter((af) => af.nominal !== 0 || af.notes !== "");

@@ -137,6 +137,7 @@ class SalaryEmployeeController extends Controller
             'additional_fee'           => 'nullable|array',
             'additional_fee.*.nominal' => 'required|numeric',
             'additional_fee.*.notes'   => 'nullable|string|max:255',
+            'additional_fee.*.type'    => 'nullable|string|max:50',
         ]);
 
         $salary = $this->upsertSalaryEmployeeAction->handleForEmployee(
