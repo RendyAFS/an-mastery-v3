@@ -76,6 +76,18 @@
                                 </ul>
                             </div>
                         </div>
+
+                        <div class="pt-1" x-show="row.employee_id" x-cloak>
+                            <button type="button" @click="openSalaryFeeModal(row, 'main')"
+                                class="inline-flex items-center rounded-lg gap-1
+                                bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
+                                text-[15px] text-(--color-light) hover:text-(--color-light)
+                                transition-all duration-200 cursor-pointer
+                                disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
+                                <i data-lucide="wallet" class="size-3.5"></i>
+                                {{ __('sablon.employee_detail.manage_salary_fee') }}
+                            </button>
+                        </div>
                     </div>
 
                     <div class="space-y-1">
@@ -165,48 +177,21 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="md:col-span-1 flex flex-col items-start justify-end" x-show="row.employee_id"
-                            x-cloak>
-                            <button type="button" @click="openSalaryFeeModal(row, 'main')"
-                                class="inline-flex items-center rounded-lg gap-1
-                                bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
-                                text-[15px] text-(--color-light) hover:text-(--color-light)
-                                transition-all duration-200 cursor-pointer
-                                disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
-                                <i data-lucide="wallet" class="size-3.5"></i>
-                                {{ __('sablon.employee_detail.manage_salary_fee') }}
-                            </button>
-                        </div>
-
-                        <div class="hidden md:block md:col-span-1"></div>
-
-                        <div class="md:col-span-1 pt-1" x-show="row.employee_change_id" x-cloak>
-                            <button type="button" @click="openSalaryFeeModal(row, 'change')"
-                                class="inline-flex items-center rounded-lg gap-1
-                                bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
-                                text-[15px] text-(--color-light) hover:text-(--color-light)
-                                transition-all duration-200 cursor-pointer
-                                disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
-                                <i data-lucide="wallet" class="size-3.5"></i>
-                                {{ __('sablon.employee_detail.manage_salary_fee') }}
-                            </button>
+                            <div class="pt-1" x-show="row.employee_change_id" x-cloak>
+                                <button type="button" @click="openSalaryFeeModal(row, 'change')"
+                                    class="inline-flex items-center rounded-lg gap-1
+                                    bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
+                                    text-[15px] text-(--color-light) hover:text-(--color-light)
+                                    transition-all duration-200 cursor-pointer
+                                    disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
+                                    <i data-lucide="wallet" class="size-3.5"></i>
+                                    {{ __('sablon.employee_detail.manage_salary_fee') }}
+                                </button>
+                            </div>
                         </div>
 
                         <div class="hidden md:block md:col-span-2"></div>
-                    </div>
-
-                    <div class="md:col-span-1 pt-2" x-show="!row.is_change && row.employee_id" x-cloak>
-                        <button type="button" @click="openSalaryFeeModal(row, 'main')"
-                            class="inline-flex items-center rounded-lg gap-1
-                            bg-(--color-warning) hover:bg-(--color-warning)/70 py-2 px-4
-                            text-[15px] text-(--color-light) hover:text-(--color-light)
-                            transition-all duration-200 cursor-pointer
-                            disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
-                            <i data-lucide="wallet" class="size-3.5"></i>
-                            {{ __('sablon.employee_detail.manage_salary_fee') }}
-                        </button>
                     </div>
 
                     <div class="md:col-span-3 space-y-3 pt-3 border-t border-(--color-gray) dark:border-(--color-slate)"
