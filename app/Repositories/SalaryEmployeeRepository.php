@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Helpers\SalaryBonusHelper;
 use App\Models\Memo;
 use App\Models\Presence;
 use App\Models\SablonEmployeeDetail;
@@ -116,6 +117,24 @@ class SalaryEmployeeRepository
                         );
                     }
                 }
+
+                $fees = $s->additional_fee ?? [];
+                $hasBonus = collect($fees)->contains(fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus');
+                if (! $hasBonus) {
+                    $sablonFee = $s->sablonEmployeeDetails
+                        ->filter(fn($d) => $d->salary_employee_id !== null || $d->isEligibleForSalary())
+                        ->sum(fn($d) => $d->countableAmount());
+                    $fabricAdj = collect($fees)
+                        ->filter(fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain')
+                            || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain'))
+                        ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                    $totalSablon = $sablonFee + $fabricAdj;
+                    $bonus = SalaryBonusHelper::calculateBonus($totalSablon);
+                    if ($bonus > 0) {
+                        $fees[] = ['nominal' => $bonus, 'notes' => 'Bonus'];
+                        $s->additional_fee = $fees;
+                    }
+                }
             }
 
             $s->setRelation('presence', $presences->get($key));
@@ -131,10 +150,19 @@ class SalaryEmployeeRepository
                     ->startOfWeek(Carbon::MONDAY)
                     ->toDateString();
 
+                $bonus = SalaryBonusHelper::calculateBonus($totalFee);
+                $additionalFee = [];
+                if ($bonus > 0) {
+                    $additionalFee[] = [
+                        'nominal' => $bonus,
+                        'notes'   => 'Bonus',
+                    ];
+                }
+
                 $salary = new SalaryEmployee([
                     'employee_id'    => $first->employee_id,
                     'fee'            => $totalFee,
-                    'additional_fee' => [],
+                    'additional_fee' => $additionalFee,
                     'status'         => StatusSalaryEmployeeEnum::PENDING,
                     'date'           => $weekStart,
                     'notes'          => null,
@@ -244,7 +272,69 @@ class SalaryEmployeeRepository
         $pendingSalaries->each(function ($p) use ($pendingPresences) {
             $key = $p->employee_id . '|' . Carbon::parse($p->date)->toDateString();
             $p->setRelation('presence', $pendingPresences->get($key));
+
+            $fees = $p->additional_fee ?? [];
+            $hasBonus = collect($fees)->contains(fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus');
+            if (! $hasBonus) {
+                $sablonFee = $p->sablonEmployeeDetails
+                    ->filter(fn($d) => $d->salary_employee_id !== null || $d->isEligibleForSalary())
+                    ->sum(fn($d) => $d->countableAmount());
+                $fabricAdj = collect($fees)
+                    ->filter(fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain')
+                        || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain'))
+                    ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                $totalSablon = $sablonFee + $fabricAdj;
+                $bonus = SalaryBonusHelper::calculateBonus($totalSablon);
+                if ($bonus > 0) {
+                    $fees[] = ['nominal' => $bonus, 'notes' => 'Bonus'];
+                    $p->additional_fee = $fees;
+                }
+            }
         });
+
+        $existingPendingKeys = $pendingSalaries
+            ->map(fn($p) => $p->employee_id . '|' . Carbon::parse($p->date)->toDateString())
+            ->all();
+
+        $unlinkedPriorDetails = SablonEmployeeDetail::query()
+            ->whereNull('salary_employee_id')
+            ->whereIn('employee_id', $employeeIds)
+            ->eligibleForSalary()
+            ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
+            ->get()
+            ->filter(fn($d) => $d->weekAnchorDate() && Carbon::parse($d->weekAnchorDate())->toDateString() < $start)
+            ->groupBy(function ($d) {
+                return $d->employee_id . '|' . Carbon::parse($d->weekAnchorDate())->startOfWeek(Carbon::MONDAY)->toDateString();
+            });
+
+        foreach ($unlinkedPriorDetails as $key => $details) {
+            if (in_array($key, $existingPendingKeys)) {
+                continue;
+            }
+            [$empId, $weekStart] = explode('|', $key);
+            $totalFee = $details->sum(fn(SablonEmployeeDetail $d) => $d->countableAmount());
+            $bonus = SalaryBonusHelper::calculateBonus($totalFee);
+            $additionalFee = [];
+            if ($bonus > 0) {
+                $additionalFee[] = ['nominal' => $bonus, 'notes' => 'Bonus'];
+            }
+
+            $first = $details->first();
+            $virtualPrev = new SalaryEmployee([
+                'employee_id'    => (int) $empId,
+                'fee'            => $totalFee,
+                'additional_fee' => $additionalFee,
+                'status'         => StatusSalaryEmployeeEnum::PENDING,
+                'date'           => $weekStart,
+                'notes'          => null,
+            ]);
+            $virtualPrev->setRelation('employee', $first?->employee);
+            $virtualPrev->setRelation('sablonEmployeeDetails', $details);
+            $virtualPrev->setRelation('memos', collect());
+            $virtualPrev->setRelation('presence', $pendingPresences->get($key));
+
+            $pendingSalaries->push($virtualPrev);
+        }
 
         $pendingByEmployee = $pendingSalaries->groupBy('employee_id');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\SalaryEmployee\UpsertSalaryEmployeeAction;
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Helpers\SalaryBonusHelper;
 use App\Helpers\WeekHelper;
 use App\Http\Resources\SalaryEmployeeResource;
 use App\Models\Employee;
@@ -64,15 +65,32 @@ class SalaryEmployeeController extends Controller
         $pairs = collect()
             ->merge(
                 SablonEmployeeDetail::query()
-                    ->whereHas('sablon', fn($q) => $q->whereBetween('date_sablon', [
-                        $start->toDateString(),
-                        $end->toDateString(),
-                    ]))
+                    ->whereNull('salary_employee_id')
+                    ->eligibleForSalary()
                     ->with('sablon')
                     ->get()
+                    ->filter(fn(SablonEmployeeDetail $d) => $d->weekAnchorDate() !== null)
                     ->map(fn(SablonEmployeeDetail $d) => $d->employee_id . '|' . Carbon::parse(
-                        $d->weekAnchorDate() ?? $d->sablon?->date_sablon
+                        $d->weekAnchorDate()
                     )->startOfWeek(Carbon::MONDAY)->toDateString())
+            )
+            ->merge(
+                SablonEmployeeDetail::query()
+                    ->inWeek($start->toDateString(), $end->toDateString())
+                    ->with('sablon')
+                    ->get()
+                    ->filter(fn(SablonEmployeeDetail $d) => $d->weekAnchorDate() !== null)
+                    ->map(fn(SablonEmployeeDetail $d) => $d->employee_id . '|' . Carbon::parse(
+                        $d->weekAnchorDate()
+                    )->startOfWeek(Carbon::MONDAY)->toDateString())
+            )
+            ->merge(
+                Memo::query()
+                    ->whereNull('salary_employee_id')
+                    ->eligibleForSalary()
+                    ->get()
+                    ->map(fn(Memo $m) => $m->employee_id . '|' . Carbon::parse($m->date)
+                        ->startOfWeek(Carbon::MONDAY)->toDateString())
             )
             ->merge(
                 Memo::query()
@@ -87,6 +105,12 @@ class SalaryEmployeeController extends Controller
                     ->get()
                     ->map(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)
                         ->startOfWeek(Carbon::MONDAY)->toDateString())
+            )
+            ->merge(
+                SalaryEmployee::query()
+                    ->where('status', StatusSalaryEmployeeEnum::PENDING)
+                    ->get()
+                    ->map(fn($s) => $s->employee_id . '|' . Carbon::parse($s->date)->toDateString())
             )
             ->merge($realignedPairs)
             ->unique()
@@ -121,9 +145,42 @@ class SalaryEmployeeController extends Controller
             ->where('date', $start)
             ->first();
 
+        $fees = $salary->additional_fee ?? [];
+        $status = $salary->status?->value ?? StatusSalaryEmployeeEnum::PENDING->value;
+
+        if ($status !== StatusSalaryEmployeeEnum::PAID->value) {
+            $hasBonus = collect($fees)->contains(fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus');
+            if (! $hasBonus) {
+                $sablonFee = 0;
+                if ($salary) {
+                    $salary->loadMissing('sablonEmployeeDetails');
+                    $sablonFee = $salary->sablonEmployeeDetails
+                        ->filter(fn($d) => $d->salary_employee_id !== null || $d->isEligibleForSalary())
+                        ->sum(fn($d) => $d->countableAmount());
+                } else {
+                    $end = Carbon::parse($validated['week_of'])->endOfWeek(Carbon::SUNDAY)->toDateString();
+                    $sablonFee = SablonEmployeeDetail::query()
+                        ->where('employee_id', $employee->id)
+                        ->whereNull('salary_employee_id')
+                        ->eligibleForSalary()
+                        ->inWeek($start, $end)
+                        ->get()
+                        ->sum(fn($d) => $d->countableAmount());
+                }
+
+                $isFabric = fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain')
+                    || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain');
+                $fabricAdj = collect($fees)->filter($isFabric)->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                $bonus = SalaryBonusHelper::calculateBonus($sablonFee + $fabricAdj);
+                if ($bonus > 0) {
+                    $fees[] = ['nominal' => $bonus, 'notes' => 'Bonus'];
+                }
+            }
+        }
+
         return response()->json([
-            'additional_fee' => $salary->additional_fee ?? [],
-            'status'         => $salary->status?->value ?? StatusSalaryEmployeeEnum::PENDING->value,
+            'additional_fee' => $fees,
+            'status'         => $status,
         ]);
     }
 

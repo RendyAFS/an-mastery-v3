@@ -74,6 +74,19 @@ const bindNotesManualEdit = (el) => {
     });
 };
 
+const calculateBonus = (totalSablon) => {
+    const amount = Number(totalSablon) || 0;
+    const tiers = window.salaryBonusTiers || [];
+
+    for (const tier of tiers) {
+        if (amount >= Number(tier.min)) {
+            return Number(tier.bonus);
+        }
+    }
+
+    return 0;
+};
+
 const PageScript = (function () {
     let cardgrid;
     const modelName = window.langModels?.SalaryEmployee ?? "Salary Employee";
@@ -345,6 +358,7 @@ const PageScript = (function () {
             <div class="flex items-center justify-end gap-1 pt-2 border-t border-(--color-gray)/20">
                 <button data-employee-id="${item.employee_id}" data-employee-name="${item.employee?.name ?? "-"}" data-status="${item.status}"
                     data-date="${item.date ?? ""}"
+                    data-fee="${item.fee ?? 0}"
                     data-additional-fee='${JSON.stringify(item.all_additional_fee ?? additionalFees)}'
                     data-previous-fee='${JSON.stringify(previousWeekFees)}'
                     class="btn-salary-employee p-1.5 rounded-lg hover:bg-(--color-gray)/20 text-xs flex items-center gap-1 cursor-pointer">
@@ -400,7 +414,8 @@ const PageScript = (function () {
             const employeeName = $(this).data("employee-name");
             const status = $(this).data("status");
             const date = $(this).data("date");
-            const existing = $(this).data("additional-fee") || [];
+            const totalSablon = Number($(this).data("fee") || 0);
+            let existing = $(this).data("additional-fee") || [];
             const existingPreviousFee = $(this).data("previous-fee") || [];
 
             $("#salary-employee-id").val(employeeId);
@@ -425,6 +440,23 @@ const PageScript = (function () {
 
             const instance = HSSelect.getInstance("#modal-salary-status");
             instance.setValue(status);
+
+            if (status !== "PAID") {
+                const bonusAmount = calculateBonus(totalSablon);
+                if (bonusAmount > 0) {
+                    const bonusItem = existing.find(
+                        (af) => (af.notes || "").trim().toLowerCase() === "bonus",
+                    );
+                    if (!bonusItem) {
+                        existing = [
+                            ...existing,
+                            { nominal: bonusAmount, notes: "Bonus" },
+                        ];
+                    } else if (!bonusItem.nominal) {
+                        bonusItem.nominal = bonusAmount;
+                    }
+                }
+            }
 
             if (existing.length) {
                 existing.forEach((af) =>

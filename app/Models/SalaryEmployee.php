@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Helpers\SalaryBonusHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,7 +58,19 @@ class SalaryEmployee extends Model
             ->sum(fn($detail) => $detail->countableAmount());
 
         $presenceTotal = (float) ($this->presence?->total ?? 0);
-        $additionalFeeTotal = collect($this->additional_fee ?? [])->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+        $fees = $this->additional_fee ?? [];
+        $hasBonus = collect($fees)->contains(fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus');
+
+        $bonusToAdd = 0;
+        if (! $hasBonus && $this->status !== StatusSalaryEmployeeEnum::PAID) {
+            $isFabric = fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain')
+                || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain');
+            $fabricAdjustmentTotal = collect($fees)->filter($isFabric)->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+            $totalSablon = $sablonFeeTotal + $fabricAdjustmentTotal;
+            $bonusToAdd = SalaryBonusHelper::calculateBonus($totalSablon);
+        }
+
+        $additionalFeeTotal = collect($fees)->sum(fn($af) => (float) ($af['nominal'] ?? 0)) + $bonusToAdd;
         $memoTotal = $this->memos->sum('nominal');
 
         return $sablonFeeTotal + $presenceTotal + $additionalFeeTotal + $memoTotal;

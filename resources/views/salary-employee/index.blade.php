@@ -1,6 +1,9 @@
 @extends('layouts.main', ['title' => __('models.SalaryEmployee')])
 
 @push('scripts')
+    <script>
+        window.salaryBonusTiers = @json(\App\Helpers\SalaryBonusHelper::getTiers());
+    </script>
     @vite('resources/js/pages/salary-employee/index.js')
 @endpush
 

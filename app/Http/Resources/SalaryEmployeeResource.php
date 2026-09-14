@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\StatusSalaryEmployeeEnum;
 use App\Helpers\RupiahHelper;
+use App\Helpers\SalaryBonusHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -80,13 +82,27 @@ class SalaryEmployeeResource extends JsonResource
             return str_starts_with($notes, 'plus kain') || str_starts_with($notes, 'minus kain');
         };
 
-        $fabricAdjustments       = $allAdditionalFees->filter($isFabricAdjustment)->values();
+        $fabricAdjustments     = $allAdditionalFees->filter($isFabricAdjustment)->values();
+        $fabricAdjustmentTotal = $fabricAdjustments->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+        $totalSablonFee        = $sablonFeeTotal + $fabricAdjustmentTotal;
+
+        $hasBonus = $allAdditionalFees->contains(
+            fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus'
+        );
+
+        if (! $hasBonus && $this->status !== StatusSalaryEmployeeEnum::PAID) {
+            $bonus = SalaryBonusHelper::calculateBonus($totalSablonFee);
+            if ($bonus > 0) {
+                $allAdditionalFees->push([
+                    'nominal' => $bonus,
+                    'notes'   => 'Bonus',
+                ]);
+            }
+        }
+
         $otherAdditionalFees     = $allAdditionalFees->reject($isFabricAdjustment)->values();
-        $fabricAdjustmentTotal   = $fabricAdjustments->sum(fn($af) => (float) ($af['nominal'] ?? 0));
         $otherAdditionalFeeTotal = $otherAdditionalFees->sum(fn($af) => (float) ($af['nominal'] ?? 0));
         $additionalFeeTotal      = $allAdditionalFees->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-
-        $totalSablonFee = $sablonFeeTotal + $fabricAdjustmentTotal;
 
         $presenceTotal      = (float) ($this->presence?->total ?? 0);
         $memoTotal          = $this->memos->sum('nominal');
@@ -111,7 +127,7 @@ class SalaryEmployeeResource extends JsonResource
             'additional_fee'                => $otherAdditionalFees,
             'additional_fee_total'          => $otherAdditionalFeeTotal,
             'additional_fee_total_formated' => RupiahHelper::format($otherAdditionalFeeTotal),
-            'all_additional_fee'            => $this->additional_fee ?? [],
+            'all_additional_fee'            => $allAdditionalFees->values()->all(),
             'presence_total'                => $presenceTotal,
             'presence_total_formated'       => RupiahHelper::format($presenceTotal),
             'previous_week_fees'            => $previousWeekFees,

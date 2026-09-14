@@ -3,6 +3,7 @@
 namespace App\Actions\SalaryEmployee;
 
 use App\Enums\StatusSalaryEmployeeEnum;
+use App\Helpers\SalaryBonusHelper;
 use App\Models\Memo;
 use App\Models\Presence;
 use App\Models\Sablon;
@@ -76,6 +77,43 @@ class UpsertSalaryEmployeeAction
                 ->value('total') ?? 0);
 
             $requestedStatus = $status !== null ? StatusSalaryEmployeeEnum::from($status) : null;
+
+            if ($additionalFee === null && ($requestedStatus ?? $salary->status) !== StatusSalaryEmployeeEnum::PAID) {
+                $currentAdditionalFee = $salary->additional_fee ?? [];
+
+                $isFabric = fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain')
+                    || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain');
+
+                $fabricAdj = collect($currentAdditionalFee)->filter($isFabric)->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                $totalSablon = $totalFee + $fabricAdj;
+                $expectedBonus = SalaryBonusHelper::calculateBonus($totalSablon);
+
+                $bonusIndex = null;
+                foreach ($currentAdditionalFee as $idx => $af) {
+                    if (mb_strtolower(trim($af['notes'] ?? '')) === 'bonus') {
+                        $bonusIndex = $idx;
+                        break;
+                    }
+                }
+
+                if ($expectedBonus > 0) {
+                    if ($bonusIndex !== null) {
+                        $currentAdditionalFee[$bonusIndex]['nominal'] = $expectedBonus;
+                    } else {
+                        $currentAdditionalFee[] = [
+                            'nominal' => $expectedBonus,
+                            'notes'   => 'Bonus',
+                        ];
+                    }
+                } elseif ($bonusIndex !== null) {
+                    if (in_array((int) ($currentAdditionalFee[$bonusIndex]['nominal'] ?? 0), [10000, 15000, 20000, 25000])) {
+                        unset($currentAdditionalFee[$bonusIndex]);
+                        $currentAdditionalFee = array_values($currentAdditionalFee);
+                    }
+                }
+
+                $salary->additional_fee = $currentAdditionalFee;
+            }
 
             $additionalFeeSum = collect($additionalFee ?? ($salary->additional_fee ?? []))
                 ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
@@ -201,10 +239,28 @@ class UpsertSalaryEmployeeAction
             ->where('employee_id', $salary->employee_id)
             ->where('status', StatusSalaryEmployeeEnum::PENDING)
             ->where('date', '<', $salary->date)
+            ->with('sablonEmployeeDetails')
             ->get();
 
         foreach ($previousPending as $prev) {
             $prev->status = StatusSalaryEmployeeEnum::PAID;
+
+            $fees = $prev->additional_fee ?? [];
+            $hasBonus = collect($fees)->contains(fn($af) => mb_strtolower(trim($af['notes'] ?? '')) === 'bonus');
+            if (! $hasBonus) {
+                $sablonFee = $prev->sablonEmployeeDetails
+                    ->filter(fn($d) => $d->salary_employee_id !== null || $d->isEligibleForSalary())
+                    ->sum(fn($d) => $d->countableAmount());
+                $fabricAdj = collect($fees)
+                    ->filter(fn($af) => str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'plus kain') || str_starts_with(mb_strtolower(trim($af['notes'] ?? '')), 'minus kain'))
+                    ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                $bonus = SalaryBonusHelper::calculateBonus($sablonFee + $fabricAdj);
+                if ($bonus > 0) {
+                    $fees[] = ['nominal' => $bonus, 'notes' => 'Bonus'];
+                    $prev->additional_fee = $fees;
+                }
+            }
+
             $prev->save();
 
             SablonEmployeeDetail::where('salary_employee_id', $prev->id)
