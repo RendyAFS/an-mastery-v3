@@ -51,6 +51,16 @@ const addSalaryFeeRow = (nominal = "", notes = "") => {
     bindSignedRupiahInput(nominalInput);
 };
 
+const handleQuickNotes = (btn) => {
+    const target =
+        btn.closest(".group")?.querySelector(".sf-notes") ||
+        btn.closest(".sablon-salary-fee-row")?.querySelector(".sf-notes");
+    if (!target) return;
+
+    target.value = btn.dataset.quickNotes;
+    target.dispatchEvent(new Event("input", { bubbles: true }));
+};
+
 const initSalaryFeeModal = () => {
     const modelName = window.langModels?.SalaryEmployee ?? "Salary Employee";
 
@@ -106,6 +116,11 @@ const initSalaryFeeModal = () => {
 
     $(document).on("click", ".btn-remove-sablon-salary-fee-row", function () {
         $(this).closest(".sablon-salary-fee-row").remove();
+    });
+
+    $(document).on("mousedown", "[data-quick-notes]", function (e) {
+        e.preventDefault();
+        handleQuickNotes(this);
     });
 
     $(document).on("click", "#btn-save-sablon-salary-fee", async function () {

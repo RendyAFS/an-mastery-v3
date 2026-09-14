@@ -97,6 +97,10 @@ return [
         'nominal'                     => 'Nominal',
         'notes'                       => 'Catatan',
         'notes_placeholder'           => 'cth. Bon Kain',
+        'quick_notes'                 => [
+            'Plus kain ',
+            'Minus kain ',
+        ],
         'manage_salary_fee'           => 'Biaya Tambahan',
         'salary_fee_modal_title'      => 'Biaya Tambahan',
         'pick_date_first'             => 'Pilih tanggal sablon terlebih dahulu',
