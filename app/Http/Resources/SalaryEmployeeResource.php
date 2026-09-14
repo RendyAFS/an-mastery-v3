@@ -26,40 +26,49 @@ class SalaryEmployeeResource extends JsonResource
             ->filter(fn($detail) => $detail->salary_employee_id !== null || $detail->isEligibleForSalary())
             ->sum(fn($detail) => $detail->countableAmount());
 
-        $sablonGroups = $this->sablonEmployeeDetails
-            ->groupBy(fn($detail) => $detail->sablon?->supplier?->name ?? '-')
-            ->map(function ($details, $supplierName) {
+        $sablonDetails = $this->sablonEmployeeDetails
+            ->sortBy(fn($detail) => [$detail->created_at?->timestamp ?? 0, $detail->id])
+            ->values()
+            ->map(function ($detail) {
+                $isCounted = $detail->salary_employee_id !== null || $detail->isEligibleForSalary();
+                $detailFee = $isCounted ? $detail->countableAmount() : 0;
+
+                $originalFee = $detailFee;
+                $deductionFee = 0;
+
+                if ($detail->settlement_of_id && $detail->settlementOf) {
+                    $originalFee = (float) $detail->settlementOf->fee;
+                    $deductionFee = collect($detail->settlementOf->additional_fee ?? [])
+                        ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
+                }
+
+                return [
+                    'id'                     => $detail->id,
+                    'supplier_name'          => $detail->sablon?->supplier?->name ?? '-',
+                    'image_fabric_name'      => $detail->sablon?->imageFabric?->name ?? '-',
+                    'layers'                 => $detail->layers,
+                    'fee'                    => $detailFee,
+                    'fee_formated'           => RupiahHelper::format($detailFee),
+                    'original_fee'           => $originalFee,
+                    'original_fee_formated' => RupiahHelper::format($originalFee),
+                    'deduction_fee'          => $deductionFee,
+                    'deduction_fee_formated' => RupiahHelper::format(abs($deductionFee)),
+                    'is_eligible'            => $isCounted,
+                    'is_bon'                 => (bool) $detail->is_bon,
+                    'is_bon_settled'         => (bool) $detail->is_settled,
+                    'is_bon_settlement'      => (bool) $detail->settlement_of_id,
+                    'status'                 => $detail->sablon?->status ? __('enums.status_sablon.' . $detail->sablon->status->value) : null,
+                    'created_at'             => $detail->created_at?->format('Y-m-d H:i:s'),
+                ];
+            })
+            ->values();
+
+        $sablonGroups = $sablonDetails
+            ->groupBy('supplier_name')
+            ->map(function ($items, $supplierName) {
                 return [
                     'supplier_name' => $supplierName,
-                    'items' => $details->map(function ($detail) {
-                        $isCounted = $detail->salary_employee_id !== null || $detail->isEligibleForSalary();
-                        $detailFee = $isCounted ? $detail->countableAmount() : 0;
-
-                        $originalFee = $detailFee;
-                        $deductionFee = 0;
-
-                        if ($detail->settlement_of_id && $detail->settlementOf) {
-                            $originalFee = (float) $detail->settlementOf->fee;
-                            $deductionFee = collect($detail->settlementOf->additional_fee ?? [])
-                                ->sum(fn($af) => (float) ($af['nominal'] ?? 0));
-                        }
-
-                        return [
-                            'image_fabric_name'      => $detail->sablon?->imageFabric?->name ?? '-',
-                            'layers'                 => $detail->layers,
-                            'fee'                    => $detailFee,
-                            'fee_formated'           => RupiahHelper::format($detailFee),
-                            'original_fee'           => $originalFee,
-                            'original_fee_formated' => RupiahHelper::format($originalFee),
-                            'deduction_fee'          => $deductionFee,
-                            'deduction_fee_formated' => RupiahHelper::format(abs($deductionFee)),
-                            'is_eligible'            => $isCounted,
-                            'is_bon'                 => (bool) $detail->is_bon,
-                            'is_bon_settled'         => (bool) $detail->is_settled,
-                            'is_bon_settlement'      => (bool) $detail->settlement_of_id,
-                            'status'                 => $detail->sablon?->status ? __('enums.status_sablon.' . $detail->sablon->status->value) : null,
-                        ];
-                    })->values(),
+                    'items'         => $items->values(),
                 ];
             })
             ->values();
@@ -115,6 +124,7 @@ class SalaryEmployeeResource extends JsonResource
             'notes'                         => $this->notes,
             'created_at'                    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'                    => $this->updated_at?->format('Y-m-d H:i:s'),
+            'sablon_details'                => $sablonDetails,
             'sablon_groups'                 => $sablonGroups,
             'memos'                         => $this->memos->map(fn($m) => [
                 'id'               => $m->id,

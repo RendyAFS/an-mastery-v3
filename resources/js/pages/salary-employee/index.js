@@ -140,60 +140,73 @@ const PageScript = (function () {
             ? item.fabric_adjustments
             : [];
 
-        const hasSablonData = item.sablon_groups?.length || fabricAdjustments.length;
+        const sablonDetails = Array.isArray(item.sablon_details)
+            ? [...item.sablon_details]
+            : Array.isArray(item.sablon_groups)
+              ? item.sablon_groups.flatMap((g) =>
+                    (g.items || []).map((i) => ({
+                        ...i,
+                        supplier_name: i.supplier_name || g.supplier_name,
+                    })),
+                )
+              : [];
 
-        const groupsHtml = item.sablon_groups?.length
+        sablonDetails.sort((a, b) => {
+            const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+            const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+            return timeA !== timeB ? timeA - timeB : (a.id || 0) - (b.id || 0);
+        });
+
+        const hasSablonData = sablonDetails.length || fabricAdjustments.length;
+
+        const groupsHtml = sablonDetails.length
             ? `
-                <div class="space-y-3">
-                    ${item.sablon_groups
-                        .map(
-                            (group) => `
-                            <div class="space-y-1">
-                                <p class="text-xs font-semibold">${group.supplier_name}</p>
-                                <ul class="space-y-1 text-xs">
-                                    ${group.items
-                                        .map(
-                                            (i) => `
-                                                <li class="flex justify-between">
-                                                    <span>
-                                                        <span class="${i.is_eligible ? "" : "opacity-40"}">
-                                                            • ${i.image_fabric_name} • ${i.layers ?? 0} Layer
-                                                            ${
-                                                                i.is_bon
-                                                                    ? i.is_bon_settled
-                                                                        ? `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_advance_label})</span>`
-                                                                        : `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_label})</span>`
-                                                                    : ""
-                                                            }
-                                                                ${
-                                                                    i.is_bon_settlement
-                                                                        ? `<span class="text-[10px] text-(--color-primary) font-bold">(${window.langSalaryEmployee.card.bon_settlement_label})</span>`
-                                                                        : ""
-                                                                }
-                                                        </span>
-                                                        ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
-                                                    </span>
-                                                    <span class="flex flex-col items-end ${i.is_eligible ? "" : "opacity-40"}">
+                <div class="space-y-2">
+                    <ul class="space-y-2 text-xs">
+                        ${sablonDetails
+                            .map(
+                                (i) => `
+                                    <li class="space-y-0.5">
+                                        ${i.supplier_name && i.supplier_name !== "-" ? `<p class="text-xs font-semibold">${i.supplier_name}</p>` : ""}
+                                        <div class="flex justify-between">
+                                            <span>
+                                                <span class="${i.is_eligible ? "" : "opacity-40"}">
+                                                    • ${i.image_fabric_name} • ${i.layers ?? 0} Layer
+                                                    ${
+                                                        i.is_bon
+                                                            ? i.is_bon_settled
+                                                                ? `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_advance_label})</span>`
+                                                                : `<span class="text-[10px] text-(--color-danger) font-bold">(${window.langSalaryEmployee.card.bon_label})</span>`
+                                                            : ""
+                                                    }
                                                         ${
-                                                            i.is_bon_settlement &&
-                                                            i.deduction_fee != 0
-                                                                ? `<span class="text-[12px] text-(--color-red)">${i.original_fee_formated} - ${i.deduction_fee_formated}</span>`
+                                                            i.is_bon_settlement
+                                                                ? `<span class="text-[10px] text-(--color-primary) font-bold">(${window.langSalaryEmployee.card.bon_settlement_label})</span>`
                                                                 : ""
                                                         }
-                                                        <span class="font-medium">${i.fee_formated}</span>
-                                                    </span>
-                                                </li>
-                                            `,
-                                        )
-                                        .join("")}
-                                </ul>
-                            </div>
-                        `,
-                        )
-                        .join("")}
+                                                </span>
+                                                ${i.is_eligible ? "" : `<span class="text-[10px] text-(--color-warning) font-semibold">(${i.status})</span>`}
+                                            </span>
+                                            <span class="flex flex-col items-end ${i.is_eligible ? "" : "opacity-40"}">
+                                                ${
+                                                    i.is_bon_settlement &&
+                                                    i.deduction_fee != 0
+                                                        ? `<span class="text-[12px] text-(--color-red)">${i.original_fee_formated} - ${i.deduction_fee_formated}</span>`
+                                                        : ""
+                                                }
+                                                <span class="font-medium">${i.fee_formated}</span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                `,
+                            )
+                            .join("")}
+                    </ul>
                 </div>
             `
-            : (hasSablonData ? "" : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`);
+            : hasSablonData
+              ? ""
+              : `<p class="text-xs text-(--color-dark-gray)">${window.langSalaryEmployee.card.no_sablon_data}</p>`;
 
         const fabricAdjustmentHtml = fabricAdjustments.length
             ? `
