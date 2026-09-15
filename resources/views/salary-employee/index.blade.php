@@ -21,7 +21,7 @@
                         class="block text-sm mb-2 font-medium text-(--color-dark) dark:text-(--color-light)">
                         {{ __('salary-employee.filter.date_range') }}
                     </label>
-                    <x-datepicker id="filter-date-range" name="date_range" mode="range"
+                    <x-datepicker id="filter-date-range" name="date_range" mode="range" weekRange="true"
                         bgClass="bg-(--color-light) dark:bg-(--color-dark)" roundedClass="rounded-lg" />
                 </div>
 
