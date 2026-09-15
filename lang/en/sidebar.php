@@ -27,4 +27,5 @@ return [
     'Sablon'              => 'Sablon',
     'Bill Supplier'       => 'Bill Konveksi',
     'Salary Employee'     => 'Salary Employee',
+    'Bonus'               => 'Bonus',
 ];

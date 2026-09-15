@@ -2,6 +2,7 @@
 
 return [
     'BillSupplier'         => 'Bill Konveksi',
+    'Bonus'                => 'Bonus',
     'ColorFabric'          => 'Color Fabric',
     'Employee'             => 'Employee',
     'Fabric'               => 'Fabric',

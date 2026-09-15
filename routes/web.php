@@ -102,6 +102,13 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     });
     Route::resource('price-employees', App\Http\Controllers\PriceEmployeeController::class)->names('price_employees');
 
+    // Bonus
+    Route::prefix('bonuses')->as('bonuses.')->group(function () {
+        Route::put('{bonus}/restore', [App\Http\Controllers\BonusController::class, 'restore'])->name('restore');
+        Route::delete('{bonus}/force-delete', [App\Http\Controllers\BonusController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('bonuses', App\Http\Controllers\BonusController::class)->names('bonuses');
+
     // Presences
     Route::prefix('presences')->as('presences.')->group(function () {
         Route::get('/', [App\Http\Controllers\PresenceController::class, 'index'])->name('index');

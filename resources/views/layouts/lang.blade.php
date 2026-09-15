@@ -41,6 +41,7 @@
     $langTypeColor = collect(trans('type-color'))->toArray();
     $langPriceSupplier = collect(trans('price-supplier'))->toArray();
     $langPriceEmployee = collect(trans('price-employee'))->toArray();
+    $langBonus = collect(trans('bonus'))->toArray();
     $langPresence = collect(trans('presence'))->toArray();
     $langFabric = collect(trans('fabric'))->toArray();
     $langSablon = collect(trans('sablon'))->toArray();
@@ -72,6 +73,7 @@
     window.langTypeColor = @json($langTypeColor);
     window.langPriceSupplier = @json($langPriceSupplier);
     window.langPriceEmployee = @json($langPriceEmployee);
+    window.langBonus = @json($langBonus);
     window.langPresence = @json($langPresence);
     window.langFabric = @json($langFabric);
     window.langSablon = @json($langSablon);

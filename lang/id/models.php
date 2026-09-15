@@ -2,6 +2,7 @@
 
 return [
     'BillSupplier'         => 'Tagihan Konveksi',
+    'Bonus'                => 'Bonus',
     'ColorFabric'          => 'Warna Kain',
     'Employee'             => 'Karyawan',
     'Fabric'               => 'Inventaris Kain',

@@ -81,6 +81,10 @@ return [
                 'name' => 'Price Employee',
                 'url'  => '/price-employees',
             ],
+            [
+                'name' => 'Bonus',
+                'url'  => '/bonuses',
+            ],
         ],
     ],
 

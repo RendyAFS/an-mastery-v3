@@ -2,13 +2,14 @@
 
 namespace App\Helpers;
 
+use App\Models\Bonus;
+
 class SalaryBonusHelper
 {
     /**
-     * Tiers configuration for automatic bonus based on total sablon fee.
-     * Ordered from highest threshold to lowest.
+     * Default tiers fallback if database table is empty or unpopulated.
      */
-    public const TIERS = [
+    public const DEFAULT_TIERS = [
         ['min' => 500000, 'bonus' => 25000],
         ['min' => 400000, 'bonus' => 20000],
         ['min' => 250000, 'bonus' => 15000],
@@ -16,13 +17,31 @@ class SalaryBonusHelper
     ];
 
     /**
-     * Get tiers configuration.
+     * Get tiers configuration from database, or fallback if empty.
+     * Ordered from highest threshold to lowest.
      *
      * @return array<int, array{min: int, bonus: int}>
      */
     public static function getTiers(): array
     {
-        return self::TIERS;
+        try {
+            $tiers = Bonus::query()
+                ->orderBy('min', 'desc')
+                ->get(['min', 'bonus'])
+                ->map(fn($b) => [
+                    'min'   => (int) $b->min,
+                    'bonus' => (int) $b->bonus,
+                ])
+                ->toArray();
+
+            if (!empty($tiers)) {
+                return $tiers;
+            }
+        } catch (\Throwable $e) {
+            // Fallback if table does not exist or database connection issue
+        }
+
+        return self::DEFAULT_TIERS;
     }
 
     /**
@@ -32,7 +51,8 @@ class SalaryBonusHelper
      */
     public static function getBonusAmounts(): array
     {
-        $amounts = array_values(array_unique(array_column(self::TIERS, 'bonus')));
+        $tiers = static::getTiers();
+        $amounts = array_values(array_unique(array_column($tiers, 'bonus')));
         sort($amounts);
 
         return $amounts;
@@ -40,19 +60,14 @@ class SalaryBonusHelper
 
     /**
      * Calculate automatic bonus amount based on total sablon fee.
-     *
-     * Rp 200.000 - Rp 249.999 : 10.000
-     * Rp 250.000 - Rp 399.999 : 15.000
-     * Rp 400.000 - Rp 499.999 : 20.000
-     * Rp 500.000+             : 25.000
      */
     public static function calculateBonus(float|int $totalSablon): int
     {
         $amount = (float) $totalSablon;
 
-        foreach (self::TIERS as $tier) {
+        foreach (static::getTiers() as $tier) {
             if ($amount >= $tier['min']) {
-                return $tier['bonus'];
+                return (int) $tier['bonus'];
             }
         }
 
