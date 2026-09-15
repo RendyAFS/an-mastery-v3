@@ -15,6 +15,16 @@ class DashboardController extends Controller
 
     public function index()
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        if ($user && !$user->hasRole('Super Admin') && $user->cannot('dashboard.view')) {
+            $firstAccessibleUrl = \App\Helpers\MenuHelper::getFirstAccessibleUrl($user);
+            if ($firstAccessibleUrl && $firstAccessibleUrl !== '/dashboard' && $firstAccessibleUrl !== url('/dashboard')) {
+                return redirect($firstAccessibleUrl);
+            }
+        }
+
         $this->authorize('dashboard.view');
 
         if (request()->expectsJson()) {
