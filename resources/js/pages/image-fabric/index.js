@@ -24,7 +24,7 @@ const PageScript = (function () {
 
             <div class="relative aspect-square rounded-lg bg-(--color-gray)/20 dark:bg-(--color-dark-gray)/20
                 flex items-center justify-center overflow-hidden cursor-pointer"
-                ${imageUrl ? `data-view-images='${JSON.stringify(images.map((i) => i.url))}' data-no-card-click` : ""}>
+                ${imageUrl ? `data-view-images='${JSON.stringify(images.map((i) => i.url))}' data-title="${item.name ? item.name.replace(/"/g, '&quot;') : ''}" data-no-card-click` : ""}>
                 ${
                     imageUrl
                         ? `<img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover rounded-lg">`
@@ -109,9 +109,10 @@ const PageScript = (function () {
         );
     };
 
-    const openViewer = (images, startIndex = 0) => {
+    const openViewer = (images, startIndex = 0, title = "") => {
         currentImages = images;
         currentIndex = startIndex;
+        $("#hs-image-fabric-viewer-label").text(title || modelName);
         renderViewer();
         HSOverlay.open("#hs-image-fabric-viewer");
         if (window.lucide) window.lucide.createIcons();
@@ -122,7 +123,8 @@ const PageScript = (function () {
             e.stopPropagation();
             e.preventDefault();
             const images = JSON.parse($(this).attr("data-view-images"));
-            openViewer(images, 0);
+            const title = $(this).attr("data-title") || "";
+            openViewer(images, 0, title);
         });
 
         $(document).on("click", "#viewer-prev", function () {
