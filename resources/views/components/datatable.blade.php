@@ -56,7 +56,7 @@
         @endif
 
         @if ($filter)
-            <select id="{{ $filterId }}-{{ $id }}" class="hidden w-auto sm:w-40"
+            <select id="{{ $filterId }}" class="hidden w-auto sm:w-40"
                 data-hs-select='{
                     "placeholder": "{{ __('datatable.Filter') }}",
                     "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",

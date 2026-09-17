@@ -23,7 +23,7 @@ export default function initDatatable({
     const filterId = filterSelector
         ? filterSelector.startsWith("#") || filterSelector.startsWith(".")
             ? filterSelector
-            : `#${filterSelector}-${tableId}`
+            : `#${filterSelector}`
         : null;
     const filterEl = filterId ? $(filterId) : null;
 
