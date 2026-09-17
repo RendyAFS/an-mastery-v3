@@ -491,7 +491,7 @@ export default function sablonForm(
         },
 
         computeFee(row) {
-            if (row.isSettlementRow) {
+            if (row.isSettlementRow || row.locked) {
                 return row.fee;
             }
 

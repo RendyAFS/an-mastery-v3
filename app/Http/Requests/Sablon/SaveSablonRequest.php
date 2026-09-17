@@ -40,7 +40,7 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.id'                        => 'nullable|integer|exists:sablon_employee_details,id',
             'employee_details.*.employee_id'               => 'required_with:employee_details|exists:employees,id',
             'employee_details.*.layers'                    => 'nullable|integer|min:0',
-            'employee_details.*.fee'                       => 'nullable|numeric|min:0',
+            'employee_details.*.fee'                       => 'nullable|numeric',
             'employee_details.*.is_change'                 => 'nullable|boolean',
             'employee_details.*.employee_change_id'        => 'nullable|exists:employees,id|different:employee_details.*.employee_id',
             'employee_details.*.is_bon'                    => 'nullable|boolean',
