@@ -139,9 +139,12 @@ const PageScript = (function () {
                     },
                 },
                 {
-                    data: "date",
+                    data: "date_formatted",
                     width: "15%",
                     className: "text-center",
+                    render(data, type, row) {
+                        return data ?? row.date ?? "-";
+                    },
                 },
                 {
                     data: "id",
