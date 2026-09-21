@@ -48,8 +48,16 @@ class {Module}Repository
     {
         return {Module}::query()
             ->select('id', 'name')
-            ->when($id, fn($query) => $query->whereKey($id))
-            ->when($search, fn($query) => $query->where('name', 'like', "%{$search}%"))
+            ->when($id, fn($query) => $query->whereKey($id), function ($query) {
+                // Filter hanya data aktif jika model memiliki atribut is_active
+                $query->where('is_active', true);
+            })
+            ->when($search, function ($query) use ($search) {
+                // Wajib dibungkus closure agar orWhere tidak mem-bypass filter is_active / soft-deletes
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+            })
             ->orderBy('name')
             ->paginate($limit, ['*'], 'page', $page);
     }
@@ -69,13 +77,16 @@ class {Module}Repository
 - [ ] Apakah kueri pembacaan data Anda sudah dipindahkan ke kelas Repository baru?
 - [ ] Apakah kueri relational tabel Anda sudah ditangani menggunakan `with(...)` (Eager Loading)?
 - [ ] Apakah filter `active`, `deleted` (soft-deleted), dan `all` sudah ditangani di method `getAll`?
+- [ ] Apakah kueri transaksional/operasional dan `getDataSelect` sudah menyaring data aktif (`where('is_active', true)`) jika model mendukung status aktif?
 - [ ] Apakah nama berkas menggunakan akhiran `Repository.php` (misal: `ProductRepository.php`)?
 
 ## Best Practice
 - **Separation of Concerns**: Jangan menulis logika penyimpanan (`save`, `update`, `delete`, `DB::transaction`) di dalam Repository. Logika tersebut ditangani oleh Controller (jika sederhana) atau Action Class (jika kompleks).
 - **Return Query/Eloquent Builder**: Untuk konsistensi, kembalikan instansi Eloquent Collection, Paginated Collection, atau instansi Eloquent Model dari method Repository Anda.
+- **Filter `is_active` pada Operasional**: Untuk model yang memiliki kolom `is_active` (seperti Employee, Supplier), seluruh query yang digunakan untuk operasional (seperti presensi, form dropdown, penugasan) **wajib** menyaring `where('is_active', true)`. Hanya query master CRUD yang menampilkan seluruh status agar dapat diaktifkan kembali.
+- **Bungkus `orWhere` dalam Closure**: Saat menambahkan pencarian keyword di kueri yang memiliki filter status/soft-delete, selalu bungkus kondisi pencarian di dalam `$query->where(function ($q) { $q->where(...)->orWhere(...); })`.
 
 ## Catatan penting
 > [!IMPORTANT]
-> Proyek ini menerapkan fitur **Soft Deletes**. Pastikan Anda selalu menangani filter penanganan data yang terhapus dengan memanfaatkan method Eloquent `onlyTrashed()` dan `withTrashed()` di dalam method query `getAll()`.
+> Proyek ini menerapkan fitur **Soft Deletes** dan **Status Aktif (`is_active`)**. Pastikan Anda selalu menangani filter penanganan data yang terhapus dengan memanfaatkan method Eloquent `onlyTrashed()` dan `withTrashed()` di dalam method query `getAll()`, serta menyaring `where('is_active', true)` pada query transaksional.
 

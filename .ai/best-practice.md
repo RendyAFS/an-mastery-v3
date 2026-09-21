@@ -69,14 +69,23 @@ class SaveProductAction
 - **Otorisasi Eksplisit**: Tulis `$this->authorize('permission_name')` di awal setiap aksi method controller.
 - **Pembersihan Mask Rupiah**: Panggil utilitas `normalizeFormInputs(form, payload)` sebelum mengirimkan data numerik rupiah ke backend.
 - **Gunakan Eager Loading**: Selalu muat relasi tabel di Repository (`$query->with(...)`) dan lindungi eksposur relasi di Resource (`$this->whenLoaded(...)`).
+- **Filter Status Aktif (`is_active`)**: Selalu filter `where('is_active', true)` (atau scope `active()`) pada query operasional, presensi, kartu tagihan, dan select dropdown jika model memiliki flag aktif.
+- **Format Tanggal ISO untuk Input**: Di API Resource, selalu format tanggal input sebagai `Y-m-d` (contoh: `'date' => $this->date?->format('Y-m-d')`), dan pisahkan format manusia ke `'date_formatted'`.
 
 ### 2. Hal yang Dilarang Keras (Don'ts)
 - **Jangan Gunakan Server-side Yajra**: Dilarang menulis pengolahan Yajra DataTable di backend. DataTable dikelola sepenuhnya secara client-side menggunakan JSON standard.
 - **Jangan Hardcode Rute**: Jangan menulis string URL rute mentah di Javascript. Selalu gunakan helper `route('nama_rute')`.
 - **Jangan Campur Logika Database**: Hindari menulis kueri `INSERT` atau `UPDATE` kompleks langsung di Controller. Gunakan kelas Action terisolasi.
+- **Jangan Kirim Format Teks Tanggal ke Flatpickr**: Dilarang mengirim teks tanggal berbahasa Indonesia (seperti `"21 September 2026"`) pada properti `date` yang dikonsumsi oleh `setDate()` Flatpickr.
 
 ## Catatan penting
 ### Masalah yang Sering Terjadi & Solusinya:
+- **Masalah: Nilai tanggal pada form edit tereset menjadi 1 Januari.**
+  - *Penyebab*: API Resource mengembalikan `date` dalam format teks bulan lokal (misal `translatedFormat('d F Y')`). Parser Flatpickr yang disetel ke `dateFormat: 'Y-m-d'` gagal membaca token bulan dan hari sehingga fallback ke bulan 0 (Januari) tanggal 1.
+  - *Solusi*: Di Resource, kembalikan `'date' => $this->date?->format('Y-m-d')` untuk input form/Flatpickr, dan gunakan `'date_formatted' => $this->date?->translatedFormat('d F Y')` untuk tampilan Datatable.
+- **Masalah: Karyawan atau supplier yang dinonaktifkan (`is_active = false`) tetap muncul di presensi atau dropdown select.**
+  - *Penyebab*: Query di Repository (seperti `getEmployeesWithPresenceForWeek` atau `getDataSelect`) belum menyaring `where('is_active', true)`.
+  - *Solusi*: Tambahkan `where('is_active', true)` pada query operasional, dan bungkus kondisi `orWhere` dalam closure function.
 - **Masalah: Elemen dropdown Preline tidak merespon/terbuka setelah tabel di-reload.**
   - *Penyebab*: DOM telah berubah, namun Preline belum mendeteksi ulang elemen baru.
   - *Solusi*: Panggil helper `ui-init` / `reinit-ui` (`initUi()` atau `reinitUi()`) atau `window.HSStaticMethods.autoInit()` di dalam callback `drawCallback()` tabel atau setelah memodifikasi DOM halaman via JS.

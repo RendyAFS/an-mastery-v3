@@ -40,7 +40,8 @@ class {Module}Resource extends JsonResource
             'id'                   => $this->id,
             'amount'               => $this->amount,
             'amount_formated'      => RupiahHelper::format($this->amount), // Rp 150.000
-            'date'                 => $this->date?->format('Y-m-d'),
+            'date'                 => $this->date?->format('Y-m-d'), // Format ISO standar untuk Flatpickr/input form
+            'date_formatted'       => $this->date?->translatedFormat('d F Y'), // Format teks ramah pengguna untuk Datatable/kartu
             'status'               => $this->status,
             'notes'                => $this->notes,
             'deleted_at'           => $this->deleted_at?->format('Y-m-d H:i:s'),
@@ -63,15 +64,20 @@ class {Module}Resource extends JsonResource
 
 ## Checklist
 - [ ] Apakah kelas API Resource mewarisi `Illuminate\Http\Resources\Json\JsonResource`?
-- [ ] Apakah properti tanggal sudah diformat secara seragam menggunakan format `format('Y-m-d H:i:s')`?
+- [ ] Apakah properti tanggal untuk form/input (`date`) menggunakan format ISO `format('Y-m-d')`?
+- [ ] Apakah tampilan tanggal ramah pengguna dipisahkan ke properti `date_formatted` (`translatedFormat('d F Y')`)?
+- [ ] Apakah properti timestamp audit trail diformat seragam menggunakan `format('Y-m-d H:i:s')`?
 - [ ] Apakah semua data relasi dibungkus dengan method `$this->whenLoaded(...)`?
 - [ ] Apakah bidang audit trail (`created_by`, `updated_by`, `deleted_by`) telah dipetakan secara lengkap?
 
 ## Best Practice
 - **Hindari Eager Loading di Resource**: Jangan memanggil properti relasi secara langsung (misal: `$this->category->name`). Selalu gunakan `$this->whenLoaded` untuk menjamin efisiensi kueri basis data.
 - **Sediakan Format Tambahan**: Selalu sediakan properti format mentah (misal: `'total'` => `$this->total`) dan properti terformat ramah pengguna (misal: `'total_formated'` => `RupiahHelper::format(...)`) secara bersamaan dalam respons.
+- **Standar Format Tanggal**: Pisahkan antara field tanggal untuk manipulasi input/Flatpickr (`'date' => $this->date?->format('Y-m-d')`) dengan field tampilan teks (`'date_formatted' => $this->date?->translatedFormat('d F Y')`).
 
 ## Catatan penting
 > [!IMPORTANT]
-> Jangan pernah mengembalikan relasi model bertingkat tanpa dibungkus dengan kelas Resource padanannya. Contoh: gunakan `new CategoryResource($this->whenLoaded('category'))` alih-alih `new JsonResource($this->category)`.
+> 1. Jangan pernah mengembalikan relasi model bertingkat tanpa dibungkus dengan kelas Resource padanannya. Contoh: gunakan `new CategoryResource($this->whenLoaded('category'))` alih-alih `new JsonResource($this->category)`.
+> 2. Jangan pernah mengirim tanggal berformat teks nama bulan lokal (contoh: `"21 September 2026"`) pada properti `date` yang dikonsumsi oleh komponen `<x-datepicker>`/Flatpickr. Parser Flatpickr hanya mengenali format standar `Y-m-d`. Format teks lokal akan menyebabkan parsing gagal dan tanggal tereset menjadi **1 Januari**. Selalu gunakan `Y-m-d` untuk `date` dan sediakan `date_formatted` untuk tampilan Datatable.
+
 

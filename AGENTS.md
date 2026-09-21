@@ -62,8 +62,11 @@ Dokumen `AGENTS.md` terhubung langsung dengan semua berkas di dalam folder `.ai/
 ## Best Practice
 - **Patuhi Konsistensi Proyek**: Selalu ikuti pola yang sudah ada di proyek ini meskipun menurut Anda ada best practice eksternal yang lebih baik.
 - **Validasi Terlebih Dahulu**: Periksa file generator `MakeModuleCommand.php` untuk melihat struktur dasar cetak biru modul baru.
+- **Filter Status Aktif (`is_active`)**: Pada model yang memiliki atribut `is_active` (seperti `Employee`, `Supplier`), seluruh query operasional (presensi, form select dropdown, kartu transaksi) **wajib** menyaring `where('is_active', true)` atau scope `active()`.
+- **Format Tanggal Form vs Tampilan**: Pada API Resource, selalu kirim `'date' => $this->date?->format('Y-m-d')` agar parser Flatpickr membaca tanggal dengan benar, dan sediakan `'date_formatted'` (misal `translatedFormat('d F Y')`) khusus untuk tampilan teks / datatable.
 
 ## Catatan penting
 > [!IMPORTANT]
 > Proyek ini menggunakan **Tailwind CSS v4** dengan variabel CSS `:root` langsung pada utilitas kelas, serta **Preline UI v3** untuk interaksi JavaScript komponennya. Jangan mengimpor library UI lain tanpa izin tertulis dari user.
+
 
