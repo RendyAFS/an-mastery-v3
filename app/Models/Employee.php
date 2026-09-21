@@ -28,6 +28,11 @@ class Employee extends Model
         return $this->hasMany(Presence::class);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public function resolveRouteBinding($value, $field = null)
     {
         return $this->withTrashed()->where($field ?? $this->getRouteKeyName(), $value)->first();

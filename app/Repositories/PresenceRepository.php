@@ -17,7 +17,7 @@ class PresenceRepository
         return Employee::query()
             ->when($filter === 'deleted', fn($q) => $q->onlyTrashed())
             ->when($filter === 'all', fn($q) => $q->withTrashed())
-            ->when(! in_array($filter, ['deleted', 'all'], true), fn($q) => $q)
+            ->when(! in_array($filter, ['deleted', 'all'], true), fn($q) => $q->where('is_active', true))
             ->with(['presences' => fn($q) => $q->where('week_of', $weekOf->toDateString())])
             ->orderBy('name')
             ->get();

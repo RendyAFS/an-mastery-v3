@@ -109,7 +109,7 @@ class SablonRepository
             'priceEmployees'    => $priceEmployeesColl->mapWithKeys(fn($item) => [$item->id => $item->typeFabric?->name . ' - ' . RupiahHelper::format($item->price) . ' - ' . $item->typeColor?->name . ' Warna'])->toArray(),
             'priceEmployeesRaw' => $priceEmployeesColl->pluck('price', 'id')->toArray(),
             'priceEmployeeMap'  => $priceEmployeesColl->mapWithKeys(fn($p) => [$p->type_fabric_id . '_' . $p->type_color_id => $p->id])->toArray(),
-            'employees'         => Employee::orderBy('name')->pluck('name', 'id'),
+            'employees'         => Employee::query()->where('is_active', true)->orderBy('name')->pluck('name', 'id'),
             'fabricDetails'     => FabricDetail::with([
                 'colorFabric',
                 'sablonDetails.sablon',

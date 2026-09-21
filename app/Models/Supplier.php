@@ -34,6 +34,11 @@ class Supplier extends Model
         return $this->hasMany(BillSupplier::class, 'supplier_id');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public function coverStyle(): HasOne
     {
         return $this->hasOne(SupplierCoverStyle::class);

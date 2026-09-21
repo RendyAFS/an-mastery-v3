@@ -17,7 +17,7 @@ class BillSupplierRepository
         ?Carbon $dateTo = null
     ) {
         $query = Supplier::query()
-            ->withTrashed()
+            ->where('is_active', true)
             ->withCount([
                 'sablons as unbilled_sablons_count' => function ($q) {
                     $q->whereDoesntHave('billSupplier');

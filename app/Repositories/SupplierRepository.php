@@ -30,6 +30,8 @@ class SupplierRepository
             ->select('id', 'name')
             ->when($id, function ($query) use ($id) {
                 $query->whereKey($id);
+            }, function ($query) {
+                $query->where('is_active', true);
             })
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");

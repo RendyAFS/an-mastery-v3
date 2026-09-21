@@ -29,10 +29,14 @@ class EmployeeRepository
             ->select('id', 'name', 'contact')
             ->when($id, function ($query) use ($id) {
                 $query->whereKey($id);
+            }, function ($query) {
+                $query->where('is_active', true);
             })
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('contact', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('contact', 'like', "%{$search}%");
+                });
             })
             ->orderBy('name')
             ->paginate($limit, ['*'], 'page', $page);
