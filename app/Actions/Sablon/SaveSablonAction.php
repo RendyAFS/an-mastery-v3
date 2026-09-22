@@ -54,7 +54,7 @@ class SaveSablonAction
                     'is_change'          => $detail['is_change'] ?? false,
                     'employee_change_id' => $detail['employee_change_id'] ?? null,
                     'is_bon'             => $detail['is_bon'] ?? false,
-                    'is_paid'            => $detail['is_paid'] ?? false,
+                    'is_paid'            => isset($detail['is_paid']) ? (bool) $detail['is_paid'] : (bool) $sablon->sablonEmployeeDetails()->whereKey($id)->value('is_paid'),
                     'notes'              => $detail['notes'] ?? null,
                     'additional_fee'     => $detail['is_bon'] ?? false
                         ? array_values(

@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 pt-5">
-                        <input type="checkbox" x-model="row.is_paid" :disabled="row.locked" class="checkbox-custom"
+                        <input type="checkbox" x-model="row.is_paid" :disabled="row.locked || (row.id && row.is_paid)" class="checkbox-custom"
                             :id="'payed_' + row.uid">
                         <label :for="'payed_' + row.uid"
                             class="text-sm text-(--color-dark) dark:text-(--color-light)">{{ __('sablon.employee_detail.is_paid') }}</label>

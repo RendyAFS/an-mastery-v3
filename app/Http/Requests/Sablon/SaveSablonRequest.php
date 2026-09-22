@@ -44,6 +44,7 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.is_change'                 => 'nullable|boolean',
             'employee_details.*.employee_change_id'        => 'nullable|exists:employees,id|different:employee_details.*.employee_id',
             'employee_details.*.is_bon'                    => 'nullable|boolean',
+            'employee_details.*.is_paid'                   => 'nullable|boolean',
             'employee_details.*.notes'                     => 'nullable|string|max:255',
             'employee_details.*.additional_fees'           => 'nullable|array',
             'employee_details.*.additional_fees.*.nominal' => 'nullable|numeric',
@@ -110,6 +111,8 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.layers'             => __('sablon.form.layers'),
             'employee_details.*.fee'                => __('sablon.form.fee'),
             'employee_details.*.employee_change_id' => __('sablon.form.employee_change'),
+            'employee_details.*.is_bon'             => __('sablon.employee_detail.is_bon'),
+            'employee_details.*.is_paid'            => __('sablon.employee_detail.is_paid'),
             'employee_details.*.notes'              => __('sablon.form.notes'),
         ];
     }

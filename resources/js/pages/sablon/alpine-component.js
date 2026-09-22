@@ -351,6 +351,7 @@ export default function sablonForm(
                 searchEmp: "",
                 searchEmpChange: "",
                 locked: !!row.locked,
+                is_settled: !!row.is_settled,
                 isSettlementRow: !!row.is_settlement_row,
             };
         },
@@ -491,7 +492,7 @@ export default function sablonForm(
         },
 
         computeFee(row) {
-            if (row.isSettlementRow || row.locked) {
+            if (row.isSettlementRow || row.is_settled || (row.locked && !row.is_bon)) {
                 return row.fee;
             }
 

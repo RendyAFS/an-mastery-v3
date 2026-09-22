@@ -23,7 +23,8 @@
                 'is_paid' => $d->is_paid,
                 'notes' => $d->notes,
                 'additional_fees' => $d->additional_fee ?? [],
-                'locked' => $d->is_paid || $d->is_settled || (bool) $d->settlement_of_id,
+                'locked' => ($d->is_paid && ! $d->is_bon) || $d->is_settled || (bool) $d->settlement_of_id,
+                'is_settled' => (bool) $d->is_settled,
                 'is_settlement_row' => (bool) $d->settlement_of_id,
             ],
         )
