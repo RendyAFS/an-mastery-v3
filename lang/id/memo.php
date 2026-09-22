@@ -47,5 +47,7 @@ return [
     'quick_items' => [
         'Kirim Kain',
         'Ambil Kain',
+        'Bon Uang',
+        'Bon Paketan',
     ],
 ];

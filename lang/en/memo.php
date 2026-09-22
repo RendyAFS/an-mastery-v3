@@ -47,5 +47,7 @@ return [
     'quick_items' => [
         'Delivered Fabric',
         'Pick Fabric',
+        'Loan Money',
+        'Loan Internet',
     ],
 ];

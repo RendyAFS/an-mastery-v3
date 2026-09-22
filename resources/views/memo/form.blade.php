@@ -11,7 +11,7 @@
         <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
             {{ __('memo.fields.item_name') }} <span class="text-(--color-red)">*</span>
         </label>
-        <input type="text" id="name" name="name" placeholder="{{ __('memo.placeholders.item_name') }}"
+        <input type="text" id="name" name="name" placeholder="{{ __('memo.placeholders.item_name') }}" autocomplete="off"
             class="mt-1 px-4 py-2 block w-full rounded-lg
                 bg-(--color-light-gray) border border-(--color-gray)
                 text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
