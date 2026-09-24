@@ -39,14 +39,6 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::put('/profile', [App\Http\Controllers\MyProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\MyProfileController::class, 'updatePassword'])->name('profile.update-password');
 
-    // App Version — acknowledge new version (sync DB version to current config version)
-    Route::put('/version/acknowledge', function () {
-        abort_unless(auth()->user()->can('dashboard.log-viewer'), 403);
-        App\Models\Setting::syncVersion();
-
-        return response()->json(['message' => 'Version acknowledged.']);
-    })->name('version.acknowledge');
-
     // Users
     Route::prefix('users')->as('users.')->group(function () {
         Route::put('{user}/toggle-active', [App\Http\Controllers\UserController::class, 'toggleActive'])->name('toggle-active');
