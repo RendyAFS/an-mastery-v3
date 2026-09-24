@@ -10,6 +10,20 @@ Route::get('/', [App\Http\Controllers\LandingPageController::class, 'index'])->n
 
 Route::get('/locale/{locale}', [App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
 
+// mkcert Root CA Download (public — no auth required so any device can install the cert)
+Route::get('/cert/download', function () {
+    $path = storage_path('app/cert/rootCA.pem');
+
+    if (!file_exists($path)) {
+        abort(404, 'Certificate file not found. Please copy your mkcert rootCA.pem to storage/app/cert/rootCA.pem');
+    }
+
+    return response()->download($path, 'rootCA.pem', [
+        'Content-Type'        => 'application/x-pem-file',
+        'Content-Disposition' => 'attachment; filename="rootCA.pem"',
+    ]);
+})->name('cert.download');
+
 Route::middleware(['auth', 'check.active'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/fabrics', [App\Http\Controllers\DashboardController::class, 'fabrics'])->name('dashboard.fabrics');

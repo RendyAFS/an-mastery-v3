@@ -11,5 +11,6 @@ return [
     'Unknown'           => 'Tidak Diketahui',
     'Profile'           => 'Profil',
     'Log Viewer'        => 'Log Viewer',
+    'Download Cert'     => 'Unduh Sertifikat',
     'Logout'            => 'Keluar',
 ];

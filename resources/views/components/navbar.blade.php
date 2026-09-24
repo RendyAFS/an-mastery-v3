@@ -158,6 +158,15 @@
                             <i data-lucide="database" class="size-4"></i>
                             {{ __('navbar.Log Viewer') }}
                         </a>
+
+                        <a href="{{ route('cert.download') }}" target="_blank"
+                            class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
+                            text-(--color-dark)
+                            dark:text-(--color-gray)
+                            hover:bg-(--color-gray)/20">
+                            <i data-lucide="shield-check" class="size-4"></i>
+                            {{ __('navbar.Download Cert') }}
+                        </a>
                     @endif
 
                     <form method="POST" action="{{ route('logout') }}">

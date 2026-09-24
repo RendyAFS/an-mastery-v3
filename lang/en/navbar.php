@@ -11,5 +11,6 @@ return [
     'Unknown'           => 'Unknown',
     'Profile'           => 'Profile',
     'Log Viewer'        => 'Log Viewer',
+    'Download Cert'     => 'Download Certificate',
     'Logout'            => 'Logout',
 ];
