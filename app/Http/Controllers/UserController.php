@@ -19,24 +19,20 @@ class UserController extends Controller
         $this->authorize('users.view');
 
         if (request()->expectsJson()) {
-
             $filter = request('filter', 'active');
-
             $users = $this->userRepository->getAll($filter);
 
             return UserResource::collection($users);
         }
 
-        return view('user.index');
+        $roles = $this->userRepository->getRoles();
+
+        return view('user.index', compact('roles'));
     }
 
     public function create()
     {
-        $this->authorize('users.create');
-
-        $roles = $this->userRepository->getRoles();
-
-        return view('user.create', compact('roles'));
+        //
     }
 
     public function store(SaveUserRequest $request, SaveUserAction $saveUserAction)
@@ -48,19 +44,18 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function show(string $id)
+    public function show(User $user)
     {
-        $this->authorize('roles.read');
-        //
+        $this->authorize('users.view');
+
+        $user->load('roles');
+
+        return new UserResource($user);
     }
 
-    public function edit(User $user)
+    public function edit()
     {
-        $this->authorize('users.update');
-
-        $roles = $this->userRepository->getRoles();
-
-        return view('user.edit', compact('user', 'roles'));
+        //
     }
 
     public function update(SaveUserRequest $request, SaveUserAction $saveUserAction, User $user)

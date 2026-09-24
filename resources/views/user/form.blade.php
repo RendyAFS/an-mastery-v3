@@ -1,11 +1,11 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+﻿<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="col-span-1">
         <div class="mb-2 space-y-2">
             <label for="name" class="block text-sm font-medium text-(--color-dark) dark:text-(--color-light)">
                 {{ __('user.fields.name') }}
             </label>
 
-            <input type="text" id="name" name="name" value="{{ $user->name ?? '' }}"
+            <input type="text" id="name" name="name"
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -16,7 +16,7 @@
                 {{ __('user.fields.email') }}
             </label>
 
-            <input type="email" id="email" name="email" value="{{ $user->email ?? '' }}"
+            <input type="email" id="email" name="email"
                 class="mt-1 px-4 py-2 block w-full rounded-lg bg-(--color-light-gray) border border-(--color-gray)
                    text-(--color-dark) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30
                    dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)">
@@ -44,11 +44,9 @@
                 </button>
             </div>
 
-            @isset($user)
-                <small class="text-xs text-(--color-dark-gray)">
-                    {{ __('user.password_hint') }}
-                </small>
-            @endisset
+            <small id="password-hint" class="hidden text-xs text-(--color-dark-gray)">
+                {{ __('user.password_hint') }}
+            </small>
         </div>
 
         <div class="mb-2 space-y-2" x-data="{ showConfirm: false }">
@@ -75,23 +73,20 @@
                 </button>
             </div>
 
-            @isset($user)
-                <small class="text-xs text-(--color-dark-gray)">
-                    {{ __('user.password_hint') }}
-                </small>
-            @endisset
+            <small id="password-confirm-hint" class="hidden text-xs text-(--color-dark-gray)">
+                {{ __('user.password_hint') }}
+            </small>
         </div>
     </div>
     <div class="col-span-1">
         <div class="mb-2 space-y-2">
             <x-select id="roles" name="roles" label="{{ __('user.fields.role') }}" :options="$roles"
-                :value="$user->role_id ?? null" placeholder="{{ __('user.role_placeholder') }}"
+                :value="null" placeholder="{{ __('user.role_placeholder') }}"
                 search-placeholder="{{ __('user.role_search_placeholder') }}" clearable="true" />
         </div>
 
         <div class="mb-6 flex items-center">
-            <input type="checkbox" id="is_active" name="is_active" value="1"
-                {{ $user && $user->is_active == 1 ? 'checked' : '' }} class="checkbox-custom">
+            <input type="checkbox" id="is_active" name="is_active" value="1" class="checkbox-custom">
 
             <label for="is_active"
                 class="text-sm font-semibold text-(--color-dark) dark:text-(--color-light) ms-3 cursor-pointer">

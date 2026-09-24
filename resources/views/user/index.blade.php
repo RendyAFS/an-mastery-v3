@@ -12,12 +12,12 @@
                 <p class="text-sm text-(--color-dark-gray) mt-1">{{ __('user.description') }}</p>
             </div>
 
-            <a href="{{ route('users.create') }}"
+            <button type="button" data-hs-overlay="#hs-user-modal" id="btn-create-user"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
                   bg-(--color-primary) text-(--color-light) hover:bg-(--color-primary)/80 cursor-pointer">
                 <i data-lucide="plus" class="size-4"></i>
                 {{ __('crud.add_title', ['model' => __('models.User')]) }}
-            </a>
+            </button>
         </div>
 
         <x-datatable id="users-datatable" filterId="filter-users">
@@ -52,4 +52,7 @@
             <tbody class="divide-y divide-(--color-gray) dark:divide-(--color-dark-gray)"></tbody>
         </x-datatable>
     </div>
+
+    @include('user.modal')
 @endsection
+
