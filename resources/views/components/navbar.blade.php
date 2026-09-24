@@ -1,5 +1,28 @@
 <nav
     class="sticky top-0 z-50 bg-(--color-light) dark:bg-(--color-dark) dark:border-b dark:border-(--color-gray)/20 shadow-sm">
+
+    {{-- Version Update Banner --}}
+    @if ($hasNewVersion && auth()->user()->can('dashboard.log-viewer'))
+        <div id="version-update-banner"
+            class="flex items-center justify-between gap-3 px-4 py-2
+               bg-gradient-to-r from-(--color-primary) to-(--color-primary)/80
+               text-(--color-light) text-sm">
+            <div class="flex items-center gap-2">
+                <i data-lucide="sparkles" class="size-4 shrink-0"></i>
+                <span>
+                    <strong>{{ __('navbar.new_version_found', ['version' => config('app.version')]) }}</strong>
+                    &mdash; {{ __('navbar.new_version_desc') }}
+                </span>
+            </div>
+            <button type="button" id="btn-acknowledge-version"
+                class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+                   bg-(--color-light)/20 hover:bg-(--color-light)/30 transition cursor-pointer">
+                <i data-lucide="check" class="size-3"></i>
+                {{ __('navbar.acknowledge') }}
+            </button>
+        </div>
+    @endif
+
     <div class="flex items-center justify-between px-4 py-3">
         <!-- Left -->
         <div class="flex items-center gap-3">

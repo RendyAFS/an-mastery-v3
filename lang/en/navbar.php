@@ -13,4 +13,7 @@ return [
     'Log Viewer'        => 'Log Viewer',
     'Download Cert'     => 'Download Certificate',
     'Logout'            => 'Logout',
+    'new_version_found' => 'New Version :version Detected',
+    'new_version_desc'  => 'A new application version has been deployed. Click Acknowledge to confirm.',
+    'acknowledge'       => 'Acknowledge',
 ];

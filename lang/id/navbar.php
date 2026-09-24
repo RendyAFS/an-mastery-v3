@@ -13,4 +13,7 @@ return [
     'Log Viewer'        => 'Log Viewer',
     'Download Cert'     => 'Unduh Sertifikat',
     'Logout'            => 'Keluar',
+    'new_version_found' => 'Versi Baru :version Terdeteksi',
+    'new_version_desc'  => 'Versi aplikasi baru telah di-deploy. Klik Konfirmasi untuk melanjutkan.',
+    'acknowledge'       => 'Konfirmasi',
 ];
