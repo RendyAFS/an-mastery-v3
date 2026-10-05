@@ -113,6 +113,19 @@ return [
         'save'   => 'Simpan',
     ],
 
+    'long_fabric_modal' => [
+        'title'           => 'Input Panjang Kain',
+        'hint'            => 'Klik untuk input panjang kain',
+        'color'           => 'Warna',
+        'long_fabric'     => 'Panjang (m)',
+        'total'           => 'Total Panjang',
+        'total_sablon'    => 'Estimasi Total Sablon',
+        'recalc_note'     => 'Total sablon & gaji karyawan akan dihitung ulang otomatis.',
+        'cancel'          => 'Batal',
+        'save'            => 'Simpan',
+        'updated_success' => 'Panjang kain berhasil diperbarui.',
+    ],
+
     'card'          => [
         'date'                => 'Tanggal',
         'total_sablon'        => 'Total Sablon',
@@ -132,6 +145,21 @@ return [
     ],
 
     'validation' => [
+        'long_fabric_modal' => [
+            'details' => [
+                'required' => 'Minimal satu detail kain harus diisi.',
+            ],
+            'id' => [
+                'required' => 'Detail kain tidak valid.',
+                'distinct' => 'Detail kain tidak boleh duplikat.',
+                'invalid'  => 'Detail kain baris ke-:row bukan milik sablon ini.',
+            ],
+            'long_fabric' => [
+                'required' => 'Panjang kain wajib diisi.',
+                'numeric'  => 'Panjang kain harus berupa angka.',
+                'min'      => 'Panjang kain minimal 0.',
+            ],
+        ],
         'supplier_id' => [
             'required' => 'Konveksi wajib dipilih.',
             'exists'   => 'Konveksi yang dipilih tidak valid.',

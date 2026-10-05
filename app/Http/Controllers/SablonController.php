@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Sablon\SaveSablonAction;
+use App\Actions\Sablon\UpdateSablonLongFabricAction;
 use App\Actions\Sablon\UpdateSablonStatusAction;
 use App\Enums\StatusSablonEnum;
 use App\Helpers\WeekHelper;
 use App\Http\Requests\Sablon\SaveSablonRequest;
+use App\Http\Requests\Sablon\UpdateLongFabricSablonRequest;
 use App\Http\Resources\SablonResource;
 use App\Models\Fabric;
 use App\Models\Sablon;
@@ -164,13 +166,42 @@ class SablonController extends Controller
         $this->authorize('sablons.update');
 
         $validated = $request->validate([
-            'status' => ['required', new Enum(StatusSablonEnum::class)],
+            'status'                => ['required', new Enum(StatusSablonEnum::class)],
+            'details'               => ['nullable', 'array'],
+            'details.*.id'          => ['required_with:details', 'integer'],
+            'details.*.long_fabric' => ['required_with:details', 'numeric', 'min:0'],
         ]);
 
-        $action->handle($sablon, $validated['status']);
+        if (! empty($validated['details'])) {
+            $ownedIds = $sablon->sablonDetails()->pluck('id')->map(fn($id) => (int) $id);
+            foreach ($validated['details'] as $index => $row) {
+                if (! $ownedIds->contains((int) $row['id'])) {
+                    return response()->json([
+                        'message' => __('sablon.validation.long_fabric_modal.id.invalid', ['row' => $index + 1]),
+                        'errors'  => [
+                            "details.{$index}.id" => [__('sablon.validation.long_fabric_modal.id.invalid', ['row' => $index + 1])],
+                        ],
+                    ], 422);
+                }
+            }
+        }
+
+        $action->handle($sablon, $validated['status'], $validated['details'] ?? null);
 
         return response()->json([
             'message' => __('sablon.status_updated_success'),
+        ]);
+    }
+
+    public function updateLongFabric(UpdateLongFabricSablonRequest $request, Sablon $sablon, UpdateSablonLongFabricAction $action)
+    {
+        $this->authorize('sablons.update');
+
+        $sablon = $action->handle($sablon, $request->validated('details'));
+
+        return response()->json([
+            'message' => __('sablon.long_fabric_modal.updated_success'),
+            'data'    => new SablonResource($sablon),
         ]);
     }
 

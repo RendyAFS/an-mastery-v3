@@ -113,6 +113,19 @@ return [
         'save'   => 'Save',
     ],
 
+    'long_fabric_modal' => [
+        'title'           => 'Input Fabric Length',
+        'hint'            => 'Click to input fabric length',
+        'color'           => 'Color',
+        'long_fabric'     => 'Length (m)',
+        'total'           => 'Total Length',
+        'total_sablon'    => 'Estimated Total Sablon',
+        'recalc_note'     => 'Total sablon & employee fees will be recalculated automatically.',
+        'cancel'          => 'Cancel',
+        'save'            => 'Save',
+        'updated_success' => 'Fabric length updated successfully.',
+    ],
+
     'card'          => [
         'date'                => 'Date',
         'total_sablon'        => 'Total Sablon',
@@ -133,6 +146,21 @@ return [
 
 
     'validation' => [
+        'long_fabric_modal' => [
+            'details' => [
+                'required' => 'At least one fabric detail is required.',
+            ],
+            'id' => [
+                'required' => 'Invalid fabric detail.',
+                'distinct' => 'Fabric details must not be duplicated.',
+                'invalid'  => 'Fabric detail on row :row does not belong to this sablon.',
+            ],
+            'long_fabric' => [
+                'required' => 'Fabric length is required.',
+                'numeric'  => 'Fabric length must be a number.',
+                'min'      => 'Fabric length must be at least 0.',
+            ],
+        ],
         'supplier_id' => [
             'required' => 'Konveksi is required.',
             'exists'   => 'The selected supplier is invalid.',
