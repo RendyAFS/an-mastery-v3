@@ -12,6 +12,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -23,6 +25,7 @@ class User extends Authenticatable implements HasMedia
      * @var list<string>
      */
     protected $fillable = [
+        'workshop_id',
         'name',
         'email',
         'password',
@@ -56,6 +59,11 @@ class User extends Authenticatable implements HasMedia
     public function getRoleIdAttribute(): ?int
     {
         return $this->roles()->first()?->id;
+    }
+
+    public function workshop(): BelongsTo
+    {
+        return $this->belongsTo(Workshop::class, 'workshop_id');
     }
 
     public function registerMediaCollections(): void

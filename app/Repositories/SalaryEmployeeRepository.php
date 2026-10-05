@@ -38,6 +38,7 @@ class SalaryEmployeeRepository
             ->all();
 
         $eligibleDetails = SablonEmployeeDetail::query()
+            ->whereHas('sablon')
             ->whereNull('salary_employee_id')
             ->eligibleForSalary()
             ->inWeek($start, $end)
@@ -69,6 +70,7 @@ class SalaryEmployeeRepository
             ->keyBy(fn($p) => $p->employee_id . '|' . Carbon::parse($p->week_of)->toDateString());
 
         $allDetails = SablonEmployeeDetail::query()
+            ->whereHas('sablon')
             ->whereNull('salary_employee_id')
             ->inWeek($start, $end)
             ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
@@ -82,6 +84,7 @@ class SalaryEmployeeRepository
             });
 
         $openInProgressByEmployee = SablonEmployeeDetail::query()
+            ->whereHas('sablon')
             ->openInProgress()
             ->with(['sablon.supplier', 'sablon.imageFabric', 'employee'])
             ->get()

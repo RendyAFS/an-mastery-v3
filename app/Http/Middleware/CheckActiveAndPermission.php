@@ -23,6 +23,32 @@ class CheckActiveAndPermission
             abort(403, 'Your account is inactive.');
         }
 
+        if (is_null($user->workshop_id)) {
+            $allowedRoutes = ['workshops.switch', 'workshops.active-list', 'logout', 'locale.switch'];
+            $currentRoute = $request->route()?->getName();
+
+            if (!in_array($currentRoute, $allowedRoutes) && ($request->expectsJson() || $request->ajax())) {
+                if ($request->has('draw')) {
+                    return response()->json([
+                        'draw'            => (int) $request->input('draw'),
+                        'recordsTotal'    => 0,
+                        'recordsFiltered' => 0,
+                        'data'            => [],
+                    ]);
+                }
+
+                if ($request->isMethod('GET')) {
+                    return response()->json([
+                        'data' => [],
+                    ]);
+                }
+
+                return response()->json([
+                    'message' => __('workshop.must_select_workshop')
+                ], 403);
+            }
+        }
+
         return $next($request);
     }
 }

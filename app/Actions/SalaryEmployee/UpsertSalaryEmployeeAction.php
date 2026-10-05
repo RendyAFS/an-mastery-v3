@@ -47,6 +47,7 @@ class UpsertSalaryEmployeeAction
                 : collect();
 
             $newEligibleDetails = SablonEmployeeDetail::query()
+                ->whereHas('sablon')
                 ->where('employee_id', $employeeId)
                 ->whereNull('salary_employee_id')
                 ->eligibleForSalary()
