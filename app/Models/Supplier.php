@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,9 +11,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Supplier extends Model
 {
-    use Userstamps, SoftDeletes;
+    use Userstamps, SoftDeletes, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'name',
         'address',
         'contact',

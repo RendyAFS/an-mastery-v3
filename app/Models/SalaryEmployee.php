@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\StatusSalaryEmployeeEnum;
 use App\Helpers\SalaryBonusHelper;
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,9 +14,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class SalaryEmployee extends Model
 {
-    use Userstamps, SoftDeletes;
+    use Userstamps, SoftDeletes, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'employee_id',
         'fee',
         'additional_fee',

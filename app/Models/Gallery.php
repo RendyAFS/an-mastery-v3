@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Mattiverse\Userstamps\Traits\Userstamps;
@@ -10,9 +11,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Gallery extends Model implements HasMedia
 {
-    use Userstamps, SoftDeletes, InteractsWithMedia;
+    use Userstamps, SoftDeletes, InteractsWithMedia, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'name',
         'notes',
     ];

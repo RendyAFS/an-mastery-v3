@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StatusSablonEnum;
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,9 +12,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Fabric extends Model
 {
-    use Userstamps, SoftDeletes;
+    use Userstamps, SoftDeletes, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'supplier_id',
         'type_fabric_id',
         'date_coming',

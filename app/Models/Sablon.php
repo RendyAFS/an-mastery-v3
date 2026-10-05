@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StatusSablonEnum;
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,9 +13,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Sablon extends Model
 {
-    use Userstamps, SoftDeletes;
+    use Userstamps, SoftDeletes, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'supplier_id',
         'fabric_id',
         'image_fabric_id',
