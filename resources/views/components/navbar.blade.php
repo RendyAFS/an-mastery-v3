@@ -18,7 +18,26 @@
         </div>
 
         <!-- Right -->
-        <div class="flex items-center gap-5">
+        <div class="flex items-center gap-2 sm:gap-4">
+            <!-- Workshop Switcher Button (Tablet & Desktop) -->
+            <button type="button"
+                data-hs-overlay="#modal-switch-workshop"
+                class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-(--color-gray)/20 hover:border-(--color-primary)/50 bg-(--color-light-gray)/60 dark:bg-(--color-dark-slate)/80 hover:bg-(--color-primary)/10 text-(--color-dark) dark:text-(--color-light) transition-all cursor-pointer group shadow-2xs"
+                title="{{ __('workshop.switch_workshop') }}">
+                <div class="size-7 rounded-md bg-(--color-primary)/10 dark:bg-(--color-primary)/20 text-(--color-primary) flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <i data-lucide="store" class="size-4"></i>
+                </div>
+                <div class="flex flex-col text-left leading-tight max-w-[140px] md:max-w-[220px]">
+                    <span class="text-[9px] text-(--color-dark-gray) dark:text-(--color-gray) uppercase tracking-wider font-semibold">
+                        {{ __('models.Workshop') }}
+                    </span>
+                    <span class="text-xs font-semibold text-(--color-dark) dark:text-(--color-light) truncate">
+                        {{ $user?->workshop?->name ?? __('workshop.no_workshop') }}
+                    </span>
+                </div>
+                <i data-lucide="chevrons-up-down" class="size-3.5 text-(--color-dark-gray) dark:text-(--color-gray) shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            </button>
+
             {{-- Toggle Theme (desktop only) --}}
             <div class="hidden lg:block">
                 @include('components.toggle-theme')
@@ -85,6 +104,26 @@
                         </p>
                     </div>
 
+                    {{-- Workshop Switcher (mobile only in dropdown) --}}
+                    <div class="sm:hidden border-t border-(--color-gray)/20 my-1 py-1">
+                        <div class="px-3 py-1">
+                            <p class="text-[11px] font-semibold uppercase tracking-wide text-(--color-dark-gray) dark:text-(--color-gray)">
+                                {{ __('models.Workshop') }}
+                            </p>
+                            <button type="button"
+                                data-hs-overlay="#modal-switch-workshop"
+                                class="w-full flex items-center justify-between gap-2 mt-1.5 p-2 rounded-lg bg-(--color-primary)/10 border border-(--color-primary)/20 text-(--color-primary) hover:bg-(--color-primary)/20 transition-colors text-left cursor-pointer">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <i data-lucide="store" class="size-4 shrink-0"></i>
+                                    <span class="text-xs font-semibold truncate">
+                                        {{ $user?->workshop?->name ?? __('workshop.no_workshop') }}
+                                    </span>
+                                </div>
+                                <span class="text-[11px] font-medium underline shrink-0">{{ __('workshop.switch_workshop') }}</span>
+                            </button>
+                        </div>
+                    </div>
+
                     {{-- Theme & Language (mobile only) --}}
                     <div class="lg:hidden border-t border-b border-(--color-gray)/20 my-1 py-1 space-y-2">
                         <div class="px-3 py-1">
@@ -149,6 +188,13 @@
                         {{ __('navbar.Profile') }}
                     </a>
 
+                    <button type="button"
+                        data-hs-overlay="#modal-switch-workshop"
+                        class="hidden sm:flex w-full items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-(--color-dark) dark:text-(--color-gray) hover:bg-(--color-gray)/20 cursor-pointer">
+                        <i data-lucide="store" class="size-4"></i>
+                        {{ __('workshop.switch_workshop') }}
+                    </button>
+
                     @if (auth()->user()->can('dashboard.log-viewer'))
                         <a href="{{ route('log-viewer.index') }}" target="_blank"
                             class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
@@ -184,3 +230,6 @@
         </div>
     </div>
 </nav>
+
+@include('components.partials._modal-switch-workshop')
+

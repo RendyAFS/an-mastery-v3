@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToWorkshop;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,9 +11,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Memo extends Model
 {
-    use SoftDeletes, Userstamps;
+    use SoftDeletes, Userstamps, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'employee_id',
         'salary_employee_id',
         'name',

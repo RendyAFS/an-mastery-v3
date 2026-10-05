@@ -25,4 +25,5 @@ return [
     'TypeColor'            => 'Jenis Warna',
     'TypeFabric'           => 'Jenis Kain',
     'User'                 => 'Pengguna',
+    'Workshop'             => 'Workshop',
 ];

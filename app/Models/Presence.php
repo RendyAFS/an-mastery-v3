@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToWorkshop;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,9 +11,10 @@ use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Presence extends Model
 {
-    use Userstamps, SoftDeletes;
+    use Userstamps, SoftDeletes, BelongsToWorkshop;
 
     protected $fillable = [
+        'workshop_id',
         'employee_id',
         'week_of',
         'monday',

@@ -195,6 +195,16 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::delete('{gallery}/force-delete', [App\Http\Controllers\GalleryController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('galleries', App\Http\Controllers\GalleryController::class)->names('galleries');
+
+    // Workshop
+    Route::prefix('workshops')->as('workshops.')->group(function () {
+        Route::get('active-list', [App\Http\Controllers\WorkshopController::class, 'activeList'])->name('active-list');
+        Route::post('switch', [App\Http\Controllers\WorkshopController::class, 'switchWorkshop'])->name('switch');
+        Route::put('{workshop}/restore', [App\Http\Controllers\WorkshopController::class, 'restore'])->name('restore');
+        Route::delete('{workshop}/force-delete', [App\Http\Controllers\WorkshopController::class, 'forceDelete'])->name('force-delete');
+        Route::get('select/workshops', [App\Http\Controllers\WorkshopController::class, 'select'])->name('select');
+    });
+    Route::resource('workshops', App\Http\Controllers\WorkshopController::class)->names('workshops');
 });
 
 

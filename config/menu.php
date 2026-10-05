@@ -22,6 +22,10 @@ return [
                 'name' => 'Roles',
                 'url'  => '/roles',
             ],
+            [
+                'name' => 'Workshops',
+                'url'  => '/workshops',
+            ],
         ],
     ],
 

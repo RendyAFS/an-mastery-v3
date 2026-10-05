@@ -23,7 +23,7 @@ class DashboardRepository
         return [
             'employees_total'                      => Employee::where('is_active', true)->count(),
             'suppliers_total'                      => Supplier::where('is_active', true)->count(),
-            'fabric_stock_total'                   => (int) FabricDetail::sum('stock'),
+            'fabric_stock_total'                   => (int) FabricDetail::whereHas('fabric')->sum('stock'),
             'bill_supplier_unpaid_count'           => BillSupplier::where('is_paid', false)->count(),
             'bill_supplier_unpaid_total'           => $unpaidTotal,
             'bill_supplier_unpaid_total_formatted' => RupiahHelper::format($unpaidTotal),

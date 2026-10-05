@@ -1,5 +1,9 @@
 import { initLucide } from "@/utils/lucide";
 
+if (window.$ && window.$.fn && window.$.fn.dataTable) {
+    window.$.fn.dataTable.ext.errMode = "none";
+}
+
 export default function initDatatable({
     table,
     ajax,
@@ -10,6 +14,10 @@ export default function initDatatable({
     rowClickRoute = null,
     onRowClick = null,
 }) {
+    if (window.$ && window.$.fn && window.$.fn.dataTable) {
+        window.$.fn.dataTable.ext.errMode = "none";
+    }
+
     if (!document.querySelector(table)) return;
 
     const tableId = table.replace("#", "");

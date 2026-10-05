@@ -9,6 +9,7 @@ return [
     'Access Management'   => 'Access Management',
     'Users'               => 'Users',
     'Roles'               => 'Roles',
+    'Workshops'           => 'Workshops',
     'People'              => 'People',
     'Suppliers'           => 'Suppliers',
     'Employees'           => 'Employees',
