@@ -113,6 +113,19 @@ return [
         'save'   => 'Save',
     ],
 
+    'long_fabric_modal' => [
+        'title'           => 'Input Fabric Length',
+        'hint'            => 'Click to input fabric length',
+        'color'           => 'Color',
+        'long_fabric'     => 'Length (m)',
+        'total'           => 'Total Length',
+        'total_sablon'    => 'Estimated Total Sablon',
+        'recalc_note'     => 'Total sablon & employee fees will be recalculated automatically.',
+        'cancel'          => 'Cancel',
+        'save'            => 'Save',
+        'updated_success' => 'Fabric length updated successfully.',
+    ],
+
     'card'          => [
         'date'                => 'Date',
         'total_sablon'        => 'Total Sablon',
@@ -133,6 +146,21 @@ return [
 
 
     'validation' => [
+        'long_fabric_modal' => [
+            'details' => [
+                'required' => 'At least one fabric detail is required.',
+            ],
+            'id' => [
+                'required' => 'Invalid fabric detail.',
+                'distinct' => 'Fabric details must not be duplicated.',
+                'invalid'  => 'Fabric detail on row :row does not belong to this sablon.',
+            ],
+            'long_fabric' => [
+                'required' => 'Fabric length is required.',
+                'numeric'  => 'Fabric length must be a number.',
+                'min'      => 'Fabric length must be at least 0.',
+            ],
+        ],
         'supplier_id' => [
             'required' => 'Konveksi is required.',
             'exists'   => 'The selected supplier is invalid.',
@@ -164,13 +192,15 @@ return [
         ],
 
         'total_long_fabric' => [
-            'numeric' => 'Total fabric length must be a number.',
-            'min'     => 'Total fabric length must be at least 0.',
+            'numeric'  => 'Total fabric length must be a number.',
+            'min'      => 'Total fabric length must be at least 0.',
+            'mismatch' => 'Total fabric length does not match the system calculation (expected :expected).',
         ],
 
         'total_sablon' => [
-            'numeric' => 'Total printing quantity must be a number.',
-            'min'     => 'Total printing quantity must be at least 0.',
+            'numeric'  => 'Total printing quantity must be a number.',
+            'min'      => 'Total printing quantity must be at least 0.',
+            'mismatch' => 'Total sablon does not match the system calculation (expected :expected).',
         ],
 
         'date_sablon' => [
@@ -194,13 +224,15 @@ return [
             'min'      => 'At least one fabric detail is required.',
 
             'fabric_detail_id' => [
-                'required' => 'Fabric detail is required.',
-                'exists'   => 'The selected fabric detail is invalid.',
+                'required'              => 'Fabric detail is required.',
+                'exists'                => 'The selected fabric detail is invalid.',
+                'not_belongs_to_fabric' => 'Fabric detail on row :row does not belong to the selected fabric.',
             ],
 
             'color_fabric_id' => [
                 'required' => 'Fabric color is required.',
                 'exists'   => 'The selected fabric color is invalid.',
+                'mismatch' => 'Fabric color on row :row does not match the fabric detail.',
             ],
 
             'long_fabric' => [
@@ -211,6 +243,10 @@ return [
 
         'employee_details' => [
             'array' => 'Invalid employee details format.',
+
+            'id' => [
+                'invalid' => 'Employee detail on row :row is not valid for this sablon.',
+            ],
 
             'employee_id' => [
                 'required_with' => 'Employee is required.',
@@ -223,8 +259,9 @@ return [
             ],
 
             'fee' => [
-                'numeric' => 'Fee must be a number.',
-                'min'     => 'Fee must be at least 0.',
+                'numeric'  => 'Fee must be a number.',
+                'min'      => 'Fee must be at least 0.',
+                'mismatch' => 'Employee fee on row :row does not match the system calculation (expected :expected).',
             ],
 
             'employee_change_id' => [

@@ -13,7 +13,8 @@ class SaveSablonAction
     public function __construct(
         private UpsertSalaryEmployeeAction $upsertSalaryEmployeeAction,
         private SettleBonAction $settleBonAction,
-        private SettleLateCompletionAction $settleLateCompletionAction
+        private SettleLateCompletionAction $settleLateCompletionAction,
+        private CalculateSablonAction $calculateSablonAction
     ) {}
 
     private function syncEmployeeDetails(Sablon $sablon, array $employeeDetails): array
@@ -97,8 +98,17 @@ class SaveSablonAction
     {
         $data = $request->validated();
 
+        $calculation = $this->calculateSablonAction->handle($data, $sablon);
+
+        $data['total_long_fabric'] = (int) round($calculation['total_long_fabric']);
+        $data['total_sablon']      = (int) round($calculation['total_sablon']);
+
         $fabricDetails   = $data['fabric_details'] ?? [];
         $employeeDetails = $data['employee_details'] ?? [];
+
+        foreach ($employeeDetails as $index => $detail) {
+            $employeeDetails[$index]['fee'] = (int) round($calculation['employee_fees'][$index]['fee'] ?? 0);
+        }
 
         unset($data['fabric_details'], $data['employee_details']);
 

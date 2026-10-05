@@ -113,6 +113,19 @@ return [
         'save'   => 'Simpan',
     ],
 
+    'long_fabric_modal' => [
+        'title'           => 'Input Panjang Kain',
+        'hint'            => 'Klik untuk input panjang kain',
+        'color'           => 'Warna',
+        'long_fabric'     => 'Panjang (m)',
+        'total'           => 'Total Panjang',
+        'total_sablon'    => 'Estimasi Total Sablon',
+        'recalc_note'     => 'Total sablon & gaji karyawan akan dihitung ulang otomatis.',
+        'cancel'          => 'Batal',
+        'save'            => 'Simpan',
+        'updated_success' => 'Panjang kain berhasil diperbarui.',
+    ],
+
     'card'          => [
         'date'                => 'Tanggal',
         'total_sablon'        => 'Total Sablon',
@@ -132,6 +145,21 @@ return [
     ],
 
     'validation' => [
+        'long_fabric_modal' => [
+            'details' => [
+                'required' => 'Minimal satu detail kain harus diisi.',
+            ],
+            'id' => [
+                'required' => 'Detail kain tidak valid.',
+                'distinct' => 'Detail kain tidak boleh duplikat.',
+                'invalid'  => 'Detail kain baris ke-:row bukan milik sablon ini.',
+            ],
+            'long_fabric' => [
+                'required' => 'Panjang kain wajib diisi.',
+                'numeric'  => 'Panjang kain harus berupa angka.',
+                'min'      => 'Panjang kain minimal 0.',
+            ],
+        ],
         'supplier_id' => [
             'required' => 'Konveksi wajib dipilih.',
             'exists'   => 'Konveksi yang dipilih tidak valid.',
@@ -163,13 +191,15 @@ return [
         ],
 
         'total_long_fabric' => [
-            'numeric' => 'Total panjang kain harus berupa angka.',
-            'min'     => 'Total panjang kain minimal 0.',
+            'numeric'  => 'Total panjang kain harus berupa angka.',
+            'min'      => 'Total panjang kain minimal 0.',
+            'mismatch' => 'Total panjang kain tidak sesuai dengan perhitungan sistem (seharusnya :expected).',
         ],
 
         'total_sablon' => [
-            'numeric' => 'Total sablon harus berupa angka.',
-            'min'     => 'Total sablon minimal 0.',
+            'numeric'  => 'Total sablon harus berupa angka.',
+            'min'      => 'Total sablon minimal 0.',
+            'mismatch' => 'Total sablon tidak sesuai dengan perhitungan sistem (seharusnya :expected).',
         ],
 
         'date_sablon' => [
@@ -193,13 +223,15 @@ return [
             'min'      => 'Minimal satu detail kain harus ditambahkan.',
 
             'fabric_detail_id' => [
-                'required' => 'Detail kain wajib dipilih.',
-                'exists'   => 'Detail kain yang dipilih tidak valid.',
+                'required'              => 'Detail kain wajib dipilih.',
+                'exists'                => 'Detail kain yang dipilih tidak valid.',
+                'not_belongs_to_fabric' => 'Detail kain baris ke-:row bukan bagian dari kain yang dipilih.',
             ],
 
             'color_fabric_id' => [
                 'required' => 'Warna kain wajib dipilih.',
                 'exists'   => 'Warna kain yang dipilih tidak valid.',
+                'mismatch' => 'Warna kain baris ke-:row tidak sesuai dengan detail kain.',
             ],
 
             'long_fabric' => [
@@ -210,6 +242,10 @@ return [
 
         'employee_details' => [
             'array' => 'Format detail karyawan tidak valid.',
+
+            'id' => [
+                'invalid' => 'Detail karyawan baris ke-:row tidak valid untuk sablon ini.',
+            ],
 
             'employee_id' => [
                 'required_with' => 'Karyawan wajib dipilih.',
@@ -222,8 +258,9 @@ return [
             ],
 
             'fee' => [
-                'numeric' => 'Gaji harus berupa angka.',
-                'min'     => 'Gaji minimal 0.',
+                'numeric'  => 'Gaji harus berupa angka.',
+                'min'      => 'Gaji minimal 0.',
+                'mismatch' => 'Gaji karyawan baris ke-:row tidak sesuai dengan perhitungan sistem (seharusnya :expected).',
             ],
 
             'employee_change_id' => [

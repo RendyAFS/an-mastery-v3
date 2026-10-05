@@ -5,6 +5,8 @@ import trans from "@/utils/trans";
 import filterStorage from "@/utils/filter-storage";
 import { getFlatpickrInstance } from "@/utils/flatpickr-init";
 import { getCenteredWeekRange } from "@/utils/week";
+import { startLoading, stopLoading } from "@/utils/button-loading";
+import { initLucide } from "@/utils/lucide";
 
 const statusBadgeMap = {
     ON_PROGRESS: "badge-warning",
@@ -16,6 +18,7 @@ const statusBadgeMap = {
 const PageScript = (function () {
     let cardgrid;
     let bulkSelect;
+    const itemsMap = new Map();
     const modelName = window.langModels?.Sablon ?? "Sablon";
 
     const getDefaultRange = () => getCenteredWeekRange(1, 1);
@@ -75,6 +78,9 @@ const PageScript = (function () {
         window.langSablon?.statuses?.[status] ?? status;
 
     const renderCard = (item) => {
+        itemsMap.set(Number(item.id), item);
+        itemsMap.set(String(item.id), item);
+
         const isDeleted = item.deleted_at !== null;
         const badge = statusBadgeMap[item.status] ?? "badge-primary";
 
@@ -103,8 +109,12 @@ const PageScript = (function () {
                     <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.total_sablon}</p>
                     <p class="text-sm font-medium">${item.total_sablon_formated ?? 0}</p>
                 </div>
-                <div class="bg-(--color-gray)/10 rounded-lg p-2">
-                    <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.long_fabric}</p>
+                <div class="bg-(--color-gray)/10 rounded-lg p-2 ${!isDeleted ? "hover:bg-(--color-gray)/20 transition cursor-pointer" : ""}"
+                    ${!isDeleted ? `data-no-card-click data-action="edit-long-fabric" data-id="${item.id}" title="${window.langSablon.long_fabric_modal?.hint ?? ""}"` : ""}>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] text-(--color-dark-gray) mb-0.5">${window.langSablon.card.long_fabric}</p>
+                        ${!isDeleted ? '<i data-lucide="edit-3" class="size-3 text-(--color-dark-gray)"></i>' : ""}
+                    </div>
                     <p class="text-sm font-medium">${item.total_long_fabric ?? 0} m</p>
                 </div>
                 <div class="bg-(--color-gray)/10 rounded-lg p-2">
@@ -115,10 +125,14 @@ const PageScript = (function () {
 
         const fabricDetailsHtml = item.sablonDetails?.length
             ? `
-                    <div class="space-y-1">
-                        <p class="text-xs font-semibold">
-                            ${window.langSablon.card.fabric_details}
-                        </p>
+                    <div class="space-y-1 rounded-lg p-2 bg-(--color-gray)/5 ${!isDeleted ? "hover:bg-(--color-gray)/15 transition cursor-pointer border border-transparent hover:border-(--color-gray)/20" : ""}"
+                        ${!isDeleted ? `data-no-card-click data-action="edit-long-fabric" data-id="${item.id}" title="${window.langSablon.long_fabric_modal?.hint ?? ""}"` : ""}>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold">
+                                ${window.langSablon.card.fabric_details}
+                            </p>
+                            ${!isDeleted ? `<span class="text-[11px] text-(--color-primary) flex items-center gap-1 font-medium"><i data-lucide="pencil" class="size-3"></i> ${window.langSablon.long_fabric_modal?.title ?? "Edit"}</span>` : ""}
+                        </div>
 
                         <ul class="space-y-1 text-xs">
                             ${item.sablonDetails
@@ -263,28 +277,119 @@ const PageScript = (function () {
         </div>`;
     };
 
+    const updateStatusModalFabricPreview = () => {
+        let total = 0;
+        $(".modal-long-fabric-input").each(function () {
+            const val = parseFloat($(this).val()) || 0;
+            total += val;
+        });
+
+        const price = parseFloat($("#status-sablon-price").val()) || 0;
+        const totalSablon = total * price;
+
+        $("#status-modal-total-preview").text(`${total} m`);
+        $("#status-modal-total-sablon-preview").text(
+            `Rp ${new Intl.NumberFormat("id-ID").format(Math.round(totalSablon))}`,
+        );
+    };
+
+    const openStatusModal = (id, currentStatus = null) => {
+        const item =
+            itemsMap.get(id) ||
+            itemsMap.get(Number(id)) ||
+            itemsMap.get(String(id));
+        if (!item) return;
+
+        const status = currentStatus ?? item.status;
+        $("#status-sablon-id").val(item.id);
+        const price = Number(item.priceEmployee?.price) || 0;
+        $("#status-sablon-price").val(price);
+
+        window.setSelectValue?.("#modal-status", status);
+
+        const infoText = `${item.supplier?.name ?? "-"} | ${item.imageFabric?.name ?? "-"} | ${item.typeFabric?.name ?? "-"}`;
+        $("#status-modal-sablon-info").text(infoText);
+
+        const container = $("#status-modal-fabric-items");
+        container.empty();
+
+        if (item.sablonDetails?.length) {
+            $("#status-modal-fabric-section").removeClass("hidden");
+            item.sablonDetails.forEach((detail) => {
+                const colorName = detail.colorFabric?.name ?? "-";
+                const val = detail.long_fabric ?? 0;
+
+                const rowHtml = `
+                    <div class="flex items-center justify-between gap-3 p-2 rounded-lg bg-(--color-gray)/10">
+                        <div class="min-w-0">
+                            <span class="text-xs font-semibold text-(--color-dark) dark:text-(--color-light) block truncate">
+                                ${colorName}
+                            </span>
+                        </div>
+                        <div class="w-28 flex items-center gap-1.5 shrink-0">
+                            <input type="number" step="any" min="0"
+                                class="modal-long-fabric-input px-2.5 py-1 text-sm font-semibold text-right block w-full rounded-lg bg-(--color-light) border border-(--color-gray) focus:border-(--color-primary) focus:ring focus:ring-(--color-primary)/30 dark:bg-(--color-dark-slate) dark:border-(--color-slate) dark:text-(--color-light)"
+                                data-detail-id="${detail.id}"
+                                value="${val}">
+                            <span class="text-xs text-(--color-dark-gray) font-medium">m</span>
+                        </div>
+                    </div>
+                `;
+                container.append(rowHtml);
+            });
+            updateStatusModalFabricPreview();
+        } else {
+            $("#status-modal-fabric-section").addClass("hidden");
+        }
+
+        window.HSStaticMethods?.autoInit();
+        initLucide();
+        HSOverlay.open("#modal-update-status");
+    };
+
     const initStatusModal = () => {
         $(document).on("click", ".btn-status", function (e) {
             e.stopPropagation();
 
             const id = $(this).data("id");
             const status = $(this).data("status");
+            openStatusModal(id, status);
+        });
 
-            $("#status-sablon-id").val(id);
+        $(document).on(
+            "click",
+            '[data-action="edit-long-fabric"]',
+            function (e) {
+                e.stopPropagation();
 
-            window.setSelectValue?.("#modal-status", status);
-            window.HSStaticMethods?.autoInit();
+                const id = $(this).data("id");
+                openStatusModal(id);
+            },
+        );
 
-            HSOverlay.open("#modal-update-status");
+        $(document).on("input", ".modal-long-fabric-input", function () {
+            updateStatusModalFabricPreview();
         });
 
         $(document).on("click", "#btn-save-status", async function () {
             const id = $("#status-sablon-id").val();
             const status = $("#modal-status").val();
+            if (!id) return;
+
+            const details = [];
+            $(".modal-long-fabric-input").each(function () {
+                details.push({
+                    id: $(this).data("detail-id"),
+                    long_fabric: parseFloat($(this).val()) || 0,
+                });
+            });
+
+            startLoading(this);
 
             try {
                 await ApiProvider.put(route("sablons.update-status", id), {
                     status,
+                    details: details.length ? details : undefined,
                 });
 
                 Toast.success(
@@ -297,6 +402,8 @@ const PageScript = (function () {
                 cardgrid.reload();
             } catch (err) {
                 console.error(err);
+            } finally {
+                stopLoading(this);
             }
         });
     };
