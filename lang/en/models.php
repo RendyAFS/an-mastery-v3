@@ -25,4 +25,5 @@ return [
     'TypeColor'            => 'Type Color',
     'TypeFabric'           => 'Type Fabric',
     'User'                 => 'User',
+    'Workshop'             => 'Workshop',
 ];

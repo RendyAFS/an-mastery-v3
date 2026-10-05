@@ -9,6 +9,7 @@ return [
     'Access Management'   => 'Manajemen Akses',
     'Users'               => 'Pengguna',
     'Roles'               => 'Akses Role',
+    'Workshops'           => 'Workshop',
     'People'              => 'Orang',
     'Suppliers'           => 'Konveksi',
     'Employees'           => 'Karyawan',
