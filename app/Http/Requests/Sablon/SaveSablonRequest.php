@@ -2,8 +2,13 @@
 
 namespace App\Http\Requests\Sablon;
 
+use App\Actions\Sablon\CalculateSablonAction;
+use App\Helpers\RupiahHelper;
+use App\Models\FabricDetail;
+use App\Models\Sablon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class SaveSablonRequest extends FormRequest
 {
@@ -50,6 +55,122 @@ class SaveSablonRequest extends FormRequest
             'employee_details.*.additional_fees.*.nominal' => 'nullable|numeric',
             'employee_details.*.additional_fees.*.notes'   => 'nullable|string|max:255',
         ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    return;
+                }
+
+                $this->validateFabricDetails($validator);
+                $this->validateEmployeeDetailIds($validator);
+
+                if ($validator->errors()->isNotEmpty()) {
+                    return;
+                }
+
+                $this->validateCalculations($validator);
+            },
+        ];
+    }
+
+    public function sablon(): ?Sablon
+    {
+        $sablon = $this->route('sablon');
+
+        return $sablon instanceof Sablon ? $sablon : null;
+    }
+
+    private function validateFabricDetails(Validator $validator): void
+    {
+        $rows    = $this->input('fabric_details', []);
+        $details = FabricDetail::query()
+            ->whereIn('id', collect($rows)->pluck('fabric_detail_id')->filter()->unique())
+            ->get(['id', 'fabric_id', 'color_fabric_id'])
+            ->keyBy('id');
+
+        foreach ($rows as $index => $row) {
+            $detail = $details->get($row['fabric_detail_id'] ?? null);
+            if (! $detail) {
+                continue;
+            }
+
+            if ((int) $detail->fabric_id !== (int) $this->input('fabric_id')) {
+                $validator->errors()->add(
+                    "fabric_details.{$index}.fabric_detail_id",
+                    __('sablon.validation.fabric_details.fabric_detail_id.not_belongs_to_fabric', ['row' => $index + 1])
+                );
+            }
+
+            if ((int) $detail->color_fabric_id !== (int) ($row['color_fabric_id'] ?? 0)) {
+                $validator->errors()->add(
+                    "fabric_details.{$index}.color_fabric_id",
+                    __('sablon.validation.fabric_details.color_fabric_id.mismatch', ['row' => $index + 1])
+                );
+            }
+        }
+    }
+
+    private function validateEmployeeDetailIds(Validator $validator): void
+    {
+        $rows = collect($this->input('employee_details', []));
+        $ids  = $rows->pluck('id')->filter()->map(fn($id) => (int) $id);
+
+        if ($ids->isEmpty()) {
+            return;
+        }
+
+        $sablon   = $this->sablon();
+        $ownedIds = $sablon
+            ? $sablon->sablonEmployeeDetails()->whereIn('id', $ids)->pluck('id')->map(fn($id) => (int) $id)
+            : collect();
+
+        foreach ($rows as $index => $row) {
+            $id = isset($row['id']) ? (int) $row['id'] : null;
+
+            if ($id && ! $ownedIds->contains($id)) {
+                $validator->errors()->add(
+                    "employee_details.{$index}.id",
+                    __('sablon.validation.employee_details.id.invalid', ['row' => $index + 1])
+                );
+            }
+        }
+    }
+
+    private function validateCalculations(Validator $validator): void
+    {
+        $calculator = app(CalculateSablonAction::class);
+        $result     = $calculator->handle($this->all(), $this->sablon());
+
+        if ($this->filled('total_long_fabric') && $calculator->isMismatch($this->input('total_long_fabric'), $result['total_long_fabric'])) {
+            $validator->errors()->add('total_long_fabric', __('sablon.validation.total_long_fabric.mismatch', [
+                'expected' => $result['total_long_fabric'],
+            ]));
+        }
+
+        if ($this->filled('total_sablon') && $calculator->isMismatch($this->input('total_sablon'), $result['total_sablon'])) {
+            $validator->errors()->add('total_sablon', __('sablon.validation.total_sablon.mismatch', [
+                'expected' => RupiahHelper::format($result['total_sablon']),
+            ]));
+        }
+
+        foreach ($this->input('employee_details', []) as $index => $row) {
+            $calc = $result['employee_fees'][$index] ?? null;
+
+            if (! $calc || $calc['locked'] || ! array_key_exists('fee', $row)) {
+                continue;
+            }
+
+            if ($calculator->isMismatch($row['fee'], $calc['fee'])) {
+                $validator->errors()->add("employee_details.{$index}.fee", __('sablon.validation.employee_details.fee.mismatch', [
+                    'row'      => $index + 1,
+                    'expected' => RupiahHelper::format($calc['fee']),
+                ]));
+            }
+        }
     }
 
     public function messages(): array
