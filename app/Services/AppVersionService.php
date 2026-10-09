@@ -295,6 +295,23 @@ echo
 git config --global --add safe.directory "$PROJECT_DIR" 2>/dev/null || true
 git config --global --add safe.directory "*" 2>/dev/null || true
 
+# Setup SSH parameters so web server (e.g. www-data) can authenticate using system SSH keys without host prompt
+export GIT_TERMINAL_PROMPT=0
+
+SSH_KEY_ARG=""
+for CANDIDATE_DIR in "$HOME/.ssh" "/home/mint/.ssh" "/root/.ssh"; do
+    if [ -d "$CANDIDATE_DIR" ]; then
+        for CANDIDATE_KEY in "$CANDIDATE_DIR/id_ed25519" "$CANDIDATE_DIR/id_rsa" "$CANDIDATE_DIR/id_ecdsa"; do
+            if [ -f "$CANDIDATE_KEY" ]; then
+                SSH_KEY_ARG="-i $CANDIDATE_KEY"
+                break 2
+            fi
+        done
+    fi
+done
+
+export GIT_SSH_COMMAND="ssh $SSH_KEY_ARG -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
 # Determine active git branch automatically
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "develop")
 echo "⬇️  Git Pull (branch: $CURRENT_BRANCH)..."
@@ -553,7 +570,7 @@ BASH
                                 break;
                             }
                         }
-                    } elseif (($item['key'] ?? '') === 'update_project' && !str_contains($item['script_content'], 'safe.directory')) {
+                    } elseif (($item['key'] ?? '') === 'update_project' && !str_contains($item['script_content'], 'GIT_SSH_COMMAND')) {
                         foreach ($defaultScripts as $def) {
                             if (($def['key'] ?? '') === 'update_project') {
                                 $item['script_content'] = $def['script_content'];

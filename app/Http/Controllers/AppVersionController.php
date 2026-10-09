@@ -326,13 +326,16 @@ class AppVersionController extends Controller
                     $cleanPath = '/usr/local/bin:/usr/bin:/bin:' . $cleanPath;
                 }
 
+                $homeDir = is_dir('/home/mint') ? '/home/mint' : (getenv('HOME') ?: base_path());
                 $env = [
-                    'PATH'               => $cleanPath,
-                    'HOME'               => getenv('HOME') ?: (base_path() ?: '/tmp'),
-                    'USER'               => getenv('USER') ?: 'www-data',
-                    'GIT_CONFIG_COUNT'   => '1',
-                    'GIT_CONFIG_KEY_0'   => 'safe.directory',
-                    'GIT_CONFIG_VALUE_0' => '*',
+                    'PATH'                => $cleanPath,
+                    'HOME'                => $homeDir,
+                    'USER'                => getenv('USER') ?: 'www-data',
+                    'GIT_CONFIG_COUNT'    => '1',
+                    'GIT_CONFIG_KEY_0'    => 'safe.directory',
+                    'GIT_CONFIG_VALUE_0'  => '*',
+                    'GIT_TERMINAL_PROMPT' => '0',
+                    'GIT_SSH_COMMAND'     => 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null',
                 ];
 
                 $startTime = microtime(true);
