@@ -246,153 +246,181 @@ class AppVersionController extends Controller
                 flush();
             };
 
-            $sendEvent('info', "====================================================\n");
-            $sendEvent('info', "        AN MASTERY SYSTEM TERMINAL RUNNER\n");
-            $sendEvent('info', "====================================================\n");
-            $sendEvent('info', "🕒 Waktu Eksekusi: " . now()->translatedFormat('d F Y H:i:s') . "\n");
-            $sendEvent('info', "👤 Operator: " . (auth()->user()?->name ?? 'Super Admin') . "\n\n");
+            try {
+                $sendEvent('info', "====================================================\n");
+                $sendEvent('info', "        AN MASTERY SYSTEM TERMINAL RUNNER\n");
+                $sendEvent('info', "====================================================\n");
+                $sendEvent('info', "🕒 Waktu Eksekusi: " . now()->translatedFormat('d F Y H:i:s') . "\n");
+                $sendEvent('info', "👤 Operator: " . (auth()->user()?->name ?? 'User') . "\n\n");
 
-            // 1. SAFETY PRE-FLIGHT CHECKS
-            $sendEvent('info', "🔍 Menjalankan Pemeriksaan Keamanan Sistem (Pre-flight Checks)...\n");
-            $preflight = $this->versionService->validateEnvironmentForUpdate();
+                // 1. SAFETY PRE-FLIGHT CHECKS
+                $sendEvent('info', "🔍 Menjalankan Pemeriksaan Keamanan Sistem (Pre-flight Checks)...\n");
+                $preflight = $this->versionService->validateEnvironmentForUpdate();
 
-            $sendEvent('info', " • Direktori Root : {$preflight['base_path']}\n");
-            $sendEvent('info', " • Sistem Operasi : {$preflight['os']}\n");
+                $sendEvent('info', " • Direktori Root : {$preflight['base_path']}\n");
+                $sendEvent('info', " • Sistem Operasi : {$preflight['os']}\n");
 
-            // Check if there are blocking safety errors
-            if (!$preflight['is_safe']) {
-                $sendEvent('error', "\n❌ [SAFETY ABORT] Pengecekan Keamanan Gagal:\n");
-                foreach ($preflight['errors'] as $err) {
-                    $sendEvent('error', "   - {$err}\n");
-                }
-                $sendEvent('error', "\nProses dihentikan secara otomatis demi mencegah kerusakan sistem.\n", [
-                    'success'   => false,
-                    'exit_code' => 1,
-                    'reason'    => 'safety_preflight_failed',
-                ]);
-                return;
-            }
-
-            // Print Warnings if any
-            if (!empty($preflight['warnings'])) {
-                foreach ($preflight['warnings'] as $warn) {
-                    $sendEvent('warning', " ⚠ Peringatan: {$warn}\n");
-                }
-            }
-
-            // 2. RESOLVE SCRIPT DIRECTLY FROM DATABASE APP_SETTINGS
-            $script = $this->versionService->resolveScriptByKey($scriptKey);
-
-            if (!$script || empty($script['script_content'])) {
-                $sendEvent('error', "\n❌ Script dengan key '{$scriptKey}' tidak ditemukan atau isi script kosong di database app_settings.\n", [
-                    'success'   => false,
-                    'exit_code' => 1,
-                ]);
-                return;
-            }
-
-            $scriptName = $script['name'] ?? $scriptKey;
-            $scriptContent = $script['script_content'];
-
-            $sendEvent('info', " • Perintah / Script: {$scriptName}\n");
-            $sendEvent('info', " • Sumber Script: Database app_settings (JSON)\n\n");
-
-            // Create a temporary executable shell script in storage
-            $tempDir = storage_path('app/temp-scripts');
-            if (!\Illuminate\Support\Facades\File::isDirectory($tempDir)) {
-                \Illuminate\Support\Facades\File::makeDirectory($tempDir, 0755, true, true);
-            }
-
-            $tempScriptFile = $tempDir . '/exec_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $scriptKey) . '_' . time() . '.sh';
-            \Illuminate\Support\Facades\File::put($tempScriptFile, str_replace("\r\n", "\n", $scriptContent));
-            @chmod($tempScriptFile, 0755);
-
-            $cmd = "bash " . escapeshellarg($tempScriptFile);
-            $sendEvent('cmd', "$ {$cmd}\n\n");
-
-            // 3. EXECUTE PROCESS WITH REAL-TIME STREAMING
-            $descriptors = [
-                0 => ['pipe', 'r'],
-                1 => ['pipe', 'w'],
-                2 => ['pipe', 'w'],
-            ];
-
-            $env = array_merge($_SERVER, $_ENV, [
-                'GIT_CONFIG_COUNT'   => '1',
-                'GIT_CONFIG_KEY_0'   => 'safe.directory',
-                'GIT_CONFIG_VALUE_0' => '*',
-                'PATH'               => getenv('PATH') ?: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-            ]);
-
-            $process = @proc_open($cmd, $descriptors, $pipes, base_path(), $env);
-
-            if (is_resource($process)) {
-                fclose($pipes[0]);
-                stream_set_blocking($pipes[1], false);
-                stream_set_blocking($pipes[2], false);
-
-                while (true) {
-                    // Check timeout
-                    if ((microtime(true) - $startTime) > $maxExecutionTimeout) {
-                        $sendEvent('error', "\n❌ [TIMEOUT] Proses pembaruan melebihi batas waktu maksimal ({$maxExecutionTimeout} detik). Menghentikan proses.\n");
-                        proc_terminate($process, 9);
-                        break;
+                // Check if there are blocking safety errors
+                if (!$preflight['is_safe']) {
+                    $sendEvent('error', "\n❌ [SAFETY ABORT] Pengecekan Keamanan Gagal:\n");
+                    foreach ($preflight['errors'] as $err) {
+                        $sendEvent('error', "   - {$err}\n");
                     }
+                    $sendEvent('error', "\nProses dihentikan secara otomatis demi mencegah kerusakan sistem.\n", [
+                        'success'   => false,
+                        'exit_code' => 1,
+                        'reason'    => 'safety_preflight_failed',
+                    ]);
+                    return;
+                }
 
-                    $read = [$pipes[1], $pipes[2]];
-                    $write = null;
-                    $except = null;
+                // Print Warnings if any
+                if (!empty($preflight['warnings'])) {
+                    foreach ($preflight['warnings'] as $warn) {
+                        $sendEvent('warning', " ⚠ Peringatan: {$warn}\n");
+                    }
+                }
 
-                    if (stream_select($read, $write, $except, 0, 150000) > 0) {
-                        foreach ($read as $pipe) {
-                            $chunk = fread($pipe, 2048);
-                            if ($chunk !== false && strlen($chunk) > 0) {
+                // 2. RESOLVE SCRIPT DIRECTLY FROM DATABASE APP_SETTINGS
+                $script = $this->versionService->resolveScriptByKey($scriptKey);
+
+                if (!$script || empty($script['script_content'])) {
+                    $sendEvent('error', "\n❌ Script dengan key '{$scriptKey}' tidak ditemukan atau isi script kosong di database app_settings.\n", [
+                        'success'   => false,
+                        'exit_code' => 1,
+                    ]);
+                    return;
+                }
+
+                $scriptName = $script['name'] ?? $scriptKey;
+                $scriptContent = $script['script_content'];
+
+                $sendEvent('info', " • Perintah / Script: {$scriptName}\n");
+                $sendEvent('info', " • Sumber Script: Database app_settings (JSON)\n\n");
+
+                // Create a temporary executable shell script
+                $tempDir = storage_path('app/temp-scripts');
+                if (!\Illuminate\Support\Facades\File::isDirectory($tempDir)) {
+                    @\Illuminate\Support\Facades\File::makeDirectory($tempDir, 0777, true, true);
+                }
+                if (!is_writable($tempDir)) {
+                    $tempDir = sys_get_temp_dir();
+                }
+
+                $tempScriptFile = $tempDir . '/exec_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $scriptKey) . '_' . time() . '.sh';
+                \Illuminate\Support\Facades\File::put($tempScriptFile, str_replace("\r\n", "\n", $scriptContent));
+                @chmod($tempScriptFile, 0755);
+
+                $cmd = "bash " . escapeshellarg($tempScriptFile);
+                $sendEvent('cmd', "$ {$cmd}\n\n");
+
+                // 3. EXECUTE PROCESS WITH REAL-TIME STREAMING
+                $descriptors = [
+                    0 => ['pipe', 'r'],
+                    1 => ['pipe', 'w'],
+                    2 => ['pipe', 'w'],
+                ];
+
+                $cleanPath = getenv('PATH') ?: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin';
+                if (!str_contains($cleanPath, '/usr/local/bin')) {
+                    $cleanPath = '/usr/local/bin:/usr/bin:/bin:' . $cleanPath;
+                }
+
+                $env = [
+                    'PATH'               => $cleanPath,
+                    'HOME'               => getenv('HOME') ?: (base_path() ?: '/tmp'),
+                    'USER'               => getenv('USER') ?: 'www-data',
+                    'GIT_CONFIG_COUNT'   => '1',
+                    'GIT_CONFIG_KEY_0'   => 'safe.directory',
+                    'GIT_CONFIG_VALUE_0' => '*',
+                ];
+
+                $startTime = microtime(true);
+                $maxExecutionTimeout = 360; // 6 minutes max
+                $process = @proc_open($cmd, $descriptors, $pipes, base_path(), $env);
+
+                if (is_resource($process)) {
+                    fclose($pipes[0]);
+                    stream_set_blocking($pipes[1], false);
+                    stream_set_blocking($pipes[2], false);
+
+                    $isRunning = true;
+                    while ($isRunning) {
+                        $status = proc_get_status($process);
+                        $isRunning = $status['running'];
+
+                        $hasData = false;
+                        // Read stdout
+                        while (($chunk = fread($pipes[1], 4096)) !== false && strlen($chunk) > 0) {
+                            $sendEvent('output', $chunk);
+                            $hasData = true;
+                        }
+
+                        // Read stderr
+                        while (($chunk = fread($pipes[2], 4096)) !== false && strlen($chunk) > 0) {
+                            $sendEvent('output', $chunk);
+                            $hasData = true;
+                        }
+
+                        if (!$isRunning) {
+                            // Trailing buffer drain
+                            while (($chunk = fread($pipes[1], 4096)) !== false && strlen($chunk) > 0) {
                                 $sendEvent('output', $chunk);
                             }
+                            while (($chunk = fread($pipes[2], 4096)) !== false && strlen($chunk) > 0) {
+                                $sendEvent('output', $chunk);
+                            }
+                            break;
+                        }
+
+                        // Check timeout
+                        if ((microtime(true) - $startTime) > $maxExecutionTimeout) {
+                            $sendEvent('error', "\n❌ [TIMEOUT] Proses pembaruan melebihi batas waktu maksimal ({$maxExecutionTimeout} detik).\n");
+                            @proc_terminate($process, 9);
+                            break;
+                        }
+
+                        if (!$hasData) {
+                            usleep(100000); // 100ms sleep when no data
                         }
                     }
 
-                    $status = proc_get_status($process);
-                    if (!$status['running']) {
-                        while ($chunk = fread($pipes[1], 2048)) {
-                            if (strlen($chunk) > 0) $sendEvent('output', $chunk);
+                    fclose($pipes[1]);
+                    fclose($pipes[2]);
+                    $exitCode = proc_close($process);
+
+                    // Clean up temporary script file
+                    @unlink($tempScriptFile);
+
+                    if ($exitCode === 0) {
+                        // If target version was requested, update database app_version
+                        if (!empty($targetVersion) && ($scriptKey === 'update_project' || str_contains($scriptKey, 'update'))) {
+                            $cleanTarget = $this->versionService->normalizeVersion($targetVersion);
+                            $this->versionService->setDatabaseVersion($cleanTarget);
+                            $sendEvent('info', "\n💾 Versi database lokal (app_settings) otomatis disinkronkan ke v{$cleanTarget}!\n");
                         }
-                        while ($chunk = fread($pipes[2], 2048)) {
-                            if (strlen($chunk) > 0) $sendEvent('output', $chunk);
-                        }
-                        break;
+
+                        $sendEvent('done', "\n====================================================\n✅ PROSES SELESAI DENGAN SUKSES!\n====================================================\n", [
+                            'exit_code' => 0,
+                            'success'   => true,
+                            'new_version' => $targetVersion ?? null,
+                        ]);
+                    } else {
+                        $sendEvent('error', "\n====================================================\n❌ Proses selesai dengan kode keluar: {$exitCode}\n====================================================\n", [
+                            'exit_code' => $exitCode,
+                            'success'   => false,
+                        ]);
                     }
-                }
-
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                $exitCode = proc_close($process);
-
-                // Clean up temporary script file immediately
-                @unlink($tempScriptFile);
-
-                if ($exitCode === 0) {
-                    // If target version was requested, update database app_version
-                    if (!empty($targetVersion) && ($scriptKey === 'update_project' || str_contains($scriptKey, 'update'))) {
-                        $cleanTarget = $this->versionService->normalizeVersion($targetVersion);
-                        $this->versionService->setDatabaseVersion($cleanTarget);
-                        $sendEvent('info', "\n💾 Versi database lokal (app_settings) otomatis disinkronkan ke v{$cleanTarget}!\n");
-                    }
-
-                    $sendEvent('done', "\n====================================================\n✅ PROSES SELESAI DENGAN SUKSES!\n====================================================\n", [
-                        'exit_code' => 0,
-                        'success'   => true,
-                        'new_version' => $targetVersion ?? null,
-                    ]);
                 } else {
-                    $sendEvent('error', "\n====================================================\n❌ Proses selesai dengan kode keluar: {$exitCode}\n====================================================\n", [
-                        'exit_code' => $exitCode,
+                    if (isset($tempScriptFile)) @unlink($tempScriptFile);
+                    $sendEvent('error', "❌ Gagal menginisialisasi proses perintah sistem (proc_open failed).\n", [
                         'success'   => false,
+                        'exit_code' => 1,
                     ]);
                 }
-            } else {
-                @unlink($tempScriptFile);
-                $sendEvent('error', "❌ Gagal menginisialisasi proses perintah sistem (proc_open failed).\n", [
+            } catch (\Throwable $e) {
+                if (isset($tempScriptFile)) @unlink($tempScriptFile);
+                $sendEvent('error', "\n❌ Terjadi kesalahan sistem: " . $e->getMessage() . "\n", [
                     'success'   => false,
                     'exit_code' => 1,
                 ]);
