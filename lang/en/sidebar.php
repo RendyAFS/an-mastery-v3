@@ -10,6 +10,7 @@ return [
     'Users'               => 'Users',
     'Roles'               => 'Roles',
     'Workshops'           => 'Workshops',
+    'App Version'         => 'App Version',
     'People'              => 'People',
     'Suppliers'           => 'Suppliers',
     'Employees'           => 'Employees',

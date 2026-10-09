@@ -50,6 +50,7 @@
     $langMemo = collect(trans('memo'))->toArray();
     $langWorkshop = collect(trans('workshop'))->toArray();
     $langMyProfile = collect(trans('my-profile'))->toArray();
+    $langAppVersion = collect(trans('app_version'))->toArray();
     // END CRUD
 @endphp
 
@@ -83,5 +84,6 @@
     window.langMemo = @json($langMemo);
     window.langWorkshop = @json($langWorkshop);
     window.langMyProfile = @json($langMyProfile);
+    window.langAppVersion = @json($langAppVersion);
     // END CRUD
 </script>

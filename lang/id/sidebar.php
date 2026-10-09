@@ -10,6 +10,7 @@ return [
     'Users'               => 'Pengguna',
     'Roles'               => 'Akses Role',
     'Workshops'           => 'Workshop',
+    'App Version'         => 'Versi Aplikasi',
     'People'              => 'Orang',
     'Suppliers'           => 'Konveksi',
     'Employees'           => 'Karyawan',

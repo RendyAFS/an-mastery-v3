@@ -26,6 +26,10 @@ return [
                 'name' => 'Workshops',
                 'url'  => '/workshops',
             ],
+            [
+                'name' => 'App Version',
+                'url'  => '/app-version',
+            ],
         ],
     ],
 
