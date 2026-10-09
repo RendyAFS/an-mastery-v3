@@ -167,7 +167,6 @@ import { initLucide } from "@/utils/lucide";
                 release_name: formData.get("release_name") || "",
                 changelog: formData.get("changelog") || "",
                 update_guide: formData.get("update_guide") || "",
-                sync_local: formData.get("sync_local") ? 1 : 0,
             };
 
             startLoading(btnSubmit);

@@ -183,23 +183,11 @@ class AppVersionController extends Controller
             ], 422);
         }
 
-        // 2. Always store version into database app_settings
-        $this->versionService->setDatabaseVersion($version);
-
-        // 3. Optionally sync local environment, config/app.php & README
-        if ($request->boolean('sync_local')) {
-            $this->versionService->updateEnvVersion($version);
-            $this->versionService->updateConfigFileVersion($version);
-            $this->versionService->syncReadme($version);
-            \Illuminate\Support\Facades\Artisan::call('config:clear');
-        }
-
         return response()->json([
             'success' => true,
             'message' => $result['message'],
             'data'    => [
                 'version' => $version,
-                'synced_local' => $request->boolean('sync_local'),
             ],
         ]);
     }

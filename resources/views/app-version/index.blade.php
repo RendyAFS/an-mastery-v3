@@ -253,20 +253,6 @@
                                 </textarea>
                     </div>
 
-                    <!-- Sync Local Checkbox -->
-                    <div
-                        class="flex items-start gap-3 p-3.5 rounded-xl bg-(--color-light-gray)/60 dark:bg-(--color-dark-slate)/60 border border-(--color-gray)/20">
-                        <input type="checkbox" id="check-sync-local" name="sync_local" value="1" checked
-                            class="mt-0.5 size-4 rounded border-(--color-gray)/40 text-(--color-primary) focus:ring-(--color-primary) cursor-pointer">
-                        <label for="check-sync-local"
-                            class="text-xs text-(--color-dark) dark:text-(--color-light) cursor-pointer select-none">
-                            <span class="font-semibold block">{{ __('app_version.sync_readme_label') }}</span>
-                            <span class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray)">
-                                {{ __('app_version.sync_readme_desc', ['table' => 'app_settings', 'file' => 'README.md']) }}
-                            </span>
-                        </label>
-                    </div>
-
                     <!-- Submit Button -->
                     <div class="pt-2 flex justify-end">
                         <button type="submit" id="btn-submit-publish"
