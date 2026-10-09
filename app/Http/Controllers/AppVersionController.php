@@ -21,7 +21,7 @@ class AppVersionController extends Controller
     {
         abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak. Fitur ini hanya untuk Super Admin.');
 
-        $currentVersion = $this->versionService->getCurrentVersion();
+        $currentVersion = $this->versionService->getCurrentVersion(fresh: true);
         $firebaseData = $this->versionService->getFirebaseVersion();
 
         $comparison = null;
@@ -29,20 +29,134 @@ class AppVersionController extends Controller
             $comparison = $this->versionService->compare($currentVersion, $firebaseData['version']);
         }
 
+        $deploymentScripts = $this->versionService->getDeploymentScripts();
+
         if ($request->expectsJson()) {
             return response()->json([
-                'success'         => true,
-                'current_version' => $currentVersion,
-                'firebase_data'   => $firebaseData,
-                'comparison'      => $comparison,
+                'success'            => true,
+                'current_version'    => $currentVersion,
+                'firebase_data'      => $firebaseData,
+                'comparison'         => $comparison,
+                'deployment_scripts' => $deploymentScripts,
             ]);
         }
 
         return view('app-version.index', [
-            'currentVersion' => $currentVersion,
-            'firebaseData'   => $firebaseData,
-            'comparison'     => $comparison,
-            'firebaseConfig' => config('firebase'),
+            'currentVersion'    => $currentVersion,
+            'firebaseData'      => $firebaseData,
+            'comparison'        => $comparison,
+            'deploymentScripts' => $deploymentScripts,
+            'firebaseConfig'    => config('firebase'),
+        ]);
+    }
+
+    /**
+     * Get list of deployment scripts as JSON.
+     */
+    public function getScripts(): JsonResponse
+    {
+        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+
+        return response()->json([
+            'success' => true,
+            'data'    => $this->versionService->getDeploymentScripts(),
+        ]);
+    }
+
+    /**
+     * Save deployment scripts configuration to database app_settings.
+     */
+    public function saveScripts(Request $request): JsonResponse
+    {
+        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+
+        $scripts = $request->input('scripts');
+
+        if (is_string($scripts)) {
+            $scripts = json_decode($scripts, true);
+        }
+
+        if (!is_array($scripts)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Format data JSON script tidak valid.',
+            ], 422);
+        }
+
+        $this->versionService->saveDeploymentScripts($scripts);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Konfigurasi script terminal berhasil diperbarui di database!',
+            'data'    => $this->versionService->getDeploymentScripts(),
+        ]);
+    }
+
+    /**
+     * Get detail of a single script including file content.
+     */
+    public function showScript(string $key): JsonResponse
+    {
+        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+
+        $detail = $this->versionService->getScriptDetail($key);
+
+        if (!$detail) {
+            return response()->json([
+                'success' => false,
+                'message' => "Script dengan key '{$key}' tidak ditemukan.",
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $detail,
+        ]);
+    }
+
+    /**
+     * Save / Update a single script item.
+     */
+    public function saveSingleScript(Request $request): JsonResponse
+    {
+        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+
+        $validated = $request->validate([
+            'key'            => 'required|string|max:100',
+            'name'           => 'required|string|max:200',
+            'icon'           => 'nullable|string|max:50',
+            'description'    => 'nullable|string|max:1000',
+            'script_content' => 'required|string',
+        ]);
+
+        $saved = $this->versionService->saveSingleScript($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Script '{$saved['name']}' berhasil disimpan ke database!",
+            'data'    => $saved,
+        ]);
+    }
+
+    /**
+     * Delete a single script item.
+     */
+    public function deleteScript(string $key): JsonResponse
+    {
+        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+
+        $deleted = $this->versionService->deleteScript($key);
+
+        if (!$deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => "Script dengan key '{$key}' tidak ditemukan.",
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Script '{$key}' berhasil dihapus!",
         ]);
     }
 
@@ -114,13 +228,16 @@ class AppVersionController extends Controller
 
     /**
      * Stream deployment update execution to the client terminal in real-time.
-     * Incorporates strict pre-flight safety checks for folder structure and script validation.
+     * Reads bash script directly from app_settings database and streams output live.
      */
-    public function streamUpdate(): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function streamUpdate(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak. Fitur eksekusi ini hanya untuk Super Admin.');
 
-        return response()->stream(function () {
+        $scriptKey = $request->query('script_key', 'update_project');
+        $targetVersion = $request->query('target_version');
+
+        return response()->stream(function () use ($scriptKey, $targetVersion) {
             while (ob_get_level()) {
                 ob_end_clean();
             }
@@ -136,14 +253,14 @@ class AppVersionController extends Controller
                 flush();
             };
 
-            $sendEvent('info', "=========================================\n");
-            $sendEvent('info', "       AN MASTERY SYSTEM UPDATE\n");
-            $sendEvent('info', "=========================================\n");
+            $sendEvent('info', "====================================================\n");
+            $sendEvent('info', "        AN MASTERY SYSTEM TERMINAL RUNNER\n");
+            $sendEvent('info', "====================================================\n");
             $sendEvent('info', "🕒 Waktu Eksekusi: " . now()->translatedFormat('d F Y H:i:s') . "\n");
             $sendEvent('info', "👤 Operator: " . (auth()->user()?->name ?? 'Super Admin') . "\n\n");
 
             // 1. SAFETY PRE-FLIGHT CHECKS
-            $sendEvent('info', "🔍 Menjalankan Pemeriksaan Keamanan (Safety Pre-flight Checks)...\n");
+            $sendEvent('info', "🔍 Menjalankan Pemeriksaan Keamanan Sistem (Pre-flight Checks)...\n");
             $preflight = $this->versionService->validateEnvironmentForUpdate();
 
             $sendEvent('info', " • Direktori Root : {$preflight['base_path']}\n");
@@ -156,9 +273,9 @@ class AppVersionController extends Controller
                     $sendEvent('error', "   - {$err}\n");
                 }
                 $sendEvent('error', "\nProses dihentikan secara otomatis demi mencegah kerusakan sistem.\n", [
-                    'success' => false,
+                    'success'   => false,
                     'exit_code' => 1,
-                    'reason' => 'safety_preflight_failed',
+                    'reason'    => 'safety_preflight_failed',
                 ]);
                 return;
             }
@@ -170,20 +287,34 @@ class AppVersionController extends Controller
                 }
             }
 
-            // 2. RESOLVE UPDATE COMMAND
-            $script = $preflight['script_path'];
-            if ($script && file_exists($script)) {
-                $sendEvent('info', " • Script Update   : {$script} (Terverifikasi)\n\n");
-                $cmd = "bash " . escapeshellarg($script);
-            } else {
-                $sendEvent('info', " • Mode Update    : Rangkaian Perintah Bawaan (Standard Fallback)\n\n");
-                if (PHP_OS_FAMILY === 'Windows') {
-                    $cmd = 'git pull origin develop && composer install --no-interaction && npm run build && php artisan optimize:clear';
-                } else {
-                    $cmd = 'git pull origin develop && composer install --no-interaction && npm run build && php artisan migrate --force && php artisan optimize:clear';
-                }
+            // 2. RESOLVE SCRIPT DIRECTLY FROM DATABASE APP_SETTINGS
+            $script = $this->versionService->resolveScriptByKey($scriptKey);
+
+            if (!$script || empty($script['script_content'])) {
+                $sendEvent('error', "\n❌ Script dengan key '{$scriptKey}' tidak ditemukan atau isi script kosong di database app_settings.\n", [
+                    'success'   => false,
+                    'exit_code' => 1,
+                ]);
+                return;
             }
 
+            $scriptName = $script['name'] ?? $scriptKey;
+            $scriptContent = $script['script_content'];
+
+            $sendEvent('info', " • Perintah / Script: {$scriptName}\n");
+            $sendEvent('info', " • Sumber Script: Database app_settings (JSON)\n\n");
+
+            // Create a temporary executable shell script in storage
+            $tempDir = storage_path('app/temp-scripts');
+            if (!\Illuminate\Support\Facades\File::isDirectory($tempDir)) {
+                \Illuminate\Support\Facades\File::makeDirectory($tempDir, 0755, true, true);
+            }
+
+            $tempScriptFile = $tempDir . '/exec_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $scriptKey) . '_' . time() . '.sh';
+            \Illuminate\Support\Facades\File::put($tempScriptFile, str_replace("\r\n", "\n", $scriptContent));
+            @chmod($tempScriptFile, 0755);
+
+            $cmd = "bash " . escapeshellarg($tempScriptFile);
             $sendEvent('cmd', "$ {$cmd}\n\n");
 
             // 3. EXECUTE PROCESS WITH REAL-TIME STREAMING
@@ -239,20 +370,32 @@ class AppVersionController extends Controller
                 fclose($pipes[2]);
                 $exitCode = proc_close($process);
 
+                // Clean up temporary script file immediately
+                @unlink($tempScriptFile);
+
                 if ($exitCode === 0) {
-                    $sendEvent('done', "\n=========================================\n✅ UPDATE BERHASIL DISELESAIKAN!\n=========================================\n", [
+                    // If target version was requested, update database app_version
+                    if (!empty($targetVersion) && ($scriptKey === 'update_project' || str_contains($scriptKey, 'update'))) {
+                        $cleanTarget = $this->versionService->normalizeVersion($targetVersion);
+                        $this->versionService->setDatabaseVersion($cleanTarget);
+                        $sendEvent('info', "\n💾 Versi database lokal (app_settings) otomatis disinkronkan ke v{$cleanTarget}!\n");
+                    }
+
+                    $sendEvent('done', "\n====================================================\n✅ PROSES SELESAI DENGAN SUKSES!\n====================================================\n", [
                         'exit_code' => 0,
-                        'success' => true,
+                        'success'   => true,
+                        'new_version' => $targetVersion ?? null,
                     ]);
                 } else {
-                    $sendEvent('error', "\n=========================================\n❌ Update gagal / terhenti dengan kode keluar (exit code): {$exitCode}\n=========================================\n", [
+                    $sendEvent('error', "\n====================================================\n❌ Proses selesai dengan kode keluar: {$exitCode}\n====================================================\n", [
                         'exit_code' => $exitCode,
-                        'success' => false,
+                        'success'   => false,
                     ]);
                 }
             } else {
+                @unlink($tempScriptFile);
                 $sendEvent('error', "❌ Gagal menginisialisasi proses perintah sistem (proc_open failed).\n", [
-                    'success' => false,
+                    'success'   => false,
                     'exit_code' => 1,
                 ]);
             }

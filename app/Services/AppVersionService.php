@@ -12,9 +12,9 @@ class AppVersionService
     /**
      * Get the current local app version from Database or fallback to config.
      */
-    public function getCurrentVersion(): string
+    public function getCurrentVersion(bool $fresh = false): string
     {
-        return (string) AppSetting::get('app_version', config('app.version', '1.0.0'));
+        return (string) (AppSetting::get('app_version', config('app.version', '1.0.0'), $fresh) ?: '1.0.0');
     }
 
     /**
@@ -253,32 +253,411 @@ class AppVersionService
     }
 
     /**
-     * Resolve path to update shell script if available.
+     * Get list of deployment and maintenance scripts stored as JSON in app_settings.
      */
-    public function resolveUpdateScript(): ?string
+    public function getDeploymentScripts(): array
     {
-        $custom = env('APP_UPDATE_SCRIPT');
-        if (!empty($custom) && File::exists($custom)) {
-            return realpath($custom) ?: $custom;
-        }
+        // Default built-in scripts with full bash script content stored directly in database
+        $defaultScripts = [
+            [
+                'key'            => 'update_project',
+                'name'           => 'Update Project (Git, Composer, NPM, DB, Build, Optimize)',
+                'icon'           => 'zap',
+                'description'    => 'Menjalankan pembaruan menyeluruh: Git Pull, Composer, NPM, Database Migration & Seeding, Build Assets, dan Optimize.',
+                'script_content' => <<<'BASH'
+#!/usr/bin/env bash
 
-        $candidates = [
-            '/home/mint/update-an-mastery.sh',
-            '/home/mint/update-all-an-mastery.sh',
-            '/home/mint/project-apps/update-an-mastery.sh',
-            base_path('../update-an-mastery.sh'),
-            base_path('../../update-an-mastery.sh'),
-            base_path('update-an-mastery.sh'),
-            base_path('update.sh'),
+# Resolve project directory dynamically
+if [ -f "artisan" ]; then
+    PROJECT_DIR="$(pwd)"
+elif [ -d "$HOME/project-apps/an-mastery-v3" ]; then
+    PROJECT_DIR="$HOME/project-apps/an-mastery-v3"
+elif [ -d "$HOME/an-mastery-v3" ]; then
+    PROJECT_DIR="$HOME/an-mastery-v3"
+else
+    PROJECT_DIR="$(pwd)"
+fi
+
+echo "========================================="
+echo "      AN MASTERY - UPDATE PROJECT"
+echo "========================================="
+echo
+
+cd "$PROJECT_DIR" || {
+    echo "❌ Project tidak ditemukan: $PROJECT_DIR"
+    exit 1
+}
+
+echo "📁 $(pwd)"
+echo
+
+echo "⬇️  Git Pull..."
+git pull origin main || exit 1
+
+echo
+echo "📦 Composer Install..."
+composer install --no-interaction --prefer-dist --optimize-autoloader || exit 1
+
+echo
+echo "📦 NPM Install..."
+npm install || exit 1
+
+echo
+echo "🗄️  Database Migration..."
+php artisan migrate --force || exit 1
+
+echo
+echo "🌱 Seed Menu Permissions..."
+php artisan db:seed --class=MenuPermissionSeeder --force || exit 1
+
+echo
+echo "🧹 Clear Cache..."
+php artisan optimize:clear || exit 1
+
+echo
+echo "🏗️  Build Assets..."
+npm run build || exit 1
+
+echo
+echo "⚡ Optimize..."
+php artisan optimize || exit 1
+
+IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+if [ -z "$IP" ]; then
+    IP="127.0.0.1"
+fi
+
+echo
+echo "========================================="
+echo "✅ UPDATE BERHASIL"
+echo "========================================="
+echo
+echo "🌐 HTTPS : https://$IP"
+echo "🌐 HTTP  : http://$IP"
+echo
+BASH
+            ],
+            [
+                'key'            => 'backup_db',
+                'name'           => 'Backup Database MySQL',
+                'icon'           => 'database',
+                'description'    => 'Melakukan ekspor dump database MySQL ke folder backup.',
+                'script_content' => <<<'BASH'
+#!/bin/bash
+
+# =========================================
+# AN MASTERY DATABASE BACKUP
+# =========================================
+
+BACKUP_DIR="${BACKUP_DIR:-$HOME/backup-data}"
+
+DB_NAME="an_mastery"
+DB_USER="andri-sablon"
+DB_PASSWORD="@andri-sablon"
+
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+BACKUP_FILE="${BACKUP_DIR}/an-mastery-db-${TIMESTAMP}.sql"
+
+echo "========================================="
+echo "     AN MASTERY DATABASE BACKUP"
+echo "========================================="
+echo
+
+mkdir -p "$BACKUP_DIR"
+
+echo "🗄️  Database : $DB_NAME"
+echo "📄 Backup   : $BACKUP_FILE"
+echo
+
+echo "🗄️  Export database..."
+
+mysqldump \
+    -u"$DB_USER" \
+    -p"$DB_PASSWORD" \
+    --single-transaction \
+    --no-tablespaces \
+    --routines \
+    --triggers \
+    --events \
+    "$DB_NAME" > "$BACKUP_FILE"
+
+if [ $? -ne 0 ]; then
+    echo
+    echo "❌ Database backup GAGAL!"
+    echo
+    rm -f "$BACKUP_FILE"
+    exit 1
+fi
+
+if [ ! -s "$BACKUP_FILE" ]; then
+    echo
+    echo "❌ File SQL kosong!"
+    echo "Backup dibatalkan."
+    rm -f "$BACKUP_FILE"
+    exit 1
+fi
+
+echo
+echo "========================================="
+echo "✅ DATABASE BACKUP BERHASIL"
+echo "========================================="
+echo
+echo "📄 File:"
+echo "$BACKUP_FILE"
+echo
+echo "📊 Ukuran:"
+du -h "$BACKUP_FILE" | awk '{print $1}'
+echo
+echo "📁 Folder:"
+echo "$BACKUP_DIR"
+echo
+echo "========================================="
+BASH
+            ],
+            [
+                'key'            => 'backup_all',
+                'name'           => 'Backup Full (Database + Storage)',
+                'icon'           => 'archive',
+                'description'    => 'Melakukan backup menyeluruh untuk database MySQL dan seluruh file storage.',
+                'script_content' => <<<'BASH'
+#!/bin/bash
+
+# =========================================
+# AN MASTERY FULL BACKUP (DB + STORAGE)
+# =========================================
+
+# Resolve project directory dynamically
+if [ -f "artisan" ]; then
+    PROJECT_DIR="$(pwd)"
+elif [ -d "$HOME/project-apps/an-mastery-v3" ]; then
+    PROJECT_DIR="$HOME/project-apps/an-mastery-v3"
+elif [ -d "$HOME/an-mastery-v3" ]; then
+    PROJECT_DIR="$HOME/an-mastery-v3"
+else
+    PROJECT_DIR="$(pwd)"
+fi
+
+BACKUP_DIR="${BACKUP_DIR:-$HOME/backup-data}"
+
+DB_NAME="an_mastery"
+DB_USER="andri-sablon"
+DB_PASSWORD="@andri-sablon"
+
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+BACKUP_NAME="an-mastery-full-${TIMESTAMP}"
+TEMP_DIR="/tmp/${BACKUP_NAME}"
+ZIP_FILE="${BACKUP_DIR}/${BACKUP_NAME}.zip"
+STORAGE_DIR="$PROJECT_DIR/public/storage"
+
+echo "========================================="
+echo "       AN MASTERY FULL BACKUP"
+echo "========================================="
+echo
+
+if [ ! -d "$PROJECT_DIR" ]; then
+    echo "❌ Project tidak ditemukan: $PROJECT_DIR"
+    exit 1
+fi
+
+mkdir -p "$BACKUP_DIR"
+rm -rf "$TEMP_DIR"
+mkdir -p "$TEMP_DIR"
+
+echo "📁 Project : $PROJECT_DIR"
+echo "🗄️  Database: $DB_NAME"
+echo "📂 Storage : $STORAGE_DIR"
+echo "📦 Backup  : $ZIP_FILE"
+echo
+
+echo "Export database..."
+
+mysqldump \
+    -u"$DB_USER" \
+    -p"$DB_PASSWORD" \
+    --single-transaction \
+    --no-tablespaces \
+    --routines \
+    --triggers \
+    --events \
+    "$DB_NAME" > "$TEMP_DIR/database.sql"
+
+if [ $? -ne 0 ]; then
+    echo
+    echo "❌ Database backup GAGAL!"
+    rm -rf "$TEMP_DIR"
+    exit 1
+fi
+
+if [ ! -s "$TEMP_DIR/database.sql" ]; then
+    echo
+    echo "❌ File database.sql kosong!"
+    rm -rf "$TEMP_DIR"
+    exit 1
+fi
+
+echo "✅ Database berhasil di-export"
+
+if [ -d "$STORAGE_DIR" ]; then
+    echo "Backup storage..."
+    cp -a "$STORAGE_DIR" "$TEMP_DIR/storage"
+    echo "✅ Storage berhasil di-backup"
+fi
+
+echo "Membuat ZIP..."
+cd /tmp || exit 1
+zip -r "$ZIP_FILE" "$BACKUP_NAME" > /dev/null
+
+if [ $? -ne 0 ]; then
+    echo "❌ Gagal membuat ZIP!"
+    rm -rf "$TEMP_DIR"
+    exit 1
+fi
+
+rm -rf "$TEMP_DIR"
+
+echo
+echo "========================================="
+echo "✅ FULL BACKUP BERHASIL"
+echo "========================================="
+echo
+echo "📦 File:"
+echo "$ZIP_FILE"
+echo
+echo "📊 Ukuran:"
+du -h "$ZIP_FILE" | awk '{print $1}'
+echo
+echo "========================================="
+BASH
+            ],
         ];
 
-        foreach ($candidates as $candidate) {
-            if (File::exists($candidate)) {
-                return realpath($candidate) ?: $candidate;
+        $json = AppSetting::get('deployment_scripts');
+
+        if (!empty($json)) {
+            $decoded = json_decode($json, true);
+            if (is_array($decoded) && !empty($decoded)) {
+                $needsResave = false;
+                // Check if existing records lack script_content, backfill from defaults
+                foreach ($decoded as &$item) {
+                    if (empty($item['script_content'])) {
+                        foreach ($defaultScripts as $def) {
+                            if (($def['key'] ?? '') === ($item['key'] ?? '')) {
+                                $item['script_content'] = $def['script_content'];
+                                $needsResave = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ($needsResave) {
+                    $this->saveDeploymentScripts($decoded);
+                }
+
+                return $decoded;
             }
         }
 
-        return null;
+        // Seed default into app_settings
+        $this->saveDeploymentScripts($defaultScripts);
+
+        return $defaultScripts;
+    }
+
+    /**
+     * Save deployment scripts configuration JSON to app_settings.
+     */
+    public function saveDeploymentScripts(array $scripts): void
+    {
+        AppSetting::set('deployment_scripts', json_encode($scripts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), 'JSON configuration of deployment and terminal scripts');
+    }
+
+    /**
+     * Resolve a deployment script by key from app_settings.
+     */
+    public function resolveScriptByKey(?string $key = null): ?array
+    {
+        $scripts = $this->getDeploymentScripts();
+        $targetKey = $key ?: 'update_project';
+
+        foreach ($scripts as $s) {
+            if (($s['key'] ?? '') === $targetKey) {
+                return $s;
+            }
+        }
+
+        return $scripts[0] ?? null;
+    }
+
+    /**
+     * Get details of a single script from database.
+     */
+    public function getScriptDetail(string $key): ?array
+    {
+        $script = $this->resolveScriptByKey($key);
+        if (!$script) {
+            return null;
+        }
+
+        return [
+            'script'         => $script,
+            'script_content' => $script['script_content'] ?? '',
+        ];
+    }
+
+    /**
+     * Save or update a single script item by key in database (supports key renaming).
+     */
+    public function saveSingleScript(array $data): array
+    {
+        $scripts = $this->getDeploymentScripts();
+        $key = trim($data['key'] ?? '');
+        $originalKey = trim($data['original_key'] ?? ($data['key'] ?? ''));
+
+        if (empty($key)) {
+            $key = \Illuminate\Support\Str::slug($data['name'] ?? 'custom_script', '_');
+        }
+
+        $scriptItem = [
+            'key'            => $key,
+            'name'           => trim($data['name'] ?? $key),
+            'icon'           => trim($data['icon'] ?? 'terminal'),
+            'description'    => trim($data['description'] ?? ''),
+            'script_content' => trim($data['script_content'] ?? ($data['file_content'] ?? '')),
+        ];
+
+        $updated = false;
+        foreach ($scripts as $idx => $s) {
+            if (($s['key'] ?? '') === $originalKey || ($s['key'] ?? '') === $key) {
+                $scripts[$idx] = $scriptItem;
+                $updated = true;
+                break;
+            }
+        }
+
+        if (!$updated) {
+            $scripts[] = $scriptItem;
+        }
+
+        $this->saveDeploymentScripts($scripts);
+
+        return $scriptItem;
+    }
+
+    /**
+     * Delete a script by key from database.
+     */
+    public function deleteScript(string $key): bool
+    {
+        $scripts = $this->getDeploymentScripts();
+        $filtered = array_values(array_filter($scripts, fn($s) => ($s['key'] ?? '') !== $key));
+
+        if (count($filtered) !== count($scripts)) {
+            $this->saveDeploymentScripts($filtered);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -308,18 +687,8 @@ class AppVersionService
             $warnings[] = 'Folder .git tidak ditemukan di root project. Pastikan folder ini merupakan clone repository Git.';
         }
 
-        // 4. Check update script
-        $scriptPath = $this->resolveUpdateScript();
-        $hasScript = !empty($scriptPath) && File::exists($scriptPath);
-
-        if (!$hasScript && PHP_OS_FAMILY !== 'Windows') {
-            $warnings[] = 'Script update-an-mastery.sh tidak ditemukan di jalur standar. Sistem akan menggunakan perintah update fallback bawaan.';
-        }
-
         return [
             'is_safe'     => empty($errors),
-            'script_path' => $scriptPath,
-            'has_script'  => $hasScript,
             'is_git'      => $isGit,
             'os'          => PHP_OS_FAMILY,
             'base_path'   => base_path(),

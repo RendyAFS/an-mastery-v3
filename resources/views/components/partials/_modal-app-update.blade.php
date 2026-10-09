@@ -37,7 +37,7 @@
                             {{ __('app_version.modal_curr_version') }}
                         </span>
                         <span class="text-sm font-mono font-bold text-(--color-dark) dark:text-(--color-light)" id="modal-curr-version">
-                            v{{ config('app.version', '1.0.0') }}
+                            v{{ \App\Models\AppSetting::get('app_version') ?: (config('app.version') ?: '1.0.0') }}
                         </span>
                     </div>
                     <i data-lucide="arrow-right" class="size-4 text-(--color-primary) shrink-0"></i>
@@ -72,23 +72,34 @@
 
                 <!-- Live Auto-Update Section (Super Admin / Deployment Execution) -->
                 <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 via-(--color-primary)/10 to-transparent border border-emerald-500/20 space-y-3">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                             <span class="text-xs font-bold text-(--color-dark) dark:text-(--color-light) flex items-center gap-1.5">
                                 <i data-lucide="zap" class="size-4 text-emerald-500"></i>
                                 {{ __('app_version.modal_auto_update_title') }}
                             </span>
                             <p class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) mt-0.5">
-                                {{ __('app_version.modal_auto_update_desc', ['script' => 'update-an-mastery.sh']) }}
+                                {{ __('app_version.modal_auto_update_desc', ['script' => 'update_project']) }}
                             </p>
                         </div>
-                        <button type="button" id="btn-run-auto-update"
-                            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold
-                                   bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/30
-                                   hover:scale-102 active:scale-98 transition-all cursor-pointer">
-                            <i data-lucide="play" class="size-3.5" id="icon-run-update"></i>
-                            <span id="text-run-update">{{ __('app_version.modal_btn_run_update') }}</span>
-                        </button>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" id="btn-run-modal-backup"
+                                title="Backup Database Sebelum Update"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold
+                                       bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray)/30
+                                       hover:border-(--color-primary) hover:text-(--color-primary)
+                                       text-(--color-dark) dark:text-(--color-light) shadow-2xs transition-all cursor-pointer">
+                                <i data-lucide="database" class="size-3.5 text-blue-500"></i>
+                                <span>Backup DB</span>
+                            </button>
+                            <button type="button" id="btn-run-auto-update"
+                                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold
+                                       bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/30
+                                       hover:scale-102 active:scale-98 transition-all cursor-pointer">
+                                <i data-lucide="play" class="size-3.5" id="icon-run-update"></i>
+                                <span id="text-run-update">{{ __('app_version.modal_btn_run_update') }}</span>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Live Terminal Output Console -->
