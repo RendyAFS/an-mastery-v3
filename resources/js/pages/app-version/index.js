@@ -1,6 +1,5 @@
 import ApiProvider from "@/utils/api-provider";
 import { startLoading, stopLoading } from "@/utils/button-loading";
-import CustomAlert from "@/utils/custom-alert";
 import { initLucide } from "@/utils/lucide";
 
 (function () {
@@ -60,6 +59,8 @@ import { initLucide } from "@/utils/lucide";
         });
     });
 
+    const isEn = document.documentElement.lang === "en";
+
     // Refresh status
     async function refreshStatus() {
         if (!btnRefresh) return;
@@ -87,18 +88,20 @@ import { initLucide } from "@/utils/lucide";
                 }
 
                 renderSyncStatus(res.comparison, res.current_version, res.firebase_data?.version);
-                CustomAlert.success("Status versi berhasil diperbarui!");
+                if (window.Toast) {
+                    window.Toast.success(window.langCustomAlert?.success ?? "Sukses", isEn ? "Version status refreshed!" : "Status versi berhasil diperbarui!");
+                }
             }
         } catch (err) {
             console.error("Failed to refresh status:", err);
-            CustomAlert.error(err.message || "Gagal memperbarui status versi.");
+            if (window.Toast) {
+                window.Toast.error(window.langCustomAlert?.error ?? "Error", err.message || (isEn ? "Failed to refresh status." : "Gagal memperbarui status versi."));
+            }
         } finally {
             stopLoading(btnRefresh);
             initLucide();
         }
     }
-
-    const isEn = document.documentElement.lang === "en";
 
     function renderSyncStatus(comparison, localV, fbV) {
         if (!displaySyncStatus) return;
@@ -157,7 +160,9 @@ import { initLucide } from "@/utils/lucide";
 
             const versionVal = (inputVersion.value || "").trim();
             if (!versionVal) {
-                CustomAlert.error(isEn ? "Version number cannot be empty." : "Nomor versi tidak boleh kosong.");
+                if (window.Toast) {
+                    window.Toast.error(window.langCustomAlert?.error ?? "Error", isEn ? "Version number cannot be empty." : "Nomor versi tidak boleh kosong.");
+                }
                 return;
             }
 
@@ -165,8 +170,8 @@ import { initLucide } from "@/utils/lucide";
             const payload = {
                 version: versionVal,
                 release_name: formData.get("release_name") || "",
+                description: formData.get("description") || "",
                 changelog: formData.get("changelog") || "",
-                update_guide: formData.get("update_guide") || "",
             };
 
             startLoading(btnSubmit);
@@ -175,17 +180,23 @@ import { initLucide } from "@/utils/lucide";
                 const response = await ApiProvider.post(route("app_version.publish"), payload);
 
                 if (response.success) {
-                    CustomAlert.success(response.message || (isEn ? "Version successfully published!" : "Versi berhasil dipublikasikan!"));
+                    if (window.Toast) {
+                        window.Toast.success(window.langCustomAlert?.success ?? "Sukses", response.message || (isEn ? "Version successfully published!" : "Versi berhasil dipublikasikan!"));
+                    }
                     setTimeout(() => {
                         window.location.reload();
                     }, 1200);
                 } else {
-                    CustomAlert.error(response.message || (isEn ? "Failed to publish version." : "Gagal mempublikasikan versi."));
+                    if (window.Toast) {
+                        window.Toast.error(window.langCustomAlert?.error ?? "Error", response.message || (isEn ? "Failed to publish version." : "Gagal mempublikasikan versi."));
+                    }
                 }
             } catch (err) {
                 console.error("Publish error:", err);
                 const errMsg = err.response?.data?.message || err.message || (isEn ? "An error occurred while publishing." : "Terjadi kesalahan saat mempublikasikan versi.");
-                CustomAlert.error(errMsg);
+                if (window.Toast) {
+                    window.Toast.error(window.langCustomAlert?.error ?? "Error", errMsg);
+                }
             } finally {
                 stopLoading(btnSubmit);
             }

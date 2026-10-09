@@ -8,7 +8,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="size-10 rounded-xl bg-(--color-primary) text-(--color-light) flex items-center justify-center shadow-md shadow-(--color-primary)/30">
-                            <i data-lucide="rocket" class="size-5"></i>
+                            <i data-lucide="sparkles" class="size-5"></i>
                         </div>
                         <div>
                             <h3 id="modal-app-update-label" class="font-bold text-base text-(--color-dark) dark:text-(--color-light) leading-snug">
@@ -52,43 +52,38 @@
                 </div>
 
                 <!-- Release Title & Published info -->
-                <div id="modal-release-info-container" class="hidden">
-                    <h4 class="text-sm font-bold text-(--color-dark) dark:text-(--color-light)" id="modal-release-name">
-                        Release Note
-                    </h4>
-                    <p class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) mt-0.5" id="modal-published-meta">
+                <div id="modal-release-info-container" class="hidden p-3.5 rounded-xl bg-(--color-primary)/5 border border-(--color-primary)/15">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-(--color-primary) text-white">
+                            Rilis
+                        </span>
+                        <h4 class="text-sm font-bold text-(--color-dark) dark:text-(--color-light)" id="modal-release-name">
+                            Release Note
+                        </h4>
+                    </div>
+                    <p class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) mt-1.5 flex items-center gap-1.5" id="modal-published-meta">
                         -
                     </p>
                 </div>
 
+                <!-- Description Box -->
+                <div id="modal-description-container" class="space-y-1.5 hidden">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-(--color-dark-gray) dark:text-(--color-gray) flex items-center gap-1.5">
+                        <i data-lucide="info" class="size-3.5 text-(--color-primary)"></i>
+                        {{ __('app_version.description') }}
+                    </span>
+                    <div id="modal-description-content" class="p-3.5 rounded-xl bg-(--color-light-gray) dark:bg-(--color-dark-slate) text-xs text-(--color-dark) dark:text-(--color-light) whitespace-pre-wrap font-sans border border-(--color-gray)/15 leading-relaxed">
+                    </div>
+                </div>
+
                 <!-- Changelog Box -->
                 <div id="modal-changelog-container" class="space-y-1.5 hidden">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-(--color-dark-gray) dark:text-(--color-gray)">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-(--color-dark-gray) dark:text-(--color-gray) flex items-center gap-1.5">
+                        <i data-lucide="list-checks" class="size-3.5 text-emerald-500"></i>
                         {{ __('app_version.changelog') }}
                     </span>
                     <div id="modal-changelog-content" class="p-3.5 rounded-xl bg-(--color-light-gray) dark:bg-(--color-dark-slate) text-xs text-(--color-dark) dark:text-(--color-light) whitespace-pre-wrap font-sans border border-(--color-gray)/15 leading-relaxed">
                     </div>
-                </div>
-
-                <!-- Manual Update Steps (Linux Terminal) -->
-                <div class="rounded-xl border border-(--color-gray)/20 bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 p-4 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-(--color-dark) dark:text-(--color-light) flex items-center gap-2">
-                            <i data-lucide="terminal" class="size-4 text-(--color-primary)"></i>
-                            {{ __('app_version.manual_update_steps') }}
-                        </span>
-                        <button type="button" id="btn-copy-update-cmd"
-                            class="inline-flex items-center gap-1 text-[11px] font-semibold text-(--color-primary) hover:underline cursor-pointer">
-                            <i data-lucide="copy" class="size-3"></i>
-                            <span>{{ __('app_version.modal_btn_copy_cmd') }}</span>
-                        </button>
-                    </div>
-
-                    <pre id="modal-update-guide-cmd"
-                        class="p-3.5 rounded-xl bg-neutral-950 text-emerald-400 font-mono text-xs leading-relaxed overflow-x-auto m-0 select-text custom-scrollbar">git pull origin develop
-composer install
-npm run build
-php artisan optimize:clear</pre>
                 </div>
 
                 <!-- Mark as Updated / Sync Confirmation Section -->

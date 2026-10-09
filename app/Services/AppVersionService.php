@@ -116,8 +116,8 @@ class AppVersionService
         $body = [
             'version'       => $cleanVersion,
             'release_name'  => $payload['release_name'] ?? ('v' . $cleanVersion),
+            'description'   => $payload['description'] ?? '',
             'changelog'     => $payload['changelog'] ?? '',
-            'update_guide'  => $payload['update_guide'] ?? "1. Buka terminal di folder project\n2. Jalankan: git pull origin develop\n3. Jalankan: composer install\n4. Jalankan: npm run build\n5. Jalankan: php artisan optimize:clear",
             'published_at'  => now()->toISOString(),
             'published_by'  => auth()->user()?->name ?? 'Developer',
         ];

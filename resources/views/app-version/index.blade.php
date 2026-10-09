@@ -222,35 +222,30 @@
                                    focus:border-(--color-primary) focus:ring-1 focus:ring-(--color-primary) outline-none transition-all">
                     </div>
 
-                    <!-- Changelog -->
+                    <!-- Description / Release Summary -->
                     <div>
-                        <label for="input-changelog"
+                        <label for="input-description"
                             class="block text-xs font-semibold uppercase tracking-wider text-(--color-dark) dark:text-(--color-light) mb-1.5">
-                            {{ __('app_version.changelog') }}
+                            {{ __('app_version.description') }}
                         </label>
-                        <textarea id="input-changelog" name="changelog" rows="4"
-                            placeholder="{{ __('app_version.changelog_placeholder') }}"
+                        <textarea id="input-description" name="description" rows="3"
+                            placeholder="{{ __('app_version.description_placeholder') }}"
                             class="w-full px-4 py-2.5 rounded-xl border border-(--color-gray)/30 bg-transparent
                                    text-(--color-dark) dark:text-(--color-light) text-sm font-sans
                                    focus:border-(--color-primary) focus:ring-1 focus:ring-(--color-primary) outline-none transition-all custom-scrollbar"></textarea>
                     </div>
 
-                    <!-- Update Guide -->
+                    <!-- Changelog / Detail Perubahan -->
                     <div>
-                        <label for="input-update-guide"
+                        <label for="input-changelog"
                             class="block text-xs font-semibold uppercase tracking-wider text-(--color-dark) dark:text-(--color-light) mb-1.5">
-                            {{ __('app_version.update_guide') }}
+                            {{ __('app_version.changelog') }}
                         </label>
-                        <textarea id="input-update-guide" name="update_guide" rows="6"
+                        <textarea id="input-changelog" name="changelog" rows="5"
+                            placeholder="{{ __('app_version.changelog_placeholder') }}"
                             class="w-full px-4 py-2.5 rounded-xl border border-(--color-gray)/30 bg-transparent
-                                   text-(--color-dark) dark:text-(--color-light) text-xs font-mono
-                                   focus:border-(--color-primary) focus:ring-1 focus:ring-(--color-primary) outline-none transition-all custom-scrollbar">
-1. Buka terminal di folder project
-2. Jalankan: git pull origin main
-3. Jalankan: composer install
-4. Jalankan: npm run build
-5. Jalankan: php artisan optimize:clear
-                                </textarea>
+                                   text-(--color-dark) dark:text-(--color-light) text-sm font-sans
+                                   focus:border-(--color-primary) focus:ring-1 focus:ring-(--color-primary) outline-none transition-all custom-scrollbar"></textarea>
                     </div>
 
                     <!-- Submit Button -->

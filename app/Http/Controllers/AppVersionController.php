@@ -47,19 +47,19 @@ class AppVersionController extends Controller
     }
 
     /**
-     * Publish a new version to Firebase RTDB and optionally update local files.
+     * Publish a new version to Firebase RTDB.
      */
     public function publish(PublishAppVersionRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $version = $this->versionService->normalizeVersion($validated['version']);
 
-        // 1. Publish to Firebase
+        // Publish to Firebase
         $result = $this->versionService->publishToFirebase([
             'version'      => $version,
             'release_name' => $validated['release_name'] ?? ('Release v' . $version),
+            'description'  => $validated['description'] ?? '',
             'changelog'    => $validated['changelog'] ?? '',
-            'update_guide' => $validated['update_guide'] ?? '',
         ]);
 
         if (!$result['success']) {

@@ -16,9 +16,8 @@ class PublishAppVersionRequest extends FormRequest
         return [
             'version'       => ['required', 'string', 'regex:/^v?\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/'],
             'release_name'  => ['nullable', 'string', 'max:255'],
+            'description'   => ['nullable', 'string'],
             'changelog'     => ['nullable', 'string'],
-            'update_guide'  => ['nullable', 'string'],
-            'sync_local'    => ['nullable', 'boolean'],
         ];
     }
 
@@ -36,9 +35,8 @@ class PublishAppVersionRequest extends FormRequest
         return [
             'version'      => 'Nomor Versi',
             'release_name' => 'Nama Rilis',
-            'changelog'    => 'Catatan Perubahan',
-            'update_guide' => 'Petunjuk Update',
-            'sync_local'   => 'Sinkronkan Versi Lokal',
+            'description'  => 'Deskripsi Pembaruan',
+            'changelog'    => 'Catatan Perubahan (Changelog)',
         ];
     }
 }

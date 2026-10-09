@@ -15,6 +15,8 @@ class SyncAppVersionCommand extends Command
     protected $signature = 'app:version
                             {version? : The new semantic version to set (e.g. 1.3.0)}
                             {--publish : Publish the version to Firebase Realtime Database}
+                            {--release-name= : Custom release name / label}
+                            {--description= : Short summary / description for Firebase}
                             {--changelog= : Changelog / release notes for Firebase}
                             {--sync-readme : Sync existing config version to README.md without changing .env}';
 
@@ -112,8 +114,9 @@ class SyncAppVersionCommand extends Command
             $this->output->write('4. Publishing to Firebase Realtime Database... ');
             $result = $versionService->publishToFirebase([
                 'version'      => $cleanVersion,
-                'release_name' => 'Release v' . $cleanVersion,
-                'changelog'    => $this->option('changelog') ?? 'Pembaruan versi ' . $cleanVersion,
+                'release_name' => $this->option('release-name') ?? ('Release v' . $cleanVersion),
+                'description'  => $this->option('description') ?? '',
+                'changelog'    => $this->option('changelog') ?? '',
             ]);
 
             if ($result['success']) {

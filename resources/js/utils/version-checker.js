@@ -69,9 +69,10 @@
         const modalReleaseContainer = document.getElementById("modal-release-info-container");
         const modalReleaseName = document.getElementById("modal-release-name");
         const modalPublishedMeta = document.getElementById("modal-published-meta");
+        const modalDescContainer = document.getElementById("modal-description-container");
+        const modalDescContent = document.getElementById("modal-description-content");
         const modalChangelogContainer = document.getElementById("modal-changelog-container");
         const modalChangelogContent = document.getElementById("modal-changelog-content");
-        const modalGuideCmd = document.getElementById("modal-update-guide-cmd");
 
         if (modalCurr) modalCurr.innerText = `v${localVersion}`;
         if (modalNew) modalNew.innerText = `v${newVersion}`;
@@ -90,36 +91,28 @@
             if (modalPublishedMeta && firebaseData.published_at) {
                 const date = new Date(firebaseData.published_at).toLocaleString();
                 const by = firebaseData.published_by ? (isEn ? ` by ${firebaseData.published_by}` : ` oleh ${firebaseData.published_by}`) : "";
-                modalPublishedMeta.innerText = isEn ? `Published: ${date}${by}` : `Dipublikasikan: ${date}${by}`;
+                modalPublishedMeta.innerHTML = `<i data-lucide="clock" class="size-3 text-(--color-primary)"></i> <span>${isEn ? `Published: ${date}${by}` : `Dipublikasikan: ${date}${by}`}</span>`;
             }
         }
 
-        if (modalChangelogContainer && firebaseData.changelog) {
+        // Description Box
+        if (modalDescContainer && firebaseData.description && firebaseData.description.trim()) {
+            modalDescContainer.classList.remove("hidden");
+            if (modalDescContent) {
+                modalDescContent.innerText = firebaseData.description;
+            }
+        } else if (modalDescContainer) {
+            modalDescContainer.classList.add("hidden");
+        }
+
+        // Changelog Box
+        if (modalChangelogContainer && firebaseData.changelog && firebaseData.changelog.trim()) {
             modalChangelogContainer.classList.remove("hidden");
             if (modalChangelogContent) {
                 modalChangelogContent.innerText = firebaseData.changelog;
             }
-        }
-
-        if (modalGuideCmd && firebaseData.update_guide) {
-            modalGuideCmd.innerText = firebaseData.update_guide;
-        }
-
-        // Copy button setup
-        const btnCopy = document.getElementById("btn-copy-update-cmd");
-        if (btnCopy && modalGuideCmd) {
-            btnCopy.onclick = function () {
-                navigator.clipboard.writeText(modalGuideCmd.innerText).then(() => {
-                    const originalHtml = btnCopy.innerHTML;
-                    const copiedText = isEn ? "Copied!" : "Tersalin!";
-                    btnCopy.innerHTML = `<i data-lucide="check" class="size-3 text-emerald-500"></i><span class="text-emerald-500">${copiedText}</span>`;
-                    if (window.lucide) window.lucide.createIcons();
-                    setTimeout(() => {
-                        btnCopy.innerHTML = originalHtml;
-                        if (window.lucide) window.lucide.createIcons();
-                    }, 2000);
-                });
-            };
+        } else if (modalChangelogContainer) {
+            modalChangelogContainer.classList.add("hidden");
         }
 
         if (window.lucide) {
@@ -276,8 +269,8 @@
                     // Hide update notification in navbar immediately
                     hideUpdateNotification();
 
-                    if (window.CustomAlert) {
-                        window.CustomAlert.success(data.message || (isEn ? "Version synced successfully!" : "Versi berhasil disinkronkan!"));
+                    if (window.Toast) {
+                        window.Toast.success(window.langCustomAlert?.success ?? "Sukses", data.message || (isEn ? "Version synced successfully!" : "Versi berhasil disinkronkan!"));
                     }
 
                     // Close modal
@@ -290,14 +283,14 @@
                         detail: { fbData: currentFirebaseData, comparison: 0, localVersion: data.app_version }
                     }));
                 } else {
-                    if (window.CustomAlert) {
-                        window.CustomAlert.error(data.message || (isEn ? "Failed to sync version." : "Gagal menyinkronkan versi."));
+                    if (window.Toast) {
+                        window.Toast.error(window.langCustomAlert?.error ?? "Error", data.message || (isEn ? "Failed to sync version." : "Gagal menyinkronkan versi."));
                     }
                 }
             } catch (err) {
                 console.error("Sync version error:", err);
-                if (window.CustomAlert) {
-                    window.CustomAlert.error(isEn ? "Failed to connect to server." : "Gagal terhubung ke server.");
+                if (window.Toast) {
+                    window.Toast.error(window.langCustomAlert?.error ?? "Error", isEn ? "Failed to connect to server." : "Gagal terhubung ke server.");
                 }
             } finally {
                 btnSync.disabled = false;
