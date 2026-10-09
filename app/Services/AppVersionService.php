@@ -291,8 +291,14 @@ cd "$PROJECT_DIR" || {
 echo "📁 $(pwd)"
 echo
 
-echo "⬇️  Git Pull..."
-git pull origin main || exit 1
+# Prevent dubious ownership error in Git (Linux web server permissions)
+git config --global --add safe.directory "$PROJECT_DIR" 2>/dev/null || true
+git config --global --add safe.directory "*" 2>/dev/null || true
+
+# Determine active git branch automatically
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "develop")
+echo "⬇️  Git Pull (branch: $CURRENT_BRANCH)..."
+git pull origin "$CURRENT_BRANCH" 2>&1 || git pull origin develop 2>&1 || git pull origin main 2>&1 || git pull 2>&1 || exit 1
 
 echo
 echo "📦 Composer Install..."
@@ -537,11 +543,19 @@ BASH
             $decoded = json_decode($json, true);
             if (is_array($decoded) && !empty($decoded)) {
                 $needsResave = false;
-                // Check if existing records lack script_content, backfill from defaults
+                // Check if existing records lack script_content or need safe.directory upgrade
                 foreach ($decoded as &$item) {
                     if (empty($item['script_content'])) {
                         foreach ($defaultScripts as $def) {
                             if (($def['key'] ?? '') === ($item['key'] ?? '')) {
+                                $item['script_content'] = $def['script_content'];
+                                $needsResave = true;
+                                break;
+                            }
+                        }
+                    } elseif (($item['key'] ?? '') === 'update_project' && !str_contains($item['script_content'], 'safe.directory')) {
+                        foreach ($defaultScripts as $def) {
+                            if (($def['key'] ?? '') === 'update_project') {
                                 $item['script_content'] = $def['script_content'];
                                 $needsResave = true;
                                 break;

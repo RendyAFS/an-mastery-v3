@@ -317,9 +317,14 @@ class AppVersionController extends Controller
                 2 => ['pipe', 'w'],
             ];
 
-            $startTime = microtime(true);
-            $maxExecutionTimeout = 360; // 6 minutes max
-            $process = @proc_open($cmd, $descriptors, $pipes, base_path());
+            $env = array_merge($_SERVER, $_ENV, [
+                'GIT_CONFIG_COUNT'   => '1',
+                'GIT_CONFIG_KEY_0'   => 'safe.directory',
+                'GIT_CONFIG_VALUE_0' => '*',
+                'PATH'               => getenv('PATH') ?: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+            ]);
+
+            $process = @proc_open($cmd, $descriptors, $pipes, base_path(), $env);
 
             if (is_resource($process)) {
                 fclose($pipes[0]);
