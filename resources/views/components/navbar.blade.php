@@ -17,6 +17,31 @@
             </a>
         </div>
 
+        <!-- Center: App Version Update Notification -->
+        <div id="navbar-version-checker-container" class="hidden items-center justify-center mx-2 animate-fade-in">
+            <button type="button"
+                data-hs-overlay="#modal-app-update"
+                id="btn-navbar-version-update"
+                class="group relative inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full
+                       bg-gradient-to-r from-(--color-primary)/15 via-emerald-500/15 to-(--color-primary)/20
+                       hover:from-(--color-primary)/25 hover:to-emerald-500/25
+                       border border-(--color-primary)/40 hover:border-(--color-primary)
+                       text-(--color-primary) dark:text-emerald-400
+                       text-xs font-semibold shadow-2xs hover:shadow-xs
+                       transition-all duration-300 cursor-pointer active:scale-95"
+                title="{{ __('app_version.modal_update_title') }}">
+                <span class="relative flex size-2 shrink-0">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full size-2 bg-emerald-500"></span>
+                </span>
+                <span class="flex items-center gap-1 min-w-0">
+                    <i data-lucide="sparkles" class="size-3.5 shrink-0 text-(--color-primary) dark:text-emerald-400 animate-pulse"></i>
+                    <span id="navbar-update-text" class="truncate font-medium">Update Tersedia</span>
+                </span>
+                <i data-lucide="chevron-right" class="size-3.5 shrink-0 text-(--color-primary) group-hover:translate-x-0.5 transition-transform"></i>
+            </button>
+        </div>
+
         <!-- Right -->
         <div class="flex items-center gap-2 sm:gap-4">
             <!-- Workshop Switcher Button (Tablet & Desktop) -->
@@ -195,6 +220,17 @@
                         {{ __('workshop.switch_workshop') }}
                     </button>
 
+                    @if (auth()->user()->hasRole('Super Admin'))
+                        <a href="{{ route('app_version.index') }}"
+                            class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
+                            text-(--color-dark)
+                            dark:text-(--color-gray)
+                            hover:bg-(--color-gray)/20">
+                            <i data-lucide="git-branch" class="size-4"></i>
+                            {{ __('app_version.title') }}
+                        </a>
+                    @endif
+
                     @if (auth()->user()->can('dashboard.log-viewer'))
                         <a href="{{ route('log-viewer.index') }}" target="_blank"
                             class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
@@ -232,4 +268,5 @@
 </nav>
 
 @include('components.partials._modal-switch-workshop')
+@include('components.partials._modal-app-update')
 

@@ -28,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
         config(['app.locale' => 'id']);
         Carbon::setLocale('id');
 
+        // Dynamically load App Version from Database (app_settings)
+        try {
+            $dbVersion = \App\Models\AppSetting::get('app_version');
+            if ($dbVersion) {
+                config(['app.version' => $dbVersion]);
+            }
+        } catch (\Throwable $e) {}
+
         Gate::define('viewLogViewer', function (User $user) {
             return $user->hasRole('Super Admin') || $user->hasPermissionTo('dashboard.log-viewer');
         });

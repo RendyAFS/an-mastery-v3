@@ -205,6 +205,14 @@ Route::middleware(['auth', 'check.active'])->group(function () {
         Route::get('select/workshops', [App\Http\Controllers\WorkshopController::class, 'select'])->name('select');
     });
     Route::resource('workshops', App\Http\Controllers\WorkshopController::class)->names('workshops');
+
+    // App Version Management
+    Route::get('/app-version/status', [App\Http\Controllers\AppVersionController::class, 'status'])->name('app-version.status');
+    Route::prefix('app-version')->as('app_version.')->group(function () {
+        Route::get('/', [App\Http\Controllers\AppVersionController::class, 'index'])->name('index');
+        Route::post('/publish', [App\Http\Controllers\AppVersionController::class, 'publish'])->name('publish');
+        Route::get('/stream-update', [App\Http\Controllers\AppVersionController::class, 'streamUpdate'])->name('stream-update');
+    });
 });
 
 

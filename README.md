@@ -10,7 +10,7 @@
 
   <br>
 
-[![Version](https://img.shields.io/badge/App_Version-v1.2.2-6d9886?style=for-the-badge)](config/app.php)
+[![Version](https://img.shields.io/badge/App_Version-v1.2.6-6d9886?style=for-the-badge)](config/app.php)
 [![Laravel 12](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -223,11 +223,9 @@ Versi aplikasi dikelola secara terpusat dan otomatis tersinkronisasi ke seluruh 
 
 ### 1. Cara Mengatur / Mengubah Versi
 
-Set variabel versi di file `.env` (atau di [`config/app.php`](file:///D:/laragon/www/an-mastery-v3/config/app.php)):
-
-```env
-APP_VERSION=1.2.2
-```
+Versi aplikasi tersimpan secara aman di Database (tabel `app_settings`) dan otomatis dimuat ke seluruh komponen sistem saat aplikasi berjalan. Anda dapat mengubah versi aplikasi melalui:
+- **Menu Web Super Admin**: Buka menu **Access Management -> App Version** (`/app-version`).
+- **Artisan Command**: `php artisan app:version <nomor_versi>` (contoh: `php artisan app:version 1.2.6`).
 
 ### 2. Lokasi Tampilan Versi di Aplikasi
 
@@ -237,14 +235,24 @@ Nilai versi aplikasi secara otomatis muncul di:
 - **Sidebar Navigation** (di bawah logo _AN Mastery_)
 - **Splash Screen Loader** (saat pemuatan aplikasi)
 - **Footer Landing Page**
-- **Dynamic PWA Service Worker** (`/sw.js` -> `CACHE_NAME = "an-mastery-v1.2.2"`)
+- **Dynamic PWA Service Worker** (`/sw.js` -> `CACHE_NAME = "an-mastery-v1.2.6"`)
 
-### 3. Cara Mengecek Versi via Terminal / CLI
+### 3. Cara Mengelola & Mengecek Versi via Terminal / CLI
 
-Anda dapat memeriksa versi aplikasi yang sedang aktif dari terminal menggunakan perintah Artisan:
+Anda dapat memeriksa status versi lokal dan Firebase, memperbarui versi secara otomatis ke `.env` & `README.md`, serta mempublikasikan rilis baru menggunakan perintah Artisan:
 
 ```bash
-php artisan config:show app.version
+# Cek status versi lokal & status Firebase
+php artisan app:version
+
+# Set versi baru (otomatis sinkron ke .env, README.md, dan config)
+php artisan app:version x.x.x
+
+# Set versi baru dan langsung publikasikan ke Firebase
+php artisan app:version x.x.x --publish --changelog="Rilis fitur baru"
+
+# Sinkronkan ulang README.md ke versi yang aktif
+php artisan app:version --sync-readme
 ```
 
 ---
