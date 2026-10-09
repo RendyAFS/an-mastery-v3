@@ -227,6 +227,7 @@
      */
     function setupAutoUpdateRunner() {
         const btnRun = document.getElementById("btn-run-auto-update");
+        const btnBackup = document.getElementById("btn-run-modal-backup");
         const terminalWrapper = document.getElementById("modal-terminal-wrapper");
         const terminalOutput = document.getElementById("modal-terminal-output");
         const terminalBadge = document.getElementById("terminal-status-badge");
@@ -246,20 +247,15 @@
                 if (terminalWrapper) {
                     terminalWrapper.classList.add("hidden");
                 }
-                if (btnRun) {
-                    btnRun.disabled = false;
-                }
+                if (btnRun) btnRun.disabled = false;
+                if (btnBackup) btnBackup.disabled = false;
                 if (textRun) {
                     textRun.innerText = isEn ? "Run Update" : "Jalankan Update";
                 }
             });
         }
 
-        if (!btnRun) return;
-
-        btnRun.addEventListener("click", function () {
-            if (btnRun.disabled) return;
-
+        function runTerminalScript(scriptKey) {
             // Show Terminal Console
             if (terminalWrapper) {
                 terminalWrapper.classList.remove("hidden");
@@ -268,7 +264,9 @@
                 terminalOutput.textContent = "";
             }
 
-            btnRun.disabled = true;
+            if (btnRun) btnRun.disabled = true;
+            if (btnBackup) btnBackup.disabled = true;
+
             if (textRun) textRun.innerText = isEn ? "Processing..." : "Memproses...";
             if (terminalBadge) {
                 terminalBadge.innerText = "Running...";
@@ -279,7 +277,20 @@
                 updateEventSource.close();
             }
 
-            const streamUrl = typeof route === "function" ? route("app_version.stream-update") : "/app-version/stream-update";
+            const modalNew = document.getElementById("modal-new-version");
+            const targetVersion = modalNew ? modalNew.innerText.replace(/^v/i, "").trim() : "";
+
+            let streamUrl = typeof route === "function"
+                ? route("app_version.stream-update")
+                : "/app-version/stream-update";
+
+            const params = new URLSearchParams();
+            params.set("script_key", scriptKey);
+            if (targetVersion) {
+                params.set("target_version", targetVersion);
+            }
+            streamUrl += (streamUrl.includes("?") ? "&" : "?") + params.toString();
+
             updateEventSource = new EventSource(streamUrl);
 
             updateEventSource.onmessage = function (event) {
@@ -295,7 +306,9 @@
                             updateEventSource.close();
                             updateEventSource = null;
                         }
-                        btnRun.disabled = false;
+                        if (btnRun) btnRun.disabled = false;
+                        if (btnBackup) btnBackup.disabled = false;
+
                         if (textRun) textRun.innerText = isEn ? "Done" : "Selesai";
                         if (terminalBadge) {
                             terminalBadge.innerText = isEn ? "Completed (0)" : "Selesai (0)";
@@ -304,12 +317,22 @@
                         if (btnReload) {
                             btnReload.classList.add("ring-4", "ring-emerald-400/50", "animate-bounce");
                         }
+
+                        // If new version was applied, update local cache and UI
+                        if (data.new_version) {
+                            cachedLocalVersion = data.new_version;
+                            const modalCurr = document.getElementById("modal-curr-version");
+                            if (modalCurr) modalCurr.innerText = `v${data.new_version}`;
+                            hideUpdateNotification();
+                        }
                     } else if (data.type === "error") {
                         if (updateEventSource) {
                             updateEventSource.close();
                             updateEventSource = null;
                         }
-                        btnRun.disabled = false;
+                        if (btnRun) btnRun.disabled = false;
+                        if (btnBackup) btnBackup.disabled = false;
+
                         if (textRun) textRun.innerText = isEn ? "Retry" : "Coba Lagi";
                         if (terminalBadge) {
                             const badgeText = data.reason === "safety_preflight_failed"
@@ -328,19 +351,28 @@
             };
 
             updateEventSource.onerror = function (err) {
-                console.error("SSE Update Error:", err);
+                console.error("SSE Terminal Error:", err);
                 if (updateEventSource) {
                     updateEventSource.close();
                     updateEventSource = null;
                 }
-                btnRun.disabled = false;
+                if (btnRun) btnRun.disabled = false;
+                if (btnBackup) btnBackup.disabled = false;
+
                 if (textRun) textRun.innerText = isEn ? "Retry" : "Coba Lagi";
                 if (terminalBadge) {
                     terminalBadge.innerText = isEn ? "Connection Lost" : "Koneksi Terputus";
                     terminalBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-700 text-neutral-300";
                 }
             };
-        });
+        }
+
+        if (btnRun) {
+            btnRun.addEventListener("click", () => runTerminalScript("update_project"));
+        }
+        if (btnBackup) {
+            btnBackup.addEventListener("click", () => runTerminalScript("backup_db"));
+        }
     }
 
     // Run on DOM ready

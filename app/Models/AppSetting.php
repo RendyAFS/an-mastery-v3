@@ -17,14 +17,19 @@ class AppSetting extends Model
     /**
      * Get a setting value with caching.
      */
-    public static function get(string $key, mixed $default = null): mixed
+    public static function get(string $key, mixed $default = null, bool $fresh = false): mixed
     {
+        if ($fresh) {
+            Cache::forget("app_setting:{$key}");
+        }
+
         return Cache::rememberForever("app_setting:{$key}", function () use ($key, $default) {
             try {
                 if (!Schema::hasTable('app_settings')) {
                     return $default;
                 }
-                return static::where('key', $key)->value('value') ?? $default;
+                $val = static::where('key', $key)->value('value');
+                return ($val !== null && $val !== '') ? $val : $default;
             } catch (\Throwable $e) {
                 return $default;
             }
