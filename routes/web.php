@@ -211,12 +211,7 @@ Route::middleware(['auth', 'check.active'])->group(function () {
     Route::prefix('app-version')->as('app_version.')->group(function () {
         Route::get('/', [App\Http\Controllers\AppVersionController::class, 'index'])->name('index');
         Route::post('/publish', [App\Http\Controllers\AppVersionController::class, 'publish'])->name('publish');
-        Route::get('/scripts', [App\Http\Controllers\AppVersionController::class, 'getScripts'])->name('scripts.index');
-        Route::post('/scripts', [App\Http\Controllers\AppVersionController::class, 'saveScripts'])->name('scripts.save');
-        Route::get('/scripts/{key}', [App\Http\Controllers\AppVersionController::class, 'showScript'])->name('scripts.show');
-        Route::post('/scripts/item', [App\Http\Controllers\AppVersionController::class, 'saveSingleScript'])->name('scripts.save-single');
-        Route::delete('/scripts/{key}', [App\Http\Controllers\AppVersionController::class, 'deleteScript'])->name('scripts.delete');
-        Route::get('/stream-update', [App\Http\Controllers\AppVersionController::class, 'streamUpdate'])->name('stream-update');
+        Route::post('/sync-local', [App\Http\Controllers\AppVersionController::class, 'syncLocalVersion'])->name('sync-local');
     });
 });
 

@@ -223,311 +223,102 @@
     }
 
     /**
-     * Setup Live Streaming Auto-Update Terminal in Modal
+     * Setup Manual Update Sync Confirmation in Modal
      */
-    function setupAutoUpdateRunner() {
-        const btnRun = document.getElementById("btn-run-auto-update");
-        const btnBackup = document.getElementById("btn-run-modal-backup");
-        const terminalWrapper = document.getElementById("modal-terminal-wrapper");
-        const terminalOutput = document.getElementById("modal-terminal-output");
-        const terminalBadge = document.getElementById("terminal-status-badge");
-        const textRun = document.getElementById("text-run-update");
-        const btnReload = document.getElementById("btn-reload-page");
-        const btnCloseTerminal = document.getElementById("btn-close-terminal");
-
-        let updateEventSource = null;
+    function setupManualUpdateSync() {
+        const btnSync = document.getElementById("btn-sync-local-version");
         const isEn = document.documentElement.lang === "en";
 
-        if (btnCloseTerminal) {
-            btnCloseTerminal.addEventListener("click", function () {
-                if (updateEventSource) {
-                    updateEventSource.close();
-                    updateEventSource = null;
-                }
-                if (terminalWrapper) {
-                    terminalWrapper.classList.add("hidden");
-                }
-                if (btnRun) btnRun.disabled = false;
-                if (btnBackup) btnBackup.disabled = false;
-                if (textRun) {
-                    textRun.innerText = isEn ? "Run Update" : "Jalankan Update";
-                }
-            });
-        }
+        if (!btnSync) return;
 
-        function runTerminalScript(scriptKey) {
-            // Show Terminal Console
-            if (terminalWrapper) {
-                terminalWrapper.classList.remove("hidden");
-            }
-            if (terminalOutput) {
-                terminalOutput.textContent = "";
-            }
-
-            if (btnRun) btnRun.disabled = true;
-            if (btnBackup) btnBackup.disabled = true;
-
-            if (textRun) textRun.innerText = isEn ? "Processing..." : "Memproses...";
-            if (terminalBadge) {
-                terminalBadge.innerText = "Running...";
-                terminalBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 animate-pulse";
-            }
-
-            if (updateEventSource) {
-                updateEventSource.close();
-            }
+        btnSync.addEventListener("click", async function (e) {
+            e.preventDefault();
 
             const modalNew = document.getElementById("modal-new-version");
             const targetVersion = modalNew ? modalNew.innerText.replace(/^v/i, "").trim() : "";
 
-            let streamUrl = typeof route === "function"
-                ? route("app_version.stream-update")
-                : "/app-version/stream-update";
+            const icon = btnSync.querySelector("[data-icon]");
+            const spinner = btnSync.querySelector("[data-spinner]");
+            const textEl = btnSync.querySelector("[data-text]");
+            const originalText = textEl ? textEl.innerText : (isEn ? "I Have Updated (Sync Version)" : "Saya Sudah Update (Sinkronkan Versi)");
+            const loadingText = btnSync.dataset.loadingText || (isEn ? "Syncing..." : "Menyinkronkan...");
 
-            const params = new URLSearchParams();
-            params.set("script_key", scriptKey);
-            if (targetVersion) {
-                params.set("target_version", targetVersion);
-            }
-            streamUrl += (streamUrl.includes("?") ? "&" : "?") + params.toString();
+            btnSync.disabled = true;
+            if (icon) icon.classList.add("hidden");
+            if (spinner) spinner.classList.remove("hidden");
+            if (textEl) textEl.innerText = loadingText;
 
-            updateEventSource = new EventSource(streamUrl);
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || "";
+                const syncUrl = typeof route === "function"
+                    ? route("app_version.sync-local")
+                    : "/app-version/sync-local";
 
-            updateEventSource.onmessage = function (event) {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.text && terminalOutput) {
-                        terminalOutput.textContent += data.text;
-                        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                const response = await fetch(syncUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                    },
+                    body: JSON.stringify({
+                        version: targetVersion,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    cachedLocalVersion = data.app_version;
+                    const modalCurr = document.getElementById("modal-curr-version");
+                    if (modalCurr) modalCurr.innerText = `v${data.app_version}`;
+
+                    // Hide update notification in navbar immediately
+                    hideUpdateNotification();
+
+                    if (window.CustomAlert) {
+                        window.CustomAlert.success(data.message || (isEn ? "Version synced successfully!" : "Versi berhasil disinkronkan!"));
                     }
 
-                    if (data.type === "done") {
-                        if (updateEventSource) {
-                            updateEventSource.close();
-                            updateEventSource = null;
-                        }
-                        if (btnRun) btnRun.disabled = false;
-                        if (btnBackup) btnBackup.disabled = false;
-
-                        if (textRun) textRun.innerText = isEn ? "Done" : "Selesai";
-                        if (terminalBadge) {
-                            terminalBadge.innerText = isEn ? "Completed (0)" : "Selesai (0)";
-                            terminalBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/30 text-emerald-300 font-bold";
-                        }
-                        if (btnReload) {
-                            btnReload.classList.add("ring-4", "ring-emerald-400/50", "animate-bounce");
-                        }
-
-                        // If new version was applied, update local cache and UI
-                        if (data.new_version) {
-                            cachedLocalVersion = data.new_version;
-                            const modalCurr = document.getElementById("modal-curr-version");
-                            if (modalCurr) modalCurr.innerText = `v${data.new_version}`;
-                            hideUpdateNotification();
-                        }
-                    } else if (data.type === "error") {
-                        if (updateEventSource) {
-                            updateEventSource.close();
-                            updateEventSource = null;
-                        }
-                        if (btnRun) btnRun.disabled = false;
-                        if (btnBackup) btnBackup.disabled = false;
-
-                        if (textRun) textRun.innerText = isEn ? "Retry" : "Coba Lagi";
-                        if (terminalBadge) {
-                            const badgeText = data.reason === "safety_preflight_failed"
-                                ? (isEn ? "Safety Stopped" : "Dihentikan (Safety)")
-                                : (isEn ? "Failed" : "Gagal");
-                            terminalBadge.innerText = badgeText;
-                            terminalBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/30 text-red-300 font-bold";
-                        }
-                    }
-                } catch (e) {
-                    if (terminalOutput) {
-                        terminalOutput.textContent += event.data + "\n";
-                        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                    }
-                }
-            };
-
-            updateEventSource.onerror = function (err) {
-                console.error("SSE Terminal Error:", err);
-                if (updateEventSource) {
-                    updateEventSource.close();
-                    updateEventSource = null;
-                }
-                if (btnRun) btnRun.disabled = false;
-                if (btnBackup) btnBackup.disabled = false;
-
-                if (textRun) textRun.innerText = isEn ? "Retry" : "Coba Lagi";
-                if (terminalBadge) {
-                    terminalBadge.innerText = isEn ? "Connection Lost" : "Koneksi Terputus";
-                    terminalBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-700 text-neutral-300";
-                }
-            };
-        }
-
-        if (btnRun) {
-            btnRun.addEventListener("click", () => runTerminalScript("update_project"));
-        }
-        if (btnBackup) {
-            btnBackup.addEventListener("click", () => runTerminalScript("backup_db"));
-        }
-    }
-
-    /**
-     * Setup Global Script Execution & Terminal Output Modal
-     */
-    function setupGlobalTerminalRunner() {
-        let globalEventSource = null;
-        let lastExecutedScriptKey = "update_project";
-        const isEn = document.documentElement.lang === "en";
-
-        const modalEl = document.getElementById("modal-global-script-terminal");
-        const titleEl = document.getElementById("global-terminal-title");
-        const statusEl = document.getElementById("global-terminal-status");
-        const outputEl = document.getElementById("global-terminal-output");
-        const btnClear = document.getElementById("btn-clear-global-terminal");
-        const btnRerun = document.getElementById("btn-rerun-global-script");
-
-        if (btnClear && outputEl) {
-            btnClear.addEventListener("click", function () {
-                outputEl.textContent = "";
-            });
-        }
-
-        if (btnRerun) {
-            btnRerun.addEventListener("click", function () {
-                if (lastExecutedScriptKey) {
-                    runGlobalScript(lastExecutedScriptKey);
-                }
-            });
-        }
-
-        function runGlobalScript(scriptKey, scriptName) {
-            if (!scriptKey) return;
-            lastExecutedScriptKey = scriptKey;
-
-            // Open Preline Overlay Modal
-            if (typeof window.HSOverlay !== "undefined" && modalEl) {
-                window.HSOverlay.open(modalEl);
-            } else {
-                const trigger = document.querySelector('[data-hs-overlay="#modal-global-script-terminal"]');
-                if (trigger) trigger.click();
-            }
-
-            if (titleEl) {
-                titleEl.innerText = `deploy@an-mastery:~$ ./${scriptKey}.sh${scriptName ? ` (${scriptName})` : ""}`;
-            }
-
-            if (statusEl) {
-                statusEl.innerText = isEn ? "Running..." : "Menjalankan...";
-                statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 animate-pulse";
-            }
-
-            if (outputEl) {
-                outputEl.textContent = `[Init] Starting script '${scriptKey}' via Database SOT...\n`;
-            }
-
-            if (globalEventSource) {
-                globalEventSource.close();
-                globalEventSource = null;
-            }
-
-            let streamUrl = typeof route === "function"
-                ? route("app_version.stream-update")
-                : "/app-version/stream-update";
-
-            const params = new URLSearchParams();
-            params.set("script_key", scriptKey);
-            streamUrl += (streamUrl.includes("?") ? "&" : "?") + params.toString();
-
-            globalEventSource = new EventSource(streamUrl);
-
-            globalEventSource.onmessage = function (event) {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.text && outputEl) {
-                        outputEl.textContent += data.text;
-                        outputEl.scrollTop = outputEl.scrollHeight;
+                    // Close modal
+                    if (typeof window.HSOverlay !== "undefined") {
+                        window.HSOverlay.close("#modal-app-update");
                     }
 
-                    if (data.type === "done") {
-                        if (globalEventSource) {
-                            globalEventSource.close();
-                            globalEventSource = null;
-                        }
-                        if (statusEl) {
-                            statusEl.innerText = isEn ? "Completed (0)" : "Selesai (0)";
-                            statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/30 text-emerald-300 font-bold";
-                        }
-                        if (data.new_version) {
-                            cachedLocalVersion = data.new_version;
-                            const modalCurr = document.getElementById("modal-curr-version");
-                            if (modalCurr) modalCurr.innerText = `v${data.new_version}`;
-                            hideUpdateNotification();
-                        }
-                    } else if (data.type === "error") {
-                        if (globalEventSource) {
-                            globalEventSource.close();
-                            globalEventSource = null;
-                        }
-                        if (statusEl) {
-                            const badgeText = data.reason === "safety_preflight_failed"
-                                ? (isEn ? "Safety Stopped" : "Dihentikan (Safety)")
-                                : (isEn ? "Failed" : "Gagal");
-                            statusEl.innerText = badgeText;
-                            statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/30 text-red-300 font-bold";
-                        }
-                    }
-                } catch (e) {
-                    if (outputEl) {
-                        outputEl.textContent += event.data + "\n";
-                        outputEl.scrollTop = outputEl.scrollHeight;
+                    // Dispatch global event
+                    window.dispatchEvent(new CustomEvent("app-version:firebase-updated", {
+                        detail: { fbData: currentFirebaseData, comparison: 0, localVersion: data.app_version }
+                    }));
+                } else {
+                    if (window.CustomAlert) {
+                        window.CustomAlert.error(data.message || (isEn ? "Failed to sync version." : "Gagal menyinkronkan versi."));
                     }
                 }
-            };
-
-            globalEventSource.onerror = function (err) {
-                console.error("Global SSE Terminal Error:", err);
-                if (globalEventSource) {
-                    globalEventSource.close();
-                    globalEventSource = null;
+            } catch (err) {
+                console.error("Sync version error:", err);
+                if (window.CustomAlert) {
+                    window.CustomAlert.error(isEn ? "Failed to connect to server." : "Gagal terhubung ke server.");
                 }
-                if (statusEl) {
-                    statusEl.innerText = isEn ? "Connection Lost" : "Koneksi Terputus";
-                    statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-700 text-neutral-300";
-                }
-            };
-        }
-
-        // Delegated click listener for any button with class .btn-run-global-script
-        document.addEventListener("click", function (e) {
-            const btn = e.target.closest(".btn-run-global-script");
-            if (btn) {
-                e.preventDefault();
-                const key = btn.dataset.scriptKey;
-                const name = btn.dataset.scriptName || "";
-                if (key) {
-                    runGlobalScript(key, name);
-                }
+            } finally {
+                btnSync.disabled = false;
+                if (icon) icon.classList.remove("hidden");
+                if (spinner) spinner.classList.add("hidden");
+                if (textEl) textEl.innerText = originalText;
             }
         });
-
-        window.runGlobalScriptTerminal = runGlobalScript;
     }
+
+
 
     // Run on DOM ready
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
             initFirebaseRealtimeListener();
-            setupAutoUpdateRunner();
-            setupGlobalTerminalRunner();
+            setupManualUpdateSync();
         });
     } else {
         initFirebaseRealtimeListener();
-        setupAutoUpdateRunner();
-        setupGlobalTerminalRunner();
+        setupManualUpdateSync();
     }
 
     // Expose for manual trigger if needed

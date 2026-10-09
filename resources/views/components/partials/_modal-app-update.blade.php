@@ -70,85 +70,55 @@
                     </div>
                 </div>
 
-                <!-- Live Auto-Update Section (Super Admin / Deployment Execution) -->
-                <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 via-(--color-primary)/10 to-transparent border border-emerald-500/20 space-y-3">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <span class="text-xs font-bold text-(--color-dark) dark:text-(--color-light) flex items-center gap-1.5">
-                                <i data-lucide="zap" class="size-4 text-emerald-500"></i>
-                                {{ __('app_version.modal_auto_update_title') }}
-                            </span>
-                            <p class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) mt-0.5">
-                                {{ __('app_version.modal_auto_update_desc', ['script' => 'update_project']) }}
-                            </p>
-                        </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <button type="button" id="btn-run-modal-backup"
-                                title="Backup Database Sebelum Update"
-                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold
-                                       bg-(--color-light) dark:bg-(--color-dark) border border-(--color-gray)/30
-                                       hover:border-(--color-primary) hover:text-(--color-primary)
-                                       text-(--color-dark) dark:text-(--color-light) shadow-2xs transition-all cursor-pointer">
-                                <i data-lucide="database" class="size-3.5 text-blue-500"></i>
-                                <span>Backup DB</span>
-                            </button>
-                            <button type="button" id="btn-run-auto-update"
-                                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold
-                                       bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/30
-                                       hover:scale-102 active:scale-98 transition-all cursor-pointer">
-                                <i data-lucide="play" class="size-3.5" id="icon-run-update"></i>
-                                <span id="text-run-update">{{ __('app_version.modal_btn_run_update') }}</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Live Terminal Output Console -->
-                    <div id="modal-terminal-wrapper" class="hidden space-y-2 pt-2 border-t border-(--color-gray)/15 animate-fade-in">
-                        <div class="flex items-center justify-between px-3 py-1.5 bg-neutral-900 rounded-t-xl border-b border-neutral-800">
-                            <div class="flex items-center gap-1.5">
-                                <span class="size-2.5 rounded-full bg-red-500/80 inline-block"></span>
-                                <span class="size-2.5 rounded-full bg-yellow-500/80 inline-block"></span>
-                                <span class="size-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
-                                <span class="text-[11px] font-mono text-neutral-400 ms-2">deploy@an-mastery:~$ update</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="terminal-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 animate-pulse">
-                                    Running...
-                                </span>
-                                <button type="button" id="btn-close-terminal" title="{{ __('app_version.modal_btn_close') }}"
-                                    class="text-neutral-400 hover:text-white p-0.5 rounded hover:bg-neutral-800 transition-colors cursor-pointer">
-                                    <i data-lucide="x" class="size-3.5"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <pre id="modal-terminal-output"
-                            class="p-3.5 bg-neutral-950 text-emerald-400 font-mono text-xs leading-relaxed overflow-x-auto overflow-y-auto max-h-56 rounded-b-xl border border-neutral-800 whitespace-pre-wrap select-text m-0"></pre>
-                    </div>
-                </div>
-
-                <!-- Manual Update Guide Accordion / Option -->
-                <details class="group rounded-xl border border-(--color-gray)/15 bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 overflow-hidden">
-                    <summary class="flex items-center justify-between p-3.5 cursor-pointer select-none text-xs font-semibold text-(--color-dark) dark:text-(--color-light)">
-                        <span class="flex items-center gap-2">
-                            <i data-lucide="terminal" class="size-3.5 text-(--color-primary)"></i>
+                <!-- Manual Update Steps (Linux Terminal) -->
+                <div class="rounded-xl border border-(--color-gray)/20 bg-(--color-light-gray)/40 dark:bg-(--color-dark-slate)/40 p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-(--color-dark) dark:text-(--color-light) flex items-center gap-2">
+                            <i data-lucide="terminal" class="size-4 text-(--color-primary)"></i>
                             {{ __('app_version.manual_update_steps') }}
                         </span>
-                        <i data-lucide="chevron-down" class="size-3.5 text-(--color-dark-gray) group-open:rotate-180 transition-transform"></i>
-                    </summary>
-                    <div class="p-3.5 pt-0 space-y-2">
-                        <div class="flex justify-end">
-                            <button type="button" id="btn-copy-update-cmd"
-                                class="inline-flex items-center gap-1 text-[11px] font-medium text-(--color-primary) hover:underline cursor-pointer">
-                                <i data-lucide="copy" class="size-3"></i>
-                                <span>{{ __('app_version.modal_btn_copy_cmd') }}</span>
-                            </button>
-                        </div>
-                        <pre id="modal-update-guide-cmd" class="p-3 rounded-xl bg-(--color-dark) text-emerald-400 font-mono text-xs leading-relaxed overflow-x-auto m-0">git pull origin develop
+                        <button type="button" id="btn-copy-update-cmd"
+                            class="inline-flex items-center gap-1 text-[11px] font-semibold text-(--color-primary) hover:underline cursor-pointer">
+                            <i data-lucide="copy" class="size-3"></i>
+                            <span>{{ __('app_version.modal_btn_copy_cmd') }}</span>
+                        </button>
+                    </div>
+
+                    <pre id="modal-update-guide-cmd"
+                        class="p-3.5 rounded-xl bg-neutral-950 text-emerald-400 font-mono text-xs leading-relaxed overflow-x-auto m-0 select-text custom-scrollbar">git pull origin develop
 composer install
 npm run build
 php artisan optimize:clear</pre>
+                </div>
+
+                <!-- Mark as Updated / Sync Confirmation Section -->
+                @if (auth()->user()?->can('app-version.update'))
+                    <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 via-(--color-primary)/10 to-transparent border border-emerald-500/30 space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="size-8 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="check-circle-2" class="size-4.5"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h4 class="text-xs font-bold text-(--color-dark) dark:text-(--color-light)">
+                                    Konfirmasi Penyelesaian Update
+                                </h4>
+                                <p class="text-[11px] text-(--color-dark-gray) dark:text-(--color-gray) leading-relaxed">
+                                    {{ __('app_version.modal_mark_updated_desc') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-1 flex justify-end">
+                            <button type="button" id="btn-sync-local-version"
+                                data-loading-text="{{ __('app_version.modal_btn_marking') }}"
+                                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-600/30 hover:scale-102 active:scale-98 transition-all cursor-pointer">
+                                <i data-lucide="check-check" class="size-4" data-icon></i>
+                                <span class="size-3.5 border-2 border-white border-t-transparent rounded-full animate-spin hidden" data-spinner></span>
+                                <span data-text>{{ __('app_version.modal_btn_mark_updated') }}</span>
+                            </button>
+                        </div>
                     </div>
-                </details>
+                @endif
             </div>
 
             <!-- Modal Footer -->

@@ -73,10 +73,7 @@
                 @include('components.toggle-language')
             </div>
 
-            @if (auth()->user()?->can('app-version.view'))
-                <!-- Terminal & Shell Scripts Shortcut -->
-                @include('components.navbar-terminal-scripts')
-            @endif
+
 
             <!-- Profile Dropdown -->
             <div class="hs-dropdown inline-flex">
@@ -274,9 +271,7 @@
 
 @include('components.partials._modal-switch-workshop')
 @include('components.partials._modal-app-update')
-@if (auth()->user()?->can('app-version.view'))
-    @include('components.partials._modal-global-script-terminal')
-@endif
+
 
 
 
