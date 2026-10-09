@@ -19,7 +19,7 @@ class AppVersionController extends Controller
      */
     public function index(Request $request): View|JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak. Fitur ini hanya untuk Super Admin.');
+        abort_unless(auth()->user()->can('app-version.view'), 403, 'Akses ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.');
 
         $currentVersion = $this->versionService->getCurrentVersion(fresh: true);
         $firebaseData = $this->versionService->getFirebaseVersion();
@@ -55,7 +55,7 @@ class AppVersionController extends Controller
      */
     public function getScripts(): JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+        abort_unless(auth()->user()->can('app-version.view'), 403, 'Akses ditolak.');
 
         return response()->json([
             'success' => true,
@@ -68,7 +68,7 @@ class AppVersionController extends Controller
      */
     public function saveScripts(Request $request): JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+        abort_unless(auth()->user()->can('app-version.update'), 403, 'Akses ditolak.');
 
         $scripts = $request->input('scripts');
 
@@ -97,7 +97,7 @@ class AppVersionController extends Controller
      */
     public function showScript(string $key): JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+        abort_unless(auth()->user()->can('app-version.view'), 403, 'Akses ditolak.');
 
         $detail = $this->versionService->getScriptDetail($key);
 
@@ -119,7 +119,7 @@ class AppVersionController extends Controller
      */
     public function saveSingleScript(Request $request): JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+        abort_unless(auth()->user()->can('app-version.update'), 403, 'Akses ditolak.');
 
         $validated = $request->validate([
             'key'            => 'required|string|max:100',
@@ -143,7 +143,7 @@ class AppVersionController extends Controller
      */
     public function deleteScript(string $key): JsonResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak.');
+        abort_unless(auth()->user()->can('app-version.delete'), 403, 'Akses ditolak.');
 
         $deleted = $this->versionService->deleteScript($key);
 
@@ -210,7 +210,7 @@ class AppVersionController extends Controller
             'latest_version'   => $firebaseData['version'] ?? $currentVersion,
             'update_available' => $updateAvailable,
             'release_info'     => $firebaseData,
-            'is_super_admin'   => auth()->check() && auth()->user()->hasRole('Super Admin'),
+            'is_super_admin'   => auth()->check() && auth()->user()->can('app-version.update'),
         ]);
     }
 
@@ -220,12 +220,17 @@ class AppVersionController extends Controller
      */
     public function streamUpdate(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
-        abort_unless(auth()->user()->hasRole('Super Admin'), 403, 'Akses ditolak. Fitur eksekusi ini hanya untuk Super Admin.');
+        abort_unless(auth()->user()->can('app-version.update'), 403, 'Akses ditolak. Anda tidak memiliki izin untuk mengeksekusi script terminal.');
 
         $scriptKey = $request->query('script_key', 'update_project');
         $targetVersion = $request->query('target_version');
 
         return response()->stream(function () use ($scriptKey, $targetVersion) {
+            @ini_set('output_buffering', 'off');
+            @ini_set('zlib.output_compression', '0');
+            @ini_set('implicit_flush', '1');
+            @set_time_limit(0);
+
             while (ob_get_level()) {
                 ob_end_clean();
             }

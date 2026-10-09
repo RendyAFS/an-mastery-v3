@@ -375,17 +375,162 @@
         }
     }
 
+    /**
+     * Setup Global Script Execution & Terminal Output Modal
+     */
+    function setupGlobalTerminalRunner() {
+        let globalEventSource = null;
+        let lastExecutedScriptKey = "update_project";
+        const isEn = document.documentElement.lang === "en";
+
+        const modalEl = document.getElementById("modal-global-script-terminal");
+        const titleEl = document.getElementById("global-terminal-title");
+        const statusEl = document.getElementById("global-terminal-status");
+        const outputEl = document.getElementById("global-terminal-output");
+        const btnClear = document.getElementById("btn-clear-global-terminal");
+        const btnRerun = document.getElementById("btn-rerun-global-script");
+
+        if (btnClear && outputEl) {
+            btnClear.addEventListener("click", function () {
+                outputEl.textContent = "";
+            });
+        }
+
+        if (btnRerun) {
+            btnRerun.addEventListener("click", function () {
+                if (lastExecutedScriptKey) {
+                    runGlobalScript(lastExecutedScriptKey);
+                }
+            });
+        }
+
+        function runGlobalScript(scriptKey, scriptName) {
+            if (!scriptKey) return;
+            lastExecutedScriptKey = scriptKey;
+
+            // Open Preline Overlay Modal
+            if (typeof window.HSOverlay !== "undefined" && modalEl) {
+                window.HSOverlay.open(modalEl);
+            } else {
+                const trigger = document.querySelector('[data-hs-overlay="#modal-global-script-terminal"]');
+                if (trigger) trigger.click();
+            }
+
+            if (titleEl) {
+                titleEl.innerText = `deploy@an-mastery:~$ ./${scriptKey}.sh${scriptName ? ` (${scriptName})` : ""}`;
+            }
+
+            if (statusEl) {
+                statusEl.innerText = isEn ? "Running..." : "Menjalankan...";
+                statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 animate-pulse";
+            }
+
+            if (outputEl) {
+                outputEl.textContent = `[Init] Starting script '${scriptKey}' via Database SOT...\n`;
+            }
+
+            if (globalEventSource) {
+                globalEventSource.close();
+                globalEventSource = null;
+            }
+
+            let streamUrl = typeof route === "function"
+                ? route("app_version.stream-update")
+                : "/app-version/stream-update";
+
+            const params = new URLSearchParams();
+            params.set("script_key", scriptKey);
+            streamUrl += (streamUrl.includes("?") ? "&" : "?") + params.toString();
+
+            globalEventSource = new EventSource(streamUrl);
+
+            globalEventSource.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.text && outputEl) {
+                        outputEl.textContent += data.text;
+                        outputEl.scrollTop = outputEl.scrollHeight;
+                    }
+
+                    if (data.type === "done") {
+                        if (globalEventSource) {
+                            globalEventSource.close();
+                            globalEventSource = null;
+                        }
+                        if (statusEl) {
+                            statusEl.innerText = isEn ? "Completed (0)" : "Selesai (0)";
+                            statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/30 text-emerald-300 font-bold";
+                        }
+                        if (data.new_version) {
+                            cachedLocalVersion = data.new_version;
+                            const modalCurr = document.getElementById("modal-curr-version");
+                            if (modalCurr) modalCurr.innerText = `v${data.new_version}`;
+                            hideUpdateNotification();
+                        }
+                    } else if (data.type === "error") {
+                        if (globalEventSource) {
+                            globalEventSource.close();
+                            globalEventSource = null;
+                        }
+                        if (statusEl) {
+                            const badgeText = data.reason === "safety_preflight_failed"
+                                ? (isEn ? "Safety Stopped" : "Dihentikan (Safety)")
+                                : (isEn ? "Failed" : "Gagal");
+                            statusEl.innerText = badgeText;
+                            statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/30 text-red-300 font-bold";
+                        }
+                    }
+                } catch (e) {
+                    if (outputEl) {
+                        outputEl.textContent += event.data + "\n";
+                        outputEl.scrollTop = outputEl.scrollHeight;
+                    }
+                }
+            };
+
+            globalEventSource.onerror = function (err) {
+                console.error("Global SSE Terminal Error:", err);
+                if (globalEventSource) {
+                    globalEventSource.close();
+                    globalEventSource = null;
+                }
+                if (statusEl) {
+                    statusEl.innerText = isEn ? "Connection Lost" : "Koneksi Terputus";
+                    statusEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-700 text-neutral-300";
+                }
+            };
+        }
+
+        // Delegated click listener for any button with class .btn-run-global-script
+        document.addEventListener("click", function (e) {
+            const btn = e.target.closest(".btn-run-global-script");
+            if (btn) {
+                e.preventDefault();
+                const key = btn.dataset.scriptKey;
+                const name = btn.dataset.scriptName || "";
+                if (key) {
+                    runGlobalScript(key, name);
+                }
+            }
+        });
+
+        window.runGlobalScriptTerminal = runGlobalScript;
+    }
+
     // Run on DOM ready
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
             initFirebaseRealtimeListener();
             setupAutoUpdateRunner();
+            setupGlobalTerminalRunner();
         });
     } else {
         initFirebaseRealtimeListener();
         setupAutoUpdateRunner();
+        setupGlobalTerminalRunner();
     }
 
     // Expose for manual trigger if needed
     window.recheckAppVersion = initFirebaseRealtimeListener;
 })();
+

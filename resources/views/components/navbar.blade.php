@@ -73,6 +73,11 @@
                 @include('components.toggle-language')
             </div>
 
+            @if (auth()->user()?->can('app-version.view'))
+                <!-- Terminal & Shell Scripts Shortcut -->
+                @include('components.navbar-terminal-scripts')
+            @endif
+
             <!-- Profile Dropdown -->
             <div class="hs-dropdown inline-flex">
                 <button id="hs-dropdown-profile" type="button"
@@ -220,7 +225,7 @@
                         {{ __('workshop.switch_workshop') }}
                     </button>
 
-                    @if (auth()->user()->hasRole('Super Admin'))
+                    @if (auth()->user()->can('app-version.view'))
                         <a href="{{ route('app_version.index') }}"
                             class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm
                             text-(--color-dark)
@@ -269,4 +274,11 @@
 
 @include('components.partials._modal-switch-workshop')
 @include('components.partials._modal-app-update')
+@if (auth()->user()?->can('app-version.view'))
+    @include('components.partials._modal-global-script-terminal')
+@endif
+
+
+
+
 

@@ -78,4 +78,12 @@ return [
     'field_script_description'      => 'Description',
     'field_script_content'          => 'Shell Script File Content (.sh)',
     'copied'                        => 'Copied!',
+    'navbar_terminal_title'         => 'Terminal & Scripts (.sh)',
+    'navbar_terminal_desc'          => 'Run maintenance shell scripts (.sh) directly via web terminal stream',
+    'navbar_terminal_manage'        => 'Manage All Scripts (Editor)',
+    'navbar_terminal_empty'         => 'No deployment scripts configured yet.',
+    'navbar_terminal_run'           => 'Run',
+    'navbar_terminal_clear'         => 'Clear Screen',
+    'navbar_terminal_rerun'         => 'Rerun Script',
 ];
+

@@ -78,4 +78,12 @@ return [
     'field_script_description'      => 'Deskripsi',
     'field_script_content'          => 'Isi File Script Shell (.sh)',
     'copied'                        => 'Tersalin!',
+    'navbar_terminal_title'         => 'Terminal & Script (.sh)',
+    'navbar_terminal_desc'          => 'Jalankan script pemeliharaan (.sh) langsung via streaming terminal web',
+    'navbar_terminal_manage'        => 'Kelola Semua Script (Editor)',
+    'navbar_terminal_empty'         => 'Belum ada script yang dikonfigurasi.',
+    'navbar_terminal_run'           => 'Jalankan',
+    'navbar_terminal_clear'         => 'Bersihkan Layar',
+    'navbar_terminal_rerun'         => 'Jalankan Ulang',
 ];
+

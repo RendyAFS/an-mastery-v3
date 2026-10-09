@@ -8,7 +8,7 @@ class PublishAppVersionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('Super Admin');
+        return auth()->check() && auth()->user()->can('app-version.update');
     }
 
     public function rules(): array
