@@ -98,8 +98,9 @@ public function index()
 ```
 
 ## Hubungan dengan file lain
-- Pola arsitektur ini memandu pembuatan berkas backend yang dibahas di `backend.md`, `controller.md`, `repository.md`, dan `resource.md`.
-- Interaksi frontend dibahas di `frontend.md`, `javascript.md`, `blade.md`, dan `css.md`.
+- Pola arsitektur ini memandu pembuatan berkas backend yang dibahas di `backend.md`, `controller.md`, `repository.md`, `resource.md`, dan `routing.md`.
+- Interaksi frontend dibahas di `frontend.md`, `javascript.md`, `blade.md`, `css.md`, `datatable.md`, dan `cardgrid.md`.
+- Standar kualitas kode, perkakas pengembangan, dan pengujian dibahas di `tooling.md`, `testing.md`, dan `best-practice.md`.
 
 ## Checklist
 - [ ] Apakah setiap modifikasi folder/file baru sudah diletakkan sesuai peta direktori di atas?

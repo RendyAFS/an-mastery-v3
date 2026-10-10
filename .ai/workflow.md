@@ -62,20 +62,24 @@ php artisan make:module Category --simple --resource
 
 ## Hubungan dengan file lain
 - Panduan penamaan file/variabel saat membuat modul dapat dilihat di `naming-convention.md`.
-- Detail implementasi backend dibahas di `backend.md`, `controller.md`, `request.md`, `repository.md`, dan `resource.md`.
+- Detail implementasi backend dibahas di `backend.md`, `controller.md`, `request.md`, `repository.md`, `resource.md`, dan `routing.md`.
 - Detail implementasi frontend dibahas di `frontend.md`, `javascript.md`, `blade.md`, `css.md`, `datatable.md`, dan `cardgrid.md`.
+- Panduan perkakas, pengujian, dan checklist best practice dibahas di `tooling.md`, `testing.md`, dan `best-practice.md`.
 
 ## Checklist
-- [ ] Apakah migrasi database sudah dijalankan dan model sudah memiliki `$fillable`?
+- [ ] Apakah migrasi database sudah dijalankan dan model sudah memiliki `$fillable` / `casts()`?
 - [ ] Apakah rute baru sudah didaftarkan di `routes/web.php` dan dilindungi middleware?
 - [ ] Apakah otorisasi / Policy Permission (`$this->authorize(...)`) sudah diterapkan pada setiap method controller?
 - [ ] Apakah response AJAX di Javascript sudah ditangani oleh wrapper `ApiProvider`?
 - [ ] Apakah UI sudah di-inisialisasi ulang menggunakan helper `ui-init` / `reinit-ui` setelah manipulasi DOM?
+- [ ] Apakah kode PHP yang diedit telah diformat dengan `vendor/bin/pint path/to/file.php`?
+- [ ] Apakah fungsionalitas baru telah diuji menggunakan Feature/Unit Test?
 
 ## Best Practice
-- **Selalu Gunakan Generator**: Mulailah dengan menjalankan `make:module` kustom Artisan command untuk meminimalkan kesalahan struktur manual.
-- **Terapkan Soft Deletes**: Pastikan fitur `restore` dan `forceDelete` didukung oleh model dan kueri repository.
+- **Selalu Gunakan Generator**: Mulailah dengan menjalankan `make:module` atau `make:*` kustom Artisan command untuk meminimalkan kesalahan struktur manual.
+- **Terapkan Soft Deletes**: Pastikan fitur `restore` dan `forceDelete` didukung oleh model dan kueri repository jika entitas mendukung penghapusan aman.
 - **Gunakan Transaksi Database**: Untuk data kompleks yang melibatkan beberapa tabel/relasi, pastikan logika di dalam Action dibungkus dalam `DB::transaction(...)`.
+- **Verifikasi dengan Tes**: Buktikan fungsionalitas logika dengan Feature Test otomatis sebelum menyelesaikan tugas.
 
 ## Catatan penting
 > [!WARNING]
